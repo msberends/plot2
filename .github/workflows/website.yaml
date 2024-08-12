@@ -50,7 +50,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Build site
-        run: pkgdown::build_site_github_pages()
+        run: pkgdown::build_site_github_pages(install = TRUE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
