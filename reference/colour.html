@@ -119,7 +119,7 @@
 <li><p><code>"terrain"</code></p></li>
 <li><p><code>"topo"</code></p></li>
 </ul></li>
-<li><p>One of the 657 built-in <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code> in <span style="R">R</span>, such as <code>"darkorange4"</code>, <code>"firebrick4"</code>, <code>"navy"</code>, <code>"orangered"</code>, <code>"palevioletred2"</code></p></li>
+<li><p>One of the 657 built-in <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code> in <span style="R">R</span>, such as <code>"blue2"</code>, <code>"darkgoldenrod3"</code>, <code>"darkolivegreen3"</code>, <code>"darkorange"</code>, <code>"violetred1"</code></p></li>
 <li><p>One of the pre-registered colours using <code>register_colour()</code></p></li>
 </ul></dd>
 
@@ -219,16 +219,16 @@
 <span class="r-in"><span><span class="co"># Now use it in plots as you like:</span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"my_organisation"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c( Petal.Length, Petal.Width, Sepal.Length, Sepal.Width )</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " boxplot "</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="colour-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Or even set the option to use it in any future plot:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"my_organisation"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c( Petal.Length, Petal.Width, Sepal.Length, Sepal.Width )</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " boxplot "</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="colour-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>

@@ -148,9 +148,9 @@ wrapper around <code>ggplot2</code> that simplifies many of the tasks
 you usually have to handle manually. To begin with, you don’t even need
 to specify what kind of plot you want — <code><a href="../reference/plot2.html">plot2()</a></code> will make
 an educated guess based on your data.</p>
-<div class="section level4">
-<h4 id="basic-usage-let-plot2-do-the-work">Basic Usage: Let <code>plot2()</code> Do the Work<a class="anchor" aria-label="anchor" href="#basic-usage-let-plot2-do-the-work"></a>
-</h4>
+<div class="section level3">
+<h3 id="basic-usage-let-plot2-do-the-work">Basic Usage: Let <code>plot2()</code> Do the Work<a class="anchor" aria-label="anchor" href="#basic-usage-let-plot2-do-the-work"></a>
+</h3>
 <p>To get started, you can pass your data directly into
 <code><a href="../reference/plot2.html">plot2()</a></code> without specifying any additional arguments. For
 example:</p>
@@ -158,8 +158,8 @@ example:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2">plot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, y <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y =  y</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x =  x</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = y</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x = x</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-2-1.png" width="576"></p>
 <p>In this simple example, <code><a href="../reference/plot2.html">plot2()</a></code> automatically generates
 a column plot because it recognises that the x-axis is categorical and
@@ -177,17 +177,17 @@ directly to production formats like PDFs. This makes
 <code><a href="../reference/plot2.html">plot2()</a></code> plots ideal for reports, publications, and
 presentations where a clean, professional look is essential.</p>
 </div>
-<div class="section level4">
-<h4 id="customising-the-plot-type">Customising the Plot Type<a class="anchor" aria-label="anchor" href="#customising-the-plot-type"></a>
-</h4>
+<div class="section level3">
+<h3 id="customising-the-plot-type">Customising the Plot Type<a class="anchor" aria-label="anchor" href="#customising-the-plot-type"></a>
+</h3>
 <p>But what if you want something different? Maybe a scatter plot or a
 line chart? No problem. You can easily specify the <code>type</code>
 argument to get exactly what you want.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x =  x</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y =  y</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x = x</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = y</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
 <p>Here, we’ve explicitly set <code>type = "point"</code> to create a
 scatter plot. <code><a href="../reference/plot2.html">plot2()</a></code> supports a wide range of plot types,
@@ -198,119 +198,119 @@ find that it often knows exactly what you want to do. But when you need
 more control, it’s easy to take the reins and specify the plot type that
 best fits your data.</p>
 </div>
-<div class="section level4">
-<h4 id="a-closer-look-at-the-axes">A Closer Look at the Axes<a class="anchor" aria-label="anchor" href="#a-closer-look-at-the-axes"></a>
-</h4>
+<div class="section level3">
+<h3 id="a-closer-look-at-the-axes">A Closer Look at the Axes<a class="anchor" aria-label="anchor" href="#a-closer-look-at-the-axes"></a>
+</h3>
 <p>One of the key strengths of <code><a href="../reference/plot2.html">plot2()</a></code> is how it handles
 axes. The <code>x</code> and <code>y</code> arguments are
 straightforward, but they come with a lot of flexibility. Let’s start
 with the basics and then build up to more advanced configurations.</p>
-<div class="section level5">
-<h5 id="setting-up-basic-axes">Setting Up Basic Axes<a class="anchor" aria-label="anchor" href="#setting-up-basic-axes"></a>
-</h5>
+<div class="section level4">
+<h4 id="setting-up-basic-axes">Setting Up Basic Axes<a class="anchor" aria-label="anchor" href="#setting-up-basic-axes"></a>
+</h4>
 <p>To create a simple scatter plot, you might pass a single variable to
 the <code>x</code> and <code>y</code> arguments:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
 <p>This creates a scatter plot of miles per gallon (<code>mpg</code>)
 against horsepower (<code>hp</code>). This is as basic as it gets — two
 variables, one for each axis.</p>
 </div>
-<div class="section level5">
-<h5 id="working-with-multiple-variables">Working with Multiple Variables<a class="anchor" aria-label="anchor" href="#working-with-multiple-variables"></a>
-</h5>
+<div class="section level4">
+<h4 id="working-with-multiple-variables">Working with Multiple Variables<a class="anchor" aria-label="anchor" href="#working-with-multiple-variables"></a>
+</h4>
 <p>Now, what if you want to compare multiple variables on the same plot?
 <code><a href="../reference/plot2.html">plot2()</a></code> makes this easy by allowing you to pass a vector of
 variables:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 <p>In this example, <code><a href="../reference/plot2.html">plot2()</a></code> plots both <code>hp</code> and
 <code>disp</code> against <code>mpg</code> on the same graph, using
 different colours or other visual distinctions to separate them.</p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="delving-into-categories">Delving into Categories<a class="anchor" aria-label="anchor" href="#delving-into-categories"></a>
-</h4>
+<div class="section level3">
+<h3 id="delving-into-categories">Delving into Categories<a class="anchor" aria-label="anchor" href="#delving-into-categories"></a>
+</h3>
 <p>Categories in <code><a href="../reference/plot2.html">plot2()</a></code> replace the <code>colour</code>
 and <code>fill</code> aesthetics from <code>ggplot2</code>. The
 <code>category</code> argument is where you define how your data should
 be grouped. Let’s start with a simple example and then explore how to
 take it further.</p>
-<div class="section level5">
-<h5 id="basic-grouping">Basic Grouping<a class="anchor" aria-label="anchor" href="#basic-grouping"></a>
-</h5>
+<div class="section level4">
+<h4 id="basic-grouping">Basic Grouping<a class="anchor" aria-label="anchor" href="#basic-grouping"></a>
+</h4>
 <p>A basic use of the <code>category</code> argument might look
 something like this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 <p>Here, the <code>cyl</code> variable is used to group the data by the
 number of cylinders, and <code><a href="../reference/plot2.html">plot2()</a></code> automatically assigns
 different colours to each group. This is particularly useful for
 comparing subsets of your data within the same plot.</p>
 </div>
-<div class="section level5">
-<h5 id="customising-categories">Customising Categories<a class="anchor" aria-label="anchor" href="#customising-categories"></a>
-</h5>
+<div class="section level4">
+<h4 id="customising-categories">Customising Categories<a class="anchor" aria-label="anchor" href="#customising-categories"></a>
+</h4>
 <p>But <code><a href="../reference/plot2.html">plot2()</a></code> doesn’t stop there. You can fully customise
 how categories are displayed. For instance, you might want to control
 the colours used for each category:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"6"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"8"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category.midpoint = 7</span><span style="color: #000000;"> (the current </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> scale centre)</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
 <p>Here, we’ve specified the exact colours to use for each category,
 giving you full control over the appearance of your plot.</p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="exploring-facets">Exploring Facets<a class="anchor" aria-label="anchor" href="#exploring-facets"></a>
-</h4>
+<div class="section level3">
+<h3 id="exploring-facets">Exploring Facets<a class="anchor" aria-label="anchor" href="#exploring-facets"></a>
+</h3>
 <p>Faceting in <code><a href="../reference/plot2.html">plot2()</a></code> allows you to split your plot into
 multiple panels, one for each level of a categorical variable. It’s an
 excellent way to compare data across different groups.</p>
-<div class="section level5">
-<h5 id="basic-faceting">Basic Faceting<a class="anchor" aria-label="anchor" href="#basic-faceting"></a>
-</h5>
+<div class="section level4">
+<h4 id="basic-faceting">Basic Faceting<a class="anchor" aria-label="anchor" href="#basic-faceting"></a>
+</h4>
 <p>A simple example of faceting might look like this:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, facet <span class="op">=</span> <span class="va">gear</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
 <p>This command splits the plot by the number of gears, giving you a
 separate panel for each group. This is a quick way to see how
 relationships vary across different subsets of your data.</p>
 </div>
-<div class="section level5">
-<h5 id="advanced-faceting-options">Advanced Faceting Options<a class="anchor" aria-label="anchor" href="#advanced-faceting-options"></a>
-</h5>
+<div class="section level4">
+<h4 id="advanced-faceting-options">Advanced Faceting Options<a class="anchor" aria-label="anchor" href="#advanced-faceting-options"></a>
+</h4>
 <p><code><a href="../reference/plot2.html">plot2()</a></code> offers additional control over how facets are
 displayed. You can specify the number of rows in the facet grid, control
 whether scales are fixed or free, and more:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, facet <span class="op">=</span> <span class="va">gear</span>, facet.nrow <span class="op">=</span> <span class="fl">2</span>, facet.fixed_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 <p>In this example, we limit the facet grid to two rows and ensure that
 all y-axes have the same scale.</p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="leveraging-inline-transformations-with-plot2">Leveraging Inline Transformations with <code>plot2()</code><a class="anchor" aria-label="anchor" href="#leveraging-inline-transformations-with-plot2"></a>
-</h4>
+<div class="section level3">
+<h3 id="leveraging-inline-transformations-with-plot2">Leveraging Inline Transformations with <code>plot2()</code><a class="anchor" aria-label="anchor" href="#leveraging-inline-transformations-with-plot2"></a>
+</h3>
 <p>One of the standout features of <code><a href="../reference/plot2.html">plot2()</a></code> is its ability
 to perform transformations directly within the function call. This
 capability can dramatically reduce the need for additional data
@@ -318,9 +318,9 @@ manipulation steps, allowing you to focus on the visualisation itself.
 Whether you’re calculating aggregates, formatting labels, or even
 applying mathematical transformations, <code><a href="../reference/plot2.html">plot2()</a></code> lets you do
 it all on the fly.</p>
-<div class="section level5">
-<h5 id="aggregations-made-easy">Aggregations Made Easy<a class="anchor" aria-label="anchor" href="#aggregations-made-easy"></a>
-</h5>
+<div class="section level4">
+<h4 id="aggregations-made-easy">Aggregations Made Easy<a class="anchor" aria-label="anchor" href="#aggregations-made-easy"></a>
+</h4>
 <p>Suppose you want to count the number of patients admitted to each
 hospital. With <code><a href="../reference/plot2.html">plot2()</a></code>, there’s no need to pre-calculate
 these counts; you can simply use <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code> directly within the
@@ -366,9 +366,9 @@ use inside <code><a href="../reference/plot2.html">plot2()</a></code> without lo
 <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct()</a></code>,
 <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with()</a></code>, <code><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where()</a></code>.</p>
 </div>
-<div class="section level5">
-<h5 id="combining-data-with-inline-transformations">Combining Data with Inline Transformations<a class="anchor" aria-label="anchor" href="#combining-data-with-inline-transformations"></a>
-</h5>
+<div class="section level4">
+<h4 id="combining-data-with-inline-transformations">Combining Data with Inline Transformations<a class="anchor" aria-label="anchor" href="#combining-data-with-inline-transformations"></a>
+</h4>
 <p>The real power of <code><a href="../reference/plot2.html">plot2()</a></code> comes when you start combining
 these inline transformations. For example, you might want to see the
 median age of patients in each hospital, broken down by gender:</p>
@@ -382,9 +382,9 @@ patients at each hospital, with separate bars for each gender. You
 didn’t need to <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code> your
 data beforehand — <code><a href="../reference/plot2.html">plot2()</a></code> takes care of it all.</p>
 </div>
-<div class="section level5">
-<h5 id="inline-math-transformations">Inline Math Transformations<a class="anchor" aria-label="anchor" href="#inline-math-transformations"></a>
-</h5>
+<div class="section level4">
+<h4 id="inline-math-transformations">Inline Math Transformations<a class="anchor" aria-label="anchor" href="#inline-math-transformations"></a>
+</h4>
 <p>You can also apply mathematical transformations directly within
 <code><a href="../reference/plot2.html">plot2()</a></code>, making it easy to explore relationships in your
 data. For example, to plot the logarithm of patient ages across
@@ -392,12 +392,12 @@ different wards, you can do this:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-13-1.png" width="576"></p>
 </div>
-<div class="section level5">
-<h5 id="advanced-formatting-on-the-fly">Advanced Formatting on the Fly<a class="anchor" aria-label="anchor" href="#advanced-formatting-on-the-fly"></a>
-</h5>
+<div class="section level4">
+<h4 id="advanced-formatting-on-the-fly">Advanced Formatting on the Fly<a class="anchor" aria-label="anchor" href="#advanced-formatting-on-the-fly"></a>
+</h4>
 <p>In addition to aggregations, <code><a href="../reference/plot2.html">plot2()</a></code> makes it easy to
 apply text transformations directly within the plotting function. For
 instance, you might want to format the date or combine different
@@ -420,9 +420,9 @@ extra preprocessing steps.</p>
 by ward, allowing you to quickly see patterns in how age distributions
 differ across wards.</p>
 </div>
-<div class="section level5">
-<h5 id="combining-everything-together">Combining Everything Together<a class="anchor" aria-label="anchor" href="#combining-everything-together"></a>
-</h5>
+<div class="section level4">
+<h4 id="combining-everything-together">Combining Everything Together<a class="anchor" aria-label="anchor" href="#combining-everything-together"></a>
+</h4>
 <p>Let’s put it all together in a more complex example. Suppose you want
 to examine the distribution of patient ages across hospitals, with each
 bar split by gender, and you want the x-axis to reflect the hospital
@@ -448,9 +448,9 @@ one <code><a href="../reference/plot2.html">plot2()</a></code> call, demonstrate
 inline transformations.</p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="sorting-and-limiting-data">Sorting and Limiting Data<a class="anchor" aria-label="anchor" href="#sorting-and-limiting-data"></a>
-</h4>
+<div class="section level3">
+<h3 id="sorting-and-limiting-data">Sorting and Limiting Data<a class="anchor" aria-label="anchor" href="#sorting-and-limiting-data"></a>
+</h3>
 <p>Sorting is a crucial part of data visualisation, as it helps bring
 clarity and focus to your plots. With <code><a href="../reference/plot2.html">plot2()</a></code>, you have a
 variety of options to sort your data in different directions. Whether
@@ -461,9 +461,9 @@ done.</p>
 display the top few items, <code>x.max_items</code> and
 <code>category.max_items</code>, and <code>facet.max_items</code> have
 got you covered.</p>
-<div class="section level5">
-<h5 id="basic-sorting">Basic Sorting<a class="anchor" aria-label="anchor" href="#basic-sorting"></a>
-</h5>
+<div class="section level4">
+<h4 id="basic-sorting">Basic Sorting<a class="anchor" aria-label="anchor" href="#basic-sorting"></a>
+</h4>
 <p>Let’s start with a simple sort based on frequency:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
@@ -474,9 +474,9 @@ got you covered.</p>
 counts in descending order. This is particularly useful when you want to
 highlight the most common categories in your data.</p>
 </div>
-<div class="section level5">
-<h5 id="sorting-alphabetically">Sorting Alphabetically<a class="anchor" aria-label="anchor" href="#sorting-alphabetically"></a>
-</h5>
+<div class="section level4">
+<h4 id="sorting-alphabetically">Sorting Alphabetically<a class="anchor" aria-label="anchor" href="#sorting-alphabetically"></a>
+</h4>
 <p>If you prefer to sort alphabetically, <code><a href="../reference/plot2.html">plot2()</a></code> makes it
 straightforward. You can use <code>"asc"</code> or <code>"alpha"</code>
 to sort your data in ascending alphabetical order:</p>
@@ -488,9 +488,9 @@ to sort your data in ascending alphabetical order:</p>
 <p>This command will sort the carburettor counts alphabetically, which
 is useful when your data naturally follows an alphabetical order.</p>
 </div>
-<div class="section level5">
-<h5 id="sorting-with-a-custom-order">Sorting with a Custom Order<a class="anchor" aria-label="anchor" href="#sorting-with-a-custom-order"></a>
-</h5>
+<div class="section level4">
+<h4 id="sorting-with-a-custom-order">Sorting with a Custom Order<a class="anchor" aria-label="anchor" href="#sorting-with-a-custom-order"></a>
+</h4>
 <p>Sometimes, you may want to present your data in a specific order that
 doesn’t follow a standard sorting method. You can define a custom order
 by providing a manual vector of values:</p>
@@ -504,9 +504,9 @@ order of 4, 1, 6, and 8, regardless of their frequency or alphabetical
 order. This approach is particularly useful when you want to highlight
 certain categories or follow a logical sequence.</p>
 </div>
-<div class="section level5">
-<h5 id="limiting-data">Limiting Data<a class="anchor" aria-label="anchor" href="#limiting-data"></a>
-</h5>
+<div class="section level4">
+<h4 id="limiting-data">Limiting Data<a class="anchor" aria-label="anchor" href="#limiting-data"></a>
+</h4>
 <p>You might not always want to show every single item in your plot. For
 example, if you’re dealing with a lot of categories, you can limit the
 display to just the most frequent ones:</p>
@@ -519,9 +519,9 @@ display to just the most frequent ones:</p>
 simplifying the visualisation and making it easier to focus on the most
 important data.</p>
 </div>
-<div class="section level5">
-<h5 id="combining-sorting-with-limiting">Combining Sorting with Limiting<a class="anchor" aria-label="anchor" href="#combining-sorting-with-limiting"></a>
-</h5>
+<div class="section level4">
+<h4 id="combining-sorting-with-limiting">Combining Sorting with Limiting<a class="anchor" aria-label="anchor" href="#combining-sorting-with-limiting"></a>
+</h4>
 <p>Sorting can be combined with other features in <code><a href="../reference/plot2.html">plot2()</a></code>
 to create more sophisticated plots. For example, you might want to sort
 by frequency and also limit the number of items displayed:</p>
@@ -534,9 +534,9 @@ by frequency and also limit the number of items displayed:</p>
 sorted in descending order. This combination helps to declutter your
 visualisation and focus on the most significant parts of your data.</p>
 </div>
-<div class="section level5">
-<h5 id="visualising-sorting-options">Visualising Sorting Options<a class="anchor" aria-label="anchor" href="#visualising-sorting-options"></a>
-</h5>
+<div class="section level4">
+<h4 id="visualising-sorting-options">Visualising Sorting Options<a class="anchor" aria-label="anchor" href="#visualising-sorting-options"></a>
+</h4>
 <p>To illustrate the impact of different sorting options, let’s create a
 plot that uses a custom sort order and highlights the flexibility of
 <code><a href="../reference/plot2.html">plot2()</a></code>:</p>
@@ -550,37 +550,37 @@ custom order, with the “55-74” group first, followed by “75+” and then
 across the specified age groups.</p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="customising-colours">Customising Colours<a class="anchor" aria-label="anchor" href="#customising-colours"></a>
-</h4>
+<div class="section level3">
+<h3 id="customising-colours">Customising Colours<a class="anchor" aria-label="anchor" href="#customising-colours"></a>
+</h3>
 <p>Customising colours in <code><a href="../reference/plot2.html">plot2()</a></code> is intuitive and
 flexible. You can use pre-set colour scales like <code>viridis</code>,
 or define your own colours. The <code>colour</code> and
 <code>colour_fill</code> arguments control the appearance of your
 plot.</p>
-<div class="section level5">
-<h5 id="using-pre-set-colour-scales">Using Pre-set Colour Scales<a class="anchor" aria-label="anchor" href="#using-pre-set-colour-scales"></a>
-</h5>
+<div class="section level4">
+<h4 id="using-pre-set-colour-scales">Using Pre-set Colour Scales<a class="anchor" aria-label="anchor" href="#using-pre-set-colour-scales"></a>
+</h4>
 <p>For a quick and visually appealing colour scheme, you might use a
 <code>viridis</code> palette:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-22-1.png" width="576"></p>
 <p>This applies the <code>viridis</code> colour scale, which is
 particularly good for making sure your plot is accessible to those with
 colour vision deficiencies.</p>
 </div>
-<div class="section level5">
-<h5 id="defining-custom-colours">Defining Custom Colours<a class="anchor" aria-label="anchor" href="#defining-custom-colours"></a>
-</h5>
+<div class="section level4">
+<h4 id="defining-custom-colours">Defining Custom Colours<a class="anchor" aria-label="anchor" href="#defining-custom-colours"></a>
+</h4>
 <p>If you want more control, you can define specific colours for each
 category:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"6"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"8"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category.midpoint = 7</span><span style="color: #000000;"> (the current </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> scale centre)</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-23-1.png" width="576"></p>
 <p>You can use any colour that the implemented <code><a href="../reference/colour.html">colour()</a></code>
@@ -614,16 +614,16 @@ style of your university / company / etc.:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"OurOrganisation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c( Petal.Length, Petal.Width, Sepal.Length, Sepal.Width )</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " boxplot "</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-26-1.png" width="576"></p>
 <p>This approach gives you full creative control over the colour scheme,
 allowing you to match your plot’s aesthetics to your presentation or
 publication needs. Or even your organisational style.</p>
 </div>
-<div class="section level5">
-<h5 id="default-colours">Default Colours<a class="anchor" aria-label="anchor" href="#default-colours"></a>
-</h5>
+<div class="section level4">
+<h4 id="default-colours">Default Colours<a class="anchor" aria-label="anchor" href="#default-colours"></a>
+</h4>
 <p>At default, <code><a href="../reference/plot2.html">plot2()</a></code> sets no colours, meaning that it
 uses ggplot2 colours. With some simple R options, it is very easy to
 switch to another colour set.</p>
@@ -643,15 +643,15 @@ colour palette</a>:</p>
 <p><img src="plot2_files/figure-html/unnamed-chunk-34-1.png" width="672"></p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="advanced-plot-types-geographies-dumbbells-and-sankey-diagrams">Advanced Plot Types: Geographies, Dumbbells and Sankey Diagrams<a class="anchor" aria-label="anchor" href="#advanced-plot-types-geographies-dumbbells-and-sankey-diagrams"></a>
-</h4>
+<div class="section level3">
+<h3 id="advanced-plot-types-geographies-dumbbells-and-sankey-diagrams">Advanced Plot Types: Geographies, Dumbbells and Sankey Diagrams<a class="anchor" aria-label="anchor" href="#advanced-plot-types-geographies-dumbbells-and-sankey-diagrams"></a>
+</h3>
 <p><code><a href="../reference/plot2.html">plot2()</a></code> shines when it comes to more complex plot types.
 Let’s explore three advanced options: geography plots, dumbbell plots
 and Sankey diagrams.</p>
-<div class="section level5">
-<h5 id="plotting-geometries-sf-objects">Plotting geometries (<code>sf</code> objects)<a class="anchor" aria-label="anchor" href="#plotting-geometries-sf-objects"></a>
-</h5>
+<div class="section level4">
+<h4 id="plotting-geometries-sf-objects">Plotting geometries (<code>sf</code> objects)<a class="anchor" aria-label="anchor" href="#plotting-geometries-sf-objects"></a>
+</h4>
 <p>Objects of class <code>sf</code> (<em>simple feature</em>) are
 handled by <code><a href="../reference/plot2.html">plot2()</a></code> like any other data set;
 <code><a href="../reference/plot2.html">plot2()</a></code> applies spatial functions such as
@@ -663,14 +663,14 @@ background colour.</p>
 <code>sf</code> object:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category =  area_km2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">datalabels =  province</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category = area_km2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">datalabels = province</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">datalabels.centroid = TRUE</span><span style="color: #000000;">. Set to FALSE for a point-on-surface placing of datalabels.</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-36-1.png" width="576"></p>
 </div>
-<div class="section level5">
-<h5 id="dumbbell-plots-for-comparisons">Dumbbell Plots for Comparisons<a class="anchor" aria-label="anchor" href="#dumbbell-plots-for-comparisons"></a>
-</h5>
+<div class="section level4">
+<h4 id="dumbbell-plots-for-comparisons">Dumbbell Plots for Comparisons<a class="anchor" aria-label="anchor" href="#dumbbell-plots-for-comparisons"></a>
+</h4>
 <p>Dumbbell plots are excellent for comparing two categories side by
 side:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -683,9 +683,9 @@ side:</p>
 <p>This plot type is particularly useful for showing the difference
 between two related metrics across different groups.</p>
 </div>
-<div class="section level5">
-<h5 id="creating-sankey-diagrams">Creating Sankey Diagrams<a class="anchor" aria-label="anchor" href="#creating-sankey-diagrams"></a>
-</h5>
+<div class="section level4">
+<h4 id="creating-sankey-diagrams">Creating Sankey Diagrams<a class="anchor" aria-label="anchor" href="#creating-sankey-diagrams"></a>
+</h4>
 <p>Sankey diagrams are another powerful visualisation, perfect for
 showing flow or movement from one state to another:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
@@ -693,69 +693,11 @@ showing flow or movement from one state to another:</p>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BB00BB;">!</span> <span style="color: #BB00BB;">Input class 'table' was transformed using `as.data.frame()`</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = Freq</span><span style="color: #000000;"> since `as.data.table()` on a `table` results in a 'Freq' column</span></span></span>
-<span><span class="co">#&gt; [1] "Class"    "Age"      "Survived"</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-38-1.png" width="576"></p>
 <p>Sankey plots are a great way to visualise transitions, such as the
 survival rates of passengers on the Titanic across different classes and
 age groups.</p>
-</div>
-</div>
-<div class="section level4">
-<h4 id="customising-fonts-in-plot2">Customising Fonts in <code>plot2()</code><a class="anchor" aria-label="anchor" href="#customising-fonts-in-plot2"></a>
-</h4>
-<p>Another powerful feature of <code><a href="../reference/plot2.html">plot2()</a></code> is its flexibility
-with fonts. Whether you’re aiming for a professional look, something
-playful, or anything in between, <code><a href="../reference/plot2.html">plot2()</a></code> allows you to
-easily customise fonts to suit your needs.</p>
-<div class="section level5">
-<h5 id="using-system-fonts-and-google-fonts">Using System Fonts and Google Fonts<a class="anchor" aria-label="anchor" href="#using-system-fonts-and-google-fonts"></a>
-</h5>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> supports all installed system fonts, as well as
-over 1,400 Google Fonts, giving you an extensive range of choices for
-your plots. Missing fonts will be downloaded automatically, and the
-required DPI will be set for you, even in R Markdown outputs.</p>
-<p>Here’s how you can apply a custom font from Google Fonts:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>, text_factor <span class="op">=</span> <span class="fl">1.5</span>, </span>
-<span>        title <span class="op">=</span> <span class="st">"Custom Font Example"</span>, </span>
-<span>        x.title <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, </span>
-<span>        y.title <span class="op">=</span> <span class="st">"Horsepower"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-39-1.png" width="576"></p>
-<p>In this example, the <code>Rock Salt</code> font, a playful and
-hand-drawn style, is applied across the plot. The
-<code>text_factor</code> argument is used to scale the size of the text,
-ensuring readability and aesthetic balance.</p>
-</div>
-<div class="section level5">
-<h5 id="creating-consistent-themes-with-fonts">Creating Consistent Themes with Fonts<a class="anchor" aria-label="anchor" href="#creating-consistent-themes-with-fonts"></a>
-</h5>
-<p>By setting font options globally through R options, you can maintain
-consistent styling across multiple plots. This is particularly useful
-when preparing a series of visualisations for a report or
-presentation.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Now every plot will use the Roboto font by default</span></span>
-<span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, title <span class="op">=</span> <span class="st">"Consistent Font Example"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-40-1.png" width="576"></p>
-<p>In this example, all plots will now use the <code>Roboto</code> font,
-ensuring a consistent and professional appearance across your
-visualisations.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># reset again</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="cn">NULL</span>, plot2.colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p>Customising fonts in <code><a href="../reference/plot2.html">plot2()</a></code> is both flexible and
-straightforward, allowing you to tailor the typography of your plots to
-match your project’s style. Whether you’re using a system font or one of
-the many Google Fonts, <code><a href="../reference/plot2.html">plot2()</a></code> makes it easy to create
-visually appealing and consistent plots with minimal effort.</p>
 </div>
 </div>
 <div class="section level3">
@@ -770,61 +712,61 @@ are designed to integrate seamlessly with <code><a href="../reference/plot2.html
 </h4>
 <p>Adding a line to an existing plot is as easy as calling
 <code><a href="../reference/add_type.html">add_line()</a></code>:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = " point "</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, legend.value <span class="op">=</span> <span class="st">"Average HP"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-42-1.png" width="576"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-39-1.png" width="576"></p>
 <p>This adds a line at the mean horsepower, with a red colour and a
 legend entry labeled “Average HP.”</p>
 <p>Multiple lines for a single axis are also supported, for example to
 show the <code><a href="https://rdrr.io/r/base/range.html" class="external-link">range()</a></code> or <code><a href="https://rdrr.io/r/stats/fivenum.html" class="external-link">fivenum()</a></code> of an axis:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"blue"</span>, legend.value <span class="op">=</span> <span class="st">"Min/Max HP"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-43-1.png" width="576"></p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<p><img src="plot2_files/figure-html/unnamed-chunk-40-1.png" width="576"></p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Also Works On ggplot()"</span><span class="op">)</span></span>
 <span><span class="va">p2</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"blue"</span>, legend.value <span class="op">=</span> <span class="st">"Min/Max HP"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-43-2.png" width="576"></p>
-<div class="section level5">
-<h5 id="adding-points">Adding Points<a class="anchor" aria-label="anchor" href="#adding-points"></a>
-</h5>
+<p><img src="plot2_files/figure-html/unnamed-chunk-40-2.png" width="576"></p>
+</div>
+<div class="section level4">
+<h4 id="adding-points">Adding Points<a class="anchor" aria-label="anchor" href="#adding-points"></a>
+</h4>
 <p>Points can be added to highlight specific values or observations:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">4</span>, size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-44-1.png" width="576"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-41-1.png" width="576"></p>
 <p>In this example, we add a point at the median <code>mpg</code> and
 <code>hp</code>, using a cross shape and a larger size for emphasis.</p>
 </div>
-<div class="section level5">
-<h5 id="adding-columns">Adding Columns<a class="anchor" aria-label="anchor" href="#adding-columns"></a>
-</h5>
+<div class="section level4">
+<h4 id="adding-columns">Adding Columns<a class="anchor" aria-label="anchor" href="#adding-columns"></a>
+</h4>
 <p>Adding columns is just as straightforward, and can be used to create
 bar charts or other similar visualisations:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_col</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cyl</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" width="576"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-42-1.png" width="576"></p>
 <p>Here, we add columns based on the number of cylinders, making it easy
 to compare the counts across different groups.</p>
-</div>
 </div>
 <div class="section level4">
 <h4 id="plotting-error-bars">Plotting Error Bars<a class="anchor" aria-label="anchor" href="#plotting-error-bars"></a>
 </h4>
 <p>Plotting error bars is just as simple:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_errorbar</a></span><span class="op">(</span>min <span class="op">=</span> <span class="va">hp</span> <span class="op">-</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="va">hp</span> <span class="op">+</span> <span class="fl">10</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-46-1.png" width="576"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-43-1.png" width="576"></p>
 <p>This adds error bars to the plot, showing a range of ±10 around the
 <code>hp</code> values.</p>
 </div>
@@ -833,15 +775,73 @@ to compare the counts across different groups.</p>
 </h4>
 <p>For those working with geographic data, <code><a href="../reference/add_type.html">add_sf()</a></code> makes
 it easy to integrate spatial features:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_sf</a></span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category =  area_km2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">datalabels =  province</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category = area_km2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">datalabels = province</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">datalabels.centroid = TRUE</span><span style="color: #000000;">. Set to FALSE for a point-on-surface placing of datalabels.</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-47-1.png" width="576"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-44-1.png" width="576"></p>
 <p>This example adds spatial features to a plot of the Netherlands, with
 an extra border around the provinces.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="customising-fonts-in-plot2">Customising Fonts in <code>plot2()</code><a class="anchor" aria-label="anchor" href="#customising-fonts-in-plot2"></a>
+</h3>
+<p>Another powerful feature of <code><a href="../reference/plot2.html">plot2()</a></code> is its flexibility
+with fonts. Whether you’re aiming for a professional look, something
+playful, or anything in between, <code><a href="../reference/plot2.html">plot2()</a></code> allows you to
+easily customise fonts to suit your needs.</p>
+<div class="section level4">
+<h4 id="using-system-fonts-and-google-fonts">Using System Fonts and Google Fonts<a class="anchor" aria-label="anchor" href="#using-system-fonts-and-google-fonts"></a>
+</h4>
+<p><code><a href="../reference/plot2.html">plot2()</a></code> supports all installed system fonts, as well as
+over 1,400 Google Fonts, giving you an extensive range of choices for
+your plots. Missing fonts will be downloaded automatically, and the
+required DPI will be set for you, even in R Markdown outputs.</p>
+<p>Here’s how you can apply a custom font from Google Fonts:</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>, text_factor <span class="op">=</span> <span class="fl">1.5</span>, </span>
+<span>        title <span class="op">=</span> <span class="st">"Custom Font Example"</span>, </span>
+<span>        x.title <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, </span>
+<span>        y.title <span class="op">=</span> <span class="st">"Horsepower"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" width="576"></p>
+<p>In this example, the <code>Rock Salt</code> font, a playful and
+hand-drawn style, is applied across the plot. The
+<code>text_factor</code> argument is used to scale the size of the text,
+ensuring readability and aesthetic balance.</p>
+</div>
+<div class="section level4">
+<h4 id="creating-consistent-themes-with-fonts">Creating Consistent Themes with Fonts<a class="anchor" aria-label="anchor" href="#creating-consistent-themes-with-fonts"></a>
+</h4>
+<p>By setting font options globally through R options, you can maintain
+consistent styling across multiple plots. This is particularly useful
+when preparing a series of visualisations for a report or
+presentation.</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="st">"Syne"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Now every plot will use the Roboto font by default</span></span>
+<span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, text_factor <span class="op">=</span> <span class="fl">1.5</span>, title <span class="op">=</span> <span class="st">"Consistent Font Example"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Downloaded font </span><span style="color: #0000BB;">https://fonts.google.com/specimen/Syne</span><span style="color: #000000;"> from Google Fonts</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-46-1.png" width="576"></p>
+<p>In this example, all plots will now use the <code>Roboto</code> font,
+ensuring a consistent and professional appearance across your
+visualisations.</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># reset again</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="cn">NULL</span>, plot2.colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p>Customising fonts in <code><a href="../reference/plot2.html">plot2()</a></code> is both flexible and
+straightforward, allowing you to tailor the typography of your plots to
+match your project’s style. Whether you’re using a system font or one of
+the many Google Fonts, <code><a href="../reference/plot2.html">plot2()</a></code> makes it easy to create
+visually appealing and consistent plots with minimal effort.</p>
 </div>
 </div>
 </div>
@@ -874,9 +874,9 @@ steps that would otherwise require additional code blocks using, e.g.,
 <code><a href="../reference/plot2.html">plot2()</a></code> alone can drastically reduce the complexity of your
 code, especially when working with large and multifaceted datasets.</p>
 </div>
-<div class="section level4">
-<h4 id="a-natural-extension-of-ggplot2">A Natural Extension of <code>ggplot2</code><a class="anchor" aria-label="anchor" href="#a-natural-extension-of-ggplot2"></a>
-</h4>
+<div class="section level3">
+<h3 id="a-natural-extension-of-ggplot2">A Natural Extension of <code>ggplot2</code><a class="anchor" aria-label="anchor" href="#a-natural-extension-of-ggplot2"></a>
+</h3>
 <p><code>ggplot2</code> has established itself as a cornerstone of data
 visualisation in R, and for good reason. Its layer-based approach and
 extensive customisation options make it incredibly powerful.
@@ -891,7 +891,6 @@ allowing users to add layers and elements with minimal code, maintaining
 the flexibility of <code>ggplot2</code> while reducing the need for
 repetitive boilerplate. This makes it easier to experiment with
 different visualisations and iterate quickly on your designs.</p>
-</div>
 <div class="section level4">
 <h4 id="flexibility-without-complexity">Flexibility Without Complexity<a class="anchor" aria-label="anchor" href="#flexibility-without-complexity"></a>
 </h4>
@@ -957,11 +956,14 @@ creating complex plots in R. By addressing these challenges head-on,
 smoother, more enjoyable, and ultimately more productive.</p>
 </div>
 </div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
