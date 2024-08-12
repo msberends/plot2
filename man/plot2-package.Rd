@@ -3,7 +3,7 @@
 \docType{package}
 \name{plot2-package}
 \alias{plot2-package}
-\title{plot2: A plotting Assistant for Fast 'ggplot2' Plotting}
+\title{plot2: A Plotting Assistant for Fast 'ggplot2' Visualisations}
 \description{
 A streamlined extension of 'ggplot2' designed to simplify and accelerate the creation of data visualisations. 'plot2' automates common tasks such as axis handling, plot type selection, and data transformation, allowing users to create complex, publication-ready plots with minimal code. It integrates seamlessly with the tidyverse and retains full compatibility with 'ggplot2', while offering additional conveniences like enhanced sorting, faceting, and custom theming.
 }

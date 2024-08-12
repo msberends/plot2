@@ -554,7 +554,7 @@ plot2 <- function(.data,
   }
 }
 
-#' @importFrom dplyr mutate vars group_by across summarise select bind_cols filter as_tibble any_of
+#' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of
 #' @importFrom forcats fct_relabel
 #' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete
 #' @importFrom tidyr pivot_longer
@@ -880,7 +880,7 @@ plot2_exec <- function(.data,
           # apply summarise_function
           group_by(across(c(plot2_env$x_variable_names, get_x_name(.data), get_category_name(.data), get_facet_name(.data),
                             matches("_var_(x|category|facet)")))) |> 
-          summarise(`_var_y` = summarise_function(`_var_y`),
+          reframe(`_var_y` = summarise_function(`_var_y`),
                     .groups = "drop") |> 
           mutate(y = `_var_y`,
                  category = `_var_category`)

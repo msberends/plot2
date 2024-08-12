@@ -586,7 +586,6 @@ validate_data <- function(df,
   # sankey plot reorganisation to be able to use {ggforce} later on
   if (dots$type_backup == "sankey") {
     x_names <- plot2_env$x_variable_names
-    print(paste(x_names))
     df_new <- df |> 
       mutate(`_sankey_split` = df |> pull(x_names[1]) |> as.character(),
              `_sankey_x` = x_names[1],
@@ -2406,10 +2405,10 @@ validate_font <- function(font) {
   if (NROW(fonts) == 0) {
     # font does not exist yet - try to download from Google Fonts
     tryCatch({
-      plot2_message("Downloading font ", font_blue(paste0("\033]8;;https://fonts.google.com/specimen/", gsub(" ", "+", font.bak), "\a", font.bak, "\033]8;;\a")), " from Google Fonts")
       font_urls <- showtextdb::google_fonts(font.bak)
       # install and register using showtextdb
       suppressMessages(showtextdb::font_install(font_urls, quiet = TRUE))
+      plot2_message("Downloaded font ", font_blue(font_url(paste0("https://fonts.google.com/specimen/", gsub(" ", "+", font.bak)), font.bak)), " from Google Fonts")
       showtextdb::load_showtext_fonts()
     }, error = function(e) invisible())
     

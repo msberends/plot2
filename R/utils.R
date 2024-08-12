@@ -97,33 +97,40 @@ like <- function(x, pattern) {
 #' @importFrom crayon black white
 font_black <- function(..., collapse = " ") {
   if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
-    paste0(white(...), collapse = collapse)
+    white(paste0(c(...), collapse = collapse))
   } else {
-    paste0(black(...), collapse = collapse)
+    black(paste0(c(...), collapse = collapse))
   }
 }
 #' @importFrom crayon blue
 font_blue <- function(..., collapse = " ") {
-  paste0(blue(...), collapse = collapse)
+  blue(paste0(c(...), collapse = collapse))
 }
 #' @importFrom crayon bold
 font_bold <- function(..., collapse = " ") {
-  paste0(bold(...), collapse = collapse)
+  bold(paste0(c(...), collapse = collapse))
 }
 #' @importFrom crayon magenta
 font_magenta <- function(..., collapse = " ") {
-  paste0(magenta(...), collapse = collapse)
+  magenta(paste0(c(...), collapse = collapse))
 }
 #' @importFrom crayon strip_style
 font_stripstyle <- function(..., collapse = " ") {
-  paste0(strip_style(...), collapse = collapse)
+  strip_style(paste0(c(...), collapse = collapse))
+}
+font_url <- function(url, txt = url) {
+  if (tryCatch(cli::ansi_has_hyperlink_support(), error = function(e) FALSE)) {
+    paste0("\033]8;;", url, "\a", txt, "\033]8;;\a")
+  } else {
+    url
+  }
 }
 #' @importFrom crayon black white
 font_white <- function(..., collapse = " ") {
   if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
-    paste0(black(...), collapse = collapse)
+    black(paste0(c(...), collapse = collapse))
   } else {
-    paste0(white(...), collapse = collapse)
+    white(paste0(c(...), collapse = collapse))
   }
 }
 

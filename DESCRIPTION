@@ -33,6 +33,7 @@ Imports:
   viridisLite (>= 0.4.0)
 Suggests: 
   AMR (>= 2.1.0),
+  cli (>= 3.6.0),
   glue (>= 1.2.0),
   grDevices,
   grid (>= 4.3.0),
