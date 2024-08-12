@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -17,12 +12,5 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-on:
-  push:
-    # only run when pushed to the 'main' branch
-    branches: 'main' 
-
-jobs:
-  website:
-    uses: certe-medical-epidemiology/template/.github/workflows/reusable-workflow-website.yml@main
-    secrets: inherit
+#' @keywords internal
+"_PACKAGE"

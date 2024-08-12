@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -18,6 +13,7 @@
 # ===================================================================== #
 
 plot2_env <- new.env(hash = FALSE)
+plot2_env$reg_cols <- list()
 
 globalVariables(c(".",
                   "_new_title",
@@ -73,63 +69,64 @@ globalVariables(c(".",
                   "ymin",
                   "year"))
 
-#' @importFrom dplyr n
-#' @export
-dplyr::n
+like <- function(x, pattern) {
+  x <- tolower(x)
+  pattern <- tolower(pattern)
+  if (length(pattern) == 1) {
+    # only one pattern
+    grepl(pattern, x, ignore.case = FALSE, fixed = FALSE,  perl = TRUE)
+  } else {
+    # multiple patterns
+    if (length(x) == 1) {
+      x <- rep(x, length(pattern))
+    } else {
+      stop("'x' and 'pattern' must be of equal length", call. = FALSE)
+    }
+    unlist(mapply(FUN = grepl, x = x, pattern = pattern, 
+                  fixed = FALSE, perl = TRUE, MoreArgs = list(ignore.case = FALSE), 
+                  SIMPLIFY = FALSE, USE.NAMES = FALSE))
+  }
+}
+`%like%` <- function(x, pattern) {
+  like(x = x, pattern = pattern)
+}
+`%unlike%` <- function(x, pattern) {
+  !like(x = x, pattern = pattern)
+}
 
-#' @importFrom dplyr n_distinct
-#' @export
-dplyr::n_distinct
+#' @importFrom crayon black white
+font_black <- function(..., collapse = " ") {
+  if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
+    paste0(white(...), collapse = collapse)
+  } else {
+    paste0(black(...), collapse = collapse)
+  }
+}
+#' @importFrom crayon blue
+font_blue <- function(..., collapse = " ") {
+  paste0(blue(...), collapse = collapse)
+}
+#' @importFrom crayon bold
+font_bold <- function(..., collapse = " ") {
+  paste0(bold(...), collapse = collapse)
+}
+#' @importFrom crayon magenta
+font_magenta <- function(..., collapse = " ") {
+  paste0(magenta(...), collapse = collapse)
+}
+#' @importFrom crayon strip_style
+font_stripstyle <- function(..., collapse = " ") {
+  paste0(strip_style(...), collapse = collapse)
+}
+#' @importFrom crayon black white
+font_white <- function(..., collapse = " ") {
+  if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
+    paste0(black(...), collapse = collapse)
+  } else {
+    paste0(white(...), collapse = collapse)
+  }
+}
 
-#' @importFrom tidyselect everything
-#' @export
-tidyselect::everything
-
-#' @importFrom tidyselect starts_with
-#' @export
-tidyselect::starts_with
-
-#' @importFrom tidyselect ends_with
-#' @export
-tidyselect::ends_with
-
-#' @importFrom tidyselect matches
-#' @export
-tidyselect::matches
-
-#' @importFrom tidyselect where
-#' @export
-tidyselect::where
-
-#' @importFrom dplyr first
-#' @export
-dplyr::first
-
-#' @importFrom dplyr last
-#' @export
-dplyr::last
-
-#' @importFrom dplyr all_of
-#' @export
-dplyr::all_of
-
-#' @importFrom dplyr any_of
-#' @export
-dplyr::any_of
-
-#' @importFrom certestyle dec_mark
-#' @export
-certestyle::dec_mark
-
-#' @importFrom certestyle big_mark
-#' @export
-certestyle::big_mark
-
-#' @importFrom certestyle colourpicker
-#' @export
-certestyle::colourpicker
-
-#' @importFrom certestyle font_black font_blue font_magenta font_white font_bold
 plot2_message <- function(..., print = interactive() | Sys.getenv("IN_PKGDOWN") != "", type = "info") {
   # at default, only prints in interactive mode and for the website generation
   if (isTRUE(print)) {
@@ -667,7 +664,6 @@ digit_to_text <- function(x) {
 }
 
 #' @importFrom rlang cnd_message
-#' @importFrom certestyle font_stripstyle
 format_error <- function(e, replace = character(0), by = character(0)) {
   if (inherits(e, "rlang_error")) {
     txt <- cnd_message(e)

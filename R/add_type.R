@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -112,49 +107,25 @@
 #'           legend.value = "This *is* **some** symbol: $beta$")
 #' 
 #' # plotting error bars was never easier
-#' if (require("dplyr", warn.conflicts = FALSE)) {   
-#'   df2 <- df |> 
-#'     as_tibble() |> 
-#'     slice(1:25) |>
-#'     filter(var_1 <= 50) |> 
-#'     mutate(error1 = var_2 * 0.9,
-#'            error2 = var_2 * 1.1)
-#'   
-#'   print(df2)
-#'   
-#'   df2 |> 
-#'     plot2(type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
-#'     # add the error bars, simply by referencing the lower and upper values
-#'     add_errorbar(error1, error2)
-#' }
+#' library("dplyr", warn.conflicts = FALSE)
+#' df2 <- df |> 
+#'   as_tibble() |> 
+#'   slice(1:25) |>
+#'   filter(var_1 <= 50) |> 
+#'   mutate(error1 = var_2 * 0.9,
+#'          error2 = var_2 * 1.1)
 #' 
-#' if (require("certestats", warn.conflicts = FALSE)) {
-#'    df |>
-#'      plot2() |> 
-#'      add_line(y = ewma(var_2, 0.75),
-#'               colour = "certeroze",
-#'               linewidth = 1)
-#' }
+#' df
 #' 
-#' if (require("certegis")) {
-#'   hospitals <- geocode(c("Martini Ziekenhuis",
-#'                          "Medisch Centrum Leeuwarden",
-#'                          "Tjongerschans Heerenveen",
-#'                          "Treant Emmen"))
-#'   geo_gemeenten |>
-#'     crop_certe() |>
-#'     plot2(datalabels = FALSE,
-#'           category.title = "Inhabitants",
-#'           colour_fill = c("white", "certeblauw2")) |>
-#'     add_sf(hospitals,
-#'            colour = "certeroze",
-#'            datalabels = place) |> 
-#'     add_sf(geo_provincies |> crop_certe(),
-#'            colour_fill = NA,
-#'            colour = "certeblauw",
-#'            linetype = 2,
-#'            linewidth = 0.5)
-#' }
+#' df2 |> 
+#'   plot2(type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
+#'   # add the error bars, simply by referencing the lower and upper values
+#'   add_errorbar(error1, error2)
+#' 
+#' # adding sf objects is just as convenient as all else
+#' plot2(netherlands)
+#' plot2(netherlands) |>
+#'   add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 1)
 add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move = 0) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 model.", call. = FALSE)
@@ -204,7 +175,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   x_part <- plot$data |>
     mutate(`_row_index` = seq_len(nrow(plot$data))) |>
     # this also works if category is NULL:
-    group_by(across(category_name)) |> 
+    group_by(across(any_of(category_name))) |> 
     reframe(x = {{ x }},
             `_row_index` = first(`_row_index`)) |> 
     arrange(`_row_index`) |> 
@@ -212,7 +183,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   y_part <- plot$data |>
     mutate(`_row_index` = seq_len(nrow(plot$data))) |>
     # this also works if category is NULL:
-    group_by(across(category_name)) |> 
+    group_by(across(any_of(category_name))) |> 
     reframe(y = {{ y }},
             `_row_index` = first(`_row_index`)) |> 
     arrange(`_row_index`) |> 
@@ -300,10 +271,10 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   }
   
   if (!is.null(out$params$colour)) {
-    out$params$colour <- colourpicker(out$params$colour)
+    out$params$colour <- colour(out$params$colour)
   }
   if (!is.null(out$params$fill)) {
-    out$params$fill <- colourpicker(out$params$fill)
+    out$params$fill <- colour(out$params$fill)
   }
   
   return(out)
@@ -312,7 +283,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 #' @rdname add_type
 #' @importFrom ggplot2 geom_line aes scale_linetype_manual
 #' @param x,y aesthetic arguments
-#' @param colour,colour_fill colour of the line or column, will be evaluated with [certestyle::colourpicker()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
+#' @param colour,colour_fill colour of the line or column, will be evaluated with [colour()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
 #' @details The function [add_line()] will add:
 #' * [`geom_hline()`][ggplot2::geom_hline()] if only `y` is provided;
 #' * [`geom_vline()`][ggplot2::geom_vline()] if only `x` is provided;
@@ -362,7 +333,7 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
     p <- p +
       geom_line(data = data.frame(x = c(Inf, Inf), y = c(Inf, Inf), group = c(legend.value, legend.value)),
                 mapping = aes(x = x, y = y, linetype = group, group = group),
-                colour = colourpicker(colour[1L]),
+                colour = colour(colour[1L]),
                 linewidth = validate_linewidth(geom_data$params$linewidth, type = "geom_line", type_backup = "geom_line"),
                 inherit.aes = FALSE) +
       scale_linetype_manual(name = NULL, values = stats::setNames(linetype, legend.value), labels = label_fn)
@@ -404,7 +375,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
     p <- p +
       geom_point(data = data.frame(x = c(Inf, Inf), y = c(-Inf, -Inf), group = c(legend.value, legend.value)),
                  mapping = aes(x = x, y = y, shape = group, group = group),
-                 colour = colourpicker(colour[1L]),
+                 colour = colour(colour[1L]),
                  size = validate_size(geom_data$params$size, type = "geom_point", type_backup = "geom_point"),
                  inherit.aes = FALSE) +
       scale_shape_manual(name = NULL, values = stats::setNames(16, legend.value), labels = label_fn)
@@ -414,7 +385,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_line aes scale_linewidth_manual
+#' @importFrom ggplot2 geom_line aes geom_col scale_linewidth_manual
 #' @export
 add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), colour_fill, width, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is.ggplot(plot)) {
@@ -448,8 +419,8 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
     p <- p +
       geom_col(data = data.frame(x = c(Inf, Inf), y = c(Inf, Inf), group = c(legend.value, legend.value)),
                mapping = aes(x = x, y = y, linewidth = group, group = group),
-               colour = colourpicker(colour[1L]),
-               fill = colourpicker(colour[1L]),
+               colour = colour(colour[1L]),
+               fill = colour(colour[1L]),
                inherit.aes = FALSE) +
       scale_linewidth_manual(name = NULL, values = stats::setNames(0.25, legend.value), labels = label_fn)
   }
@@ -462,7 +433,6 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 #' @importFrom dplyr reframe
 #' @importFrom ggplot2 aes
 #' @importFrom rlang as_label
-#' @importFrom certestyle colourpicker
 #' @details
 #' The function [add_errorbar()] only adds error bars to the `y` values, see *Examples*.
 #' @export
@@ -479,7 +449,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   # build additional parameters
   params <- list(inherit.aes = inherit.aes)
   if (!missing(colour) || !isTRUE(inherit.aes) || !"colour" %in% names(plot$mapping)) {
-    params <- c(params, list(colour = colourpicker(colour)))
+    params <- c(params, list(colour = colour(colour)))
   }
   params <- c(params, list(width = width))
   if (length(list(...)) > 0) {
@@ -495,13 +465,12 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
 }
 
 #' @rdname add_type
-#' @param sf_data an 'sf' [data.frame], such as the outcome of [certegis::geocode()]
+#' @param sf_data an 'sf' [data.frame]
 #' @param datalabels a column of `sf_data` to add as label below the points
 #' @param datalabels.colour,datalabels.size,datalabels.angle,datalabels.font properties of `datalabels`
 #' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
 #' @importFrom dplyr mutate
 #' @importFrom ggplot2 geom_sf geom_sf_text aes is.ggplot
-#' @importFrom certestyle colourpicker
 #' @export
 add_sf <- function(plot,
                    sf_data,
@@ -543,8 +512,8 @@ add_sf <- function(plot,
             inherit.aes = inherit.aes,
             size = size,
             linewidth = linewidth,
-            colour = colourpicker(colour),
-            fill = colourpicker(colour_fill),
+            colour = colour(colour),
+            fill = colour(colour_fill),
             ...)
   
   if (tryCatch(!is.null(datalabels), error = function(e) TRUE)) {
@@ -568,7 +537,7 @@ add_sf <- function(plot,
                    family = datalabels.font,
                    angle = datalabels.angle,
                    nudge_y = datalabels.nudge_y,
-                   colour = colourpicker(colour),
+                   colour = colour(colour),
                    fun.geometry = function(x) {
                      x[!sf::st_is_valid(x)] <- sf::st_point()
                      suppressWarnings(sf::st_point_on_surface(sf::st_zm(x)))

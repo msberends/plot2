@@ -225,7 +225,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{additional settings for the plotting direction \code{facet}}
 
-\item{facet.fixed_y}{a \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the \link[certestats:distribution_metrics]{coefficient of variation} (sd divided by mean) of the maximum values of y is less than 15\%.}
+\item{facet.fixed_y}{a \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (sd divided by mean) of the maximum values of y is less than 15\%.}
 
 \item{facet.fixed_x}{a \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
 
@@ -237,9 +237,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.focus}{a value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
 
-\item{colour}{colour(s) to set, will be evaluated with \code{\link[certestyle:colourpicker]{colourpicker()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can also be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can also be used to manually sort the values of \code{category}.}
+\item{colour}{colour(s) to set, will be evaluated with \code{\link[=colour]{colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can also be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can also be used to manually sort the values of \code{category}.}
 
-\item{colour_fill}{colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[certestyle:colourpicker]{colourpicker()}}}
+\item{colour_fill}{colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=colour]{colour()}}}
 
 \item{colour_opacity}{amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent)}
 
@@ -283,7 +283,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y.age}{a \link{logical} to indicate whether the y labels and breaks should be formatted as ages in years}
 
-\item{y.scientific, y_secondary.scientific}{a \link{logical} to indicate whether the y labels should be formatted in scientific notation, using \code{\link[certestyle:format2]{format2_scientific()}}. Defaults to \code{TRUE} only if the range of the y values spans more than \code{10e5}.}
+\item{y.scientific, y_secondary.scientific}{a \link{logical} to indicate whether the y labels should be formatted in scientific notation. Defaults to \code{TRUE} only if the range of the y values spans more than \code{10e5}.}
 
 \item{y.percent, y_secondary.percent}{a \link{logical} to indicate whether the y labels should be formatted as percentages}
 
@@ -291,7 +291,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y_secondary}{values to use for plotting along the secondary y axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.}
 
-\item{y_secondary.colour, y_secondary.colour_fill}{colours to set for the secondary y axis, will be evaluated with \code{\link[certestyle:colourpicker]{colourpicker()}}}
+\item{y_secondary.colour, y_secondary.colour_fill}{colours to set for the secondary y axis, will be evaluated with \code{\link[=colour]{colour()}}}
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{settings for the plotting direction \code{category}.}
 
@@ -394,7 +394,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{theme}{a valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
-\item{background}{the background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[certestyle:colourpicker]{colourpicker()}}. Only applies when \code{theme} is not \code{NULL}.}
+\item{background}{the background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=colour]{colour()}}. Only applies when \code{theme} is not \code{NULL}.}
 
 \item{markdown}{a \link{logical} to turn all labels and titles into \link{plotmath} expressions, by converting common markdown language using the \code{\link[=md_to_expression]{md_to_expression()}} function (defaults to \code{TRUE})}
 
@@ -561,7 +561,7 @@ correlation_matrix |>
   plot2()
 
 correlation_matrix |> 
-  plot2(colour = c("certeblauw2", "white", "certeroze2"),
+  plot2(colour = c("blue3", "white", "red3"),
         datalabels = TRUE,
         category.title = "*r*-value",
         title =  "Correlation matrix")
@@ -578,37 +578,10 @@ lm(mpg ~ hp, data = mtcars) |>
         title = "Titles/captions *support* **markdown**",
         subtitle = "Axis titles contain the square notation: x^2")
 
-# plot2() also has various other S3 implementations:
-
-# QC plots, according to e.g. Nelson's Quality Control Rules
-if (require("certestats", warn.conflicts = FALSE)) {
-  rnorm(250, mean = 10, sd = 1) |> 
-    qc_test() |> 
-    plot2()
-}
-        
 # sf objects (geographic plots, 'simple features') are also supported
 if (require("sf")) {
   netherlands |> 
     plot2(datalabels = paste0(province, "\n", round(area_km2)))
-}
-
-# Antimicrobial resistance (AMR) data analysis
-if (require("AMR")) {
-  options(AMR_locale = "nl")
-  
-  example_isolates[, c("mo", penicillins())] |>
-    bug_drug_combinations(FUN = mo_gramstain) |>
-    plot2(y.percent_break = 0.25)
-}
-if (require("AMR") & require("dplyr")) {
-  example_isolates |>
-    select(date, NIT, FOS, AMC) |> 
-    group_by(year = format(date, "\%Y")) |>
-    sir_df() |>
-    filter(year >= 2015) |>
-    plot2(datalabels = paste0(round(value * 100), "\%\nn = ", isolates),
-          y.percent_break = 0.125)
 }
 
 # # support for any font

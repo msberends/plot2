@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -17,7 +12,6 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' @importFrom certestyle font_blue font_black
 #' @importFrom dplyr group_by across summarise n_distinct n
 validate_type <- function(type, df = NULL) {
   type.bak <- type
@@ -123,7 +117,6 @@ validate_legend.position <- function(legend.position) {
 
 #' @importFrom dplyr select pull mutate arrange across if_all cur_column filter distinct group_by summarise bind_rows
 #' @importFrom tidyselect starts_with matches
-#' @importFrom certestyle font_bold font_blue font_magenta font_black
 validate_data <- function(df,
                           misses_x,
                           misses_category,
@@ -442,7 +435,7 @@ validate_data <- function(df,
     df <- df |>
       mutate(`_var_category` = as.character(`_var_category`))
   }
-
+  
   # remove infinite values
   if (has_y(df) && any(is.infinite(get_y(df)), na.rm = TRUE)) {
     inf_values <- sum(is.infinite(get_y(df)))
@@ -473,7 +466,7 @@ validate_data <- function(df,
     complete_direction("x", has_x(df), dots$x.complete) |> 
     complete_direction("category", has_category(df), dots$category.complete) |> 
     complete_direction("facet", has_facet(df), dots$facet.complete)
-    
+  
   # remove or replace NAs
   rows_with_NA <- df |>
     select(c(get_x_name(df), get_category_name(df), get_facet_name(df),
@@ -593,6 +586,7 @@ validate_data <- function(df,
   # sankey plot reorganisation to be able to use {ggforce} later on
   if (dots$type_backup == "sankey") {
     x_names <- plot2_env$x_variable_names
+    print(paste(x_names))
     df_new <- df |> 
       mutate(`_sankey_split` = df |> pull(x_names[1]) |> as.character(),
              `_sankey_x` = x_names[1],
@@ -736,8 +730,6 @@ validate_taxonomy <- function(df) {
 
 #' @importFrom ggplot2 scale_x_discrete scale_x_date scale_x_datetime scale_x_continuous expansion waiver
 #' @importFrom scales reverse_trans pretty_breaks
-#' @importFrom cleaner format_datetime
-#' @importFrom certestyle format2
 validate_x_scale <- function(values,
                              x.date_breaks,
                              x.date_labels,
@@ -830,14 +822,14 @@ validate_x_scale <- function(values,
   if (inherits(values, "Date")) {
     scale_x_date(position = x.position,
                  date_breaks = x.date_breaks,
-                 date_labels = format_datetime(x.date_labels),
+                 date_labels = posix_date_format(x.date_labels),
                  expand = x.expand,
                  limits = x.limits, 
                  labels = if (is.null(x.labels)) waiver() else x.labels)
   } else if (inherits(values, "POSIXt")) {
     scale_x_datetime(position = x.position,
                      date_breaks = x.date_breaks,
-                     date_labels = format_datetime(x.date_labels),
+                     date_labels = posix_date_format(x.date_labels),
                      expand = x.expand,
                      limits = x.limits, 
                      labels = if (is.null(x.labels)) waiver() else x.labels)
@@ -906,7 +898,6 @@ validate_x_scale <- function(values,
 #' @importFrom ggplot2 waiver expansion scale_y_continuous sec_axis
 #' @importFrom cleaner as.percentage
 #' @importFrom scales pretty_breaks
-#' @importFrom certestyle format2 format2_scientific
 validate_y_scale <- function(df,
                              type,
                              y.24h,
@@ -1094,7 +1085,7 @@ validate_y_scale <- function(df,
           if (isTRUE(is_scientific)) {
             plot2_message("Assuming ", font_blue("y.scientific = TRUE"))
           }
-          # scientific notation or non-unique labels, use expression function from certestyle
+          # scientific notation or non-unique labels
           format2_scientific(x, decimal.mark = dec, big.mark = big)
         } else {
           format2(x, decimal.mark = dec, big.mark = big)
@@ -1234,7 +1225,6 @@ validate_y_scale <- function(df,
 }
 
 #' @importFrom ggplot2 scale_colour_gradient2 scale_colour_gradient scale_colour_gradientn expansion guide_colourbar element_text
-#' @importFrom certestyle format2
 #' @importFrom cleaner as.percentage
 #' @importFrom scales pretty_breaks
 validate_category_scale <- function(values,
@@ -1480,7 +1470,6 @@ validate_category_scale <- function(values,
 }
 
 #' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter
-#' @importFrom certestyle font_blue font_black
 generate_geom <- function(type,
                           df,
                           stacked,
@@ -1662,7 +1651,6 @@ generate_geom <- function(type,
   }
 }
 
-#' @importFrom certestyle colourpicker add_white
 validate_colour <- function(df,
                             type,
                             type_backup,
@@ -1673,61 +1661,41 @@ validate_colour <- function(df,
                             horizontal) {
   
   if (is.numeric(get_category(df)) || is_date(get_category(df))) {
-    viridis_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "rocket", "mako", "turbo")
     colour.bak <- colour
     # this is for validate_category_scale()
     if (length(colour) == 1 && !is.na(colour)) {
-      if (colour == "certe") {
-        # divergent Certe scale
-        colour <- colourpicker(c("certeblauw0", "certegroen", "certegeel", "certeroze"),
-                               opacity = colour_opacity)
-      } else if (colour %like% "certe([1-6]+)$") {
-        # take Certe colours
-        colour <- colourpicker(colour, 4, opacity = colour_opacity)
-      } else if (colour %in% viridis_colours) {
+      if (colour %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour)) > 1) {
+        colour <- colour(colour, 4, opacity = colour_opacity)
+      } else if (colour %in% viridisLite_colours) {
         # generate viridis colour
-        colour <- colourpicker(colour, 5, opacity = colour_opacity)
+        colour <- colour(colour, 5, opacity = colour_opacity)
       } else {
-        colour <- colourpicker(colour, opacity = colour_opacity)
+        colour <- colour(colour, opacity = colour_opacity)
       }
     } else {
-      colour <- colourpicker(colour, opacity = colour_opacity)
+      colour <- colour(colour, opacity = colour_opacity)
     }
     
     if (is.null(colour_fill) || identical(colour.bak, colour_fill)) {
       colour_fill <- colour
     } else {
       if (length(colour_fill) == 1 && !is.na(colour_fill)) {
-        if (colour_fill == "certe") {
-          # divergent Certe scale
-          colour_fill <- colourpicker(c("certeblauw0", "certegroen", "certegeel", "certeroze"),
-                                      opacity = colour_opacity)
-        } else if (colour_fill %like% "certe([1-6]+)$") {
-          # take Certe colours
-          colour_fill <- colourpicker(colour_fill, 4, opacity = colour_opacity)
-        } else if (colour_fill %in% viridis_colours) {
+        if (colour_fill %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour_fill)) > 1) {
+          colour_fill <- colour(colour_fill, 4, opacity = colour_opacity)
+        } else if (colour_fill %in% viridisLite_colours) {
           # generate viridis colour
-          colour_fill <- colourpicker(colour_fill, 5, opacity = colour_opacity)
+          colour_fill <- colour(colour_fill, 5, opacity = colour_opacity)
         } else {
-          colour_fill <- colourpicker(colour_fill, opacity = colour_opacity)
+          colour_fill <- colour(colour_fill, opacity = colour_opacity)
         }
       } else {
-        colour_fill <- colourpicker(colour_fill, opacity = colour_opacity)
+        colour_fill <- colour(colour_fill, opacity = colour_opacity)
       }
     }
     return(list(colour = colour,
                 colour_fill = colour_fill))
   }
   
-  if (geom_is_continuous(type) && !geom_has_only_colour(type) && is.null(colour_fill) && any(colour %like% "certe")) {
-    # exception for Certe: "certeblauw" (colour) -> "certeblauw6" (colour_fill)
-    colour_fill <- as.character(colourpicker(colour, opacity = colour_opacity))
-    if (type == "geom_sf") {
-      colour_fill[colour %like% "certe[a-z]*"] <- paste0(colour[colour %like% "certe[a-z]*"], "3")
-    } else {
-      colour_fill[colour %like% "certe[a-z]*"] <- paste0(colour[colour %like% "certe[a-z]*"], "6")
-    }
-  }
   if (isTRUE(misses_colour_fill) && is.null(colour_fill) && !geom_is_continuous(type)) {
     colour_fill <- colour
   }
@@ -1746,30 +1714,28 @@ validate_colour <- function(df,
         colour_fill <- "#595959"
       }
     }
-    colour <- colourpicker(colour, opacity = colour_opacity)
+    colour <- colour(colour, opacity = colour_opacity)
     if (geom_is_continuous(type) && is.null(colour_fill)) {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
-      # note: for "certe" there is an exception earlier in this function
       colour_fill <- add_white(colour, white = 0.75)
     } else {
-      colour_fill <- colourpicker(colour_fill, opacity = colour_opacity)
+      colour_fill <- colour(colour_fill, opacity = colour_opacity)
     }
     
   } else {
     # has also category, and it's not numeric
     n_unique <- length(unique(get_category(df)))
-    colour <- colourpicker(colour,
-                           length = ifelse(length(colour) == 1, n_unique, 1),
-                           opacity = colour_opacity)
+    colour <- colour(colour,
+                     length = ifelse(length(colour) == 1, n_unique, 1),
+                     opacity = colour_opacity)
     if (geom_is_continuous(type) && is.null(colour_fill) && type_backup != "sankey") {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
       # but not for Sankey plots - they have sankey.alpha
-      # note: for "certe" there is an exception earlier in this function
       colour_fill <- add_white(colour, white = 0.75)
     } else {
-      colour_fill <- colourpicker(colour_fill,
-                                  length = ifelse(length(colour_fill) == 1, n_unique, 1),
-                                  opacity = colour_opacity)
+      colour_fill <- colour(colour_fill,
+                            length = ifelse(length(colour_fill) == 1, n_unique, 1),
+                            opacity = colour_opacity)
     }
     
     if (isTRUE(horizontal)) {
@@ -1814,8 +1780,8 @@ validate_colour <- function(df,
     colour_fill <- colour_fill[1]
   }
   
-  list(colour = colourpicker(colour),
-       colour_fill = colourpicker(colour_fill))
+  list(colour = colour(colour),
+       colour_fill = colour(colour_fill))
 }
 
 validate_size <- function(size, type, type_backup) {
@@ -1931,7 +1897,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
       out <- ""
     }
   } else {
-    out <- concat(as.character(x))
+    out <- paste0(as.character(x), collapse = "", sep = "")
   }
   
   out <- gsub("<br>", "\n", out, fixed = TRUE)
@@ -1974,7 +1940,6 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
 }
 
 #' @importFrom ggplot2 theme_grey element_blank margin rel
-#' @importFrom certestyle colourpicker
 validate_theme <- function(theme,
                            type,
                            background,
@@ -2035,11 +2000,11 @@ validate_theme <- function(theme,
   
   # set other properties to theme, that are set in plot2(...)
   if (!isTRUE(orginally_empty) && !is.null(background)) {
-    theme$panel.background <- element_rect(fill = colourpicker(background),
+    theme$panel.background <- element_rect(fill = colour(background),
                                            colour = theme$panel.background$colour,
                                            linewidth = theme$panel.background$linewidth,
                                            linetype = theme$panel.background$linetype)
-    theme$plot.background <- element_rect(fill = colourpicker(background),
+    theme$plot.background <- element_rect(fill = colour(background),
                                           colour = theme$plot.background$colour,
                                           linewidth = theme$plot.background$linewidth,
                                           linetype = theme$plot.background$linetype)
@@ -2099,10 +2064,10 @@ validate_theme <- function(theme,
   }
   
   if (!is.null(title.colour)) {
-    theme$plot.title$colour <- colourpicker(title.colour)
+    theme$plot.title$colour <- colour(title.colour)
   }
   if (!is.null(subtitle.colour)) {
-    theme$plot.subtitle$colour <- colourpicker(subtitle.colour)
+    theme$plot.subtitle$colour <- colour(subtitle.colour)
   }
   # facet
   theme$strip.background$fill <- facet.fill
@@ -2242,7 +2207,6 @@ validate_facet <- function(df,
 }
 
 #' @importFrom ggplot2 geom_text geom_label geom_sf_label geom_sf_text aes position_fill position_stack position_dodge2
-#' @importFrom certestyle colourpicker
 set_datalabels <- function(p,
                            df,
                            type,
@@ -2284,11 +2248,11 @@ set_datalabels <- function(p,
   }
   
   if (!isTRUE(stacked) && !isTRUE(stackedpercent) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
-    datalabels.colour_fill <- colourpicker(datalabels.colour_fill, opacity = 0.4) # 40% transparency
+    datalabels.colour_fill <- colour(datalabels.colour_fill, opacity = 0.4) # 40% transparency
   } else {
-    datalabels.colour_fill <- colourpicker(datalabels.colour_fill, opacity = 0.75) # 75% transparency
+    datalabels.colour_fill <- colour(datalabels.colour_fill, opacity = 0.75) # 75% transparency
   }
-  datalabels.colour <- colourpicker(datalabels.colour)
+  datalabels.colour <- colour(datalabels.colour)
   
   # set label and text offsets (does not apply to sf and tile plots)
   text_horizontal <- 0.5
@@ -2420,7 +2384,7 @@ validate_font <- function(font) {
   showtext::showtext_auto(enable = TRUE)
   
   if (isTRUE(getOption("knitr.in.progress")) &&
-        !identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+      !identical(Sys.getenv("IN_PKGDOWN"), "true")) {
     # if in knitr (R Markdown) set the right DPI for this plot according to current chunk setting
     showtext::showtext_opts(dpi = knitr::opts_current$get("dpi"))
   }
@@ -2541,7 +2505,6 @@ validate_sorting <- function(sort_method, horizontal) {
 
 #' @importFrom forcats fct_inorder fct_reorder
 #' @importFrom stringr str_sort
-#' @importFrom certestyle font_blue
 sort_data <- function(values,
                       original_values, # required for sort = FALSE, should be according to original values
                       sort_method,
@@ -2653,7 +2616,6 @@ sort_data <- function(values,
 
 #' @importFrom forcats fct_relevel
 #' @importFrom dplyr group_by across group_size mutate summarise
-#' @importFrom certestyle font_blue font_magenta format2
 set_max_items <- function(df,
                           y,
                           x,
@@ -2791,7 +2753,6 @@ summarise_data <- function(df,
   df
 }
 
-#' @importFrom certestyle format2 font_blue
 #' @importFrom dplyr n_distinct
 format_datalabels <- function(datalabels,
                               datalabels.round,

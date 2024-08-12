@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -62,7 +57,7 @@ get_plot_title <- function(plot,
     title <- title[which(title != "" & title != "paste(" & 
                            title != ", italic(" & title != ", bold(" & title != ", bolditalic(" &
                            title != ")" & title != "), ")]
-    title <- gsub("_+", " ", concat(title)) |> 
+    title <- gsub("_+", " ", paste0(title, collapse = "", sep = "")) |> 
       trimws()
     if (title == "") {
       title <- get_default_title(plot = plot, default = default)

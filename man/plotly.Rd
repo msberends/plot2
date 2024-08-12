@@ -29,18 +29,4 @@ mtcars |>
   as_plotly(dragmode = "pan") |>
   plotly_style(marker.line.color = "red",
                hoverinfo = "y")
-
-
-\dontrun{
-# in the certetoolbox package, this:
-mtcars |>
-  plot2(mpg, hp) |> 
-  export_html("filename")
-  
-# is short for:
-mtcars |>
-  plot2(mpg, hp) |> 
-  as_plotly() |> 
-  htmltools::save_html("filename.html")
-}
 }

@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -26,7 +21,6 @@
 #' @param colour_font_axis colour to set for the axis titles on both x and y
 #' @param colour_background colour to set for the background
 #' @importFrom ggplot2 element_text `%+replace%` theme_bw theme margin element_line element_blank unit element_rect
-#' @importFrom certestyle colourpicker
 #' @export
 #' @examples 
 #' plot2(iris)
@@ -47,10 +41,10 @@ theme_minimal2 <- function(...,
                            colour_font_axis = getOption("plot2.colour_font_axis", "grey25"),
                            colour_background = getOption("plot2.colour_background", "white")) {
   
-  colour_font_primary <- colourpicker(colour_font_primary, length = 1)
-  colour_font_secondary <- colourpicker(colour_font_secondary, length = 1)
-  colour_font_axis <- colourpicker(colour_font_axis, length = 1)
-  colour_background <- colourpicker(colour_background, length = 1)
+  colour_font_primary <- colour(colour_font_primary, length = 1)
+  colour_font_secondary <- colour(colour_font_secondary, length = 1)
+  colour_font_axis <- colour(colour_font_axis, length = 1)
+  colour_background <- colour(colour_background, length = 1)
   
   t <- theme_bw(base_size = 11) %+replace%
     theme(

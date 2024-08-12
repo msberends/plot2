@@ -12,22 +12,37 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-title: "plot2"
-url: "https://msberends.github.io/plot2"
+on:
+  push:
+    # only run when pushed to the 'main' branch
+    branches: 'main' 
 
-navbar:
-  title: "plot2"
-  left:
-    - text: "Home"
-      icon: "fa-home"
-      href: "index.html"
-    - text: "Manual"
-      icon: "fa-book-open"
-      href: "reference/index.html"
-    - text: "plot2(): a Gentle Intro"
-      icon: "fa-chart-bar"
-      href: "articles/plot2.html"
-  right:
-    - text: "Source Code"
-      icon: "fab fa-github"
-      href: "https://github.com/msberends/plot2"
+name: website
+
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    secrets: inherit
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::pkgdown
+          needs: website
+
+      - name: Install package
+        run: |
+          ls -lh
+          Rscript -e 'install.packages(getwd(), repos = NULL, type = "source")'
+
+      - name: Deploy package
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          Rscript -e 'pkgdown::build_favicons()'
+          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE, clean = TRUE)'

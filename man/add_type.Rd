@@ -91,7 +91,7 @@ add_sf(
 
 \item{x, y}{aesthetic arguments}
 
-\item{colour, colour_fill}{colour of the line or column, will be evaluated with \code{\link[certestyle:colourpicker]{certestyle::colourpicker()}}. If \code{colour_fill} is missing but \code{colour} is given, \code{colour_fill} will inherit the colour set with \code{colour}.}
+\item{colour, colour_fill}{colour of the line or column, will be evaluated with \code{\link[=colour]{colour()}}. If \code{colour_fill} is missing but \code{colour} is given, \code{colour_fill} will inherit the colour set with \code{colour}.}
 
 \item{linetype, linewidth, shape, size, width, ...}{arguments passed on to the geom}
 
@@ -101,7 +101,7 @@ add_sf(
 
 \item{min, max}{minimum (lower) and maximum (upper) values of the error bars}
 
-\item{sf_data}{an 'sf' \link{data.frame}, such as the outcome of \code{\link[certegis:geocoding]{certegis::geocode()}}}
+\item{sf_data}{an 'sf' \link{data.frame}}
 
 \item{datalabels}{a column of \code{sf_data} to add as label below the points}
 
@@ -205,47 +205,23 @@ df |>
           legend.value = "This *is* **some** symbol: $beta$")
 
 # plotting error bars was never easier
-if (require("dplyr", warn.conflicts = FALSE)) {   
-  df2 <- df |> 
-    as_tibble() |> 
-    slice(1:25) |>
-    filter(var_1 <= 50) |> 
-    mutate(error1 = var_2 * 0.9,
-           error2 = var_2 * 1.1)
-  
-  print(df2)
-  
-  df2 |> 
-    plot2(type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
-    # add the error bars, simply by referencing the lower and upper values
-    add_errorbar(error1, error2)
-}
+library("dplyr", warn.conflicts = FALSE)
+df2 <- df |> 
+  as_tibble() |> 
+  slice(1:25) |>
+  filter(var_1 <= 50) |> 
+  mutate(error1 = var_2 * 0.9,
+         error2 = var_2 * 1.1)
 
-if (require("certestats", warn.conflicts = FALSE)) {
-   df |>
-     plot2() |> 
-     add_line(y = ewma(var_2, 0.75),
-              colour = "certeroze",
-              linewidth = 1)
-}
+df
 
-if (require("certegis")) {
-  hospitals <- geocode(c("Martini Ziekenhuis",
-                         "Medisch Centrum Leeuwarden",
-                         "Tjongerschans Heerenveen",
-                         "Treant Emmen"))
-  geo_gemeenten |>
-    crop_certe() |>
-    plot2(datalabels = FALSE,
-          category.title = "Inhabitants",
-          colour_fill = c("white", "certeblauw2")) |>
-    add_sf(hospitals,
-           colour = "certeroze",
-           datalabels = place) |> 
-    add_sf(geo_provincies |> crop_certe(),
-           colour_fill = NA,
-           colour = "certeblauw",
-           linetype = 2,
-           linewidth = 0.5)
-}
+df2 |> 
+  plot2(type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
+  # add the error bars, simply by referencing the lower and upper values
+  add_errorbar(error1, error2)
+
+# adding sf objects is just as convenient as all else
+plot2(netherlands)
+plot2(netherlands) |>
+  add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 1)
 }

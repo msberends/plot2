@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -38,20 +33,6 @@
 #'   as_plotly(dragmode = "pan") |>
 #'   plotly_style(marker.line.color = "red",
 #'                hoverinfo = "y")
-#' 
-#' 
-#' \dontrun{
-#' # in the certetoolbox package, this:
-#' mtcars |>
-#'   plot2(mpg, hp) |> 
-#'   export_html("filename")
-#'   
-#' # is short for:
-#' mtcars |>
-#'   plot2(mpg, hp) |> 
-#'   as_plotly() |> 
-#'   htmltools::save_html("filename.html")
-#' }
 as_plotly <- function(plot, ...) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 model.", call. = FALSE)

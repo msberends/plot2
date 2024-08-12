@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -17,5 +12,46 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' @keywords internal
-"_PACKAGE"
+#' @importFrom dplyr n
+#' @export
+dplyr::n
+
+#' @importFrom dplyr n_distinct
+#' @export
+dplyr::n_distinct
+
+#' @importFrom tidyselect everything
+#' @export
+tidyselect::everything
+
+#' @importFrom tidyselect starts_with
+#' @export
+tidyselect::starts_with
+
+#' @importFrom tidyselect ends_with
+#' @export
+tidyselect::ends_with
+
+#' @importFrom tidyselect matches
+#' @export
+tidyselect::matches
+
+#' @importFrom tidyselect where
+#' @export
+tidyselect::where
+
+#' @importFrom dplyr first
+#' @export
+dplyr::first
+
+#' @importFrom dplyr last
+#' @export
+dplyr::last
+
+#' @importFrom dplyr all_of
+#' @export
+dplyr::all_of
+
+#' @importFrom dplyr any_of
+#' @export
+dplyr::any_of

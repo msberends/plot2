@@ -16,15 +16,14 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 ) 
-library(certeplot2)
+library(plot2)
 # load this as well, so function names will get tidyverse links on the website
 library(ggplot2)
 library(patchwork)
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr, warn.conflicts = FALSE)
-exported <- getNamespaceExports("certeplot2")
-all_ls <- c(ls(envir = asNamespace("certeplot2")), ls(envir = asNamespace("certestyle")))
-reexported <- sort(exported[!exported %in% all_ls])
+exported <- getNamespaceExports("plot2")
+reexported <- sort(exported[!exported %in% ls(envir = asNamespace("plot2"))])
 ```
 
 # Introduction
@@ -50,7 +49,7 @@ Let's start with the basics. The `plot2()` function is a wrapper around `ggplot2
 To get started, you can pass your data directly into `plot2()` without specifying any additional arguments. For example:
 
 ```{r}
-library(certeplot2)
+library(plot2)
 data.frame(x = LETTERS[1:10], y = 11:20) |> 
   plot2()
 ```
@@ -190,7 +189,7 @@ admitted_patients |>
   plot2(x = hospital, y = median(age), category = gender)
 ```
 
-This creates a grouped column plot, showing the median age of patients at each hospital, with separate bars for each gender. You didn’t need to `group_by()` or `summarise()` your data beforehand—`plot2()` takes care of it all.
+This creates a grouped column plot, showing the median age of patients at each hospital, with separate bars for each gender. You didn’t need to `group_by()` or `summarise()` your data beforehand — `plot2()` takes care of it all.
 
 #### Inline Math Transformations
 
@@ -329,7 +328,38 @@ mtcars |>
   plot2(mpg, hp, category = cyl, colour = c("4" = "red", "6" = "blue", "8" = "green"))
 ```
 
-This approach gives you full creative control over the colour scheme, allowing you to match your plot’s aesthetics to your presentation or publication needs.
+You can use any colour that the implemented `colour()` function can understand, such as colour names and HTML codes:
+
+```{r}
+colour("red")
+colour("#FF0000")
+colour("ff0000")
+colour("f00")
+```
+
+But most importantly, you can register new colours to the `plot2` package. Let's assume these six colours are from the style of your university / company / etc.:
+
+```{r}
+register_colour(navy_blue = "#1F3A93",
+                burnt_orange = "#D35400",
+                forest_green = "#2C6F47",
+                goldenrod_yellow = "#DAA520",
+                slate_grey = "#708090",
+                plum_purple = "#8E4585")
+# Then register the whole colour list too:
+register_colour(OurOrganisation = c("navy_blue", "burnt_orange",
+                                    "forest_green", "goldenrod_yellow",
+                                    "slate_grey", "plum_purple"))
+```
+
+You can now use these colours in your plots!
+
+```{r}
+iris |>
+  plot2(x = Species, y = where(is.double), colour = "OurOrganisation")
+```
+
+This approach gives you full creative control over the colour scheme, allowing you to match your plot’s aesthetics to your presentation or publication needs. Or even your organisational style.
 
 #### Default Colours
 
@@ -375,7 +405,8 @@ plots()
 ```
 
 ```{r}
-options(plot2.colour = "certe")
+# our previously set manual colour set:
+options(plot2.colour = "OurOrganisation")
 ```
 
 ```{r, echo = FALSE, message = FALSE, fig.height = 7.5, fig.width = 7}

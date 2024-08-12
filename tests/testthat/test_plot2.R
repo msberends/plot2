@@ -1,11 +1,6 @@
 # ===================================================================== #
-#  An R package by Certe:                                               #
-#  https://github.com/certe-medical-epidemiology                        #
-#                                                                       #
-#  Licensed as GPL-v2.0.                                                #
-#                                                                       #
-#  Developed at non-profit organisation Certe Medical Diagnostics &     #
-#  Advice, department of Medical Epidemiology.                          #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
 #                                                                       #
 #  This R package is free software; you can freely use and distribute   #
 #  it for both personal and commercial purposes under the terms of the  #
@@ -100,7 +95,8 @@ test_that("S3 implementations work", {
   # lm
   expect_s3_class(lm(mpg ~ hp, mtcars) |> plot2(), "gg")
   # freq
-  expect_s3_class(cleaner::freq(admitted_patients$hospital) |> plot2(), "gg")
+  freq <- cleaner::freq(admitted_patients$hospital)
+  expect_s3_class(freq |> plot2(), "gg")
   # sf
   expect_s3_class(netherlands |> plot2(), "gg")
   expect_s3_class(netherlands |> plot2(crs = 28992, theme = theme_minimal2()), "gg")
@@ -118,29 +114,16 @@ test_that("S3 implementations work", {
                     dplyr::filter(yr >= 2015) |>
                     plot2(),
                   "gg")
-  # qc_test
-  expect_s3_class(certestats::qc_test(rnorm(1000)) |> plot2(), "gg")
-  # disease clusters
-  expect_s3_class(data.frame(date = sample(seq(as.Date("2018-01-01"),
-                                               as.Date("2022-12-31"),
-                                               "1 day"),
-                                           size = 300),
-                             patient = sample(LETTERS, size = 300, replace = TRUE)) |> 
-                    certestats::early_warning_cluster(minimum_cases = 1, threshold_percentile = 0.75) |>
-                    plot2(),
-                  "gg")
-  
   # type should become boxplot here
-  expect_s3_class(admitted_patients |> plot2(x = hospital, y = certestats::z_score(age)), "gg")
-  # this uses the certestyle::format2_scientific function for the y axis
+  expect_s3_class(admitted_patients |> plot2(x = hospital, y = (age - mean(age)) / sd(age)), "gg")
+  # this uses the format2_scientific function for the y axis
   expect_s3_class(admitted_patients |>
                     plot2(format(date, "%Y"),
-                          certestats::z_score(age),
+                          (age - mean(age)) / sd(age),
                           hospital,
                           y.scientific = TRUE),
                   "gg")
-  expect_s3_class(certegis::geo_provincies |> plot2(markdown = TRUE), "gg")
-  expect_s3_class(certegis::geo_provincies |> plot2(markdown = TRUE), "gg")
+  expect_s3_class(netherlands |> plot2(markdown = TRUE), "gg")
 })
 
 test_that("general mapping works", {
@@ -184,32 +167,6 @@ test_that("adding types works", {
                           colour_fill = "yellow",
                           width = 0.25) |>
                   get_layers(), 3)
-  
-  expect_length(p |>
-                  add_line(certestats::rr_ewma(y, 0.75),
-                           colour = "certeroze",
-                           linewidth = 2,
-                           linetype = 2,
-                           alpha = 0.5) |>
-                  get_layers(), 2)
-  
-  expect_length(plot2(certegis::geo_provincies, datalabels = FALSE) |>
-                  add_sf(certegis::geocode("Martini Ziekenhuis"),
-                         colour = "certeroze") |>
-                  get_layers(), 2)
-  expect_length(plot2(certegis::geo_provincies, datalabels = FALSE) |>
-                  add_sf(certegis::geocode("Martini Ziekenhuis"),
-                         colour = "certeroze",
-                         datalabels = place) |>
-                  get_layers(), 3)
-  
-  # way off with labels, and different CRS between plot and input
-  expect_s3_class(plot2(certegis::geo_provincies |> sf::st_transform(4326),
-                        datalabels = FALSE) |>
-                    add_sf(certegis::geocode("Martini Ziekenhuis"),
-                           colour = "certeroze",
-                           datalabels = place),
-                  "gg")
 })
 
 test_that("titles work", {
@@ -388,15 +345,15 @@ test_that("category scale works", {
                        get_mapping())))
   expect_true(all(c(fill = "Petal.Length", colour = "Petal.Length") %in%
                     (plot2(iris, Sepal.Length, Sepal.Width, Petal.Length,
-                           colour = "certe") |>
+                           colour = "viridis") |>
                        get_mapping())))
   expect_s3_class(mtcars |> plot2(mpg, hp, as.character(cyl), category.focus = 2), "gg")
   expect_s3_class(mtcars |> plot2(mpg, hp, as.character(cyl), category.focus = "4"), "gg")
   # adding white to geoplot if only one colour set
-  expect_s3_class(certegis::geo_provincies |> plot2(colour_fill = "red"), "gg")
-  expect_s3_class(certegis::geo_provincies |> plot2(colour_fill = "red", 
-                                                    category.transform = "log10",
-                                                    category.limits = c(NA, 10e3)),
+  expect_s3_class(netherlands |> plot2(colour_fill = "red"), "gg")
+  expect_s3_class(netherlands |> plot2(colour_fill = "red", 
+                                       category.transform = "log10",
+                                       category.limits = c(NA, 10e3)),
                   "gg")
   # date class as category
   expect_s3_class(admitted_patients |>
@@ -489,22 +446,6 @@ test_that("type validation works", {
   expect_equal(validate_type("p", df), "geom_point")
   expect_equal(validate_type("r", df), "geom_ribbon")
   expect_equal(validate_type("v", df), "geom_violin")
-})
-
-test_that("adding scales works", {
-  library(ggplot2)
-  expect_message(mtcars |>
-                   plot2(mpg, hp, cyl, colour = "viridis") + 
-                   scale_color_certe_c())
-  expect_message(mtcars |>
-                   plot2(mpg, hp, cyl, colour = "viridis") + 
-                   scale_fill_certe_c())
-  expect_message(mtcars |>
-                   plot2(mpg, hp, rownames(mtcars), colour = "viridis") +
-                   scale_color_certe_d())
-  expect_message(mtcars |>
-                   plot2(mpg, hp, rownames(mtcars), colour = "viridis") +
-                   scale_fill_certe_d())
 })
 
 test_that("moving layer works", {
@@ -603,13 +544,13 @@ test_that("matrices works", {
                     plot2(), "gg")
   expect_s3_class(mtcars |>
                     stats::cor() |>
-                    plot2(colour = c("certeblauw", "white", "certeroze"),
+                    plot2(colour = c("blue4", "white", "red4"),
                           category.limits = c(-1, 1)), "gg")
 })
 
 test_that("errorbars work", {
   expect_s3_class(plotdata |>
                     dplyr::mutate(error1 = n * 0.9, error2 = n * 1.1) |> 
-                    plot2(type = "c", colour = "certeroze4") |>
+                    plot2(type = "c", colour = "pink") |>
                     add_errorbar(error1, error2), "gg")
 })

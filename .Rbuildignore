@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.github$
-^certeplot2\.Rproj$
+^plot2\.Rproj$
 ^_pkgdown\.yml$
 ^logo\.svg$
 ^\.DS_Store$
