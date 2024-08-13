@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.retina = 2,
-  dpi = 25
+  dpi = 600
 ) 
 library(plot2)
 # load this as well, so function names will get tidyverse links on the website
