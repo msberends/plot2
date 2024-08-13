@@ -17,7 +17,7 @@ url: "https://msberends.github.io/plot2"
 
 template:
   bootstrap: 5
-  bootswatch: "United"
+  bootswatch: "united"
 
 navbar:
   title: "plot2"
