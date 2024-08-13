@@ -225,7 +225,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{additional settings for the plotting direction \code{facet}}
 
-\item{facet.fixed_y}{a \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (sd divided by mean) of the maximum values of y is less than 15\%.}
+\item{facet.fixed_y}{a \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25\%.}
 
 \item{facet.fixed_x}{a \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
 

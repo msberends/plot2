@@ -134,7 +134,9 @@ font_white <- function(..., collapse = " ") {
   }
 }
 
-plot2_message <- function(..., print = interactive() | Sys.getenv("IN_PKGDOWN") != "", type = "info") {
+plot2_message <- function(...,
+                          print = (interactive() | Sys.getenv("IN_PKGDOWN") != "") & !identical(as.logical(getOption("plot2.silent", default = FALSE)), TRUE),
+                          type = "info") {
   # at default, only prints in interactive mode and for the website generation
   if (isTRUE(print)) {
     # get info icon
@@ -156,6 +158,9 @@ plot2_message <- function(..., print = interactive() | Sys.getenv("IN_PKGDOWN") 
       message(paste(icon, fn(msg)))
     } else if (type == "warning") {
       warning("\n", paste(icon, fn(msg)), call. = FALSE, immediate. = TRUE)
+    }
+    if (stats::runif(1) < 0.05 && Sys.getenv("IN_PKGDOWN") == "") {
+      message(paste(icon, fn(paste0("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages."))))
     }
   }
 }

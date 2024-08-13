@@ -79,7 +79,7 @@
 #' @param subtitle.colour text colour of the subtitle
 #' @param na.replace character to put in place of `NA` values if `na.rm = FALSE`
 #' @param na.rm remove `NA` values from showing in the plot
-#' @param facet.fixed_y a [logical] to indicate whether all y scales should have the same limits. Defaults to `TRUE` only if the coefficient of variation (sd divided by mean) of the maximum values of y is less than 15%.
+#' @param facet.fixed_y a [logical] to indicate whether all y scales should have the same limits. Defaults to `TRUE` only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25%.
 #' @param facet.fixed_x a [logical] to indicate whether all x scales should have the same breaks. This acts like the inverse of `x.drop`.
 #' @param facet.position,facet.fill,facet.bold,facet.italic,facet.size,facet.margin,facet.repeat_lbls_x,facet.repeat_lbls_y,facet.drop,facet.nrow,facet.relative additional settings for the plotting direction `facet`
 #' @param x.date_breaks breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as `"1 day"` and `"2 years"`.

@@ -57,7 +57,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R, such as \code{"blue2"}, \code{"darkgoldenrod3"}, \code{"darkolivegreen3"}, \code{"darkorange"}, \code{"violetred1"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R, such as \code{"darkblue"}, \code{"darkorange"}, \code{"darkseagreen4"}, \code{"palegreen2"}, \code{"turquoise2"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
@@ -120,21 +120,25 @@ register_colour(navy_blue = "#1F3A93",
                 goldenrod_yellow = "#DAA520",
                 slate_grey = "#708090",
                 plum_purple = "#8E4585")
+
 # Then register the whole colour list too:
 register_colour(my_organisation = c("navy_blue", "burnt_orange",
                                     "forest_green", "goldenrod_yellow",
                                     "slate_grey", "plum_purple"))
 # Check that it works:
 colour("my_organisation", length = 6)
+
 # Now use it in plots as you like:
 iris |>
   plot2(x = Species, y = where(is.double), colour = "my_organisation")
 
 # Or even set the option to use it in any future plot:
 options(plot2.colour = "my_organisation")
+
 iris |>
   plot2(x = Species, y = where(is.double))
-  
+
+# reset option again
 options(plot2.colour = NULL)
 
 

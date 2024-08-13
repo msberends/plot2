@@ -1,3 +1,4 @@
+/*
 # ===================================================================== #
 #  An R package for Fast 'ggplot2' Plotting:                            #
 #  https://github.com/msberends/plot2                                   #
@@ -11,27 +12,14 @@
 #  research and it was publicly released in the hope that it will be    #
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
+*/
 
-title: "plot2"
-url: "https://msberends.github.io/plot2"
-
-template:
-  bootstrap: 5
-  bootswatch: "United"
-
-navbar:
-  title: "plot2"
-  left:
-    - text: "Home"
-      icon: "fa-home"
-      href: "index.html"
-    - text: "Manual"
-      icon: "fa-book-open"
-      href: "reference/index.html"
-    - text: "plot2(): a Gentle Intro"
-      icon: "fa-chart-bar"
-      href: "articles/plot2.html"
-  right:
-    - text: "Source Code"
-      icon: "fab fa-github"
-      href: "https://github.com/msberends/plot2"
+/* import fonts from Google */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+pre code {
+  font-family: 'Fira Code', monospace !important;
+  font-feature-settings: "ss02", "ss06";
+  /* don't wrap syntax on small devices: */
+  word-wrap: normal !important;
+  white-space: pre !important;
+}

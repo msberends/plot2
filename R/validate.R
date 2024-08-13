@@ -296,8 +296,8 @@ validate_data <- function(df,
   if (has_y_secondary(df)) {
     max_primary <- max(get_y(df), na.rm = TRUE)
     max_secondary <- max(get_y_secondary(df), na.rm = TRUE)
-    # if 15% difference, create own secondary y breaks
-    if (abs((max_secondary - max_primary) / max_secondary) >= 0.15)  {
+    # if 25% difference, create own secondary y breaks
+    if (abs((max_secondary - max_primary) / max_secondary) >= 0.25)  {
       plot2_env$y_secondary_factor <- max_secondary / max_primary
       df$`_var_y_secondary` <- df$`_var_y_secondary` / plot2_env$y_secondary_factor
     }
@@ -959,17 +959,17 @@ validate_y_scale <- function(df,
   }
   
   if (is.null(facet.fixed_y) && is.null(y.limits) && has_facet(df) && !isTRUE(stackedpercent) && type != "geom_histogram") {
-    # determine if scales should be fixed - if CV_ymax < 15% then fix them:
+    # determine if scales should be fixed - if CV_ymax < 25% then fix them:
     # (this does not work for facetted histograms)
     y_maxima <- df |>
       group_by(across(get_facet_name(df))) |> 
       summarise(max = max(`_var_y`, na.rm = TRUE))
     if (!any(is.infinite(y_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(y_maxima$max) / mean(y_maxima$max)
-      if (coeff_of_variation < 0.15) {
+      if (coeff_of_variation < 0.25) {
         plot2_message("Assuming ", font_blue("facet.fixed_y = TRUE"), 
                       " since the ", digit_to_text(nrow(y_maxima)), " ",
-                      font_blue("y"), " scales are roughly equal")
+                      font_blue("y"), " scales differ by less than 25%")
         facet.fixed_y <- TRUE
       }
     }

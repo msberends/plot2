@@ -59,6 +59,13 @@ iris |>
         y = Sepal.Width,
         category = Species) |>
   add_line(y = mean(Sepal.Width)) # adds 3 lines, for each of `Species`
+
+# Lose the need for seperate grouping and summarising
+admitted_patients |> 
+  plot2(x = hospital,
+        y = n_distinct(patient_id),
+        category = ifelse(date < "2010-01-01", "Prior to 2010", "Since 2010"),
+        facet = ward)
 ```
 
 For a comprehensive guide to using `plot2`, including advanced features and customisation options, please see the full vignette [here](https://msberends.github.io/plot2/articles/plot2.html).

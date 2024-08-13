@@ -231,6 +231,9 @@ colour <- function(x, length = 1, opacity = 0) {
 #' options(plot2.colour = NULL)
 register_colour <- function(...) {
   dots <- list(...)
+  if (length(dots) == 1 && is.null(names(dots)) && !is.null(names(dots[[1]]))) {
+    dots <- as.list(dots[[1]])
+  }
   for (i in seq_len(length(dots))) {
     if (is.null(names(dots)[i])) {
       stop("Input must be named")
