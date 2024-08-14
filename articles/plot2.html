@@ -833,6 +833,39 @@ required DPI will be set for you, even in R Markdown outputs.</p>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Currently fig.showtext is FALSE</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">set dpi!</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-44-1.png" width="700"></p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>, text_factor <span class="op">=</span> <span class="fl">1.5</span>, </span>
+<span>        title <span class="op">=</span> <span class="st">"Custom Font Example"</span>, </span>
+<span>        x.title <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, </span>
+<span>        y.title <span class="op">=</span> <span class="st">"Horsepower"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Enabled showtext with dpi 96</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Currently fig.showtext is FALSE</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">set dpi!</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" width="700"></p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>, text_factor <span class="op">=</span> <span class="fl">1.5</span>, </span>
+<span>        title <span class="op">=</span> <span class="st">"Custom Font Example"</span>, </span>
+<span>        x.title <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, </span>
+<span>        y.title <span class="op">=</span> <span class="st">"Horsepower"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Enabled showtext with dpi 96</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Currently fig.showtext is FALSE</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">set dpi!</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-46-1.png" width="700"></p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>, text_factor <span class="op">=</span> <span class="fl">1.5</span>, </span>
+<span>        title <span class="op">=</span> <span class="st">"Custom Font Example"</span>, </span>
+<span>        x.title <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, </span>
+<span>        y.title <span class="op">=</span> <span class="st">"Horsepower"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Enabled showtext with dpi 96</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Currently fig.showtext is FALSE</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">set dpi!</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-47-1.png" width="700"></p>
 <p>In this example, the <code>Rock Salt</code> font, a playful and
 hand-drawn style, is applied across the plot. The
 <code>text_factor</code> argument is used to scale the size of the text,
@@ -849,7 +882,7 @@ integration directly, including automatic downloading and scaling.</p>
 consistent styling across multiple plots. This is particularly useful
 when preparing a series of visualisations for a report or
 presentation.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="st">"Syne"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
 <span></span>
@@ -860,11 +893,11 @@ presentation.</p>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Enabled showtext with dpi 96</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Currently fig.showtext is FALSE</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">set dpi!</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" width="700"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-48-1.png" width="700"></p>
 <p>In this example, all plots will now use the <code>Roboto</code> font,
 ensuring a consistent and professional appearance across your
 visualisations.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># reset again</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="cn">NULL</span>, plot2.colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p>Customising fonts in <code><a href="../reference/plot2.html">plot2()</a></code> is both flexible and
