@@ -45,6 +45,11 @@ jobs:
           extra-packages: any::pkgdown
           needs: website
 
+      - name: Install package
+        run: |
+          ls -lh
+          Rscript -e 'install.packages(getwd(), repos = NULL, type = "source")'
+
       - name: Generate icons
         run: pkgdown::build_favicons()
         shell: Rscript {0}
