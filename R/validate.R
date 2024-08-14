@@ -2369,8 +2369,8 @@ set_datalabels <- function(p,
 validate_font <- function(font) {
   if (is_empty(font)) {
     # no font set, so return empty string to use default
-    # enable showtext
-    showtext::showtext_end()
+    # disable showtext
+    try(showtext::showtext_end(), silent = TRUE)
     return("")
   }
   required_pkg <- c("showtext", "showtextdb", "sysfonts")
