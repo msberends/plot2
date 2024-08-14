@@ -2382,10 +2382,13 @@ validate_font <- function(font) {
   # enable showtext
   showtext::showtext_auto(enable = TRUE)
   
-  if (isTRUE(getOption("knitr.in.progress")) &&
-      !identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+  plot2_message("Enabled showtext with dpi ", knitr::opts_chunk$get()$dpi, print = TRUE)
+  plot2_message("Currently fig.showtext is ", isTRUE(knitr::opts_chunk$get()$fig.showtest), print = TRUE)
+  
+  if (isTRUE(getOption("knitr.in.progress"))) {
     # if in knitr (R Markdown) set the right DPI for this plot according to current chunk setting
-    showtext::showtext_opts(dpi = knitr::opts_current$get("dpi"))
+    plot2_message("set dpi!", print = TRUE)
+    showtext::showtext_opts(dpi = knitr::opts_chunk$get()$dpi)
   }
   
   font.bak <- font

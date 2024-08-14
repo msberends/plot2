@@ -15,12 +15,13 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 ) 
-library(plot2)
-# load this as well, so function names will get tidyverse links on the website
-library(ggplot2)
-library(patchwork)
+# load these, so that function names will get tidyverse links on the web page
+library(ggplot2, warn.conflicts = FALSE)
+library(patchwork, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr, warn.conflicts = FALSE)
+# now load our own package
+library(plot2)
 exported <- getNamespaceExports("plot2")
 reexported <- sort(exported[!exported %in% ls(envir = asNamespace("plot2"))])
 ```
