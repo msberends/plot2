@@ -563,6 +563,30 @@ mtcars |>
         y.title = "Horsepower")
 ```
 
+```{r}
+mtcars |> 
+  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+        title = "Custom Font Example", 
+        x.title = "Miles per Gallon", 
+        y.title = "Horsepower")
+```
+
+```{r, fig.showtext = TRUE}
+mtcars |> 
+  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+        title = "Custom Font Example", 
+        x.title = "Miles per Gallon", 
+        y.title = "Horsepower")
+```
+
+```{r, fig.showtext = TRUE}
+mtcars |> 
+  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+        title = "Custom Font Example", 
+        x.title = "Miles per Gallon", 
+        y.title = "Horsepower")
+```
+
 In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot. The `text_factor` argument is used to scale the size of the text, ensuring readability and aesthetic balance.
 
 In `ggplot2`, custom fonts often require additional packages like `showtext` or manual adjustments in theme settings. `plot2()` simplifies this by handling font integration directly, including automatic downloading and scaling.
