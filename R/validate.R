@@ -2386,9 +2386,9 @@ validate_font <- function(font) {
     # if in knitr (R Markdown) set the right DPI for this plot according to current chunk setting
     plot2_message("set dpi!", print = TRUE)
     showtext::showtext_opts(dpi = knitr::opts_chunk$get()$dpi)
-    # enable showtext
+    # disable showtext
     showtext::showtext_auto(enable = FALSE)
-  } {
+  } else {
     # enable showtext
     showtext::showtext_auto(enable = TRUE)
   }
