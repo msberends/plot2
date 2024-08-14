@@ -553,59 +553,13 @@ Another powerful feature of `plot2()` is its flexibility with fonts. Whether you
 
 `plot2()` supports all installed system fonts, as well as over 1,400 Google Fonts, giving you an extensive range of choices for your plots. Missing fonts will be downloaded automatically, and the required DPI will be set for you, even in R Markdown outputs.
 
-Here’s how you can apply a custom font from Google Fonts:
-
-```{r}
-mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt", 
-        title = "Custom Font Example", 
-        x.title = "Miles per Gallon", 
-        y.title = "Horsepower",
-        caption = "No fig.showtext")
-```
-
-```{r}
-mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt",
-        title = "Custom Font Example", 
-        x.title = "Miles per Gallon", 
-        y.title = "Horsepower",
-        caption = "No fig.showtext")
-```
+Here’s how you can apply a custom font from Google Fonts, which will be downloaded automatically:
 
 ```{r, fig.showtext = TRUE}
 mtcars |> 
   plot2(mpg, hp, font = "Rock Salt",
         title = "Custom Font Example", 
-        x.title = "Miles per Gallon", 
-        y.title = "Horsepower",
-        caption = "With fig.showtext")
-```
-
-```{r, fig.showtext = TRUE}
-mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt",
-        title = "Custom Font Example", 
-        y.title = "Horsepower",
-        caption = "With fig.showtext")
-```
-
-```{r}
-mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt",
-        title = "Custom Font Example", 
-        x.title = "Miles per Gallon", 
-        y.title = "Horsepower",
-        caption = "No fig.showtext")
-```
-
-```{r}
-mtcars |> 
-  plot2(mpg, hp,
-        title = "Custom Font Example", 
-        x.title = "Miles per Gallon", 
-        y.title = "Horsepower",
-        caption = "No fig.showtext")
+        y.title = "Horsepower")
 ```
 
 In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot. The `text_factor` argument is used to scale the size of the text, ensuring readability and aesthetic balance.
@@ -616,8 +570,8 @@ In `ggplot2`, custom fonts often require additional packages like `showtext` or 
 
 By setting font options globally through R options, you can maintain consistent styling across multiple plots. This is particularly useful when preparing a series of visualisations for a report or presentation.
 
-```{r}
-options(plot2.font = "Syne")
+```{r, fig.showtext = TRUE}
+options(plot2.font = "Lobster")
 options(plot2.colour = "viridis")
 
 # Now every plot will use the Syne font by default
@@ -625,7 +579,7 @@ mtcars |>
   plot2(mpg, hp, title = "Consistent Font Example")
 ```
 
-In this example, all plots will now use the `Roboto` font, ensuring a consistent and professional appearance across your visualisations.
+In this example, all plots will now use the `Lobster` font, ensuring a consistent appearance across your visualisations.
 
 ```{r}
 # reset again
