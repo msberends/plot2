@@ -2369,6 +2369,8 @@ set_datalabels <- function(p,
 validate_font <- function(font) {
   if (is_empty(font)) {
     # no font set, so return empty string to use default
+    # enable showtext
+    showtext::showtext_end()
     return("")
   }
   required_pkg <- c("showtext", "showtextdb", "sysfonts")
@@ -2379,18 +2381,18 @@ validate_font <- function(font) {
     return("")
   }
   
-  # enable showtext
-  showtext::showtext_auto(enable = TRUE)
-  
-  plot2_message("Enabled showtext with dpi ", knitr::opts_chunk$get()$dpi, print = TRUE)
-  plot2_message("opts_chunk fig.showtext is ", as.character(knitr::opts_chunk$get()$fig.showtest), print = TRUE)
-  plot2_message("opts_current fig.showtext is ", as.character(knitr::opts_current$get()$fig.showtest), print = TRUE)
+  print(str(knitr::opts_current$get()))
   
   
   if (isTRUE(getOption("knitr.in.progress"))) {
     # if in knitr (R Markdown) set the right DPI for this plot according to current chunk setting
-    plot2_message("set dpi!", print = TRUE) 
-    showtext::showtext_opts(dpi = knitr::opts_chunk$get()$dpi)
+    #plot2_message("set dpi!", print = TRUE) 
+    #showtext::showtext_opts(dpi = knitr::opts_chunk$get()$dpi)
+      # enable showtext
+    showtext::showtext_begin()
+  } else {
+    # enable showtext
+    showtext::showtext_auto(enable = TRUE)
   }
   
   font.bak <- font
