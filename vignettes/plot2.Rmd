@@ -557,34 +557,55 @@ Here’s how you can apply a custom font from Google Fonts:
 
 ```{r}
 mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+  plot2(mpg, hp, font = "Rock Salt", 
         title = "Custom Font Example", 
         x.title = "Miles per Gallon", 
-        y.title = "Horsepower")
+        y.title = "Horsepower",
+        caption = "No fig.showtext")
 ```
 
 ```{r}
 mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+  plot2(mpg, hp, font = "Rock Salt",
         title = "Custom Font Example", 
         x.title = "Miles per Gallon", 
-        y.title = "Horsepower")
+        y.title = "Horsepower",
+        caption = "No fig.showtext")
 ```
 
 ```{r, fig.showtext = TRUE}
 mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+  plot2(mpg, hp, font = "Rock Salt",
         title = "Custom Font Example", 
         x.title = "Miles per Gallon", 
-        y.title = "Horsepower")
+        y.title = "Horsepower",
+        caption = "With fig.showtext")
 ```
 
 ```{r, fig.showtext = TRUE}
 mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt", text_factor = 1.5, 
+  plot2(mpg, hp, font = "Rock Salt",
+        title = "Custom Font Example", 
+        y.title = "Horsepower",
+        caption = "With fig.showtext")
+```
+
+```{r}
+mtcars |> 
+  plot2(mpg, hp, font = "Rock Salt",
         title = "Custom Font Example", 
         x.title = "Miles per Gallon", 
-        y.title = "Horsepower")
+        y.title = "Horsepower",
+        caption = "No fig.showtext")
+```
+
+```{r}
+mtcars |> 
+  plot2(mpg, hp,
+        title = "Custom Font Example", 
+        x.title = "Miles per Gallon", 
+        y.title = "Horsepower",
+        caption = "No fig.showtext")
 ```
 
 In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot. The `text_factor` argument is used to scale the size of the text, ensuring readability and aesthetic balance.
@@ -599,9 +620,9 @@ By setting font options globally through R options, you can maintain consistent 
 options(plot2.font = "Syne")
 options(plot2.colour = "viridis")
 
-# Now every plot will use the Roboto font by default
+# Now every plot will use the Syne font by default
 mtcars |> 
-  plot2(mpg, hp, text_factor = 1.5, title = "Consistent Font Example")
+  plot2(mpg, hp, title = "Consistent Font Example")
 ```
 
 In this example, all plots will now use the `Roboto` font, ensuring a consistent and professional appearance across your visualisations.
