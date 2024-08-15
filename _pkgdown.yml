@@ -16,7 +16,9 @@ title: "plot2"
 url: "https://msberends.github.io/plot2"
 
 template:
-  bootstrap: 5
+  # bootstrap 5 uses <dl> for reference index, which we consider much less readable than <table>, so we stick to v4.
+  # see here: https://github.com/r-lib/pkgdown/issues/1822
+  bootstrap: 4
   bootswatch: "united"
 
 navbar:
@@ -25,12 +27,18 @@ navbar:
     - text: "Home"
       icon: "fa-home"
       href: "index.html"
-    - text: "Manual"
+    - text: "Full Manual"
       icon: "fa-book-open"
       href: "reference/index.html"
-    - text: "plot2(): a Gentle Intro"
-      icon: "fa-chart-bar"
+    - text: "An Intro to plot2"
+      icon: "fa-magnifying-glass-chart"
       href: "articles/plot2.html"
+    - text: "Manual for plot2()"
+      icon: "fa-chart-simple"
+      href: "reference/plot2.html"
+    - text: "Manual for adding types"
+      icon: "fa-square-plus"
+      href: "reference/add_type.html"
   right:
     - text: "Source Code"
       icon: "fab fa-github"

@@ -14,8 +14,8 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.height = 8,
-  fig.width = 12
+  fig.height = 5,
+  fig.width = 7
 ) 
 # load these, so that function names will get tidyverse links on the web page
 library(ggplot2, warn.conflicts = FALSE)
