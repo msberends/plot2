@@ -19,11 +19,15 @@
 
 ## Installation
 
-You can install the latest version of `plot2` from GitHub:
+You can install the latest version of `plot2` here:
 
 ```r
-# Install the development version from GitHub
-devtools::install_github("msberends/plot2")
+# Directly from R Universe
+install.packages("plot2",
+                 repos = c(options()$repos, "https://msberends.r-universe.dev"))
+
+# from GitHub using the 'remotes' package
+remotes::install_github("msberends/plot2")
 ```
 
 ## Basic Usage
