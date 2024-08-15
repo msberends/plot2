@@ -16,9 +16,7 @@ title: "plot2"
 url: "https://msberends.github.io/plot2"
 
 template:
-  # bootstrap 5 uses <dl> for reference index, which we consider much less readable than <table>
-  # see here: https://github.com/r-lib/pkgdown/issues/1822
-  # bootstrap: 5
+  bootstrap: 5
   bootswatch: "united"
 
 navbar:
