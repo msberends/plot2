@@ -2380,18 +2380,25 @@ validate_font <- function(font) {
   }
   
   if (isTRUE(getOption("knitr.in.progress"))) {
-    # do not use showtext::showtext_auto(), but do check the chunk options
+    # we are in R Markdown - chunk option `fig.showtext` must be set to TRUE
     fig.showtext <- knitr::opts_current$get()$`fig.showtext`
     if (!isTRUE(fig.showtext)) {
-      stop(paste0("Using custom fonts in plot2() in R Markdown requires you to set the chunk option `fig.showtext = TRUE`, e.g.:\n",
+      stop(paste0("Using custom fonts with `plot2()` in R Markdown requires the chunk option `fig.showtext = TRUE`, e.g.:\n",
                   "\n",
-                  "```{r, fig.showtext = TRUE}\n",
-                  "your_data |>\n",
-                  "  plot2(..., font = \"", font, "\")\n",
-                  "```\n",
+                  font_blue("```{r, fig.showtext = TRUE}\n"),
+                  font_blue("your_data |>\n"),
+                  font_blue(paste0("  plot2(..., font = \"", font, "\")\n")),
+                  font_blue("```\n"),
                   "\n",
-                  "You can also set it globally in `knitr::opt_chunk$set()` at the top of your R Markdown file.\n",
-                  "See for more info ", font_url("https://yihui.org/knitr/options/#plots", "this knitr manual"), "."))
+                  "To apply for all chunks, set the option in `knitr::opts_chunk$set()` at the top of your R Markdown file, e.g.:\n",
+                  "\n",
+                  font_blue("```{r setup, include = FALSE}\n"),
+                  font_blue("knitr::opts_chunk$set(echo = TRUE,\n"),
+                  font_blue("                      fig.showtext = TRUE)\n"),
+                  font_blue("```\n"),
+                  "\n",
+                  "For more information, see ", font_url("https://yihui.org/knitr/options/#plots", "this knitr manual"), "."),
+           call. = FALSE)
     }
   } else {
     # enable showtext

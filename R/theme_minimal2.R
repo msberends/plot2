@@ -23,18 +23,21 @@
 #' @importFrom ggplot2 element_text `%+replace%` theme_bw theme margin element_line element_blank unit element_rect
 #' @export
 #' @examples 
-#' plot2(iris)
-#' plot2(admitted_patients, x = hospital, category = gender)
-#' 
-#' if (require("ggplot2")) {
-#'   ggplot(mtcars, aes(hp, mpg)) +
-#'     geom_point()
-#' }
-#' if (require("ggplot2")) {
-#'   ggplot(mtcars, aes(hp, mpg)) +
-#'     geom_point() +
-#'     theme_minimal2()
-#' }
+#' library(ggplot2)
+#' ggplot(mtcars, aes(hp, mpg)) +
+#'   geom_point()
+#'   
+#' ggplot(mtcars, aes(hp, mpg)) +
+#'   geom_point() +
+#'   theme_minimal2()
+#'   
+#' # in plot2(), the 'theme' argument defaults to theme_minimal2():
+#' mtcars |>
+#'   plot2(hp, mpg)
+#'   
+#' # set to NULL to use the ggplot2 default:
+#' mtcars |>
+#'   plot2(hp, mpg, theme = NULL)
 theme_minimal2 <- function(...,
                            colour_font_primary = getOption("plot2.colour_font_primary", "black"),
                            colour_font_secondary = getOption("plot2.colour_font_secondary", "grey35"),

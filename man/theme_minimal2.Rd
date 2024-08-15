@@ -27,16 +27,19 @@ theme_minimal2(
 This \code{ggplot2} theme provides even more white area and less clutter than \code{\link[ggplot2:ggtheme]{theme_minimal()}}.
 }
 \examples{
-plot2(iris)
-plot2(admitted_patients, x = hospital, category = gender)
-
-if (require("ggplot2")) {
-  ggplot(mtcars, aes(hp, mpg)) +
-    geom_point()
-}
-if (require("ggplot2")) {
-  ggplot(mtcars, aes(hp, mpg)) +
-    geom_point() +
-    theme_minimal2()
-}
+library(ggplot2)
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point()
+  
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme_minimal2()
+  
+# in plot2(), the 'theme' argument defaults to theme_minimal2():
+mtcars |>
+  plot2(hp, mpg)
+  
+# set to NULL to use the ggplot2 default:
+mtcars |>
+  plot2(hp, mpg, theme = NULL)
 }

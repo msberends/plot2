@@ -2,7 +2,7 @@
 title: "A Gentle Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{A Gentle Introduction to plot2(): Enhancing Your ggplot2 Workflow}
+  %\VignetteIndexEntry{A Gentle Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 toc: true
@@ -13,7 +13,9 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.height = 8,
+  fig.width = 12
 ) 
 # load these, so that function names will get tidyverse links on the web page
 library(ggplot2, warn.conflicts = FALSE)
@@ -557,14 +559,16 @@ Here’s how you can apply a custom font from Google Fonts, which will be downlo
 
 ```{r, fig.showtext = TRUE}
 mtcars |> 
-  plot2(mpg, hp, font = "Rock Salt",
+  plot2(mpg, hp,
+        font = "Rock Salt",
+        text_factor = 1.5,
         title = "Custom Font Example", 
         y.title = "Horsepower")
 ```
 
-In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot. The `text_factor` argument is used to scale the size of the text, ensuring readability and aesthetic balance.
+In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot. The `text_factor` argument shows that it can be used to scale the text size of all plot elements, ensuring readability and aesthetic balance.
 
-In `ggplot2`, custom fonts often require additional packages like `showtext` or manual adjustments in theme settings. `plot2()` simplifies this by handling font integration directly, including automatic downloading and scaling.
+In `ggplot2`, using custom fonts often requires extra handling using the `showtext` package with manual adjustments in theme settings. `plot2()` simplifies this by integrating `showtext` into its core, including automatic downloading and font scaling.
 
 ### Creating Consistent Themes with Fonts
 
