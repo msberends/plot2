@@ -37,13 +37,9 @@ Here’s how easy it is to get started with `plot2`:
 ```r
 library(plot2)
 
-# Create a simple plot
-data.frame(x = LETTERS[1:10], y = 11:20) |> 
-  plot2()
-
-# Add a custom plot type
-data.frame(x = 1:10, y = rnorm(10)) |> 
-  plot2(type = "point")
+# Like plot(), just pass x, y
+mtcars |> 
+  plot2(mpg, hp)
 
 # Use inline transformations
 mtcars |> 
@@ -53,7 +49,7 @@ mtcars |>
 iris |>
   plot2(x = Species, y = where(is.double))
 
-# Sort by frequency
+# Count with n() or n_distinct(), sort by frequency
 mtcars |> 
   plot2(carb, y = n(), x.sort = "freq-desc")
   

@@ -3,6 +3,7 @@
 \docType{import}
 \name{reexports}
 \alias{reexports}
+\alias{\%>\%}
 \alias{n}
 \alias{n_distinct}
 \alias{everything}
@@ -21,7 +22,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr:reexports]{all_of}}, \code{\link[dplyr:reexports]{any_of}}, \code{\link[dplyr:nth]{first}}, \code{\link[dplyr:nth]{last}}, \code{\link[dplyr:context]{n}}, \code{\link[dplyr]{n_distinct}}}
+  \item{dplyr}{\code{\link[dplyr:reexports]{\%>\%}}, \code{\link[dplyr:reexports]{all_of}}, \code{\link[dplyr:reexports]{any_of}}, \code{\link[dplyr:nth]{first}}, \code{\link[dplyr:nth]{last}}, \code{\link[dplyr:context]{n}}, \code{\link[dplyr]{n_distinct}}}
 
   \item{tidyselect}{\code{\link[tidyselect:starts_with]{ends_with}}, \code{\link[tidyselect]{everything}}, \code{\link[tidyselect:starts_with]{matches}}, \code{\link[tidyselect]{starts_with}}, \code{\link[tidyselect]{where}}}
 }}

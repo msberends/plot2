@@ -52,26 +52,47 @@ Let's start with the basics. The `plot2()` function is a wrapper around `ggplot2
 
 To get started, you can pass your data directly into `plot2()` without specifying any additional arguments. For example:
 
-```{r}
+```{r, echo = FALSE}
 library(plot2)
-data.frame(x = LETTERS[1:10], y = 11:20) |> 
+df <- data.frame(group = c("A", "B", "C", "D"),
+                 values = c(105, 120, 114, 136))
+```
+
+```{r, eval = FALSE}
+# Load the package
+library(plot2)
+
+df <- data.frame(group = c("A", "B", "C", "D"),
+                 values = c(105, 120, 114, 136))
+df |>
   plot2()
 ```
 
-In this simple example, `plot2()` automatically generates a column plot because it recognises that the x-axis is categorical and the y-axis is numeric. It even adds data labels by default because the x-axis is discrete. This is `plot2()` at its most basic — no need to specify a plot type or worry about details like labels and scales.
+```{r, echo = FALSE}
+p1 <- df |> 
+  plot2(title = "df |>\n  plot2()") +
+  theme(plot.title = element_text(hjust = 0, family = "Fira Code", size = 10))
+p2 <- ggplot(df) +
+  geom_col(aes(group, values)) +
+  labs(title = "ggplot(df) +\n  geom_col(aes(group, values))") +
+  theme(plot.title = element_text(hjust = 0, family = "Fira Code", size = 10))
+p1 + p2
+```
 
-You'll also notice the clean, uncluttered appearance of the plot, thanks to `theme_minimal2()`, which is applied by default in `plot2()`. Unlike `ggplot2`’s default `theme_grey()` that features a grey background, `theme_minimal2()` provides an even more spacious, white background that reduces visual clutter and is optimised for printing directly to production formats like PDFs. This makes `plot2()` plots ideal for reports, publications, and presentations where a clean, professional look is essential.
+In this simple example, `plot2()` automatically generates a column plot because it recognises that the x-axis is categorical and the y-axis is numeric. It even adds data labels by default because the x-axis is discrete. Also, at the top of the y-axis there is a bit more space to better be able to read the plot, akin to how Microsoft Excel plots at default. This is `plot2()` at its most basic — no need to specify a plot type or worry about details like labels and scales.
+
+You'll also notice the clean, uncluttered appearance of the plot, especially when compared to a default `ggplot2` plot, thanks to `theme_minimal2()`, which is applied by default in `plot2()`. Unlike `ggplot2`’s default `theme_grey()` that features a grey background, `theme_minimal2()` provides an even more spacious, white background that reduces visual clutter and is optimised for printing directly to production formats like PDFs. This makes `plot2()` plots ideal for reports, publications, and presentations where a clean, professional look is essential.
 
 ## Customising the Plot Type
 
 But what if you want something different? Maybe a scatter plot or a line chart? No problem. You can easily specify the `type` argument to get exactly what you want.
 
 ```{r}
-data.frame(x = 1:10, y = rnorm(10)) |> 
-  plot2(type = "line")
+df |> 
+  plot2(type = "l")
 ```
 
-Here, we've explicitly set `type = "line"` to create a line plot. `plot2()` supports a wide range of plot types, and you can use either the full name (`"geom_line"`) or an abbreviation (`"line"`, `"l"`).
+Here, we've explicitly set `type = "l"` to create a line plot. `plot2()` supports a wide range of plot types, and you can use either the full name (`type = "geom_line"`) or an abbreviation (`type = "line"`, `type = "l"`).
 
 This flexibility can save you from remembering multiple `ggplot2` functions like `geom_point()`, `geom_line()`, and `geom_col()`. With `plot2()`, these are all accessible through a simple `type` argument, making your workflow more intuitive.
 
@@ -83,12 +104,23 @@ One of the key strengths of `plot2()` is how it handles axes. The `x` and `y` ar
 
 To create a simple scatter plot, you might pass a single variable to the `x` and `y` arguments:
 
-```{r}
-mtcars |> 
+```{r, eval = FALSE}
+mtcars |>
   plot2(mpg, hp)
 ```
 
-This creates a scatter plot of miles per gallon (`mpg`) against horsepower (`hp`). This is as basic as it gets — two variables, one for each axis.
+```{r, echo = FALSE}
+p1 <- mtcars |> 
+  plot2(mpg, hp, title = "mtcars |>\n  plot2(mpg, hp)") +
+  theme(plot.title = element_text(hjust = 0, family = "Fira Code", size = 10))
+p2 <- ggplot(mtcars) +
+  geom_point(aes(mpg, hp)) +
+  labs(title = "ggplot(mtcars) +\n  geom_point(aes(mpg, hp))") +
+  theme(plot.title = element_text(hjust = 0, family = "Fira Code", size = 10))
+p1 + p2
+```
+
+This creates a scatter plot of miles per gallon (`mpg`) against horsepower (`hp`). This is as basic as it gets — two variables, one for each axis. Also, `plot2()` always tries to start at zero for both `x` and `y` (which can be set with `x.expand` and `y.expand`). With `ggplot()`, the default plot is 'zoomed in' to the data region.
 
 ### Working with Multiple Variables
 
@@ -192,6 +224,8 @@ admitted_patients |>
 Here, the `ifelse()` in category adds the grouping on date, counting the number of unique patients per ward per hospital, again with no need for additional code outside of `plot2()`.
 
 You didn’t need to `group_by()` or `summarise()` your data beforehand — `plot2()` takes care of it all, embedding the transformation directly into the plot creation process.
+
+In `plot2()`, these tidyverse functions are available without loading other packages: `r paste0("\u0060", reexported, "()\u0060", collapse = ", ")`.
 
 ```{r}
 admitted_patients |> 

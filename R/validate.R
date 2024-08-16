@@ -746,6 +746,8 @@ validate_x_scale <- function(values,
                              horizontal,
                              type_backup) {
   
+  print(x.expand)
+  
   if (isTRUE(x.zoom) && is.null(x.limits)) {
     x.limits <- c(NA_real_, NA_real_)
     if (is.null(x.expand)) {
@@ -868,11 +870,14 @@ validate_x_scale <- function(values,
         }
       }
       
+      print(set_x.expand)
+      print(x.expand)
+      
       if (set_x.expand == FALSE) {
         if (min(values, na.rm = TRUE) >= 0) {
-          x.expand <- expansion(mult = c(0.025, 0.05))
+          x.expand <- expansion(mult = c(0.025, 0.25))
         } else {
-          x.expand <- expansion(mult = c(0.05, 0.05))
+          x.expand <- expansion(mult = c(0.25, 0.25))
         }
       } else if (length(x.expand) == 1) {
         x.expand <- expansion(mult = c(x.expand, x.expand))

@@ -12,6 +12,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+#' @importFrom dplyr `%>%`
+#' @export
+dplyr::`%>%`
+
 #' @importFrom dplyr n
 #' @export
 dplyr::n
