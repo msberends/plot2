@@ -532,9 +532,9 @@ setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
       # this is required for restore_mapping()
       x <- as.symbol(x)
     } else {
-      # use str2lang() to get a `call` type:
+      # use str2lang() to get a `call` type, but not if it's already in backticks or if it's a number:
       x <- as.character(x)
-      if (x != make.names(x) && substr(x, 1, 1) != "`") {
+      if (x != make.names(x) && substr(x, 1, 1) != "`" && x %unlike% "^[0-9.]+$") {
         x <- paste0("`", x, "`")
       }
       x <- str2lang(x)
