@@ -374,9 +374,9 @@ plot2 <- function(.data,
                   facet.size = 10,
                   facet.margin = 8,
                   facet.repeat_lbls_x = TRUE,
-                  facet.repeat_lbls_y = TRUE,
+                  facet.repeat_lbls_y = NULL,
                   facet.fixed_y = NULL,
-                  facet.fixed_x = TRUE,
+                  facet.fixed_x = NULL,
                   facet.drop = FALSE,
                   facet.nrow = NULL,
                   facet.relative = FALSE,
@@ -802,6 +802,9 @@ plot2_exec <- function(.data,
                 x_variable_names = tryCatch(suppressWarnings(.data |> select({{ x }}) |> colnames()), error = function(e) NULL))
   on.exit(clean_plot2_env())
   
+  plot2_env$facet.fixed_y <- facet.fixed_y
+  plot2_env$has_given_note <- FALSE
+  
   # get titles based on raw data ----
   # compute contents of title arguments
   title <- validate_title({{ title }}, markdown = isTRUE(markdown), df = .data, max_length = title.linelength)
@@ -1156,7 +1159,7 @@ plot2_exec <- function(.data,
       # no colour in sf's
       mapping <- utils::modifyList(mapping, aes(colour = NULL))
       # # and set sf column
-      # mapping <- update_aes(mapping, geometry = dots$`_sf.column`)
+      # mapping <- setup_aes(mapping, geometry = dots$`_sf.column`)
     }
   }
   if (geom_is_continuous(type) && !geom_is_line_or_area(type) && has_category(df)) {
@@ -1437,7 +1440,8 @@ plot2_exec <- function(.data,
         }
       } else {
         p <- p + 
-          validate_x_scale(values = get_x(df),
+          validate_x_scale(df,
+                           values = get_x(df),
                            x.date_breaks = x.date_breaks,
                            x.date_labels = x.date_labels,
                            x.breaks = x.breaks,
@@ -1449,6 +1453,7 @@ plot2_exec <- function(.data,
                            x.transform = x.transform,
                            x.drop = x.drop,
                            x.zoom = x.zoom,
+                           facet.fixed_x = facet.fixed_x,
                            decimal.mark = decimal.mark,
                            big.mark = big.mark,
                            horizontal = horizontal,
@@ -1619,11 +1624,13 @@ plot2_exec <- function(.data,
   
   # set facet ----
   if (has_facet(df)) {
+    # this must follow after setting the y scale, since plot2_env$facet.fixed_y might have changed
     p <- p +
       validate_facet(df = df,
                      type = type,
                      facet.repeat_lbls_x = facet.repeat_lbls_x,
                      facet.repeat_lbls_y = facet.repeat_lbls_y,
+                     facet.fixed_y = plot2_env$facet.fixed_y,
                      facet.relative = facet.relative,
                      facet.drop = facet.drop,
                      facet.nrow = facet.nrow,
@@ -1712,6 +1719,11 @@ plot2_exec <- function(.data,
   # but only when it's nothing more than a data.frame without row names
   if (identical(class(p$data), "data.frame") && identical(rownames(p$data), as.character(seq_len(nrow(p$data))))) {
     p$data <- as_tibble(p$data)
+  }
+  
+  if (isTRUE(plot2_env$has_given_note) && stats::runif(1) < 0.1 && Sys.getenv("IN_PKGDOWN") == "") {
+    plot2_message(paste0("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages."), print = TRUE)
+    plot2_env$has_given_note <- FALSE
   }
   
   # return plot ----

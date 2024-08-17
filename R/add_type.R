@@ -213,9 +213,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
     # just used e.g. `plot_object |> add_line()`
     inherit.aes <- TRUE
     x_name <- as_label(plot$mapping$x)
-    # has_x <- !identical(x_name, "NULL")
     y_name <- as_label(plot$mapping$y)
-    # has_y <- !identical(y_name, "NULL")
     new_df <- plot$data |> select(any_of(c(x_name, y_name)))
   }
   
@@ -258,7 +256,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
               plotdata_is_length_x = has_x && NROW(plot$data) == NROW(new_df$x),
               plotdata_is_length_y = has_y && NROW(plot$data) == NROW(new_df$y),
               params = params,
-              mapping = update_aes(x = if (has_x) "x" else as_label(plot$mapping$x),
+              mapping = setup_aes(x = if (has_x) "x" else as_label(plot$mapping$x),
                                    y = if (has_y) "y" else as_label(plot$mapping$y),
                                    group = 1),
               data = if (inherit.aes) NULL else new_df,
@@ -267,7 +265,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!colour_missing && !has_category) {
     out$params$colour <- list(...)$colour
   } else if (has_category && !inherit.aes) {
-    out$mapping <- update_aes(out$mapping, colour = category_name)
+    out$mapping <- setup_aes(out$mapping, colour = category_name)
   }
   
   if (!is.null(out$params$colour)) {
@@ -276,7 +274,6 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!is.null(out$params$fill)) {
     out$params$fill <- colour(out$params$fill)
   }
-  
   return(out)
 }
 
@@ -305,11 +302,11 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
   
   if (geom_data$has_y && !geom_data$has_x && !geom_data$plotdata_is_length_y) {
     type <- "hline"
-    mapping <- update_aes(yintercept = "y", colour = geom_data$plot$mapping$colour)
+    mapping <- setup_aes(yintercept = "y", colour = geom_data$plot$mapping$colour)
     geom_data$params$inherit.aes <- NULL
   } else if (geom_data$has_x && !geom_data$has_y && !geom_data$plotdata_is_length_x) {
     type <- "vline"
-    mapping <- update_aes(xintercept = "x", colour = geom_data$plot$mapping$colour)
+    mapping <- setup_aes(xintercept = "x", colour = geom_data$plot$mapping$colour)
     geom_data$params$inherit.aes <- NULL
   } else {
     type <- "line"

@@ -139,6 +139,7 @@ plot2_message <- function(...,
                           type = "info") {
   # at default, only prints in interactive mode and for the website generation
   if (isTRUE(print)) {
+    plot2_env$has_given_note <- TRUE
     # get info icon
     if (isTRUE(base::l10n_info()$`UTF-8`) && interactive()) {
       # \u2139 is a symbol officially named 'information source'
@@ -158,9 +159,6 @@ plot2_message <- function(...,
       message(paste(icon, fn(msg)))
     } else if (type == "warning") {
       warning("\n", paste(icon, fn(msg)), call. = FALSE, immediate. = TRUE)
-    }
-    if (stats::runif(1) < 0.05 && Sys.getenv("IN_PKGDOWN") == "") {
-      message(paste(icon, fn(paste0("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages."))))
     }
   }
 }
@@ -518,7 +516,7 @@ group_sizes <- function(df) {
 # this replaces ggplot2::aes_string(), which was deprecated in 3.4.0
 #' @importFrom ggplot2 aes
 #' @importFrom rlang is_quosure as_label new_quosure
-update_aes <- function(current = aes(), ..., as_symbol = FALSE) {
+setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
   mapping <- list(...)
   caller_env <- parent.frame()
   mapping <- lapply(mapping, function(x) {
@@ -536,7 +534,7 @@ update_aes <- function(current = aes(), ..., as_symbol = FALSE) {
     } else {
       # use str2lang() to get a `call` type:
       x <- as.character(x)
-      if (x %unlike% "^[A-Za-z0-9]") {
+      if (x != make.names(x) && substr(x, 1, 1) != "`") {
         x <- paste0("`", x, "`")
       }
       x <- str2lang(x)
@@ -558,15 +556,15 @@ restore_mapping <- function(p, df) {
                           function(map) {
                             # deparse(map) has a value such as "~`_var_y`"
                             if (any(deparse(map) %like% "_var_x")) {
-                              update_aes(x = get_x_name(df), as_symbol = TRUE)[[1]] 
+                              setup_aes(x = get_x_name(df), as_symbol = TRUE)[[1]] 
                             } else if (any(deparse(map) %like% "_var_y_secondary")) {
-                              update_aes(x = get_y_secondary_name(df), as_symbol = TRUE)[[1]]
+                              setup_aes(x = get_y_secondary_name(df), as_symbol = TRUE)[[1]]
                             } else if (any(deparse(map) %like% "_var_y")) {
-                              update_aes(x = get_y_name(df), as_symbol = TRUE)[[1]]
+                              setup_aes(x = get_y_name(df), as_symbol = TRUE)[[1]]
                             } else if (any(deparse(map) %like% "_var_category")) {
-                              update_aes(x = get_category_name(df), as_symbol = TRUE)[[1]]
+                              setup_aes(x = get_category_name(df), as_symbol = TRUE)[[1]]
                             } else if (any(deparse(map) %like% "_var_facet")) {
-                              update_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
+                              setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
                             } else {
                               map
                             }})
@@ -583,15 +581,15 @@ restore_mapping <- function(p, df) {
   
   # facet mapping
   if (has_facet(df)) {
-    p$facet$params$facets[[1]] <- update_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
+    p$facet$params$facets[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
     names(p$facet$params$facets)[1] <- get_facet_name(df)
     # required for ggplot2::facet_grid(), which is used when facet.relative = TRUE:
     if (length(p$facet$params$rows) > 0) {
-      p$facet$params$rows[[1]] <- update_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
+      p$facet$params$rows[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
       names(p$facet$params$rows)[1] <- get_facet_name(df)
     }
     if (length(p$facet$params$cols) > 0) {
-      p$facet$params$cols[[1]] <- update_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
+      p$facet$params$cols[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
       names(p$facet$params$cols)[1] <- get_facet_name(df)
     }
   }

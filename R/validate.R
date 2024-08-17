@@ -729,7 +729,8 @@ validate_taxonomy <- function(df) {
 
 #' @importFrom ggplot2 scale_x_discrete scale_x_date scale_x_datetime scale_x_continuous expansion waiver
 #' @importFrom scales reverse_trans pretty_breaks
-validate_x_scale <- function(values,
+validate_x_scale <- function(df,
+                             values,
                              x.date_breaks,
                              x.date_labels,
                              x.breaks,
@@ -741,12 +742,11 @@ validate_x_scale <- function(values,
                              x.transform,
                              x.drop,
                              x.zoom,
+                             facet.fixed_x,
                              decimal.mark,
                              big.mark,
                              horizontal,
                              type_backup) {
-  
-  print(x.expand)
   
   if (isTRUE(x.zoom) && is.null(x.limits)) {
     x.limits <- c(NA_real_, NA_real_)
@@ -773,6 +773,22 @@ validate_x_scale <- function(values,
   }
   if (is.null(x.transform)) {
     x.transform <- "identity"
+  }
+  
+  if (is.null(facet.fixed_x) && is.null(x.limits) && has_facet(df)) {
+    # determine if scales should be fixed - if CV_xmax < 25% then fix them:
+    x_maxima <- df |>
+      group_by(across(get_facet_name(df))) |> 
+      summarise(max = max(`_var_x`, na.rm = TRUE))
+    if (!any(is.infinite(x_maxima$max), na.rm = TRUE)) {   
+      coeff_of_variation <- stats::sd(x_maxima$max) / mean(x_maxima$max)
+      if (coeff_of_variation < 0.25) {
+        plot2_message("Assuming ", font_blue("facet.fixed_x = TRUE"), 
+                      " since the ", digit_to_text(nrow(x_maxima)), " ",
+                      font_blue("x"), " scales differ by less than 25%")
+        facet.fixed_x <- TRUE
+      }
+    }
   }
   
   if (!is.null(x.limits)) {
@@ -870,19 +886,27 @@ validate_x_scale <- function(values,
         }
       }
       
-      print(set_x.expand)
-      print(x.expand)
-      
       if (set_x.expand == FALSE) {
         if (min(values, na.rm = TRUE) >= 0) {
-          x.expand <- expansion(mult = c(0.025, 0.25))
+          x.expand <- expansion(mult = c(0.025, 0.2))
         } else {
-          x.expand <- expansion(mult = c(0.25, 0.25))
+          x.expand <- expansion(mult = c(0.2, 0.2))
         }
       } else if (length(x.expand) == 1) {
         x.expand <- expansion(mult = c(x.expand, x.expand))
       } else if (length(x.expand) == 2) {
         x.expand <- expansion(mult = x.expand)
+      }
+
+      if (isTRUE(facet.fixed_x)) {
+        if (!is.na(x.limits[1])) {
+          if (x.limits[1] == 0) {
+            min_lim <- 0
+          } else
+            min_lim <- min(values, na.rm = TRUE)
+        }
+        max_lim <- max(values, na.rm = TRUE)
+        x.limits <- c(min_lim, max_lim)
       }
       scale_x_continuous(labels = x.labels,
                          breaks = breaks_fn(values = values,
@@ -976,6 +1000,7 @@ validate_y_scale <- function(df,
                       " since the ", digit_to_text(nrow(y_maxima)), " ",
                       font_blue("y"), " scales differ by less than 25%")
         facet.fixed_y <- TRUE
+        plot2_env$facet.fixed_y <- TRUE
       }
     }
   }
@@ -2150,11 +2175,23 @@ validate_facet <- function(df,
                            type,
                            facet.repeat_lbls_x,
                            facet.repeat_lbls_y,
+                           facet.fixed_y,
                            facet.relative,
                            facet.drop,
                            facet.nrow,
                            facet.position,
                            horizontal) {
+  
+  if (is.null(facet.repeat_lbls_y)) {
+    if (isTRUE(facet.fixed_y)) {
+      plot2_message("Assuming ", font_blue("facet.repeat_lbls_y = FALSE"),
+                    " since ", font_blue("y"), " has fixed scales")
+      facet.repeat_lbls_y <- FALSE
+    } else {
+      facet.repeat_lbls_y <- TRUE
+    }
+  }
+  
   scales <- "fixed"
   if (isTRUE(facet.repeat_lbls_x) && isTRUE(facet.repeat_lbls_y)) {
     scales <- "free"

@@ -527,13 +527,18 @@ Adding a line to an existing plot is as easy as calling `add_line()`:
 
 ```{r}
 p <- mtcars |> 
-  plot2(mpg, hp)
+  plot2(mpg, hp, as.character(cyl),
+        category.title = "Cylinders")
+
+# Notice how plot2() adds 3 lines here, since `category` is set
+p |> 
+  add_line(y = mean(hp))
 
 p |> 
   add_line(y = mean(hp), colour = "red", legend.value = "Average HP")
 ```
 
-This adds a line at the mean horsepower, with a red colour and a legend entry labeled "Average HP."
+This adds a line at the mean horsepower. The `add_*()` functions automatically correct for `category`, removing the need for pre-processing steps to determine (in this case) the mean. A legend item can also be added by just setting `legend.value`.
 
 In `ggplot2`, this would typically require adding `geom_hline()` with an aesthetic mapping. `plot2()` simplifies this to a single function call.
 
@@ -593,14 +598,17 @@ Here’s how you can apply a custom font from Google Fonts, which will be downlo
 
 ```{r, fig.showtext = TRUE}
 mtcars |> 
-  plot2(mpg, hp,
+  plot2(mpg, hp, wt * 1000,
+        facet = ifelse(vs == 0, "V-shaped Engine", "Straight Engine"),
         font = "Rock Salt",
-        text_factor = 1.5,
         title = "Custom Font Example", 
-        y.title = "Horsepower")
+        x.title = "Miles per US gallon",
+        y.title = "Gross Horsepower",
+        category.title = "Weight (lbs)",
+        facet.fixed_y = TRUE)
 ```
 
-In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot. The `text_factor` argument shows that it can be used to scale the text size of all plot elements, ensuring readability and aesthetic balance.
+In this example, the `Rock Salt` font, a playful and hand-drawn style, is applied across the plot.
 
 In `ggplot2`, using custom fonts often requires extra handling using the `showtext` package with manual adjustments in theme settings. `plot2()` simplifies this by integrating `showtext` into its core, including automatic downloading and font scaling.
 
@@ -612,12 +620,12 @@ By setting font options globally through R options, you can maintain consistent 
 options(plot2.font = "Lobster")
 options(plot2.colour = "viridis")
 
-# Now every plot will use the Syne font by default
 mtcars |> 
-  plot2(mpg, hp, title = "Consistent Font Example")
+  plot2(mpg, hp, title = "Consistent Font Example",
+        text_factor = 1.5)
 ```
 
-In this example, all plots will now use the `Lobster` font, ensuring a consistent appearance across your visualisations.
+In this example, all plots will now use the `Lobster` font, ensuring a consistent appearance across your visualisations. The `text_factor` argument shows that it can be used to scale the text size of all plot elements, ensuring readability and aesthetic balance.
 
 ```{r}
 # reset again

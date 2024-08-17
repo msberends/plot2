@@ -554,3 +554,9 @@ test_that("errorbars work", {
                     plot2(type = "c", colour = "pink") |>
                     add_errorbar(error1, error2), "gg")
 })
+
+test_that("aes works", {
+  expect_identical(
+    aes(x = some_var, y = `as.character(some_var)`),
+    setup_aes(x = "some_var", y = "as.character(some_var)"))
+})
