@@ -775,7 +775,7 @@ validate_x_scale <- function(df,
     x.transform <- "identity"
   }
   
-  if (is.null(facet.fixed_x) && is.null(x.limits) && has_facet(df)) {
+  if (is.null(facet.fixed_x) && is.null(x.limits) && has_facet(df) && mode(get_x(df)) == "numeric" && !is.factor(get_x(df))) {
     # determine if scales should be fixed - if CV_xmax < 25% then fix them:
     x_maxima <- df |>
       group_by(across(get_facet_name(df))) |> 
