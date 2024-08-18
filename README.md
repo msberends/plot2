@@ -1,6 +1,8 @@
 # `plot2`: Simplified and Enhanced Data Visualisation in R
 
-`plot2` is a powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require manual intervention in `ggplot2`. This allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
+`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require manual intervention in `ggplot2`, `dplyr`, `tidyr` and `forcats`. This allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
+
+> For a comprehensive guide to using `plot2`, including advanced features and customisation options, please [see the full vignette here](https://msberends.github.io/plot2/articles/plot2.html).
 
 ## Philosophy
 
@@ -10,11 +12,11 @@
 
 ## Key Features
 
-- **Plotting With As Few Lines As Possible:** no need to type `ggplot()`, `geom_col()`, `aes()`, `scale_colour_manual()` or `theme()` dozens of times anymore, just one `plot2` call will suffice.
+- **Plotting With As Few Lines As Possible:** no need to type `ggplot()`, `geom_col()`, `aes()`, `scale_colour_manual()`, `facet_wrap()` or `theme()` anymore, just one `plot2()` call will suffice.
 - **Automatic Plot Selection:** `plot2` automatically chooses the best plot type based on your data, saving you time and effort.
-- **Inline Data Transformations:** Perform data transformations directly within the plotting function, eliminating the need for pre-processing steps.
+- **Inline Data Transformations:** Eliminate the need for manual pre-processing steps e.g. in `dplyr` and `tidyr`, by performing data transformations directly within the plotting function.
 - **Enhanced Sorting and Faceting:** Easily sort and facet your data with simple arguments, streamlining the creation of complex multi-panel plots.
-- **Customisable Themes:** Includes `theme_minimal2()`, a minimalist theme optimised for clear and professional outputs, perfect for publications and presentations.
+- **A Clean Theme:** Includes `theme_minimal2()`, a minimalist theme optimised for clear and professional outputs, perfect for PDF publications, scientific manuscripts, and presentations.
 - **Seamless Integration with ggplot2:** Retain all the power and flexibility of `ggplot2` while benefiting from `plot2`’s streamlined interface.
 
 ## Installation
@@ -68,8 +70,6 @@ admitted_patients |>
         facet = ward)
 ```
 
-For a comprehensive guide to using `plot2`, including advanced features and customisation options, please see the full vignette [here](https://msberends.github.io/plot2/articles/plot2.html).
-
 ## Getting Involved
 
 We welcome contributions to `plot2`, whether it's through reporting issues, suggesting features, or submitting pull requests. If you're familiar with `ggplot2` and the tidyverse, your insights will be especially valuable as we continue to develop and refine the package.
@@ -80,5 +80,5 @@ Though only released here in August 2024, this package has had years of developm
 
 ## License
 
-This project is licensed under the GPL-v2 License - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the GNU GPL v2.0 License - see the [LICENSE](LICENSE.md) file for details.
 
