@@ -60,7 +60,10 @@
 <code>plot2</code>: Simplified and Enhanced Data Visualisation in R<a class="anchor" aria-label="anchor" href="#plot2-simplified-and-enhanced-data-visualisation-in-r"></a>
 </h1>
 </div>
-<p><code>plot2</code> is a powerful extension of <code>ggplot2</code>, designed to streamline the process of creating high-quality data visualisations in R. Built with the philosophy of <strong>Less Typing, More Plotting</strong>, <code>plot2</code> automates many of the routine tasks that typically require manual intervention in <code>ggplot2</code>. This allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.</p>
+<p><code>plot2</code> is a simple yet powerful extension of <code>ggplot2</code>, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of <strong>Less Typing, More Plotting</strong>, <code>plot2</code> automates many of the routine tasks that typically require manual intervention in <code>ggplot2</code>, <code>dplyr</code>, <code>tidyr</code> and <code>forcats</code>. This allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.</p>
+<blockquote>
+<p>For a comprehensive guide to using <code>plot2</code>, including advanced features and customisation options, please <a href="https://msberends.github.io/plot2/articles/plot2.html">see the full vignette here</a>.</p>
+</blockquote>
 <div class="section level2">
 <h2 id="philosophy">Philosophy<a class="anchor" aria-label="anchor" href="#philosophy"></a>
 </h2>
@@ -72,15 +75,15 @@
 </h2>
 <ul>
 <li>
-<strong>Plotting With As Few Lines As Possible:</strong> no need to type <code>ggplot()</code>, <code>geom_col()</code>, <code>aes()</code>, <code>scale_colour_manual()</code> or <code>theme()</code> dozens of times anymore, just one <code>plot2</code> call will suffice.</li>
+<strong>Plotting With As Few Lines As Possible:</strong> no need to type <code>ggplot()</code>, <code>geom_col()</code>, <code>aes()</code>, <code>scale_colour_manual()</code>, <code>facet_wrap()</code> or <code>theme()</code> anymore, just one <code><a href="reference/plot2.html">plot2()</a></code> call will suffice.</li>
 <li>
 <strong>Automatic Plot Selection:</strong> <code>plot2</code> automatically chooses the best plot type based on your data, saving you time and effort.</li>
 <li>
-<strong>Inline Data Transformations:</strong> Perform data transformations directly within the plotting function, eliminating the need for pre-processing steps.</li>
+<strong>Inline Data Transformations:</strong> Eliminate the need for manual pre-processing steps e.g. in <code>dplyr</code> and <code>tidyr</code>, by performing data transformations directly within the plotting function.</li>
 <li>
 <strong>Enhanced Sorting and Faceting:</strong> Easily sort and facet your data with simple arguments, streamlining the creation of complex multi-panel plots.</li>
 <li>
-<strong>Customisable Themes:</strong> Includes <code><a href="reference/theme_minimal2.html">theme_minimal2()</a></code>, a minimalist theme optimised for clear and professional outputs, perfect for publications and presentations.</li>
+<strong>A Clean Theme:</strong> Includes <code><a href="reference/theme_minimal2.html">theme_minimal2()</a></code>, a minimalist theme optimised for clear and professional outputs, perfect for PDF publications, scientific manuscripts, and presentations.</li>
 <li>
 <strong>Seamless Integration with ggplot2:</strong> Retain all the power and flexibility of <code>ggplot2</code> while benefiting from <code>plot2</code>’s streamlined interface.</li>
 </ul>
@@ -133,7 +136,6 @@
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>,</span>
 <span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span>, <span class="st">"Prior to 2010"</span>, <span class="st">"Since 2010"</span><span class="op">)</span>,</span>
 <span>        facet <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span></code></pre></div>
-<p>For a comprehensive guide to using <code>plot2</code>, including advanced features and customisation options, please see the full vignette <a href="https://msberends.github.io/plot2/articles/plot2.html">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-involved">Getting Involved<a class="anchor" aria-label="anchor" href="#getting-involved"></a>
@@ -148,7 +150,7 @@
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
-<p>This project is licensed under the GPL-v2 License - see the <a href="LICENSE.html">LICENSE</a> file for details.</p>
+<p>This project is licensed under the GNU GPL v2.0 License - see the <a href="LICENSE.html">LICENSE</a> file for details.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
