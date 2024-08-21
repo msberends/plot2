@@ -1,6 +1,6 @@
 # `plot2`: Simplified and Enhanced Data Visualisation in R
 
-`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require manual intervention in `ggplot2`, `dplyr`, `tidyr` and `forcats`. This allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
+`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require manual intervention in `ggplot2`, and even looses the need for pre-processing steps in, e.g., `dplyr`, `tidyr` and `forcats`. This package allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
 
 > For a comprehensive guide to using `plot2`, including advanced features and customisation options, please [see the full vignette here](https://msberends.github.io/plot2/articles/plot2.html).
 
@@ -8,15 +8,15 @@
 
 `ggplot2` is a versatile tool that has become a cornerstone of data visualisation in R, giving users unparalleled control over their plots. However, with this flexibility often comes the need for repetitive and verbose code, especially for routine tasks such as setting axis labels, choosing plot types, or transforming data.
 
-`plot2` is designed to complement `ggplot2` by offering a more streamlined and intuitive interface. It simplifies the process of creating complex plots by automatically handling many of the details, without sacrificing the flexibility and power that `ggplot2` provides. Whether you're quickly exploring data or preparing a polished visualisation for publication, `plot2` helps you get there faster with less code.
+`plot2` is designed to complement `ggplot2` by offering a more streamlined and intuitive interface. It simplifies the process of creating plots by automatically handling many of the details, without sacrificing the flexibility and power that `ggplot2` provides. Whether you're quickly exploring data or preparing a polished visualisation for publication, `plot2` helps you get there faster with less code.
 
 ## Key Features
 
 - **Plotting With As Few Lines As Possible:** no need to type `ggplot()`, `geom_col()`, `aes()`, `scale_colour_manual()`, `facet_wrap()` or `theme()` anymore, just one `plot2()` call will suffice.
 - **Automatic Plot Selection:** `plot2` automatically chooses the best plot type based on your data, saving you time and effort.
-- **Inline Data Transformations:** Eliminate the need for manual pre-processing steps e.g. in `dplyr` and `tidyr`, by performing data transformations directly within the plotting function.
+- **Inline Data Transformations:** Eliminate the need for manual pre-processing steps e.g. in `dplyr` and `tidyr`, by performing data transformations directly within the plotting function, even for axis and plot titles.
 - **Enhanced Sorting and Faceting:** Easily sort and facet your data with simple arguments, streamlining the creation of complex multi-panel plots.
-- **A Clean Theme:** Includes `theme_minimal2()`, a minimalist theme optimised for clear and professional outputs, perfect for PDF publications, scientific manuscripts, and presentations.
+- **New Clean Theme:** Includes `theme_minimal2()`, a new minimalist theme based on `theme_minimal()` that is further optimised for clear and professional outputs, therefore perfect for PDF publications, scientific manuscripts, and presentations.
 - **Seamless Integration with ggplot2:** Retain all the power and flexibility of `ggplot2` while benefiting from `plot2`’s streamlined interface.
 
 ## Installation
@@ -39,9 +39,11 @@ Here’s how easy it is to get started with `plot2`:
 ```r
 library(plot2)
 
-# Like plot(), just pass x, y
-mtcars |> 
-  plot2(mpg, hp)
+# Like plot(), just pass x, y in the way you prefer
+plot2(mtcars, mpg, hp)
+mtcars |> plot2(mpg, hp)
+mtcars %>% plot2(mpg, hp)
+plot2(hp ~ mpg, data = mtcars)
 
 # Use inline transformations
 mtcars |> 
