@@ -1,6 +1,6 @@
 # `plot2`: Simplified and Enhanced Data Visualisation in R
 
-`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require manual intervention in `ggplot2`, and even looses the need for pre-processing steps in, e.g., `dplyr`, `tidyr` and `forcats`. This package allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
+`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require manual intervention in `ggplot2`. For plotting on-the-fly, it even renders pre-processing steps in, e.g., `dplyr`, `tidyr` and `forcats` largely superfluous. This package allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
 
 > For a comprehensive guide to using `plot2`, including advanced features and customisation options, please [see the full vignette here](https://msberends.github.io/plot2/articles/plot2.html).
 
