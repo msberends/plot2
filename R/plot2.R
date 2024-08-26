@@ -542,8 +542,6 @@ plot2 <- function(.data,
     }
   }
   
-  print(class(.data))
-  
   if (tryCatch(!inherits(.data, "sf") &&
                ((isTRUE("geometry" %in% colnames(.data)) && suppressWarnings(inherits(.data$geometry, "sfc")))
                 || isTRUE(attributes(.data)$sf_column %in% colnames(.data))) &&
