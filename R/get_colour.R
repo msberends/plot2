@@ -78,7 +78,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
       x <- plot2_env$reg_cols[names(plot2_env$reg_cols) == x][[1]]
       if (length(x) < length) {
         x <- grDevices::colorRampPalette(x)(length)
-        plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
+        # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
       }
       x <- x[seq_len(length)]
       # some support names, so return the object
@@ -97,7 +97,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
       if (is.null(new_cols)) {
         # failed or returned a warning, so now try to expand the colour palette with an 8-sized basis
         new_cols <- grDevices::colorRampPalette(grDevices::palette.colors(8, palette = x))(length)
-        plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
+        # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
       }
       # some support names, so return the object
       return(structure(new_cols, class = c("colour", "character")))
