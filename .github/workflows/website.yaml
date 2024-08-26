@@ -44,6 +44,7 @@ jobs:
         with:
           extra-packages: any::pkgdown
           needs: website
+          upgrade: 'TRUE'
 
       - name: Generate icons
         run: pkgdown::build_favicons()
