@@ -16,10 +16,13 @@
 
 /* import fonts from Google */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-pre code {
+pre code, code, .code {
   font-family: 'Fira Code', monospace !important;
   font-feature-settings: "ss02", "ss06";
   /* don't wrap syntax on small devices: */
   word-wrap: normal !important;
+  word-break: keep-all !important;
   white-space: pre !important;
+  color: var(--bs-primary)  !important;
+  background-color: transparent  !important;
 }
