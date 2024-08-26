@@ -640,7 +640,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># the type will be points since the first two variables are numeric</span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x = Sepal.Length</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = Sepal.Width</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category = Species</span></span>
@@ -650,19 +649,16 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># if x and y are set, no additional mapping will be set:</span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">Sepal.Width</span>, <span class="va">Sepal.Length</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">Species</span>, <span class="va">Sepal.Length</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="plot2-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># the arguments are in this order: x, y, category, facet</span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="va">Sepal.Width</span>, <span class="va">Petal.Length</span>, <span class="va">Species</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_x = TRUE</span><span style="color: #000000;"> since the three </span><span style="color: #0000BB;">x</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_y = TRUE</span><span style="color: #000000;"> since the three </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
@@ -672,7 +668,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="va">Sepal.Width</span>, <span class="va">Petal.Length</span>, <span class="va">Species</span>,</span></span>
 <span class="r-in"><span>        colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span> <span class="co"># set the viridis colours</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_x = TRUE</span><span style="color: #000000;"> since the three </span><span style="color: #0000BB;">x</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_y = TRUE</span><span style="color: #000000;"> since the three </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
@@ -682,7 +677,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="va">Sepal.Width</span>, <span class="va">Petal.Length</span>, <span class="va">Species</span>,</span></span>
 <span class="r-in"><span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"red"</span>, <span class="st">"black"</span><span class="op">)</span><span class="op">)</span> <span class="co"># set own colours</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category.midpoint = 3.45</span><span style="color: #000000;"> (the current </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> scale centre)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_x = TRUE</span><span style="color: #000000;"> since the three </span><span style="color: #0000BB;">x</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
@@ -695,13 +689,11 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Sepal.Length</span>,</span></span>
 <span class="r-in"><span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Length <span class="op">=</span> <span class="va">Petal.Length</span>, Width <span class="op">=</span> <span class="va">Petal.Width</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        category.title <span class="op">=</span> <span class="st">"Petal property"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="co"># with included selection helpers such as where(), starts_with(), etc.:</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="plot2-8.png" alt="" width="700" height="433"></span>
@@ -713,7 +705,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        y_secondary <span class="op">=</span> <span class="va">disp</span> <span class="op">^</span> <span class="fl">2</span>, </span></span>
 <span class="r-in"><span>        y_secondary.scientific <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"Secondary y axis sets colour to the axis titles"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -737,19 +728,16 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># the arguments are in this order: x, y, category, facet</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">hospital</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="plot2-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span>, <span class="va">gender</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">hospital</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">gender</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="plot2-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">hospital</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">gender</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">ward</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_y = TRUE</span><span style="color: #000000;"> since the two </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span><span style="color: #000000;"> since </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> has fixed scales</span></span>
@@ -758,14 +746,12 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># or use any function for y</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_y = TRUE</span><span style="color: #000000;"> since the two </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> scales differ by less than 25%</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span><span style="color: #000000;"> since </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> has fixed scales</span></span>
 <span class="r-plt img"><img src="plot2-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-plt img"><img src="plot2-14.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -777,13 +763,11 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        colour_fill <span class="op">=</span> <span class="st">"#FFBB00AA"</span>,</span></span>
 <span class="r-in"><span>        linewidth <span class="op">=</span> <span class="fl">1.25</span>,</span></span>
 <span class="r-in"><span>        y.age <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">hospital</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">gender</span><span style="color: #000000;"> contain at least three values</span></span>
 <span class="r-plt img"><img src="plot2-15.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">age</span>, type <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">binwidth = 6.4</span><span style="color: #000000;"> based on data</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">smooth = TRUE</span><span style="color: #000000;"> for </span><span style="color: #0000BB;">type = "histogram"</span></span>
 <span class="r-plt img"><img src="plot2-16.png" alt="" width="700" height="433"></span>
@@ -795,7 +779,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Total rows:"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        caption <span class="op">=</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"From {n_distinct(hospital)} hospitals"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        x.title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Age ranging from"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">" to "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">binwidth = 6.4</span><span style="color: #000000;"> based on data</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">smooth = TRUE</span><span style="color: #000000;"> for </span><span style="color: #0000BB;">type = "histogram"</span></span>
 <span class="r-plt img"><img src="plot2-17.png" alt="" width="700" height="433"></span>
@@ -804,28 +787,24 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># set in non-continuous types:</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-plt img"><img src="plot2-18.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
 <span class="r-in"><span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-plt img"><img src="plot2-19.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>        </span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
 <span class="r-in"><span>        stackedpercent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-plt img"><img src="plot2-20.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># two categories might benefit from a dumbbell plot:</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-plt img"><img src="plot2-21.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span> </span></span>
 <span class="r-in"><span><span class="co"># sort on any direction:</span></span></span>
@@ -833,7 +812,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
 <span class="r-in"><span>        x.sort <span class="op">=</span> <span class="st">"freq-asc"</span>,</span></span>
 <span class="r-in"><span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Applying </span><span style="color: #0000BB;">x.sort = "freq-asc"</span><span style="color: #000000;"> using </span><span style="color: #0000BB;">summarise_function = sum</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-plt img"><img src="plot2-22.png" alt="" width="700" height="433"></span>
@@ -843,7 +821,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"D"</span>, <span class="st">"A"</span><span class="op">)</span>, <span class="co"># missing values ("C") will be added</span></span></span>
 <span class="r-in"><span>        category.sort <span class="op">=</span> <span class="st">"alpha-desc"</span>,</span></span>
 <span class="r-in"><span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span>
 <span class="r-plt img"><img src="plot2-23.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>        </span></span>
@@ -852,7 +829,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Age</span>, <span class="va">Class</span>, <span class="va">Survived</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        category <span class="op">=</span> <span class="va">Sex</span>,</span></span>
 <span class="r-in"><span>        type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "table"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">!</span> <span style="color: #BB00BB;">Input class 'table' was transformed using `as.data.frame()`</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = Freq</span><span style="color: #000000;"> since `as.data.table()` on a `table` results in a 'Freq' column</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span>
@@ -879,7 +855,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-out co"><span class="r-pr">#&gt;</span> wt   -0.17471588 -0.5549157 -0.6924953 -0.5832870  0.4276059</span>
 <span class="r-in"><span><span class="va">correlation_matrix</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "matrix" "array" </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">type = "tile"</span><span style="color: #000000;"> since the matrix contains identical row and column names</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">!</span> <span style="color: #BB00BB;">Omitting printing of 121 datalabels - use </span><span style="color: #0000BB;">datalabels = TRUE</span><span style="color: #BB00BB;"> to force printing</span></span>
 <span class="r-plt img"><img src="plot2-25.png" alt="" width="700" height="433"></span>
@@ -889,7 +864,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>        category.title <span class="op">=</span> <span class="st">"*r*-value"</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span>  <span class="st">"Correlation matrix"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "matrix" "array" </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">type = "tile"</span><span style="color: #000000;"> since the matrix contains identical row and column names</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category.midpoint = 0</span><span style="color: #000000;"> (the current </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> scale centre)</span></span>
 <span class="r-plt img"><img src="plot2-26.png" alt="" width="700" height="433"></span>
@@ -905,7 +879,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        smooth.formula <span class="op">=</span> <span class="st">"y ~ log(x)"</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"Titles/captions *support* **markdown**"</span>,</span></span>
 <span class="r-in"><span>        subtitle <span class="op">=</span> <span class="st">"Axis titles contain the square notation: x^2"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "lm"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-27.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -916,7 +889,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: sf</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sf"         "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category = area_km2</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">datalabels.centroid = TRUE</span><span style="color: #000000;">. Set to FALSE for a point-on-surface placing of datalabels.</span></span>
 <span class="r-plt img"><img src="plot2-28.png" alt="" width="700" height="433"></span>
@@ -925,7 +897,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"This plot uses a Google Font"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-29.png" alt="" width="700" height="433"></span>
 </code></pre></div>
