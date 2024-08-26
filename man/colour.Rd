@@ -57,7 +57,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R, such as \code{"chocolate"}, \code{"darkseagreen4"}, \code{"mediumorchid1"}, \code{"red2"}, \code{"violetred1"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R, such as \code{"chartreuse3"}, \code{"lightsteelblue"}, \code{"maroon"}, \code{"oldlace"}, \code{"orangered"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 

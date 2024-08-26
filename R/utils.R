@@ -227,7 +227,10 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
   
   # this adds the column again with the right label
   var_label <- paste0(trimws(var_label), collapse = " ")
-  if (var_label != "NULL" && !var_label %in% colnames(df)) {
+  var_label <- gsub("^\\{ \\{", "", var_label)
+  var_label <- gsub("\\} \\}$", "", var_label)
+  var_label <- trimws(var_label)
+  if (var_label != "NULL" && !var_label %in% colnames(df) && paste0("_var_", var_name) %in% colnames(df)) {
     df$`_var_new` <- df[, paste0("_var_", var_name), drop = TRUE]
     colnames(df)[colnames(df) == "_var_new"] <- var_label
   }
@@ -695,4 +698,8 @@ format_error <- function(e, replace = character(0), by = character(0)) {
   }
   txt <- trimws(txt)
   paste0(txt, collapse = "\n")
+}
+
+`%or%` <- function(x, y) {
+  if (is.null(x)) y else x
 }

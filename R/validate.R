@@ -888,8 +888,10 @@ validate_x_scale <- function(df,
       
       if (set_x.expand == FALSE) {
         if (min(values, na.rm = TRUE) >= 0) {
+          # really start at zero
           x.expand <- expansion(mult = c(0.025, 0.2))
         } else {
+          # leave some space to the left, same as to the right
           x.expand <- expansion(mult = c(0.2, 0.2))
         }
       } else if (length(x.expand) == 1) {
@@ -897,13 +899,16 @@ validate_x_scale <- function(df,
       } else if (length(x.expand) == 2) {
         x.expand <- expansion(mult = x.expand)
       }
-
+      
       if (isTRUE(facet.fixed_x)) {
         if (!is.na(x.limits[1])) {
           if (x.limits[1] == 0) {
             min_lim <- 0
-          } else
+          } else {
             min_lim <- min(values, na.rm = TRUE)
+          }
+        } else {
+          min_lim <- 0
         }
         max_lim <- max(values, na.rm = TRUE)
         x.limits <- c(min_lim, max_lim)
