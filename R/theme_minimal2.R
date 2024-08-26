@@ -44,10 +44,10 @@ theme_minimal2 <- function(...,
                            colour_font_axis = getOption("plot2.colour_font_axis", "grey25"),
                            colour_background = getOption("plot2.colour_background", "white")) {
   
-  colour_font_primary <- colour(colour_font_primary, length = 1)
-  colour_font_secondary <- colour(colour_font_secondary, length = 1)
-  colour_font_axis <- colour(colour_font_axis, length = 1)
-  colour_background <- colour(colour_background, length = 1)
+  colour_font_primary <- get_colour(colour_font_primary, length = 1)
+  colour_font_secondary <- get_colour(colour_font_secondary, length = 1)
+  colour_font_axis <- get_colour(colour_font_axis, length = 1)
+  colour_background <- get_colour(colour_background, length = 1)
   
   t <- theme_bw(base_size = 11) %+replace%
     theme(

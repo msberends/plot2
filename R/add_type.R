@@ -269,10 +269,10 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   }
   
   if (!is.null(out$params$colour)) {
-    out$params$colour <- colour(out$params$colour)
+    out$params$colour <- get_colour(out$params$colour)
   }
   if (!is.null(out$params$fill)) {
-    out$params$fill <- colour(out$params$fill)
+    out$params$fill <- get_colour(out$params$fill)
   }
   return(out)
 }
@@ -280,7 +280,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 #' @rdname add_type
 #' @importFrom ggplot2 geom_line aes scale_linetype_manual
 #' @param x,y aesthetic arguments
-#' @param colour,colour_fill colour of the line or column, will be evaluated with [colour()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
+#' @param colour,colour_fill colour of the line or column, will be evaluated with [get_colour()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
 #' @details The function [add_line()] will add:
 #' * [`geom_hline()`][ggplot2::geom_hline()] if only `y` is provided;
 #' * [`geom_vline()`][ggplot2::geom_vline()] if only `x` is provided;
@@ -330,7 +330,7 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
     p <- p +
       geom_line(data = data.frame(x = c(Inf, Inf), y = c(Inf, Inf), group = c(legend.value, legend.value)),
                 mapping = aes(x = x, y = y, linetype = group, group = group),
-                colour = colour(colour[1L]),
+                colour = get_colour(colour[1L]),
                 linewidth = validate_linewidth(geom_data$params$linewidth, type = "geom_line", type_backup = "geom_line"),
                 inherit.aes = FALSE) +
       scale_linetype_manual(name = NULL, values = stats::setNames(linetype, legend.value), labels = label_fn)
@@ -372,7 +372,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
     p <- p +
       geom_point(data = data.frame(x = c(Inf, Inf), y = c(-Inf, -Inf), group = c(legend.value, legend.value)),
                  mapping = aes(x = x, y = y, shape = group, group = group),
-                 colour = colour(colour[1L]),
+                 colour = get_colour(colour[1L]),
                  size = validate_size(geom_data$params$size, type = "geom_point", type_backup = "geom_point"),
                  inherit.aes = FALSE) +
       scale_shape_manual(name = NULL, values = stats::setNames(16, legend.value), labels = label_fn)
@@ -416,8 +416,8 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
     p <- p +
       geom_col(data = data.frame(x = c(Inf, Inf), y = c(Inf, Inf), group = c(legend.value, legend.value)),
                mapping = aes(x = x, y = y, linewidth = group, group = group),
-               colour = colour(colour[1L]),
-               fill = colour(colour[1L]),
+               colour = get_colour(colour[1L]),
+               fill = get_colour(colour[1L]),
                inherit.aes = FALSE) +
       scale_linewidth_manual(name = NULL, values = stats::setNames(0.25, legend.value), labels = label_fn)
   }
@@ -446,7 +446,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   # build additional parameters
   params <- list(inherit.aes = inherit.aes)
   if (!missing(colour) || !isTRUE(inherit.aes) || !"colour" %in% names(plot$mapping)) {
-    params <- c(params, list(colour = colour(colour)))
+    params <- c(params, list(colour = get_colour(colour)))
   }
   params <- c(params, list(width = width))
   if (length(list(...)) > 0) {
@@ -509,8 +509,8 @@ add_sf <- function(plot,
             inherit.aes = inherit.aes,
             size = size,
             linewidth = linewidth,
-            colour = colour(colour),
-            fill = colour(colour_fill),
+            colour = get_colour(colour),
+            fill = get_colour(colour_fill),
             ...)
   
   if (tryCatch(!is.null(datalabels), error = function(e) TRUE)) {
@@ -534,7 +534,7 @@ add_sf <- function(plot,
                    family = datalabels.font,
                    angle = datalabels.angle,
                    nudge_y = datalabels.nudge_y,
-                   colour = colour(colour),
+                   colour = get_colour(colour),
                    fun.geometry = function(x) {
                      x[!sf::st_is_valid(x)] <- sf::st_point()
                      suppressWarnings(sf::st_point_on_surface(sf::st_zm(x)))

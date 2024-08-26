@@ -384,13 +384,13 @@ mtcars |>
   plot2(mpg, hp, category = cyl, colour = c("4" = "red", "6" = "blue", "8" = "green"))
 ```
 
-You can use any colour that the implemented `colour()` function can understand, such as colour names and HTML codes:
+You can use any colour that the implemented `get_colour()` function can understand, such as colour names and HTML codes:
 
 ```{r}
-colour("red")
-colour("#FF0000")
-colour("ff0000")
-colour("f00")
+get_colour("red")
+get_colour("#FF0000")
+get_colour("ff0000")
+get_colour("f00")
 ```
 
 But most importantly, you can register new colours to the `plot2` package. Let's assume these six colours are from the style of your university/company/etc.:

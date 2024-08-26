@@ -1694,15 +1694,15 @@ validate_colour <- function(df,
     # this is for validate_category_scale()
     if (length(colour) == 1 && !is.na(colour)) {
       if (colour %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour)) > 1) {
-        colour <- colour(colour, 4, opacity = colour_opacity)
+        colour <- get_colour(colour, 4, opacity = colour_opacity)
       } else if (colour %in% viridisLite_colours) {
         # generate viridis colour
-        colour <- colour(colour, 5, opacity = colour_opacity)
+        colour <- get_colour(colour, 5, opacity = colour_opacity)
       } else {
-        colour <- colour(colour, opacity = colour_opacity)
+        colour <- get_colour(colour, opacity = colour_opacity)
       }
     } else {
-      colour <- colour(colour, opacity = colour_opacity)
+      colour <- get_colour(colour, opacity = colour_opacity)
     }
     
     if (is.null(colour_fill) || identical(colour.bak, colour_fill)) {
@@ -1710,15 +1710,15 @@ validate_colour <- function(df,
     } else {
       if (length(colour_fill) == 1 && !is.na(colour_fill)) {
         if (colour_fill %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour_fill)) > 1) {
-          colour_fill <- colour(colour_fill, 4, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, 4, opacity = colour_opacity)
         } else if (colour_fill %in% viridisLite_colours) {
           # generate viridis colour
-          colour_fill <- colour(colour_fill, 5, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, 5, opacity = colour_opacity)
         } else {
-          colour_fill <- colour(colour_fill, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
         }
       } else {
-        colour_fill <- colour(colour_fill, opacity = colour_opacity)
+        colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
       }
     }
     return(list(colour = colour,
@@ -1743,18 +1743,18 @@ validate_colour <- function(df,
         colour_fill <- "#595959"
       }
     }
-    colour <- colour(colour, opacity = colour_opacity)
+    colour <- get_colour(colour, opacity = colour_opacity)
     if (geom_is_continuous(type) && is.null(colour_fill)) {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
       colour_fill <- add_white(colour, white = 0.75)
     } else {
-      colour_fill <- colour(colour_fill, opacity = colour_opacity)
+      colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
     }
     
   } else {
     # has also category, and it's not numeric
     n_unique <- length(unique(get_category(df)))
-    colour <- colour(colour,
+    colour <- get_colour(colour,
                      length = ifelse(length(colour) == 1, n_unique, 1),
                      opacity = colour_opacity)
     if (geom_is_continuous(type) && is.null(colour_fill) && type_backup != "sankey") {
@@ -1762,7 +1762,7 @@ validate_colour <- function(df,
       # but not for Sankey plots - they have sankey.alpha
       colour_fill <- add_white(colour, white = 0.75)
     } else {
-      colour_fill <- colour(colour_fill,
+      colour_fill <- get_colour(colour_fill,
                             length = ifelse(length(colour_fill) == 1, n_unique, 1),
                             opacity = colour_opacity)
     }
@@ -1809,8 +1809,8 @@ validate_colour <- function(df,
     colour_fill <- colour_fill[1]
   }
   
-  list(colour = colour(colour),
-       colour_fill = colour(colour_fill))
+  list(colour = get_colour(colour),
+       colour_fill = get_colour(colour_fill))
 }
 
 validate_size <- function(size, type, type_backup) {
@@ -2029,11 +2029,11 @@ validate_theme <- function(theme,
   
   # set other properties to theme, that are set in plot2(...)
   if (!isTRUE(orginally_empty) && !is.null(background)) {
-    theme$panel.background <- element_rect(fill = colour(background),
+    theme$panel.background <- element_rect(fill = get_colour(background),
                                            colour = theme$panel.background$colour,
                                            linewidth = theme$panel.background$linewidth,
                                            linetype = theme$panel.background$linetype)
-    theme$plot.background <- element_rect(fill = colour(background),
+    theme$plot.background <- element_rect(fill = get_colour(background),
                                           colour = theme$plot.background$colour,
                                           linewidth = theme$plot.background$linewidth,
                                           linetype = theme$plot.background$linetype)
@@ -2093,10 +2093,10 @@ validate_theme <- function(theme,
   }
   
   if (!is.null(title.colour)) {
-    theme$plot.title$colour <- colour(title.colour)
+    theme$plot.title$colour <- get_colour(title.colour)
   }
   if (!is.null(subtitle.colour)) {
-    theme$plot.subtitle$colour <- colour(subtitle.colour)
+    theme$plot.subtitle$colour <- get_colour(subtitle.colour)
   }
   # facet
   theme$strip.background$fill <- facet.fill
@@ -2289,11 +2289,11 @@ set_datalabels <- function(p,
   }
   
   if (!isTRUE(stacked) && !isTRUE(stackedpercent) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
-    datalabels.colour_fill <- colour(datalabels.colour_fill, opacity = 0.4) # 40% transparency
+    datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.4) # 40% transparency
   } else {
-    datalabels.colour_fill <- colour(datalabels.colour_fill, opacity = 0.75) # 75% transparency
+    datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.75) # 75% transparency
   }
-  datalabels.colour <- colour(datalabels.colour)
+  datalabels.colour <- get_colour(datalabels.colour)
   
   # set label and text offsets (does not apply to sf and tile plots)
   text_horizontal <- 0.5

@@ -24,30 +24,30 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' * One of the pre-registered colours using [register_colour()]
 #' @param length size of the vector to be returned
 #' @param opacity amount of opacity (0 = solid, 1 = transparent)
-#' @details A palette from \R will be expanded where needed, so even `colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
+#' @details A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
 #' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
 #' @rdname colour
 #' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
 #' @importFrom viridisLite viridis
 #' @export
 #' @examples
-#' colour(c("red", "tan1", "#ffa", "FFAA00"))
+#' get_colour(c("red", "tan1", "#ffa", "FFAA00"))
 #' 
 #' par(mar = c(0.5, 2.5, 1.5, 0)) # set plot margins for below plots
 #' 
 #' # all colourblind-safe colour palettes from the famous viridisLite package
 #' barplot(1:7,
-#'         col = colour("viridis", 7))
+#'         col = get_colour("viridis", 7))
 #' barplot(1:7,
-#'         col = colour("magma", 7))
+#'         col = get_colour("magma", 7))
 #'
 #' barplot(8:1,
-#'         col = colour("R4", 8),
+#'         col = get_colour("R4", 8),
 #'         main = "Some palettes have only 8 colours...")
 #' barplot(20:1,
-#'         col = colour("R4", 20),
+#'         col = get_colour("R4", 20),
 #'         main = "Not anymore!")
-colour <- function(x, length = 1, opacity = 0) {
+get_colour <- function(x, length = 1, opacity = 0) {
   
   if (is.null(x)) {
     # transparent white
@@ -181,7 +181,7 @@ colour <- function(x, length = 1, opacity = 0) {
 }
 
 #' @rdname colour
-#' @param ... named vectors with known, valid colours. They must be coercible with [colour()].
+#' @param ... named vectors with known, valid colours. They must be coercible with [get_colour()].
 #' @export
 #' @examples
 #' 
@@ -189,17 +189,17 @@ colour <- function(x, length = 1, opacity = 0) {
 #' # Registering Colours --------------------------------------------------
 #' 
 #' # to register colours, use named input - the values will be evaluated
-#' # with colour()
-#' colour("red123")
+#' # with get_colour()
+#' get_colour("red123")
 #' register_colour(red123 = "red", red456 = "#ff0000", red789 = "f00")
-#' colour("red123")
-#' colour("red456")
-#' colour("red789")
+#' get_colour("red123")
+#' get_colour("red456")
+#' get_colour("red789")
 #' 
 #' # you can also register a group name
 #' register_colour(red_group = c("red123", "ff4400", "red3", "red4"))
-#' colour("red_group")
-#' colour("red_group", 3)
+#' get_colour("red_group")
+#' get_colour("red_group", 3)
 #' 
 #' # Registering colours is ideal for your (organisational) style in plots.
 #' # Let's say these are your style:
@@ -215,7 +215,7 @@ colour <- function(x, length = 1, opacity = 0) {
 #'                                     "forest_green", "goldenrod_yellow",
 #'                                     "slate_grey", "plum_purple"))
 #' # Check that it works:
-#' colour("my_organisation", length = 6)
+#' get_colour("my_organisation", length = 6)
 #' 
 #' # Now use it in plots as you like:
 #' iris |>
@@ -239,7 +239,7 @@ register_colour <- function(...) {
       stop("Input must be named")
     }
     # try to coerce
-    out <- as.character(suppressWarnings(suppressMessages(colour(dots[[i]]))))
+    out <- as.character(suppressWarnings(suppressMessages(get_colour(dots[[i]]))))
     if (anyNA(out)) {
       stop("Input must not be NA, and must be known, valid colours")
     }
@@ -258,7 +258,7 @@ get_registered_colour <- function(name) {
   if (!name %in% names(plot2_env$reg_cols)) {
     stop("colour not registered: ", name)
   }
-  colour(plot2_env$reg_cols[[which(names(plot2_env$reg_cols) == name)]])
+  get_colour(plot2_env$reg_cols[[which(names(plot2_env$reg_cols) == name)]])
 }
 
 #' @method as.character colour
@@ -332,21 +332,21 @@ rep.colour <- function(x, ...) {
 #' @export
 unique.colour <- function(x, ...) {
   if (is.null(names(x))) {
-    return(colour(unique(as.character(x))))
+    return(get_colour(unique(as.character(x))))
   }
   out <- data.frame(vals = as.character(x),
                     nms = names(x),
                     stringsAsFactors = FALSE)
   out$uniq <- paste(out$vals, out$nms)
   out <- unique(out, fromLast = TRUE)
-  colour(stats::setNames(out$vals, out$nms))
+  get_colour(stats::setNames(out$vals, out$nms))
 }
 
 #' @method c colour
 #' @noRd
 #' @export
 c.colour <- function(...) {
-  colour(unlist(lapply(list(...), as.character)))
+  get_colour(unlist(lapply(list(...), as.character)))
 }
 
 #' @rdname colour
@@ -356,7 +356,7 @@ c.colour <- function(...) {
 #' 
 #' 
 #' # Use add_white() to add white to existing colours:
-#' colours <- colour("R4", 6)
+#' colours <- get_colour("R4", 6)
 #' colours
 #' add_white(colours, 0.25)
 #' add_white(colours, 0.5)
@@ -370,5 +370,5 @@ add_white <- function(x, white) {
   out <- unname(vapply(FUN.VALUE = character(1),
                        x,
                        function(y) grDevices::colorRampPalette(c("white", y))(1000)[white]))
-  colour(out)
+  get_colour(out)
 }

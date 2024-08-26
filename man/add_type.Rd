@@ -91,7 +91,7 @@ add_sf(
 
 \item{x, y}{aesthetic arguments}
 
-\item{colour, colour_fill}{colour of the line or column, will be evaluated with \code{\link[=colour]{colour()}}. If \code{colour_fill} is missing but \code{colour} is given, \code{colour_fill} will inherit the colour set with \code{colour}.}
+\item{colour, colour_fill}{colour of the line or column, will be evaluated with \code{\link[=get_colour]{get_colour()}}. If \code{colour_fill} is missing but \code{colour} is given, \code{colour_fill} will inherit the colour set with \code{colour}.}
 
 \item{linetype, linewidth, shape, size, width, ...}{arguments passed on to the geom}
 

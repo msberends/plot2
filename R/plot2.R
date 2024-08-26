@@ -49,7 +49,7 @@
 #'  The `category` can also be a date or date/time (class `Date` or `POSIXt`).
 #' 
 #' @param y_secondary values to use for plotting along the secondary y axis. This functionality is poorly supported by `ggplot2` and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.
-#' @param y_secondary.colour,y_secondary.colour_fill colours to set for the secondary y axis, will be evaluated with [colour()]
+#' @param y_secondary.colour,y_secondary.colour_fill colours to set for the secondary y axis, will be evaluated with [get_colour()]
 #' @param type,y_secondary.type type of visualisation to use. This can be:
 #' 
 #' - A `ggplot2` geom name or their abbreviation such as `"col"` and `"point"`. All geoms are supported (including [`geom_blank()`][ggplot2::geom_blank()]).
@@ -86,8 +86,8 @@
 #' @param x.date_labels labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
 #' @param x.date_remove_years a [logical] to indicate whether the years of all `x` values must be unified. This will set the years of all `x` values [to 1970](https://en.wikipedia.org/wiki/Unix_time) if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the `category` while maintaining a date range on `x`. The default is `FALSE`, unless `category` contains all years present in `x`.
 #' @param category.focus a value of `category` that should be highlighted, meaning that all other values in `category` will be greyed out. This can also be a numeric value between 1 and the length of unique values of `category`, e.g. `category.focus = 2` to focus on the second legend item.
-#' @param colour colour(s) to set, will be evaluated with [colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can also be a named vector to match values of `category`, see *Examples*. Using a named vector can also be used to manually sort the values of `category`.
-#' @param colour_fill colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [colour()]
+#' @param colour get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can also be a named vector to match values of `category`, see *Examples*. Using a named vector can also be used to manually sort the values of `category`.
+#' @param colour_fill get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()]
 #' @param colour_opacity amount of opacity for `colour`/`colour_fill` (0 = solid, 1 = transparent)
 #' @param x.lbl_angle angle to use for the x axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom)
 #' @param x.lbl_align alignment for the x axis between `0` (left aligned) and `1` (right aligned)
@@ -170,7 +170,7 @@
 #' @param text_factor text factor to use, which will apply to all texts shown in the plot
 #' @param font font (family) to use, can be set with `options(plot2.font = "...")`. Can be any installed system font or any of the > 1400 font names from [Google Fonts](https://fonts.google.com). When using custom fonts in R Markdown, be sure to set the chunk option `fig.showtext = TRUE`, otherwise an informative error will be generated.
 #' @param theme a valid `ggplot2` [theme][ggplot2::theme()] to apply, or `NULL` to use the default [`theme_grey()`][ggplot2::theme_grey()]. This argument accepts themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and characters themes (e.g., `"theme_bw"`). The default is [theme_minimal2()], but can be set with `options(plot2.theme = "...")`.
-#' @param background the background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [colour()]. Only applies when `theme` is not `NULL`.
+#' @param background the background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [get_colour()]. Only applies when `theme` is not `NULL`.
 #' @param markdown a [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`)
 #' @param ... any argument to give to the geom. This will override automatically-set settings for the geom.
 #' @details The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions such as [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], [`geom_col()`][ggplot2::geom_col()], [`facet_wrap()`][ggplot2::facet_wrap()], [`labs()`][ggplot2::labs()], etc., and provides:
@@ -541,6 +541,8 @@ plot2 <- function(.data,
       return(p)
     }
   }
+  
+  print(class(.data))
   
   if (tryCatch(!inherits(.data, "sf") &&
                ((isTRUE("geometry" %in% colnames(.data)) && suppressWarnings(inherits(.data$geometry, "sfc")))
@@ -1113,15 +1115,15 @@ plot2_exec <- function(.data,
         # support `category.focus = 3` to choose the third value
         category.focus <- category_unique[category.focus]
       }
-      cols <- rep(as.character(colour("grey85")), length(category_unique))
+      cols <- rep(as.character(get_colour("grey85")), length(category_unique))
       nms <- as.character(category_unique)
-      cols[which(nms == category.focus)] <- colour(colour[1L])
+      cols[which(nms == category.focus)] <- get_colour(colour[1L])
       colour <- stats::setNames(cols, nms)
     }
   }
   if (has_y_secondary(df)) {
-    y_secondary.colour <- colour(y_secondary.colour)[1L]
-    y_secondary.colour_fill <- colour(y_secondary.colour_fill)[1L]
+    y_secondary.colour <- get_colour(y_secondary.colour)[1L]
+    y_secondary.colour_fill <- get_colour(y_secondary.colour_fill)[1L]
   }
   # Note that this will be not be used if colour == "ggplot2" or colour_fill == "ggplot2"
   cols <- validate_colour(df = df,
@@ -1211,13 +1213,13 @@ plot2_exec <- function(.data,
                          sep = sankey.node_whitespace,
                          # width for flows, i.e., category
                          axis.width = sankey.node_width) +
-      geom_parallel_sets_axes(fill = colour(datalabels.colour_fill[1]),
-                              colour = colour(datalabels.colour[1]),
+      geom_parallel_sets_axes(fill = get_colour(datalabels.colour_fill[1]),
+                              colour = get_colour(datalabels.colour[1]),
                               # whitespace between nodes
                               sep = sankey.node_whitespace,
                               # width of nodes
                               axis.width = sankey.node_width) +
-      geom_parallel_sets_labels(colour = colour(datalabels.colour[1]),
+      geom_parallel_sets_labels(colour = get_colour(datalabels.colour[1]),
                                 size = datalabels.size,
                                 # whitespace between labels in nodes
                                 sep = sankey.node_whitespace,
@@ -1291,7 +1293,7 @@ plot2_exec <- function(.data,
       smooth.colour <- cols$colour[1L]
       has_smooth.colour <- FALSE
     } else {
-      smooth.colour <- colour(smooth.colour)
+      smooth.colour <- get_colour(smooth.colour)
       has_smooth.colour <- TRUE
     }
     if (type == "geom_histogram") {

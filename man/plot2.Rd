@@ -237,9 +237,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.focus}{a value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
 
-\item{colour}{colour(s) to set, will be evaluated with \code{\link[=colour]{colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can also be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can also be used to manually sort the values of \code{category}.}
+\item{colour}{get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can also be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can also be used to manually sort the values of \code{category}.}
 
-\item{colour_fill}{colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=colour]{colour()}}}
+\item{colour_fill}{get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}}
 
 \item{colour_opacity}{amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent)}
 
@@ -291,7 +291,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y_secondary}{values to use for plotting along the secondary y axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.}
 
-\item{y_secondary.colour, y_secondary.colour_fill}{colours to set for the secondary y axis, will be evaluated with \code{\link[=colour]{colour()}}}
+\item{y_secondary.colour, y_secondary.colour_fill}{colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}}
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{settings for the plotting direction \code{category}.}
 
@@ -394,7 +394,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{theme}{a valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
-\item{background}{the background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=colour]{colour()}}. Only applies when \code{theme} is not \code{NULL}.}
+\item{background}{the background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=get_colour]{get_colour()}}. Only applies when \code{theme} is not \code{NULL}.}
 
 \item{markdown}{a \link{logical} to turn all labels and titles into \link{plotmath} expressions, by converting common markdown language using the \code{\link[=md_to_expression]{md_to_expression()}} function (defaults to \code{TRUE})}
 
