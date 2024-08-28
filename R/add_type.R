@@ -481,9 +481,6 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
     params <- c(params, list(...))
   }
   
-  print(params)
-  print(inherit.aes)
-  
   add_type(plot = plot,
            type = "errorbar",
            data = new_df,
