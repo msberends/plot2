@@ -41,9 +41,9 @@ library(plot2)
 
 # Like plot(), just pass x, y in the way you prefer
 plot2(mtcars, mpg, hp)
-mtcars |> plot2(mpg, hp)
 mtcars %>% plot2(mpg, hp)
 plot2(hp ~ mpg, data = mtcars)
+mtcars |> plot2(mpg, hp) # preferred method since R 4.1
 
 # Use inline transformations
 mtcars |> 
