@@ -172,6 +172,7 @@
 #' @param theme a valid `ggplot2` [theme][ggplot2::theme()] to apply, or `NULL` to use the default [`theme_grey()`][ggplot2::theme_grey()]. This argument accepts themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and characters themes (e.g., `"theme_bw"`). The default is [theme_minimal2()], but can be set with `options(plot2.theme = "...")`.
 #' @param background the background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [get_colour()]. Only applies when `theme` is not `NULL`.
 #' @param markdown a [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`)
+#' @param data substitute for `.data`, used in formula notation, e.g., `plot2(hp ~ mpg, data = mtcars)`
 #' @param ... any argument to give to the geom. This will override automatically-set settings for the geom.
 #' @details The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions such as [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], [`geom_col()`][ggplot2::geom_col()], [`facet_wrap()`][ggplot2::facet_wrap()], [`labs()`][ggplot2::labs()], etc., and provides:
 #'   - Writing as few lines of codes as possible
@@ -497,8 +498,9 @@ plot2 <- function(.data,
                   theme = getOption("plot2.theme", "theme_minimal2"),
                   background = getOption("plot2.colour_background", "white"),
                   markdown = TRUE,
+                  data = NULL,
                   ...) {
-  
+
   # no observations, return empty plot immediately
   if (NROW(.data) == 0) {
     # check if markdown is required
@@ -883,8 +885,7 @@ plot2_exec <- function(.data,
           # apply summarise_function
           group_by(across(c(plot2_env$x_variable_names, get_x_name(.data), get_category_name(.data), get_facet_name(.data),
                             matches("_var_(x|category|facet)")))) |> 
-          reframe(`_var_y` = summarise_function(`_var_y`),
-                    .groups = "drop") |> 
+          reframe(`_var_y` = summarise_function(`_var_y`)) |> 
           mutate(y = `_var_y`,
                  category = `_var_category`)
         

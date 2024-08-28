@@ -57,7 +57,7 @@ add_errorbar(
   colour = getOption("plot2.colour", "ggplot2"),
   width = 0.5,
   ...,
-  inherit.aes = FALSE,
+  inherit.aes = NULL,
   move = 0
 )
 
@@ -193,9 +193,10 @@ p |>
 
 # any mathematical transformation of current values is supported
 df <- data.frame(var_1 = c(1:100),
-                 var_2 = rnorm(100, 100, 25))
+                 var_2 = rnorm(100, 100, 25),
+                 var_3 = rep(LETTERS[1:5], 5))
 df |>
-  plot2() |> 
+  plot2(var_1, var_2) |> 
   add_line(y = mean(var_2), 
            linetype = 3,
            legend.value = "Average") |>
@@ -213,11 +214,11 @@ df2 <- df |>
   mutate(error1 = var_2 * 0.9,
          error2 = var_2 * 1.1)
 
-df
+df2
 
 df2 |> 
-  plot2(type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
-  # add the error bars, simply by referencing the lower and upper values
+  plot2(var_1, var_2, var_3, type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
+  # adding error bars was never easier - just reference the lower and upper values
   add_errorbar(error1, error2)
 
 # adding sf objects is just as convenient as all else

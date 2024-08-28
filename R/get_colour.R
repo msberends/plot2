@@ -20,7 +20,7 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' @param x colour or colour palette name. Input can be:
 #' * One of the colourblind-safe `viridisLite` palettes: `r paste0('\n  - \u0060"', viridisLite_colours, '"\u0060', collapse = "")`
 #' * One of the built-in palettes in \R (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
-#' * One of the `r length(colours())` built-in [colours()] in \R, such as `r paste0('\u0060"', sort(sample(colours()[colours() %unlike% "^grey|gray"], 5)), '"\u0060', collapse = ", ")`
+#' * One of the `r length(colours())` built-in [colours()] in \R (even case-insensitive), such as `r paste0('\u0060"', sort(sample(colours()[colours() %unlike% "^grey|gray"], 5)), '"\u0060', collapse = ", ")`
 #' * One of the pre-registered colours using [register_colour()]
 #' @param length size of the vector to be returned
 #' @param opacity amount of opacity (0 = solid, 1 = transparent)
@@ -121,9 +121,9 @@ get_colour <- function(x, length = 1, opacity = 0) {
   }
   
   # replace R colour names with HTML code
-  if (any(x %in% colours())) {
-    x[x %in% colours()] <- sapply(as.list(as.data.frame(col2rgb(x[x %in% colours()]))),
-                                  function(rgb) rgb(red = rgb[1], green = rgb[2], blue = rgb[3], maxColorValue = 255))
+  if (any(tolower(x) %in% colours())) {
+    x[tolower(x) %in% colours()] <- sapply(as.list(as.data.frame(col2rgb(tolower(x[tolower(x) %in% colours()])))),
+                                           function(rgb) rgb(red = rgb[1], green = rgb[2], blue = rgb[3], maxColorValue = 255))
   }
   # replace pre-registered colour names with HTML code
   if (any(x %in% names(plot2_env$reg_cols))) {

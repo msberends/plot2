@@ -154,6 +154,7 @@ plot2(
   theme = getOption("plot2.theme", "theme_minimal2"),
   background = getOption("plot2.colour_background", "white"),
   markdown = TRUE,
+  data = NULL,
   ...
 )
 }
@@ -398,6 +399,8 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{markdown}{a \link{logical} to turn all labels and titles into \link{plotmath} expressions, by converting common markdown language using the \code{\link[=md_to_expression]{md_to_expression()}} function (defaults to \code{TRUE})}
 
+\item{data}{substitute for \code{.data}, used in formula notation, e.g., \code{plot2(hp ~ mpg, data = mtcars)}}
+
 \item{...}{any argument to give to the geom. This will override automatically-set settings for the geom.}
 }
 \value{
@@ -432,7 +435,7 @@ The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \
 \item Support for any \code{ggplot2} extension based on \code{\link[ggplot2:fortify]{ggplot2::fortify()}}
 }
 
-The \code{ggplot2} package in conjunction with the \code{tidyr}, \code{forcats} and \code{cleaner} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 149 arguments, all with a default value. \strong{Less typing, faster coding.}
+The \code{ggplot2} package in conjunction with the \code{tidyr}, \code{forcats} and \code{cleaner} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 150 arguments, all with a default value. \strong{Less typing, faster coding.}
 }
 \examples{
 options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)

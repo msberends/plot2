@@ -570,7 +570,7 @@ Plotting error bars is just as simple:
 
 ```{r}
 p |> 
-  add_errorbar(min = hp - 10, max = hp + 10, colour = "black")
+  add_errorbar(min = hp - 10, max = hp + 10)
 ```
 
 This adds error bars to the plot, showing a range of ±10 around the `hp` values. `plot2()` abstracts away the complexities of `geom_errorbar()`, offering a more intuitive syntax.

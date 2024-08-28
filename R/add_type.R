@@ -95,9 +95,10 @@
 #'
 #' # any mathematical transformation of current values is supported
 #' df <- data.frame(var_1 = c(1:100),
-#'                  var_2 = rnorm(100, 100, 25))
+#'                  var_2 = rnorm(100, 100, 25),
+#'                  var_3 = rep(LETTERS[1:5], 5))
 #' df |>
-#'   plot2() |> 
+#'   plot2(var_1, var_2) |> 
 #'   add_line(y = mean(var_2), 
 #'            linetype = 3,
 #'            legend.value = "Average") |>
@@ -115,11 +116,11 @@
 #'   mutate(error1 = var_2 * 0.9,
 #'          error2 = var_2 * 1.1)
 #' 
-#' df
+#' df2
 #' 
 #' df2 |> 
-#'   plot2(type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
-#'   # add the error bars, simply by referencing the lower and upper values
+#'   plot2(var_1, var_2, var_3, type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
+#'   # adding error bars was never easier - just reference the lower and upper values
 #'   add_errorbar(error1, error2)
 #' 
 #' # adding sf objects is just as convenient as all else
@@ -427,25 +428,52 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 
 #' @rdname add_type
 #' @param min,max minimum (lower) and maximum (upper) values of the error bars
-#' @importFrom dplyr reframe
+#' @importFrom dplyr group_by across reframe
 #' @importFrom ggplot2 aes
 #' @importFrom rlang as_label
 #' @details
 #' The function [add_errorbar()] only adds error bars to the `y` values, see *Examples*.
 #' @export
-add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggplot2"), width = 0.5, ..., inherit.aes = FALSE, move = 0) {
+add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggplot2"), width = 0.5, ..., inherit.aes = NULL, move = 0) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 model.", call. = FALSE)
   }
   
+  if (!is.null(plot$mapping$colour) && missing(colour)) {
+    category_name <- as_label(plot$mapping$colour)
+    colour_unique <- unique(plot$data[[category_name]])
+  } else {
+    category_name <- NULL
+    colour_unique <- ""
+  }
+  
   new_df <- plot$data |>
+    mutate(`_row_index` = seq_len(nrow(plot$data))) |>
+    # this also works if category is NULL:
+    group_by(across(any_of(category_name))) |> 
     reframe(ymin = {{ min }},
-            ymax = {{ max }})
+            ymax = {{ max }},
+            `_row_index` = `_row_index`) |> 
+    arrange(`_row_index`) |> 
+    select(-`_row_index`)
+  
   new_df$x <- plot$data[[as_label(plot$mapping$x)]]
+  
+  if (!missing(colour) && is.null(inherit.aes)) {
+    inherit.aes <- FALSE
+    mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
+  } else if (!is.null(category_name) && !isFALSE(inherit.aes)) {
+    # has category
+    inherit.aes <- FALSE
+    mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax", colour = category_name)
+  } else {
+    inherit.aes <- TRUE
+    mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
+  }
 
   # build additional parameters
   params <- list(inherit.aes = inherit.aes)
-  if (!missing(colour) || !isTRUE(inherit.aes) || !"colour" %in% names(plot$mapping)) {
+  if (!missing(colour) && isFALSE(inherit.aes)) {
     params <- c(params, list(colour = get_colour(colour)))
   }
   params <- c(params, list(width = width))
@@ -453,10 +481,13 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
     params <- c(params, list(...))
   }
   
+  print(params)
+  print(inherit.aes)
+  
   add_type(plot = plot,
            type = "errorbar",
            data = new_df,
-           mapping = aes(x = x, ymin = ymin, ymax = ymax),
+           mapping = mapping,
            params = params,
            move = move)
 }
