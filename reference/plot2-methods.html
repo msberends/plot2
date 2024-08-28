@@ -193,6 +193,161 @@
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for class 'formula'</span></span>
+<span><span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span></span>
+<span>  .data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.title <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  y.title <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  category.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  caption <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tag <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  title.linelength <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  title.colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour_font_primary"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  subtitle.linelength <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  subtitle.colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour_font_secondary"</span>, <span class="st">"grey35"</span><span class="op">)</span>,</span>
+<span>  na.replace <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  facet.position <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span>  facet.fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.bold <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  facet.italic <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  facet.size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  facet.margin <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  facet.repeat_lbls_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  facet.repeat_lbls_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.fixed_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.fixed_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.drop <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  facet.nrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.relative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x.date_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.date_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.date_remove_years <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.focus <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour"</span>, <span class="st">"ggplot2"</span><span class="op">)</span>,</span>
+<span>  colour_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colour_opacity <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  x.lbl_angle <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  x.lbl_align <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.lbl_italic <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x.lbl_taxonomy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x.remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>  x.max_items <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  x.max_txt <span class="op">=</span> <span class="st">"(rest, x%n)"</span>,</span>
+<span>  category.max_items <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  category.max_txt <span class="op">=</span> <span class="st">"(rest, x%n)"</span>,</span>
+<span>  facet.max_items <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  facet.max_txt <span class="op">=</span> <span class="st">"(rest, x%n)"</span>,</span>
+<span>  x.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.n_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.transform <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>  x.expand <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.character <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.drop <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x.mic <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x.zoom <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y.remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y.24h <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y.age <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y.percent_break <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  y.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y.n_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y.limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y.expand <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y.transform <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>  y.position <span class="op">=</span> <span class="st">"left"</span>,</span>
+<span>  y.zoom <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y_secondary <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y_secondary.type <span class="op">=</span> <span class="va">type</span>,</span>
+<span>  y_secondary.title <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  y_secondary.colour <span class="op">=</span> <span class="fu"><a href="colour.html">get_colour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour"</span>, <span class="st">"ggplot2"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  y_secondary.colour_fill <span class="op">=</span> <span class="fu"><a href="colour.html">get_colour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour"</span>, <span class="st">"ggplot2"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.expand <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  category.midpoint <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.transform <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>  category.date_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.date_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.character <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x.sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  facet.sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  x.complete <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category.complete <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.complete <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  datalabels.round <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">y.percent</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  datalabels.format <span class="op">=</span> <span class="st">"%n"</span>,</span>
+<span>  datalabels.colour <span class="op">=</span> <span class="st">"grey25"</span>,</span>
+<span>  datalabels.colour_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  datalabels.size <span class="op">=</span> <span class="op">(</span><span class="fl">3</span> <span class="op">*</span> <span class="va">text_factor</span><span class="op">)</span>,</span>
+<span>  datalabels.angle <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  datalabels.lineheight <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  decimal.mark <span class="op">=</span> <span class="fu"><a href="dec_mark.html">dec_mark</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  big.mark <span class="op">=</span> <span class="fu"><a href="dec_mark.html">big_mark</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  summarise_function <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span>,</span>
+<span>  stacked <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  stackedpercent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  horizontal <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  reverse <span class="op">=</span> <span class="va">horizontal</span>,</span>
+<span>  smooth <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  smooth.method <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  smooth.formula <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  smooth.se <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  smooth.level <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  smooth.alpha <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  smooth.linewidth <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  smooth.linetype <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  smooth.colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  linetype <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  binwidth <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  jitter_seed <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  violin_scale <span class="op">=</span> <span class="st">"count"</span>,</span>
+<span>  legend.position <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  legend.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  legend.reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  legend.barheight <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  legend.barwidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>  legend.nbin <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  legend.italic <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sankey.node_width <span class="op">=</span> <span class="fl">0.15</span>,</span>
+<span>  sankey.node_whitespace <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span>  sankey.alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  sankey.remove_axes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  zoom <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sep <span class="op">=</span> <span class="st">" / "</span>,</span>
+<span>  print <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  text_factor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  font <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.font"</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.theme"</span>, <span class="st">"theme_minimal2"</span><span class="op">)</span>,</span>
+<span>  background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour_background"</span>, <span class="st">"white"</span><span class="op">)</span>,</span>
+<span>  markdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'freq'</span></span>
 <span><span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span></span>
 <span>  <span class="va">.data</span>,</span>
@@ -501,6 +656,7 @@
 <span>    <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, axis.ticks <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour_background"</span>, <span class="st">"white"</span><span class="op">)</span>,</span>
 <span>  markdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  datalabels.centroid <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -819,7 +975,7 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg--data">.data<a class="anchor" aria-label="anchor" href="#arg--data"></a></dt>
+<dl><dt id="arg--data-data">.data, data<a class="anchor" aria-label="anchor" href="#arg--data-data"></a></dt>
 <dd><p>data to plot</p></dd>
 
 

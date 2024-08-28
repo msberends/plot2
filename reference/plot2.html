@@ -195,6 +195,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.theme"</span>, <span class="st">"theme_minimal2"</span><span class="op">)</span>,</span>
 <span>  background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"plot2.colour_background"</span>, <span class="st">"white"</span><span class="op">)</span>,</span>
 <span>  markdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -595,6 +596,10 @@ See plot2-methods for all implemented methods for different object classes."><me
 <dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to turn all labels and titles into <a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">plotmath</a> expressions, by converting common markdown language using the <code><a href="md_to_expression.html">md_to_expression()</a></code> function (defaults to <code>TRUE</code>)</p></dd>
 
 
+<dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dd><p>substitute for <code>.data</code>, used in formula notation, e.g., <code>plot2(hp ~ mpg, data = mtcars)</code></p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>any argument to give to the geom. This will override automatically-set settings for the geom.</p></dd>
 
@@ -620,7 +625,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <li><p>Labels with data values can easily be printed and are automatically determined</p></li>
 </ul></li>
 <li><p>Support for any <code>ggplot2</code> extension based on <code><a href="https://ggplot2.tidyverse.org/reference/fortify.html" class="external-link">ggplot2::fortify()</a></code></p></li>
-</ul><p>The <code>ggplot2</code> package in conjunction with the <code>tidyr</code>, <code>forcats</code> and <code>cleaner</code> packages can provide above functionalities, but the goal of the <code>plot2()</code> function is to generalise this into one function. The generic <code>plot2()</code> function currently has 149 arguments, all with a default value. <strong>Less typing, faster coding.</strong></p>
+</ul><p>The <code>ggplot2</code> package in conjunction with the <code>tidyr</code>, <code>forcats</code> and <code>cleaner</code> packages can provide above functionalities, but the goal of the <code>plot2()</code> function is to generalise this into one function. The generic <code>plot2()</code> function currently has 150 arguments, all with a default value. <strong>Less typing, faster coding.</strong></p>
     </div>
 
     <div class="section level2">
