@@ -38,7 +38,7 @@ get_plot_title <- function(plot,
                            default = NULL) {
   
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   
   current_title <- plot$labels$title

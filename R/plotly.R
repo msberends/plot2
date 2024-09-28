@@ -35,7 +35,7 @@
 #'                hoverinfo = "y")
 as_plotly <- function(plot, ...) {
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (!"plotly" %in% rownames(utils::installed.packages())) {
     stop("This function requires the 'plotly' package - install it with install.packages(\"plotly\")", call. = FALSE)

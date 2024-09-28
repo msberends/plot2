@@ -129,7 +129,7 @@
 #'   add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 1)
 add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move = 0) {
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   type <- validate_type(type[1L])
   if (type == "") {
@@ -289,7 +289,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 #' @export
 add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (missing(linetype)) {
     linetype <- NA_missing_
@@ -345,7 +345,7 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
 #' @export
 add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), size, shape, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (missing(size)) {
     size <- NA_missing_
@@ -387,7 +387,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
 #' @export
 add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), colour_fill, width, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (missing(colour_fill)) {
     fill <- colour
@@ -436,7 +436,7 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 #' @export
 add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggplot2"), width = 0.5, ..., inherit.aes = NULL, move = 0) {
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   
   if (!is.null(plot$mapping$colour) && missing(colour)) {
@@ -515,10 +515,10 @@ add_sf <- function(plot,
   loadNamespace("sf") # will throw an error if not installed
   
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (!"geometry" %in% colnames(plot$data)) {
-    stop("`plot` must be a ggplot2 model based on geographic data.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object based on geographic data.", call. = FALSE)
   }
   
   # force sf type

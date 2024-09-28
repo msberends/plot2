@@ -23,7 +23,7 @@
 move_layer <- function(plot, move = -1, layer = length(plot$layers)) {
   
   if (!is.ggplot(plot)) {
-    stop("`plot` must be a ggplot2 model.", call. = FALSE)
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   
   layers <- plot$layers

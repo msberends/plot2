@@ -155,7 +155,7 @@ plot2_message <- function(...,
       icon <- font_magenta("!")
     }
     msg <- paste0(fn(c(...), collapse = NULL), collapse = "")
-    if (type %in% c("info", "caution")) {
+    if (type %in% c("info", "caution") && msg_not_thrown_before("plot2_message", msg)) {
       message(paste(icon, fn(msg)))
     } else if (type == "warning") {
       warning("\n", paste(icon, fn(msg)), call. = FALSE, immediate. = TRUE)
@@ -702,4 +702,49 @@ format_error <- function(e, replace = character(0), by = character(0)) {
 
 `%or%` <- function(x, y) {
   if (is.null(x)) y else x
+}
+
+msg_not_thrown_before <- function(fn, ..., entire_session = FALSE) {
+  # this is to prevent that messages/notes will be printed for every facet rather than once per call
+  unique_call_id <- function(entire_session = FALSE, match_fn = NULL) {
+    if (entire_session == TRUE) {
+      return(c(envir = "session", call = "session"))
+    }
+    # combination of environment ID (such as "0x7fed4ee8c848") and relevant system call (where 'match_fn' is being called in)
+    calls <- sys.calls()
+    if (!is.null(match_fn)) {
+      for (i in seq_len(length(calls))) {
+        call_clean <- gsub("[^a-zA-Z0-9_().-]", "", as.character(calls[[i]]), perl = TRUE)
+        if (match_fn %in% call_clean || any(call_clean %like% paste0(match_fn, "\\("), na.rm = TRUE)) {
+          return(c(
+            envir = gsub("<environment: (.*)>", "\\1", utils::capture.output(sys.frames()[[1]]), perl = TRUE),
+            call = paste0(deparse(calls[[i]]), collapse = "")
+          ))
+        }
+      }
+    }
+    c(
+      envir = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""),
+      call = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = "")
+    )
+  }
+  
+  salt <- gsub("[^a-zA-Z0-9|_-]", "?", substr(paste(c(...), sep = "|", collapse = "|"), 1, 512), perl = TRUE)
+  not_thrown_before <- is.null(plot2_env[[paste0("thrown_msg.", fn, ".", salt)]]) ||
+    !identical(
+      plot2_env[[paste0("thrown_msg.", fn, ".", salt)]],
+      unique_call_id(
+        entire_session = entire_session,
+        match_fn = fn
+      )
+    )
+  if (isTRUE(not_thrown_before)) {
+    # message was not thrown before - remember this so on the next run it will return FALSE:
+    assign(
+      x = paste0("thrown_msg.", fn, ".", salt),
+      value = unique_call_id(entire_session = entire_session, match_fn = fn),
+      envir = plot2_env
+    )
+  }
+  not_thrown_before
 }
