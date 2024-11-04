@@ -110,6 +110,10 @@ font_blue <- function(..., collapse = " ") {
 font_bold <- function(..., collapse = " ") {
   bold(paste0(c(...), collapse = collapse))
 }
+#' @importFrom crayon italic
+font_italic <- function(..., collapse = " ") {
+  italic(paste0(c(...), collapse = collapse))
+}
 #' @importFrom crayon magenta
 font_magenta <- function(..., collapse = " ") {
   magenta(paste0(c(...), collapse = collapse))
