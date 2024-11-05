@@ -708,8 +708,12 @@ format_error <- function(e, replace = character(0), by = character(0)) {
   if (is.null(x)) y else x
 }
 
+# this is to prevent that messages/notes will be printed for every facet rather than once per call
 msg_not_thrown_before <- function(fn, ..., entire_session = FALSE) {
-  # this is to prevent that messages/notes will be printed for every facet rather than once per call
+  if (identical(Sys.getenv("TESTTHAT"), "true")) {
+    # always print in testthat runs
+    return(TRUE)
+  }
   unique_call_id <- function(entire_session = FALSE, match_fn = NULL) {
     if (entire_session == TRUE) {
       return(c(envir = "session", call = "session"))
@@ -727,10 +731,8 @@ msg_not_thrown_before <- function(fn, ..., entire_session = FALSE) {
         }
       }
     }
-    c(
-      envir = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""),
-      call = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = "")
-    )
+    c(envir = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""),
+      call = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""))
   }
   
   salt <- gsub("[^a-zA-Z0-9|_-]", "?", substr(paste(c(...), sep = "|", collapse = "|"), 1, 512), perl = TRUE)
