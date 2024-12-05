@@ -779,7 +779,7 @@ validate_x_scale <- function(df,
     # determine if scales should be fixed - if CV_xmax < 25% then fix them:
     x_maxima <- df |>
       group_by(across(get_facet_name(df))) |> 
-      summarise(max = max(`_var_x`, na.rm = TRUE))
+      summarise(max = as.double(max(`_var_x`, na.rm = TRUE)))
     if (!any(is.infinite(x_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(x_maxima$max) / mean(x_maxima$max)
       if (coeff_of_variation < 0.25) {
@@ -997,7 +997,7 @@ validate_y_scale <- function(df,
     # (this does not work for facetted histograms)
     y_maxima <- df |>
       group_by(across(get_facet_name(df))) |> 
-      summarise(max = max(`_var_y`, na.rm = TRUE))
+      summarise(max = as.double(max(`_var_y`, na.rm = TRUE)))
     if (!any(is.infinite(y_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(y_maxima$max) / mean(y_maxima$max)
       if (coeff_of_variation < 0.25) {
@@ -1921,10 +1921,9 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
           unique() |> 
           first()
       ), error = function(e) {
-        warning(format_error(e,
-                             replace = c("`_new_title = ", "`_new_title`"),
-                             by = c("`", "A title")),
-                call. = FALSE)
+        plot2_warning(format_error(e,
+                                   replace = c("`_new_title = ", "`_new_title`"),
+                                   by = c("`", "A title")))
         NULL
       })
     if (is.null(out)) {

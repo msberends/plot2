@@ -138,41 +138,62 @@ font_white <- function(..., collapse = " ") {
   }
 }
 
-plot2_message <- function(...,
+plot2_message <- function(...) {
+  plot2_env$infos <- c(plot2_env$infos, paste0(c(...), collapse = ""))
+}
+plot2_caution <- function(...) {
+  plot2_env$cautions <- c(plot2_env$cautions, paste0(c(...), collapse = ""))
+}
+plot2_warning <- function(...) {
+  plot2_env$warnings <- c(plot2_env$warnings, paste0(c(...), collapse = ""))
+}
+
+#' @importFrom cli cli_alert_info cli_alert_warning cli_alert_danger
+plot2_message_out <- function(txt,
                           print = (interactive() | Sys.getenv("IN_PKGDOWN") != "") & !identical(as.logical(getOption("plot2.silent", default = FALSE)), TRUE),
                           type = "info") {
   # at default, only prints in interactive mode and for the website generation
   if (isTRUE(print)) {
-    plot2_env$has_given_note <- TRUE
-    # get info icon
-    if (isTRUE(base::l10n_info()$`UTF-8`) && interactive()) {
-      # \u2139 is a symbol officially named 'information source'
-      icon <- "\u2139"
-    } else {
-      icon <- "i"
-    }
     if (type == "info") {
-      fn <- font_black
-      icon <- font_blue(icon)
-    } else {
-      fn <- font_magenta
-      icon <- font_magenta("!")
-    }
-    msg <- paste0(fn(c(...), collapse = NULL), collapse = "")
-    if (type %in% c("info", "caution") && msg_not_thrown_before("plot2_message", msg)) {
-      message(paste(icon, fn(msg)))
+      cli_alert_info(txt, wrap = TRUE)
+    } else if (type == "caution") {
+      cli_alert_warning(txt, wrap = TRUE)
     } else if (type == "warning") {
-      warning("\n", paste(icon, fn(msg)), call. = FALSE, immediate. = TRUE)
+      cli_alert_danger(txt, wrap = TRUE)
     }
   }
 }
 
-plot2_caution <- function(..., print = interactive() | Sys.getenv("IN_PKGDOWN") != "") {
-  plot2_message(..., print = print, type = "caution")
-}
-
-plot2_warning <- function(..., print = interactive() | Sys.getenv("IN_PKGDOWN") != "") {
-  plot2_message(..., print = print, type = "warning")
+throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "") {
+  has_given_note <- FALSE
+  # messages
+  if (!is.null(plot2_env$infos)) {
+    plot2_env$infos <- unique(sort(plot2_env$infos))
+    has_given_note <- TRUE
+    for (i in seq_len(length(plot2_env$infos))) {
+      plot2_message_out(plot2_env$infos[i], print = print, type = "info")
+    }
+  }
+  # cautions
+  if (!is.null(plot2_env$cautions)) {
+    plot2_env$cautions <- unique(sort(plot2_env$cautions))
+    has_given_note <- TRUE
+    for (i in seq_len(length(plot2_env$cautions))) {
+      plot2_message_out(plot2_env$cautions[i], print = print, type = "caution")
+    }
+  }
+  # warnings
+  if (!is.null(plot2_env$warnings)) {
+    plot2_env$warnings <- unique(sort(plot2_env$warnings))
+    has_given_note <- TRUE
+    for (i in seq_len(length(plot2_env$warnings))) {
+      plot2_message_out(plot2_env$warnings[i], print = print, type = "warning")
+    }
+  }
+  if (isTRUE(has_given_note) && stats::runif(1) < 0.1 && Sys.getenv("IN_PKGDOWN") == "") {
+    message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
+    has_given_note <- FALSE
+  }
 }
 
 requires_numeric_coercion <- function(x) {
@@ -639,6 +660,9 @@ clean_plot2_env <- function() {
   plot2_env$mapping_y_secondary <- NULL
   plot2_env$x_variable_names <- NULL
   plot2_env$y_secondary_factor <- NULL
+  plot2_env$infos <- NULL
+  plot2_env$cautions <- NULL
+  plot2_env$warnings <- NULL
 }
 
 sigfigs <- function(x) {

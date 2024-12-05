@@ -46,7 +46,7 @@ dec_mark <- function() {
     if (option_set %in% c(",", ".")) {
       return(option_set)
     } else {
-      warning("Option 'dec_mark' has an invalid value and was ignored. Use a \",\" or \".\".", call. = FALSE)
+      plot2_warning("Option 'dec_mark' has an invalid value and was ignored. Use a \",\" or \".\".")
     }
   } else {
     getOption("OutDec", default = ".")
@@ -61,7 +61,7 @@ big_mark <- function() {
     if (option_set %in% c(",", ".", "", " ")) {
       return(option_set)
     } else {
-      warning("Option 'big_mark' has an invalid value and was ignored. Use a \",\" or \".\" or \" \" or \"\".", call. = FALSE)
+      plot2_warning("Option 'big_mark' has an invalid value and was ignored. Use a \",\" or \".\" or \" \" or \"\".")
     }
   }
   

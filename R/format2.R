@@ -72,7 +72,7 @@ format2.numeric <- function(x,
     
     if (min_length > 0) {
       if (force_decimals == TRUE) {
-        warning("`force_decimals = TRUE` will be overwritten by `min_length = ", min_length, "`.")
+        plot2_warning("`force_decimals = TRUE` will be overwritten by `min_length = ", min_length, "`")
       }
       x <- formatC(as.integer(x),
                    width = min_length,
@@ -221,9 +221,8 @@ coerce_datetime <- function(x, format, locale, ...) {
   if (!is.null(old_option)) {
     tryCatch(Sys.setlocale("LC_TIME", locale = old_option),
              error = function(e) {
-               warning("Unable to reset original language when running: ",
-                       'Sys.setlocale("LC_TIME", locale = "', old_option, '")',
-                       call. = FALSE)
+               plot2_warning("Unable to reset original language when running: ",
+                             'Sys.setlocale("LC_TIME", locale = "', old_option, '")')
              })
   }
   

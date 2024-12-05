@@ -802,10 +802,12 @@ plot2_exec <- function(.data,
                 facet = dots$`_label.facet`,
                 y_secondary = dots$`_label.y_secondary`,
                 x_variable_names = tryCatch(suppressWarnings(.data |> select({{ x }}) |> colnames()), error = function(e) NULL))
-  on.exit(clean_plot2_env())
+  on.exit({
+    throw_messages()
+    clean_plot2_env()
+  })
   
   plot2_env$facet.fixed_y <- facet.fixed_y
-  plot2_env$has_given_note <- FALSE
   
   # get titles based on raw data ----
   # compute contents of title arguments
@@ -1720,11 +1722,6 @@ plot2_exec <- function(.data,
   # but only when it's nothing more than a data.frame without row names
   if (identical(class(p$data), "data.frame") && identical(rownames(p$data), as.character(seq_len(nrow(p$data))))) {
     p$data <- as_tibble(p$data)
-  }
-  
-  if (isTRUE(plot2_env$has_given_note) && stats::runif(1) < 0.1 && Sys.getenv("IN_PKGDOWN") == "") {
-    plot2_message(paste0("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages."), print = TRUE)
-    plot2_env$has_given_note <- FALSE
   }
   
   # return plot ----

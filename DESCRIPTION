@@ -1,6 +1,6 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
-Version: 1.25.0.9004
+Version: 1.25.0.9005
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -17,6 +17,7 @@ Depends:
   R (>= 4.1.0)
 Imports: 
   cleaner (>= 1.5.1),
+  cli (>= 3.6.0),
   crayon (>= 1.5.0),
   dplyr (>= 1.0.0),
   forcats (>= 0.5.1),
@@ -33,7 +34,6 @@ Imports:
   viridisLite (>= 0.4.0)
 Suggests: 
   AMR (>= 2.1.0),
-  cli (>= 3.6.0),
   glue (>= 1.2.0),
   grDevices,
   grid (>= 4.3.0),

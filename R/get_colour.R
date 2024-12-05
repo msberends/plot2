@@ -149,7 +149,8 @@ get_colour <- function(x, length = 1, opacity = 0) {
   
   invalid <- x %unlike% "^#[0-F]{6,8}$"
   if (any(invalid)) {
-    warning("Invalid colours, replacing with grey: ", paste0(unique(x[invalid]), collapse = ", "), call. = FALSE)
+    inv <- unique(x[invalid])
+    plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), ", replacing with a grey: ", paste0(font_magenta(paste0('"', inv, '"'), collapse = NULL), collapse = ", "))
     x[invalid] <- sapply(seq_len(length(invalid)), function(i) {
       int <- sample(c(38:217), 1, replace = FALSE)
       rgb(int, int, int, maxColorValue = 255)
@@ -158,7 +159,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
   
   if (length > length(x)) {
     # misses some colours, so fill with greys that are 70-95% white
-    warning("Missing ", length - length(x), " colours, filling with random light greys", call. = FALSE)
+    plot2_warning("Missing ", length - length(x), " colours, filling with random light greys")
     x <- c(x[1:length(x)],
            grey.colors(length - length(x), start = 0.7, end = 0.95))
   }
