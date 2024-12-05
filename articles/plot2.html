@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="A Gentle Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow">
 </head>
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,8 +134,8 @@ example:</p>
 <span>                 values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">105</span>, <span class="fl">120</span>, <span class="fl">114</span>, <span class="fl">136</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = values</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x = group</span></span></span></code></pre>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = group</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = values</span></span></span></code></pre>
 <p><img src="plot2_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
 <p>In this simple example, <code><a href="../reference/plot2.html">plot2()</a></code> automatically generates
 a column plot because it recognises that the x-axis is categorical and
@@ -164,7 +164,9 @@ line chart? No problem. You can easily specify the <code>type</code>
 argument to get exactly what you want.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = group</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = values</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
 <p>Here, we’ve explicitly set <code>type = "l"</code> to create a line
 plot. <code><a href="../reference/plot2.html">plot2()</a></code> supports a wide range of plot types, and you
@@ -191,7 +193,7 @@ the <code>x</code> and <code>y</code> arguments:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre>
 <p><img src="plot2_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
 <p>This creates a scatter plot of miles per gallon (<code>mpg</code>)
 against horsepower (<code>hp</code>). This is as basic as it gets — two
@@ -210,7 +212,7 @@ variables:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <p>In this example, <code><a href="../reference/plot2.html">plot2()</a></code> plots both <code>hp</code> and
 <code>disp</code> against <code>mpg</code> on the same graph, using
@@ -236,7 +238,7 @@ something like this:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <p>Here, the <code>cyl</code> variable is used to group the data by the
 number of cylinders, and <code><a href="../reference/plot2.html">plot2()</a></code> automatically assigns
@@ -258,8 +260,8 @@ the colours used for each category:</p>
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>,</span>
 <span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"6"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"8"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">category.midpoint = 7</span><span style="color: #000000;"> (the current </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> scale centre)</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category.midpoint = 7</span> (the current <span style="color: #0000BB;">category</span> scale centre)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <p>Here, we’ve specified the exact colours to use for each category,
 giving you full control over the appearance of your plot.</p>
@@ -282,8 +284,9 @@ excellent way to compare data across different groups.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, facet <span class="op">=</span> <span class="va">gear</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_x = TRUE</span><span style="color: #000000;"> since the three </span><span style="color: #0000BB;">x</span><span style="color: #000000;"> scales differ by less than 25%</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_x = TRUE</span> since the three <span style="color: #0000BB;">x</span> scales differ by less than</span></span>
+<span><span class="co">#&gt; 25%</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 <p>This command splits the plot by the number of gears, giving you a
 separate panel for each group. This is a quick way to see how
@@ -303,8 +306,10 @@ whether scales are fixed or free, and more.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, facet <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"g"</span><span class="op">)</span>, facet.nrow <span class="op">=</span> <span class="fl">2</span>, facet.fixed_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span><span style="color: #000000;"> since </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> has fixed scales</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_x = TRUE</span> since the three <span style="color: #0000BB;">x</span> scales differ by less than</span></span>
+<span><span class="co">#&gt; 25%</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 <p>In this example, we limit the facet grid to two rows and ensure that
 all y-axes have the same scale. This simplifies <code>ggplot2</code>’s
@@ -352,8 +357,11 @@ as easily:</p>
 <span>          category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span>, <span class="st">"Prior to 2010"</span>, <span class="st">"Since 2010"</span><span class="op">)</span>,</span>
 <span>          facet <span class="op">=</span> <span class="va">ward</span>,</span>
 <span>          title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Total of"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"patients"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">ifelse(date &lt; "2010-01-01", "Prior to 2010", "Since 2010")</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_y = TRUE</span><span style="color: #000000;"> since the two </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> scales differ by less than 25%</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_y = TRUE</span> since the two <span style="color: #0000BB;">y</span> scales differ by less than 25%</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">ifelse(date &lt; "2010-01-01",</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">"Prior to 2010", "Since 2010")</span>), a dumbbell plot can be used (<span style="color: #0000BB;">type = "dumbbell"</span></span></span>
+<span><span class="co">#&gt; or <span style="color: #0000BB;">type = "d"</span>)</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
 <p>Here, the <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> in category adds the grouping on
 date, counting the number of unique patients per ward per hospital,
@@ -372,7 +380,8 @@ without loading other packages: <code>%&gt;%()</code>,
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">gender</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">To compare single values in two categories (</span><span style="color: #0000BB;">gender</span><span style="color: #000000;">), a dumbbell plot can be used (</span><span style="color: #0000BB;">type = "dumbbell"</span><span style="color: #000000;"> or </span><span style="color: #0000BB;">type = "d"</span><span style="color: #000000;">)</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span></span>
+<span><span class="co">#&gt; used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 </div>
 <div class="section level4">
@@ -385,7 +394,7 @@ different wards, you can do this:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, y.transform <span class="op">=</span> <span class="st">"log2"</span>, category <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 <p>In a traditional <code>ggplot2</code> approach, you might have to
 create a new variable in your data for the logarithmic transformation
@@ -406,7 +415,7 @@ variables for the labels:</p>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Hospital"</span>, <span class="va">hospital</span><span class="op">)</span>,</span>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BB00BB;">!</span> <span style="color: #BB00BB;">Omitting printing of 60 datalabels - use </span><span style="color: #0000BB;">datalabels = TRUE</span><span style="color: #BB00BB;"> to force printing</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Omitting printing of 60 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
 <p>This example creates a plot where the x-axis labels combine the text
 “Hospital” with the hospital name, and the categories are based on the
@@ -431,8 +440,9 @@ name and use facets for the year of admission:</p>
 <span>        y.title <span class="op">=</span> <span class="st">"Median Patient Age"</span>,</span>
 <span>        y.labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"yrs"</span><span class="op">)</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Year"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_y = TRUE</span><span style="color: #000000;"> since the four </span><span style="color: #0000BB;">y</span><span style="color: #000000;"> scales differ by less than 25%</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BB00BB;">!</span> <span style="color: #BB00BB;">Omitting printing of 106 datalabels - use </span><span style="color: #0000BB;">datalabels = TRUE</span><span style="color: #BB00BB;"> to force printing</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_y = TRUE</span> since the four <span style="color: #0000BB;">y</span> scales differ by less than 25%</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Omitting printing of 106 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 <p>In this plot, we’re using multiple inline transformations, showcasing
 the use of only 8 lines of code without using <code>dplyr</code>
@@ -461,7 +471,7 @@ got you covered.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x.character = TRUE</span><span style="color: #000000;"> since </span><span style="color: #0000BB;">x.sort</span><span style="color: #000000;"> is set</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> since <span style="color: #0000BB;">x.sort</span> is set</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
 <p>In this example, the data is sorted by the frequency of carburettor
 counts in descending order. This is particularly useful when you want to
@@ -479,7 +489,8 @@ straightforward. You can use <code>"asc"</code> or <code>"alpha"</code>
 to sort your data in ascending alphabetical order:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"asc"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"asc"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> since <span style="color: #0000BB;">x.sort</span> is set</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 <p>This command will sort the carburettor counts alphabetically, which
 is useful when your data naturally follows an alphabetical order.</p>
@@ -496,7 +507,8 @@ doesn’t follow a standard sorting method. You can define a custom order
 by providing a manual vector of values:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> since <span style="color: #0000BB;">x.sort</span> is set</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
 <p>In this example, the carburettor counts will be displayed in the
 order of 4, 1, 6, and 8, regardless of their frequency or alphabetical
@@ -516,7 +528,8 @@ display to just the most frequent ones:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.max_items <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">x.character = TRUE</span><span style="color: #000000;"> for discrete plot type (</span><span style="color: #0000BB;">geom_col</span><span style="color: #000000;">) since </span><span style="color: #0000BB;">carb</span><span style="color: #000000;"> is numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> for discrete plot type (<span style="color: #0000BB;">geom_col</span>) since <span style="color: #0000BB;">carb</span> is</span></span>
+<span><span class="co">#&gt; numeric</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
 <p>This limits the plot to the top 5 most frequent carburetor counts,
 simplifying the visualisation and making it easier to focus on the most
@@ -534,7 +547,9 @@ to create more sophisticated plots. For example, you might want to sort
 by frequency and also limit the number of items displayed:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span>, x.max_items <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span>, x.max_items <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> for discrete plot type (<span style="color: #0000BB;">geom_col</span>) since <span style="color: #0000BB;">carb</span> is</span></span>
+<span><span class="co">#&gt; numeric</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
 <p>This plot will show only the top 5 most frequent carburettor counts,
 sorted in descending order. This combination helps to declutter your
@@ -580,7 +595,7 @@ plot.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-25-1.png" width="672"></p>
 <p>This applies the <code>viridis</code> colour scale, which is
 particularly good for making sure your plot is accessible to those with
@@ -598,7 +613,8 @@ category:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"6"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"8"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category.midpoint = 7</span> (the current <span style="color: #0000BB;">category</span> scale centre)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-26-1.png" width="672"></p>
 <p>You can use any colour that the implemented <code><a href="../reference/colour.html">get_colour()</a></code>
 function can understand, such as colour names and HTML codes:</p>
@@ -632,8 +648,9 @@ style of your university/company/etc.:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"OurOrganisation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "boxplot"</span><span style="color: #000000;"> since all groups in </span><span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span><span style="color: #000000;"> contain at least three values</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "boxplot"</span> since all groups in <span style="color: #0000BB;">Species</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">category</span> contain at</span></span>
+<span><span class="co">#&gt; least three values</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-29-1.png" width="672"></p>
 <p>This approach mirrors <code>ggplot2</code>’s
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> but with an added layer of
@@ -683,8 +700,10 @@ background colour.</p>
 <code>sf</code> object:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">datalabels = province</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">datalabels.centroid = TRUE</span><span style="color: #000000;">. Set to FALSE for a point-on-surface placing of datalabels.</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span></span>
+<span><span class="co">#&gt; placing of datalabels.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-39-1.png" width="672"></p>
 <p><code>ggplot2</code> users would typically need to specify
 <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf_label()</a></code> explicitly and
@@ -720,9 +739,10 @@ showing flow or movement from one state to another:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Titanic</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BB00BB;">!</span> <span style="color: #BB00BB;">Input class 'table' was transformed using `as.data.frame()`</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">y = Freq</span><span style="color: #000000;"> since `as.data.table()` on a `table` results in a 'Freq' column</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = Freq</span><span style="color: #000000;"> since `as.data.table()` on a `table` results in a 'Freq'</span></span></span>
+<span><span class="co">#&gt; <span style="color: #000000;">column</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-41-1.png" width="672"></p>
 <p>Sankey plots are a great way to visualise transitions, such as the
 survival rates of passengers on the Titanic across different classes and
@@ -747,7 +767,7 @@ are designed to integrate seamlessly with <code><a href="../reference/plot2.html
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span></span>
 <span><span class="co"># Notice how plot2() adds 3 lines here, since `category` is set</span></span>
 <span><span class="va">p</span> <span class="op">|&gt;</span> </span>
@@ -815,7 +835,11 @@ syntax.</p>
 it easy to integrate spatial features:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_sf</a></span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/add_type.html">add_sf</a></span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span></span>
+<span><span class="co">#&gt; placing of datalabels.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-46-1.png" width="672"></p>
 <p>This example adds spatial features to a plot of the Netherlands, with
 an extra border around the provinces. <code>ggplot2</code> users would
@@ -850,8 +874,9 @@ be downloaded automatically:</p>
 <span>        y.title <span class="op">=</span> <span class="st">"Gross Horsepower"</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Weight (lbs)"</span>,</span>
 <span>        facet.fixed_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Assuming </span><span style="color: #0000BB;">facet.fixed_x = TRUE</span><span style="color: #000000;"> since the two </span><span style="color: #0000BB;">x</span><span style="color: #000000;"> scales differ by less than 25%</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_x = TRUE</span> since the two <span style="color: #0000BB;">x</span> scales differ by less than 25%</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-47-1.png" width="672"></p>
 <p>In this example, the <code>Rock Salt</code> font, a playful and
 hand-drawn style, is applied across the plot.</p>
@@ -875,7 +900,8 @@ presentation.</p>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, title <span class="op">=</span> <span class="st">"Consistent Font Example"</span>,</span>
 <span>        text_factor <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">i</span> <span style="color: #000000;">Using </span><span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Lobster</span> from Google Fonts</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-48-1.png" width="672"></p>
 <p>In this example, all plots will now use the <code>Lobster</code>
 font, ensuring a consistent appearance across your visualisations. The
