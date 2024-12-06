@@ -39,12 +39,6 @@ Here’s how easy it is to get started with `plot2`:
 ```r
 library(plot2)
 
-# Like plot(), just pass x, y in the way you prefer
-plot2(mtcars, mpg, hp)
-mtcars %>% plot2(mpg, hp)
-plot2(hp ~ mpg, data = mtcars)
-mtcars |> plot2(mpg, hp) # preferred method since R 4.1
-
 # Use inline transformations
 mtcars |> 
   plot2(x = log(mpg), y = sqrt(hp))
@@ -70,6 +64,13 @@ admitted_patients |>
         y = n_distinct(patient_id),
         category = ifelse(date < "2010-01-01", "Prior to 2010", "Since 2010"),
         facet = ward)
+      
+# Like plot(), just pass x, y in the way you prefer
+plot2(mtcars, mpg, hp)
+mtcars %>% plot2(mpg, hp)
+plot2(hp ~ mpg, data = mtcars)
+mtcars |> plot2(mpg, hp) # preferred method since R 4.1
+
 ```
 
 ## Getting Involved

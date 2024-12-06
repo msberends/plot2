@@ -948,7 +948,7 @@ validate_y_scale <- function(df,
                              y.transform,
                              y.zoom,
                              stacked,
-                             stackedpercent,
+                             stacked_fill,
                              facet.fixed_y,
                              decimal.mark,
                              big.mark,
@@ -992,7 +992,7 @@ validate_y_scale <- function(df,
          call. = FALSE)
   }
   
-  if (is.null(facet.fixed_y) && is.null(y.limits) && has_facet(df) && !isTRUE(stackedpercent) && type != "geom_histogram") {
+  if (is.null(facet.fixed_y) && is.null(y.limits) && has_facet(df) && !isTRUE(stacked_fill) && type != "geom_histogram") {
     # determine if scales should be fixed - if CV_ymax < 25% then fix them:
     # (this does not work for facetted histograms)
     y_maxima <- df |>
@@ -1011,7 +1011,7 @@ validate_y_scale <- function(df,
   }
   
   breaks_fn <- function(values, waiver,
-                        y.breaks, y.n_breaks, y.expand, stackedpercent,
+                        y.breaks, y.n_breaks, y.expand, stacked_fill,
                         y.age, y.percent, y.percent_break, y.24h, y.limits,
                         y.transform) {
     data_min <- min(0, values, na.rm = TRUE) * - (1 + y.expand[length(y.expand)])
@@ -1040,7 +1040,7 @@ validate_y_scale <- function(df,
             to = max(x, na.rm = TRUE),
             by = 24)
       }
-    } else if (isTRUE(stackedpercent)) {
+    } else if (isTRUE(stacked_fill)) {
       # special case of y.percent, where the y scale is always 0 to 1
       function(x, y_percent_break = y.percent_break, ...) {
         seq(from = min(0, x, na.rm = TRUE),
@@ -1088,7 +1088,7 @@ validate_y_scale <- function(df,
   
   labels_fn <- function(values, waiver,
                         y.labels,
-                        y.age, y.scientific, y.percent, y.24h, stackedpercent,
+                        y.age, y.scientific, y.percent, y.24h, stacked_fill,
                         decimal.mark, big.mark) {
     if (!is.null(y.labels)) {
       y.labels
@@ -1106,7 +1106,7 @@ validate_y_scale <- function(df,
         paste0(format2(x, decimal.mark = dec, big.mark = big, round = 0),
                ifelse(Sys.getlocale("LC_COLLATE") %like% "nl|dutch", " jr", " yrs"))
       }
-    } else if (isTRUE(y.percent) || isTRUE(stackedpercent)) {
+    } else if (isTRUE(y.percent) || isTRUE(stacked_fill)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         format2(as.percentage(x), round = max(1, sigfigs(x) - 2), decimal.mark = dec, big.mark = big)
       }
@@ -1162,10 +1162,10 @@ validate_y_scale <- function(df,
     }
   }
   
-  expand_fn <- function(values, y.expand, y.age, stackedpercent, y.limits, type_backup) {
+  expand_fn <- function(values, y.expand, y.age, stacked_fill, y.limits, type_backup) {
     if (is.function(y.expand)) {
       y.expand
-    } else if (isTRUE(y.age) || isTRUE(stackedpercent)) {
+    } else if (isTRUE(y.age) || isTRUE(stacked_fill)) {
       expansion(mult = c(0, 0))
     } else {
       y.expand.bak <- y.expand
@@ -1206,7 +1206,7 @@ validate_y_scale <- function(df,
                                          y.age = FALSE,
                                          y.24h = FALSE,
                                          y.scientific = y_secondary.scientific,
-                                         stackedpercent = stackedpercent,
+                                         stacked_fill = stacked_fill,
                                          decimal.mark = decimal.mark,
                                          big.mark = big.mark),
                       name = validate_title(y_secondary.title, markdown = markdown))
@@ -1228,7 +1228,7 @@ validate_y_scale <- function(df,
                        y.breaks = y.breaks,
                        y.n_breaks = y.n_breaks,
                        y.expand = y.expand,
-                       stackedpercent = stackedpercent,
+                       stacked_fill = stacked_fill,
                        y.age = y.age,
                        y.percent = y.percent,
                        y.percent_break = y.percent_break,
@@ -1243,14 +1243,14 @@ validate_y_scale <- function(df,
                        y.age = y.age,
                        y.24h = y.24h,
                        y.scientific = y.scientific,
-                       stackedpercent = stackedpercent,
+                       stacked_fill = stacked_fill,
                        decimal.mark = decimal.mark,
                        big.mark = big.mark),
     limits = limits_evaluated,
     expand = expand_fn(values = values,
                        y.expand = y.expand,
                        y.age = y.age,
-                       stackedpercent = stackedpercent,
+                       stacked_fill = stacked_fill,
                        y.limits = limits_evaluated),
     transform = y.transform,
     position = y.position,
@@ -1273,7 +1273,7 @@ validate_category_scale <- function(values,
                                     category.transform,
                                     category.date_breaks,
                                     category.date_labels,
-                                    stackedpercent,
+                                    stacked_fill,
                                     legend.nbin,
                                     legend.barheight,
                                     legend.barwidth,
@@ -1296,10 +1296,10 @@ validate_category_scale <- function(values,
     legend.position <- validate_legend.position(legend.position)
   }
   
-  labels_fn <- function(values, category.labels, category.percent, category.date_labels, stackedpercent, decimal.mark, big.mark) {
+  labels_fn <- function(values, category.labels, category.percent, category.date_labels, stacked_fill, decimal.mark, big.mark) {
     if (!is.null(category.labels)) {
       category.labels
-    } else if (isTRUE(category.percent) || isTRUE(stackedpercent)) {
+    } else if (isTRUE(category.percent) || isTRUE(stacked_fill)) {
       function(x, dec = decimal.mark, big = big.mark, ...) format2(as.percentage(x), decimal.mark = dec, big.mark = big)
     } else if (is_date(values)) {
       if (is.null(category.date_labels)) {
@@ -1423,7 +1423,7 @@ validate_category_scale <- function(values,
                                   category.labels = category.labels,
                                   category.percent = category.percent,
                                   category.date_labels = category.date_labels,
-                                  stackedpercent = stackedpercent,
+                                  stacked_fill = stacked_fill,
                                   decimal.mark = decimal.mark,
                                   big.mark = big.mark),
                breaks = breaks_fn(values = values,
@@ -1507,7 +1507,7 @@ validate_category_scale <- function(values,
 generate_geom <- function(type,
                           df,
                           stacked,
-                          stackedpercent,
+                          stacked_fill,
                           horizontal,
                           width,
                           size,
@@ -1531,7 +1531,7 @@ generate_geom <- function(type,
   # set position
   if (isTRUE(stacked)) {
     position <- position_stack(reverse = reverse)
-  } else if (isTRUE(stackedpercent)) {
+  } else if (isTRUE(stacked_fill)) {
     position <- position_fill(reverse = reverse)
   } else {
     # small whitespace between columns:
@@ -2243,6 +2243,11 @@ validate_facet <- function(df,
                         switch = switch))
     }
   } else {
+    facet.position <- trimws(tolower(facet.position[1L]))
+    facet.position <- gsub("^t$", "top", facet.position)
+    facet.position <- gsub("^r$", "right", facet.position)
+    facet.position <- gsub("^b$", "bottom", facet.position)
+    facet.position <- gsub("^l$", "left", facet.position)
     return(facet_wrap("`_var_facet`",
                       scales = scales,
                       strip.position = facet.position,
@@ -2257,7 +2262,7 @@ set_datalabels <- function(p,
                            type,
                            width,
                            stacked,
-                           stackedpercent,
+                           stacked_fill,
                            datalabels.colour_fill,
                            datalabels.colour,
                            datalabels.size,
@@ -2292,7 +2297,7 @@ set_datalabels <- function(p,
     }
   }
   
-  if (!isTRUE(stacked) && !isTRUE(stackedpercent) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
+  if (!isTRUE(stacked) && !isTRUE(stacked_fill) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
     datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.4) # 40% transparency
   } else {
     datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.75) # 75% transparency
@@ -2312,7 +2317,7 @@ set_datalabels <- function(p,
   }
   
   # set positioning function
-  if (isTRUE(stackedpercent)) {
+  if (isTRUE(stacked_fill)) {
     position_fn <- position_fill(reverse = reverse, vjust = 0.5)
   } else if (isTRUE(stacked)) {
     position_fn <- position_stack(reverse = reverse, vjust = 0.5)
@@ -2370,13 +2375,13 @@ set_datalabels <- function(p,
                      # only when there's a category:
                      list(position = position_fn)[has_category(df) & !isTRUE(is_sf)],
                      # only when not stacked at all:
-                     list(label.padding = unit(0.25, "lines"))[!isTRUE(stacked) & !isTRUE(stackedpercent) & !isTRUE(is_sf) & !isTRUE(is_tile)],
-                     list(label.r = unit(0, "lines"))[!isTRUE(stacked) & !isTRUE(stackedpercent) & !isTRUE(is_sf) & !isTRUE(is_tile)],
-                     list(vjust = label_vertical)[!isTRUE(stacked) & !isTRUE(stackedpercent) & !isTRUE(is_sf) & !isTRUE(is_tile)],
-                     list(hjust = label_horizontal)[!isTRUE(stacked) & !isTRUE(stackedpercent) & !isTRUE(is_sf) & !isTRUE(is_tile)],
-                     # only when stackedpercent:
-                     list(vjust = 0.5)[isTRUE(stackedpercent) || isTRUE(is_sf) || isTRUE(is_tile)],
-                     list(hjust = 0.5)[isTRUE(stackedpercent) || isTRUE(is_sf) || isTRUE(is_tile)],
+                     list(label.padding = unit(0.25, "lines"))[!isTRUE(stacked) & !isTRUE(stacked_fill) & !isTRUE(is_sf) & !isTRUE(is_tile)],
+                     list(label.r = unit(0, "lines"))[!isTRUE(stacked) & !isTRUE(stacked_fill) & !isTRUE(is_sf) & !isTRUE(is_tile)],
+                     list(vjust = label_vertical)[!isTRUE(stacked) & !isTRUE(stacked_fill) & !isTRUE(is_sf) & !isTRUE(is_tile)],
+                     list(hjust = label_horizontal)[!isTRUE(stacked) & !isTRUE(stacked_fill) & !isTRUE(is_sf) & !isTRUE(is_tile)],
+                     # only when stacked_fill:
+                     list(vjust = 0.5)[isTRUE(stacked_fill) || isTRUE(is_sf) || isTRUE(is_tile)],
+                     list(hjust = 0.5)[isTRUE(stacked_fill) || isTRUE(is_sf) || isTRUE(is_tile)],
                      # only when sf:
                      list(fun.geometry = geometry_fix_fn)[isTRUE(is_sf)])) +
     # set text
@@ -2391,15 +2396,15 @@ set_datalabels <- function(p,
                      # only when there's a category:
                      list(position = position_fn)[has_category(df) & !isTRUE(is_sf) & !isTRUE(is_tile)],
                      # only when not stacked at all:
-                     list(vjust = text_vertical)[!isTRUE(stacked) & !isTRUE(stackedpercent) & !isTRUE(is_sf) & !isTRUE(is_tile)],
-                     list(hjust = text_horizontal)[!isTRUE(stacked) & !isTRUE(stackedpercent) & !isTRUE(is_sf) & !isTRUE(is_tile)],
-                     # only when stackedpercent:
-                     list(vjust = 0.5)[isTRUE(stackedpercent) || isTRUE(is_sf) || isTRUE(is_tile)],
-                     list(hjust = 0.5)[isTRUE(stackedpercent) || isTRUE(is_sf) || isTRUE(is_tile)],
+                     list(vjust = text_vertical)[!isTRUE(stacked) & !isTRUE(stacked_fill) & !isTRUE(is_sf) & !isTRUE(is_tile)],
+                     list(hjust = text_horizontal)[!isTRUE(stacked) & !isTRUE(stacked_fill) & !isTRUE(is_sf) & !isTRUE(is_tile)],
+                     # only when stacked_fill:
+                     list(vjust = 0.5)[isTRUE(stacked_fill) || isTRUE(is_sf) || isTRUE(is_tile)],
+                     list(hjust = 0.5)[isTRUE(stacked_fill) || isTRUE(is_sf) || isTRUE(is_tile)],
                      # only when sf:
                      list(fun.geometry = geometry_fix_fn)[isTRUE(is_sf)]))
   
-  if (!isTRUE(stacked) && !isTRUE(stackedpercent) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
+  if (!isTRUE(stacked) && !isTRUE(stacked_fill) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
     # move label layer to back + 1;
     # this will make the labels only interfere with plot lines,
     # not with the data (such as columns)

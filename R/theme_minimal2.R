@@ -90,7 +90,7 @@ theme_minimal2 <- function(...,
                               margin = margin(0, 0, 0, 0),
                               face = "bold"),
       strip.background = element_rect(colour = colour_background),
-      strip.switch.pad.wrap = unit(10, "pt"),
+      strip.switch.pad.wrap = unit(-5, "pt"),
       strip.placement = "outside",
       complete = TRUE)
   

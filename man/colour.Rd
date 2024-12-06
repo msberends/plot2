@@ -32,7 +32,7 @@ add_white(x, white)
 \item \code{"mako"}
 \item \code{"turbo"}
 }
-\item One of the built-in palettes in \R (these are from \R 4.4.2):
+\item One of the built-in palettes in \R (these are from \R 4.4.1):
 \itemize{
 \item \code{"Accent"}
 \item \code{"Alphabet"}
@@ -57,7 +57,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"gold1"}, \code{"rosybrown3"}, \code{"springgreen1"}, \code{"turquoise"}, \code{"turquoise1"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"blue1"}, \code{"hotpink3"}, \code{"navy"}, \code{"pink4"}, \code{"salmon2"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 

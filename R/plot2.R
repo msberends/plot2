@@ -62,8 +62,9 @@
 #' 
 #'   - `"barpercent"` (short: `"bp"`), which is effectively a shortcut to set `type = "col"` and `horizontal = TRUE` and `x.max_items = 10` and `x.sort = "freq-desc"` and `datalabels.format = "%n (%p)"`.
 #'   - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds two point geoms using [add_point()]; one with large white dots and one with smaller dots using the colours set in `colour`. This is essentially equal to base \R `plot(..., type = "b")` but with closed shapes.
+#'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. Alternatively, `x` must be one columns with the so-called *sets* (e.g., `x = c("A", "A", "B")`) and `y` must be an identifier (e.g., `y = c(1, 2, 2)`).
 #'   - `"dumbbell"` (short: `"d"`), which sets `type = "point"` and `horizontal = TRUE`, and adds a line between the points (using [geom_segment()]). The line colour cannot be changed. This plot type is only possible when the `category` has two distinct values.
-#'   - `"sankey"` (short: `"s"`) creates a Sankey plots using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
+#'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no x axis or if the length of unique values per x axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param title,subtitle,caption,tag,x.title,y.title,category.title,legend.title,y_secondary.title a title to use. This can be:
@@ -86,7 +87,7 @@
 #' @param x.date_labels labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
 #' @param x.date_remove_years a [logical] to indicate whether the years of all `x` values must be unified. This will set the years of all `x` values [to 1970](https://en.wikipedia.org/wiki/Unix_time) if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the `category` while maintaining a date range on `x`. The default is `FALSE`, unless `category` contains all years present in `x`.
 #' @param category.focus a value of `category` that should be highlighted, meaning that all other values in `category` will be greyed out. This can also be a numeric value between 1 and the length of unique values of `category`, e.g. `category.focus = 2` to focus on the second legend item.
-#' @param colour get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can also be a named vector to match values of `category`, see *Examples*. Using a named vector can also be used to manually sort the values of `category`.
+#' @param colour get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can be a named vector to match values of `category`, see *Examples*. Using a named vector can be used to manually sort the values of `category`.
 #' @param colour_fill get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()]
 #' @param colour_opacity amount of opacity for `colour`/`colour_fill` (0 = solid, 1 = transparent)
 #' @param x.lbl_angle angle to use for the x axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom)
@@ -140,8 +141,8 @@
 #' @param decimal.mark decimal mark, defaults to [dec_mark()]
 #' @param big.mark thousands separator, defaults to [big_mark()]
 #' @param summarise_function a [function] to use if the data has to be summarised, see *Examples*. This can also be `NULL`, which will be converted to `function(x) x`.
-#' @param stacked a [logical] to indicate that values must be stacked
-#' @param stackedpercent a [logical] to indicate that values must be 100% stacked
+#' @param stacked a [logical] to indicate that values must be [stacked][ggplot2::position_stack()]
+#' @param stacked_fill a [logical] to indicate that values must be [100% stacked][ggplot2::position_fill()]
 #' @param horizontal a [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original x axis.
 #' @param reverse a [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth a [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
@@ -160,10 +161,10 @@
 #' @param violin_scale scale to be set when using `type = "violin"`, can also be set to `"area"`
 #' @param legend.position position of the legend, must be `"top"`, `"right"`, `"bottom"`, `"left"` or `"none"` (or `NA` or `NULL`), can be abbreviated. Defaults to `"right"` for numeric `category` values and 'sf' plots, and `"top"` otherwise.
 #' @param legend.reverse,legend.barheight,legend.barwidth,legend.nbin,legend.italic other settings for the legend
-#' @param sankey.node_width width of the vertical nodes in a Sankey plot (i.e., when `type = "sankey"`)
-#' @param sankey.node_whitespace whitespace between the nodes
-#' @param sankey.alpha alpha of the flows in a Sankey plot (i.e., when `type = "sankey"`)
-#' @param sankey.remove_axes logical to indicate whether all axes must be removed in a Sankey plot (i.e., when `type = "sankey"`)
+#' @param sankey.node_width width of the vertical nodes in a Sankey plot
+#' @param sankey.node_whitespace whitespace between the nodes in a Sankey plot
+#' @param sankey.alpha alpha of the flows in a Sankey plot
+#' @param sankey.remove_axes logical to indicate whether all axes must be removed in a Sankey plot
 #' @param zoom a [logical] to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set `x.zoom = TRUE` and `y.zoom = TRUE`.
 #' @param sep separator character to use if multiple columns are given to either of the three directions: `x`, `category` and `facet`, e.g. `facet = c(column1, column2)`
 #' @param print a [logical] to indicate if the result should be [printed][print()] instead of just returned
@@ -290,7 +291,7 @@
 #'         
 #' admitted_patients |> 
 #'   plot2(hospital, n(), gender,
-#'         stackedpercent = TRUE)
+#'         stacked_fill = TRUE)
 #' 
 #' # two categories might benefit from a dumbbell plot:
 #' admitted_patients |> 
@@ -460,7 +461,7 @@ plot2 <- function(.data,
                   big.mark = big_mark(),
                   summarise_function = base::sum,
                   stacked = FALSE,
-                  stackedpercent = FALSE,
+                  stacked_fill = FALSE,
                   horizontal = FALSE,
                   reverse = horizontal,
                   smooth = NULL,
@@ -500,7 +501,7 @@ plot2 <- function(.data,
                   markdown = TRUE,
                   data = NULL,
                   ...) {
-
+  
   # no observations, return empty plot immediately
   if (NROW(.data) == 0) {
     # check if markdown is required
@@ -672,7 +673,7 @@ plot2_exec <- function(.data,
                        big.mark,
                        summarise_function,
                        stacked,
-                       stackedpercent,
+                       stacked_fill,
                        horizontal,
                        reverse,
                        smooth,
@@ -716,8 +717,8 @@ plot2_exec <- function(.data,
   dots_geom <- dots[names(dots) %unlike% "^_(label[.]|misses[.]|sf.column|summarise_fn_name|datalabels.centroid)"]
   if (length(dots_geom) > 0) {
     plot2_message(ifelse(length(dots_geom) == 1,
-                         "This additional argument is given to the geom: ",
-                         "These additional arguments are given to the geom: "),
+                         "This additional argument was given to the geom: ",
+                         "These additional arguments were given to the geom: "),
                   paste0(font_blue(names(dots_geom), collapse = NULL), collapse = font_black(", ")))
   }
   
@@ -744,6 +745,30 @@ plot2_exec <- function(.data,
   if (!misses_facet.fixed_x) {
     x.drop <- !isTRUE(facet.fixed_x)
   }
+  
+  # get titles based on raw data ----
+  # compute contents of title arguments
+  title <- validate_title({{ title }}, markdown = isTRUE(markdown), df = .data, max_length = title.linelength)
+  subtitle <- validate_title({{ subtitle }}, markdown = isTRUE(markdown), df = .data, max_length = subtitle.linelength)
+  caption <- validate_title({{ caption }}, markdown = isTRUE(markdown), df = .data)
+  tag <- validate_title({{ tag }}, markdown = isTRUE(markdown), df = .data)
+  x.title <- validate_title({{ x.title }}, markdown = isTRUE(markdown), df = .data)
+  y.title <- validate_title({{ y.title }}, markdown = isTRUE(markdown), df = .data)
+  legend.title <- validate_title({{ legend.title }}, markdown = isTRUE(markdown), df = .data)
+  category.title <- validate_title({{ category.title }}, markdown = isTRUE(markdown), df = .data)
+  # category.title and legend.title both exist for convenience, though going forward, legend.title will be used
+  legend.title <- if (is.null(category.title)) legend.title else category.title
+  if (tryCatch(!is.null(y_secondary), error = function(e) TRUE)) {
+    y_secondary.title <- validate_title({{ y_secondary.title }}, markdown = isTRUE(markdown), df = .data)
+  }
+  
+  if (is.null(summarise_function)) {
+    summarise_function <- function(x) x
+    dots$`_summarise_fn_name` <- "function(x) x"
+  } else if (!is.function(summarise_function)) {
+    stop("'summarise_function' must be a function")
+  }
+  dots$`_summarise_fn_name` <- gsub("^base::", "", dots$`_summarise_fn_name`)
   
   # pre-validate types and set type shortcuts ----
   if (!is_empty(type) && !is.character(type)) {
@@ -788,6 +813,9 @@ plot2_exec <- function(.data,
       }
       x.title = ""
     }
+    if (type == "upset") {
+      p <- create_upset_plot(df)
+    }
     if (type %like% "bar") {
       type <- "col"
       horizontal <- TRUE
@@ -796,46 +824,24 @@ plot2_exec <- function(.data,
     type_backup <- ""
   }
   
+  if (decimal.mark == big.mark) {
+    big.mark <- " "
+  }
+  
+  # set environment ----
   set_plot2_env(x = dots$`_label.x`,
                 y = dots$`_label.y`,
                 category = dots$`_label.category`,
                 facet = dots$`_label.facet`,
                 y_secondary = dots$`_label.y_secondary`,
                 x_variable_names = tryCatch(suppressWarnings(.data |> select({{ x }}) |> colnames()), error = function(e) NULL))
+  
   on.exit({
     throw_messages()
     clean_plot2_env()
   })
   
   plot2_env$facet.fixed_y <- facet.fixed_y
-  
-  # get titles based on raw data ----
-  # compute contents of title arguments
-  title <- validate_title({{ title }}, markdown = isTRUE(markdown), df = .data, max_length = title.linelength)
-  subtitle <- validate_title({{ subtitle }}, markdown = isTRUE(markdown), df = .data, max_length = subtitle.linelength)
-  caption <- validate_title({{ caption }}, markdown = isTRUE(markdown), df = .data)
-  tag <- validate_title({{ tag }}, markdown = isTRUE(markdown), df = .data)
-  x.title <- validate_title({{ x.title }}, markdown = isTRUE(markdown), df = .data)
-  y.title <- validate_title({{ y.title }}, markdown = isTRUE(markdown), df = .data)
-  legend.title <- validate_title({{ legend.title }}, markdown = isTRUE(markdown), df = .data)
-  category.title <- validate_title({{ category.title }}, markdown = isTRUE(markdown), df = .data)
-  # category.title and legend.title both exist for convenience
-  legend.title <- if (is.null(category.title)) legend.title else category.title
-  if (tryCatch(!is.null(y_secondary), error = function(e) TRUE)) {
-    y_secondary.title <- validate_title({{ y_secondary.title }}, markdown = isTRUE(markdown), df = .data)
-  }
-  
-  if (is.null(summarise_function)) {
-    summarise_function <- function(x) x
-    dots$`_summarise_fn_name` <- "function(x) x"
-  } else if (!is.function(summarise_function)) {
-    stop("'summarise_function' must be a function")
-  }
-  dots$`_summarise_fn_name` <- gsub("^base::", "", dots$`_summarise_fn_name`)
-  
-  if (decimal.mark == big.mark) {
-    big.mark <- " "
-  }
   
   # prepare data ----
   # IMPORTANT: in this part, the data for mapping will be generated anonymously, e.g. as `_var_x` and `_var_category`;
@@ -1085,9 +1091,9 @@ plot2_exec <- function(.data,
     }
   }
   
-  # keep only one of `stacked` and `stackedpercent`
-  if (isTRUE(stacked) && isTRUE(stackedpercent)) {
-    plot2_warning("Ignoring ", font_blue("stacked = TRUE"), ", since ", font_blue("stackedpercent = TRUE"))
+  # keep only one of `stacked` and `stacked_fill`
+  if (isTRUE(stacked) && isTRUE(stacked_fill)) {
+    plot2_warning("Ignoring ", font_blue("stacked = TRUE"), ", since ", font_blue("stacked_fill = TRUE"))
     stacked <- FALSE
   }
   
@@ -1235,7 +1241,7 @@ plot2_exec <- function(.data,
       generate_geom(type = type,
                     df = df,
                     stacked = stacked,
-                    stackedpercent = stackedpercent,
+                    stacked_fill = stacked_fill,
                     horizontal = horizontal,
                     width = width,
                     size = size,
@@ -1266,7 +1272,7 @@ plot2_exec <- function(.data,
         generate_geom(type = y_secondary.type,
                       df = df,
                       stacked = stacked,
-                      stackedpercent = stackedpercent,
+                      stacked_fill = stacked_fill,
                       horizontal = horizontal,
                       width = width,
                       size = size,
@@ -1361,7 +1367,7 @@ plot2_exec <- function(.data,
                               category.transform = category.transform,
                               category.date_breaks = category.date_breaks,
                               category.date_labels = category.date_labels,
-                              stackedpercent = stackedpercent,
+                              stacked_fill = stacked_fill,
                               legend.nbin = legend.nbin,
                               legend.barheight = legend.barheight,
                               legend.barwidth = legend.barwidth,
@@ -1486,7 +1492,7 @@ plot2_exec <- function(.data,
                          y.transform = y.transform,
                          y.zoom = y.zoom,
                          stacked = stacked,
-                         stackedpercent = stackedpercent,
+                         stacked_fill = stacked_fill,
                          facet.fixed_y = facet.fixed_y,
                          decimal.mark = decimal.mark,
                          big.mark = big.mark,
@@ -1515,7 +1521,7 @@ plot2_exec <- function(.data,
                          y.transform = y.transform,
                          y.zoom = y.zoom,
                          stacked = stacked,
-                         stackedpercent = stackedpercent,
+                         stacked_fill = stacked_fill,
                          facet.fixed_y = facet.fixed_y,
                          decimal.mark = decimal.mark,
                          big.mark = big.mark,
@@ -1648,7 +1654,7 @@ plot2_exec <- function(.data,
                         type = type,
                         width = width,
                         stacked = stacked,
-                        stackedpercent = stackedpercent,
+                        stacked_fill = stacked_fill,
                         datalabels.colour_fill = datalabels.colour_fill,
                         datalabels.colour = datalabels.colour,
                         datalabels.size = datalabels.size,

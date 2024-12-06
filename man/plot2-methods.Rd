@@ -122,7 +122,7 @@
   big.mark = big_mark(),
   summarise_function = base::sum,
   stacked = FALSE,
-  stackedpercent = FALSE,
+  stacked_fill = FALSE,
   horizontal = FALSE,
   reverse = horizontal,
   smooth = NULL,
@@ -275,7 +275,7 @@
   big.mark = big_mark(),
   summarise_function = base::sum,
   stacked = FALSE,
-  stackedpercent = FALSE,
+  stacked_fill = FALSE,
   horizontal = FALSE,
   reverse = horizontal,
   smooth = NULL,
@@ -429,7 +429,7 @@
   big.mark = big_mark(),
   summarise_function = base::sum,
   stacked = FALSE,
-  stackedpercent = FALSE,
+  stacked_fill = FALSE,
   horizontal = FALSE,
   reverse = horizontal,
   smooth = NULL,
@@ -582,7 +582,7 @@
   big.mark = big_mark(),
   summarise_function = base::sum,
   stacked = FALSE,
-  stackedpercent = FALSE,
+  stacked_fill = FALSE,
   horizontal = FALSE,
   reverse = horizontal,
   smooth = NULL,
@@ -741,7 +741,7 @@
   big.mark = big_mark(),
   summarise_function = base::sum,
   stacked = FALSE,
-  stackedpercent = FALSE,
+  stacked_fill = FALSE,
   horizontal = FALSE,
   reverse = horizontal,
   smooth = NULL,
@@ -894,7 +894,7 @@
   big.mark = big_mark(),
   summarise_function = base::sum,
   stacked = FALSE,
-  stackedpercent = FALSE,
+  stacked_fill = FALSE,
   horizontal = FALSE,
   reverse = horizontal,
   smooth = NULL,
@@ -974,8 +974,9 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \itemize{
 \item \code{"barpercent"} (short: \code{"bp"}), which is effectively a shortcut to set \code{type = "col"} and \code{horizontal = TRUE} and \code{x.max_items = 10} and \code{x.sort = "freq-desc"} and \code{datalabels.format = "\%n (\%p)"}.
 \item \code{"linedot"} (short: \code{"ld"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
+\item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. Alternatively, \code{x} must be one columns with the so-called \emph{sets} (e.g., \code{x = c("A", "A", "B")}) and \code{y} must be an identifier (e.g., \code{y = c(1, 2, 2)}).
 \item \code{"dumbbell"} (short: \code{"d"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[=geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
-\item \code{"sankey"} (short: \code{"s"}) creates a Sankey plots using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}.
+\item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}.
 }
 \item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no x axis or if the length of unique values per x axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
 }}
@@ -1015,7 +1016,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.focus}{a value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
 
-\item{colour}{get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can also be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can also be used to manually sort the values of \code{category}.}
+\item{colour}{get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
 
 \item{colour_fill}{get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}}
 
@@ -1115,9 +1116,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{summarise_function}{a \link{function} to use if the data has to be summarised, see \emph{Examples}. This can also be \code{NULL}, which will be converted to \code{function(x) x}.}
 
-\item{stacked}{a \link{logical} to indicate that values must be stacked}
+\item{stacked}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}}
 
-\item{stackedpercent}{a \link{logical} to indicate that values must be 100\% stacked}
+\item{stacked_fill}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{100\% stacked}}
 
 \item{horizontal}{a \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original x axis.}
 
@@ -1152,13 +1153,13 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic}{other settings for the legend}
 
-\item{sankey.node_width}{width of the vertical nodes in a Sankey plot (i.e., when \code{type = "sankey"})}
+\item{sankey.node_width}{width of the vertical nodes in a Sankey plot}
 
-\item{sankey.node_whitespace}{whitespace between the nodes}
+\item{sankey.node_whitespace}{whitespace between the nodes in a Sankey plot}
 
-\item{sankey.alpha}{alpha of the flows in a Sankey plot (i.e., when \code{type = "sankey"})}
+\item{sankey.alpha}{alpha of the flows in a Sankey plot}
 
-\item{sankey.remove_axes}{logical to indicate whether all axes must be removed in a Sankey plot (i.e., when \code{type = "sankey"})}
+\item{sankey.remove_axes}{logical to indicate whether all axes must be removed in a Sankey plot}
 
 \item{zoom}{a \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
 

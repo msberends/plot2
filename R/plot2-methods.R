@@ -19,7 +19,7 @@
 #' @name plot2-methods
 #' @inheritParams plot2
 #' @importFrom ggplot2 fortify
-#' @importFrom dplyr count filter
+#' @importFrom dplyr count filter mutate
 #' @export
 plot2.default <- function(.data,
                           x = NULL,
@@ -132,7 +132,7 @@ plot2.default <- function(.data,
                           big.mark = big_mark(),
                           summarise_function = base::sum,
                           stacked = FALSE,
-                          stackedpercent = FALSE,
+                          stacked_fill = FALSE,
                           horizontal = FALSE,
                           reverse = horizontal,
                           smooth = NULL,
@@ -214,9 +214,17 @@ plot2.default <- function(.data,
       }
       plot2_caution("Input class ", paste0("'", class(.data), "'", collapse = "/"), " was transformed using `as.data.frame()`")
       if (inherits(.data, "table")) {
-        # if using `as.data.table()` on a `table`, the resulting count column with be "Freq"
-        plot2_message("Using ", font_blue("y = Freq"), font_black(" since `as.data.table()` on a `table` results in a 'Freq' column"))
-        y <- str2lang("Freq")
+        # if using `as.data.frame()` on a `table`, the resulting count column with be "Freq"
+        if (tryCatch(is.null(y), error = function(e) FALSE)) {
+          colnames(new_df)[colnames(new_df) == "Freq"] <- "count"
+          y <- str2lang("count")
+        } else {
+          # this is when y is set to something - put that to the y axis and adjust the data set
+          col_fn <- function(y = NULL) data.frame() |> mutate({{ y }} := 0)
+          y <- colnames(col_fn({{ y }}))
+          colnames(new_df)[colnames(new_df) == "Freq"] <- y
+          y <- str2lang(y)
+        }
       }
     }
   }
@@ -332,7 +340,7 @@ plot2.default <- function(.data,
              big.mark = big.mark,
              summarise_function = summarise_function,
              stacked = stacked,
-             stackedpercent = stackedpercent,
+             stacked_fill = stacked_fill,
              horizontal = horizontal,
              reverse = reverse,
              smooth = smooth,
@@ -511,7 +519,7 @@ plot2.formula <- function(.data = NULL,
                              big.mark = big_mark(),
                              summarise_function = base::sum,
                              stacked = FALSE,
-                             stackedpercent = FALSE,
+                             stacked_fill = FALSE,
                              horizontal = FALSE,
                              reverse = horizontal,
                              smooth = NULL,
@@ -693,7 +701,7 @@ plot2.formula <- function(.data = NULL,
              big.mark = big.mark,
              summarise_function = summarise_function,
              stacked = stacked,
-             stackedpercent = stackedpercent,
+             stacked_fill = stacked_fill,
              horizontal = horizontal,
              reverse = reverse,
              smooth = smooth,
@@ -873,7 +881,7 @@ plot2.freq <- function(.data,
                        big.mark = big_mark(),
                        summarise_function = base::sum,
                        stacked = FALSE,
-                       stackedpercent = FALSE,
+                       stacked_fill = FALSE,
                        horizontal = FALSE,
                        reverse = horizontal,
                        smooth = NULL,
@@ -1023,7 +1031,7 @@ plot2.freq <- function(.data,
              big.mark = big.mark,
              summarise_function = summarise_function,
              stacked = stacked,
-             stackedpercent = stackedpercent,
+             stacked_fill = stacked_fill,
              horizontal = horizontal,
              reverse = reverse,
              smooth = smooth,
@@ -1204,7 +1212,7 @@ plot2.sf <- function(.data,
                      big.mark = big_mark(),
                      summarise_function = base::sum,
                      stacked = FALSE,
-                     stackedpercent = FALSE,
+                     stacked_fill = FALSE,
                      horizontal = FALSE,
                      reverse = horizontal,
                      smooth = NULL,
@@ -1389,7 +1397,7 @@ plot2.sf <- function(.data,
              big.mark = big.mark,
              summarise_function = summarise_function,
              stacked = stacked,
-             stackedpercent = stackedpercent,
+             stacked_fill = stacked_fill,
              horizontal = horizontal,
              reverse = reverse,
              smooth = smooth,
@@ -1569,7 +1577,7 @@ plot2.data.frame <- function(.data,
                              big.mark = big_mark(),
                              summarise_function = base::sum,
                              stacked = FALSE,
-                             stackedpercent = FALSE,
+                             stacked_fill = FALSE,
                              horizontal = FALSE,
                              reverse = horizontal,
                              smooth = NULL,
@@ -1724,7 +1732,7 @@ plot2.data.frame <- function(.data,
              big.mark = big.mark,
              summarise_function = summarise_function,
              stacked = stacked,
-             stackedpercent = stackedpercent,
+             stacked_fill = stacked_fill,
              horizontal = horizontal,
              reverse = reverse,
              smooth = smooth,
@@ -1906,7 +1914,7 @@ plot2.matrix <- function(.data,
                          big.mark = big_mark(),
                          summarise_function = base::sum,
                          stacked = FALSE,
-                         stackedpercent = FALSE,
+                         stacked_fill = FALSE,
                          horizontal = FALSE,
                          reverse = horizontal,
                          smooth = NULL,
@@ -2077,7 +2085,7 @@ plot2.matrix <- function(.data,
                big.mark = big.mark,
                summarise_function = summarise_function,
                stacked = stacked,
-               stackedpercent = stackedpercent,
+               stacked_fill = stacked_fill,
                horizontal = horizontal,
                reverse = reverse,
                smooth = smooth,
