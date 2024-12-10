@@ -341,7 +341,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{stacked}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}}
 
-\item{stacked_fill}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{100\% stacked}}
+\item{stacked_fill}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%)}
 
 \item{horizontal}{a \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original x axis.}
 

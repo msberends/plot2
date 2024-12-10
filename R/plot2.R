@@ -142,7 +142,7 @@
 #' @param big.mark thousands separator, defaults to [big_mark()]
 #' @param summarise_function a [function] to use if the data has to be summarised, see *Examples*. This can also be `NULL`, which will be converted to `function(x) x`.
 #' @param stacked a [logical] to indicate that values must be [stacked][ggplot2::position_stack()]
-#' @param stacked_fill a [logical] to indicate that values must be [100% stacked][ggplot2::position_fill()]
+#' @param stacked_fill a [logical] to indicate that values must be [filled][ggplot2::position_fill()] (i.e., stacked to 100%)
 #' @param horizontal a [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original x axis.
 #' @param reverse a [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth a [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
