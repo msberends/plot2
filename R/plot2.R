@@ -1093,7 +1093,7 @@ plot2_exec <- function(.data,
   
   # keep only one of `stacked` and `stacked_fill`
   if (isTRUE(stacked) && isTRUE(stacked_fill)) {
-    plot2_warning("Ignoring ", font_blue("stacked = TRUE"), ", since ", font_blue("stacked_fill = TRUE"))
+    plot2_warning("Ignoring ", font_blue("stacked = TRUE"), " since ", font_blue("stacked_fill = TRUE"))
     stacked <- FALSE
   }
   

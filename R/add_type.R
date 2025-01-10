@@ -39,6 +39,8 @@
 #'   
 #' # if not specifying x or y, current plot data are taken
 #' p |> add_line()
+#' 
+#' p |> add_smooth()
 #'   
 #' # single values for add_line() will plot 'hline' or 'vline'
 #' # even considering the `category` if set
@@ -134,8 +136,6 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
   type <- validate_type(type[1L])
   if (type == "") {
     stop("`type` must be set for `add_type()`", call. = FALSE)
-  } else if (type == "geom_smooth") {
-    plot2_caution("Adding a smooth using `add_type()` is less convenient than using `plot2(..., smooth = TRUE)")
   }
   
   args <- list(...)
@@ -210,12 +210,21 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   has_x <- "x" %in% colnames(new_df)
   has_y <- "y" %in% colnames(new_df)
   
+  if (length(colnames(new_df)) == 0) {
+    # something went wrong - get the original data
+    x_name <- as_label(plot$mapping$x)
+    y_name <- as_label(plot$mapping$y)
+    new_df <- plot$data |> select(any_of(c(x_name, y_name, category_name)))
+    has_x <- "x" %in% colnames(new_df)
+    has_y <- "y" %in% colnames(new_df)
+  }
+  
   if (!has_x && !has_y) {
     # just used e.g. `plot_object |> add_line()`
     inherit.aes <- TRUE
     x_name <- as_label(plot$mapping$x)
     y_name <- as_label(plot$mapping$y)
-    new_df <- plot$data |> select(any_of(c(x_name, y_name)))
+    new_df <- plot$data |> select(any_of(c(x_name, y_name, category_name)))
   }
   
   if (is.null(inherit.aes)) {
@@ -246,7 +255,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (has_category) {
     params <- utils::modifyList(params, list(colour = NULL, fill = NULL))
   }
-
+  
   out <- list(plot = plot,
               has_category = has_category,
               has_x = has_x,
@@ -265,7 +274,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   
   if (!colour_missing && !has_category) {
     out$params$colour <- list(...)$colour
-  } else if (has_category && !inherit.aes) {
+  } else if (has_category) {
     out$mapping <- setup_aes(out$mapping, colour = category_name)
   }
   
@@ -275,6 +284,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!is.null(out$params$fill)) {
     out$params$fill <- get_colour(out$params$fill)
   }
+  
   return(out)
 }
 
@@ -312,6 +322,11 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
   } else {
     type <- "line"
     mapping <- geom_data$mapping
+  }
+  
+  if (is.null(geom_data$data) && geom_data$has_category) {
+    # update the group mapping in line geoms
+    mapping <- setup_aes(mapping, group = mapping$colour)
   }
   
   p <- add_type(plot = geom_data$plot,
@@ -487,6 +502,66 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
            mapping = mapping,
            params = params,
            move = move)
+}
+
+
+#' @rdname add_type
+#' @inheritParams ggplot2::geom_smooth
+#' @importFrom ggplot2 is.ggplot geom_line scale_linetype_manual
+#' @export
+add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, formula, method, se, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
+  if (!is.ggplot(plot)) {
+    stop("`plot` must be a ggplot2 object.", call. = FALSE)
+  }
+  if (missing(linetype)) {
+    linetype <- NA_missing_
+  }
+  if (missing(linewidth)) {
+    linewidth <- NA_missing_
+  }
+  geom_data <- new_geom_data(plot, x = {{ x }}, y = {{ y }},
+                             colour = colour, linetype = linetype, linewidth = linewidth, ...,
+                             colour_missing = missing(colour), inherit.aes = inherit.aes)
+  
+  if (!missing(formula)) {
+    geom_data$params$formula <- formula
+  }
+  if (!missing(method)) {
+    geom_data$params$method <- method
+  }
+  if (!missing(se)) {
+    geom_data$params$se <- se
+  }
+  
+  if (is.null(geom_data$data) && geom_data$has_category) {
+    # update the group mapping in line geoms
+    geom_data$mapping <- setup_aes(geom_data$mapping, group = geom_data$mapping$colour)
+  }
+  
+  p <- add_type(plot = geom_data$plot,
+                type = "smooth",
+                data = geom_data$data,
+                mapping = geom_data$mapping,
+                params = geom_data$params,
+                move = move)
+  
+  if (!is.null(legend.value)) {
+    if (is.expression(validate_title(legend.value, markdown = TRUE))) {
+      label_fn <- md_to_expression
+    } else {
+      label_fn <- function(x) x
+    }
+    linetype <- ifelse(identical(linetype, NA_missing_), "solid", linetype)
+    p <- p +
+      geom_line(data = data.frame(x = c(as.Date(Inf), as.Date(Inf)), y = c(Inf, Inf), group = c(legend.value, legend.value)),
+                mapping = aes(x = x, y = y, linetype = group),
+                colour = get_colour(colour[1L]),
+                linewidth = validate_linewidth(geom_data$params$linewidth, type = "geom_line", type_backup = "geom_line"),
+                inherit.aes = FALSE) +
+      scale_linetype_manual(name = NULL, values = stats::setNames(linetype, legend.value), labels = label_fn)
+  }
+  
+  p
 }
 
 #' @rdname add_type
