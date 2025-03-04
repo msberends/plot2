@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -271,11 +271,41 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-in"><span>           colour <span class="op">=</span> <span class="st">"red"</span>,</span></span>
 <span class="r-in"><span>           legend.value <span class="op">=</span> <span class="st">"Average"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="add_type-5.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span>  </span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># also works with facets</span></span></span>
+<span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Sepal.Length</span>,</span></span>
+<span class="r-in"><span>        y <span class="op">=</span> <span class="va">Sepal.Width</span>,</span></span>
+<span class="r-in"><span>        facet <span class="op">=</span> <span class="va">Species</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">add_line</span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Width</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           legend.value <span class="op">=</span> <span class="st">"Average"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_x = TRUE</span> since the three <span style="color: #0000BB;">x</span> scales differ by less than</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 25%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_y = TRUE</span> since the three <span style="color: #0000BB;">y</span> scales differ by less than</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 25%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
+<span class="r-plt img"><img src="add_type-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Sepal.Length</span>,</span></span>
+<span class="r-in"><span>        y <span class="op">=</span> <span class="va">Sepal.Width</span>,</span></span>
+<span class="r-in"><span>        facet <span class="op">=</span> <span class="va">Species</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">add_line</span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">Sepal.Width</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           legend.value <span class="op">=</span> <span class="st">"Range"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_x = TRUE</span> since the three <span style="color: #0000BB;">x</span> scales differ by less than</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 25%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_y = TRUE</span> since the three <span style="color: #0000BB;">y</span> scales differ by less than</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 25%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
+<span class="r-plt img"><img src="add_type-7.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">add_line</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">add_line</span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Width</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-6.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">add_point</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>,</span></span>
@@ -283,27 +313,27 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-in"><span>            shape <span class="op">=</span> <span class="fl">13</span>,</span></span>
 <span class="r-in"><span>            size <span class="op">=</span> <span class="fl">25</span>,</span></span>
 <span class="r-in"><span>            show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-7.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co"># multiple values will just plot multiple lines</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">add_line</span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/fivenum.html" class="external-link">fivenum</a></span><span class="op">(</span><span class="va">Sepal.Width</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>           colour <span class="op">=</span> <span class="st">"blue"</span>,</span></span>
 <span class="r-in"><span>           legend.value <span class="op">=</span> <span class="st">"Tukey's Numbers"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-8.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">add_line</span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">Sepal.Width</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>           colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>           linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-9.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co"># use move to move the new layer down</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">add_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>            colour <span class="op">=</span> <span class="st">"lightpink"</span>,</span></span>
 <span class="r-in"><span>            move <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-10.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-12.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># providing x and y will just plot the points as new data,</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span> </span></span>
@@ -311,14 +341,14 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-in"><span>            x <span class="op">=</span> <span class="fl">5</span><span class="op">:</span><span class="fl">7</span>,</span></span>
 <span class="r-in"><span>            colour <span class="op">=</span> <span class="st">"red"</span>,</span></span>
 <span class="r-in"><span>            size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-11.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># even with expanded grid if x and y are not of the same length</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">add_point</span><span class="op">(</span>y <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,</span></span>
 <span class="r-in"><span>            x <span class="op">=</span> <span class="fl">5</span><span class="op">:</span><span class="fl">8</span>,</span></span>
 <span class="r-in"><span>            colour <span class="op">=</span> <span class="st">"red"</span>,</span></span>
 <span class="r-in"><span>            size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="add_type-12.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-14.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># any mathematical transformation of current values is supported</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>var_1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span>,</span></span>
@@ -336,7 +366,7 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 row containing missing values or values outside the scale range</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_col()`).</span>
-<span class="r-plt img"><img src="add_type-13.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-15.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plotting error bars was never easier</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://dplyr.tidyverse.org" class="external-link">"dplyr"</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
@@ -351,16 +381,16 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 25 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    var_1 var_2 var_3 error1 error2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 106.  A       95.7  117. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2  39.1 B       35.2   43.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3  99.9 C       89.9  110. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 116.  D      104.   127. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 129.  E      116.   142. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6  54.5 A       49.0   59.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7  93.8 B       84.4  103. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8  93.9 C       84.5  103. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9  92.9 D       83.6  102. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10  86.2 E       77.5   94.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1  39.1 A       35.2   43.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2  99.9 B       89.9  110. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 116.  C      104.   127. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 129.  D      116.   142. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5  54.5 E       49.0   59.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6  93.8 A       84.4  103. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7  93.9 B       84.5  103. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8  92.9 C       83.6  102. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9  86.2 D       77.5   94.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 116.  E      104.   127. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df2</span> <span class="op">|&gt;</span> </span></span>
@@ -370,7 +400,7 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This additional argument was given to the geom: <span style="color: #0000BB;">alpha</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> for discrete plot type (<span style="color: #0000BB;">geom_col</span>) since <span style="color: #0000BB;">var_1</span> is</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> numeric</span>
-<span class="r-plt img"><img src="add_type-14.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-16.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># adding sf objects is just as convenient as all else</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span></span></span>
@@ -378,14 +408,14 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
-<span class="r-plt img"><img src="add_type-15.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-17.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">add_sf</span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
-<span class="r-plt img"><img src="add_type-16.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="add_type-18.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
