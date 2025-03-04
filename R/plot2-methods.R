@@ -20,6 +20,7 @@
 #' @inheritParams plot2
 #' @importFrom ggplot2 fortify
 #' @importFrom dplyr count filter mutate
+#' @importFrom rlang `:=`
 #' @export
 plot2.default <- function(.data,
                           x = NULL,

@@ -54,7 +54,7 @@
 #' 
 #' - A `ggplot2` geom name or their abbreviation such as `"col"` and `"point"`. All geoms are supported (including [`geom_blank()`][ggplot2::geom_blank()]).
 #' 
-#'   Full function names can be used (e.g., `"geom_histogram"`), but they can also be abbreviated (e.g., `"h"`, `"hist"`). The following geoms can be abbreviated by their first character: area (`"a"`), boxplot (`"b"`), column (`"c"`), histogram (`"h"`), jitter (`"j"`), line (`"l"`), point (`"p"`), ribbon (`"r"`), and violin (`"v"`).
+#'   Full function names can be used (e.g., `"geom_histogram"`), but they can also be abbreviated (e.g., `"h"`, `"hist"`). The following geoms can be abbreviated by their first character: area (`"a"`), boxplot (`"b"`), beeswarm (`"bs"`), column (`"c"`), histogram (`"h"`), jitter (`"j"`), line (`"l"`), point (`"p"`), ribbon (`"r"`), and violin (`"v"`).
 #' 
 #'   Please note: in `ggplot2`, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, `type = "bar"` will set `type = "col"` and `horizontal = TRUE`.
 #' 
@@ -813,9 +813,9 @@ plot2_exec <- function(.data,
       }
       x.title = ""
     }
-    if (type == "upset") {
-      p <- create_upset_plot(df)
-    }
+    # if (type == "upset") {
+    #   p <- create_upset_plot(df)
+    # }
     if (type %like% "bar") {
       type <- "col"
       horizontal <- TRUE

@@ -53,7 +53,23 @@
 #'   add_line(y = mean(Sepal.Width),
 #'            colour = "red",
 #'            legend.value = "Average")
-#'   
+#'
+#' # also works with facets
+#' iris |>
+#'   plot2(x = Sepal.Length,
+#'         y = Sepal.Width,
+#'         facet = Species) |>
+#'   add_line(y = mean(Sepal.Width),
+#'            legend.value = "Average")
+#' 
+#' iris |>
+#'   plot2(x = Sepal.Length,
+#'         y = Sepal.Width,
+#'         facet = Species) |>
+#'   add_line(y = range(Sepal.Width),
+#'            legend.value = "Range")
+#'
+#'
 #' p |> 
 #'   add_line(x = mean(Sepal.Length)) |> 
 #'   add_line(y = mean(Sepal.Width))
@@ -172,11 +188,19 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
     colour_unique <- ""
   }
   
+  if (!is.null(plot$facet$params) && length(plot$facet$params) != 0) {
+    facet_name <- as_label(plot$facet$params$facets[[1]])
+    facet_unique <- unique(plot$data[[facet_name]])
+  } else {
+    facet_name <- NULL
+    facet_unique <- ""
+  }
+  
   # split the x-part and x-part, so that even `add_point(y = 1:4, x = 1:3)` is possible with expand.grid()
   x_part <- plot$data |>
     mutate(`_row_index` = seq_len(nrow(plot$data))) |>
     # this also works if category is NULL:
-    group_by(across(any_of(category_name))) |> 
+    group_by(across(any_of(c(category_name, facet_name)))) |> 
     reframe(x = {{ x }},
             `_row_index` = first(`_row_index`)) |> 
     arrange(`_row_index`) |> 
@@ -184,7 +208,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   y_part <- plot$data |>
     mutate(`_row_index` = seq_len(nrow(plot$data))) |>
     # this also works if category is NULL:
-    group_by(across(any_of(category_name))) |> 
+    group_by(across(any_of(c(category_name, facet_name)))) |> 
     reframe(y = {{ y }},
             `_row_index` = first(`_row_index`)) |> 
     arrange(`_row_index`) |> 
@@ -198,6 +222,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
                           y = y_part$y) |> 
       as_tibble()
     category_name <- NULL
+    facet_name <- NULL
   } else if ("x" %in% colnames(x_part)) {
     new_df <- x_part
   } else if ("y" %in% colnames(y_part)) {

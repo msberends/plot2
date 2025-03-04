@@ -78,6 +78,7 @@ validate_type <- function(type, df = NULL) {
     if (type == "p") type <- "point"
     if (type == "r") type <- "ribbon"
     if (type == "v") type <- "violin"
+    if (type == "bs") type <- "beeswarm"
     if (type %like% "column") { # don't catch "bar" here - we consider that a horizontal "col" like Excel
       type <- "col"
     }
@@ -89,6 +90,10 @@ validate_type <- function(type, df = NULL) {
   }
   
   valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
+  if ("ggbeeswarm" %in% rownames(utils::installed.packages())) {
+    valid_geoms <- c(valid_geoms, 
+                     ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
+  }
   if (!type %in% valid_geoms) {
     if (any(valid_geoms %like% type)) {
       type <- valid_geoms[valid_geoms %like% type][1L]
@@ -1504,6 +1509,7 @@ validate_category_scale <- function(values,
 }
 
 #' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter
+#' @importFrom rlang check_installed
 generate_geom <- function(type,
                           df,
                           stacked,
@@ -1526,7 +1532,12 @@ generate_geom <- function(type,
   if (type == "geom_col") {
     type <- "geom_bar"
   }
-  geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
+  if (type == "geom_beeswarm") {
+    check_installed("ggbeeswarm")
+    geom_fn <- ggbeeswarm::geom_beeswarm
+  } else {
+    geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
+  }
   
   # set position
   if (isTRUE(stacked)) {
@@ -1585,6 +1596,14 @@ generate_geom <- function(type,
     do.call(geom_fn,
             args = set_arguments(list(size = size,
                                       position = position_jitter(seed = jitter_seed),
+                                      na.rm = na.rm),
+                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
+                                 list(mapping = mapping)[!is.null(mapping)]))
+    
+  } else if (type == "geom_beeswarm") {
+    do.call(geom_fn,
+            args = set_arguments(list(size = size,
+                                      #position = ggbeeswarm::position_beeswarm(),
                                       na.rm = na.rm),
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
                                  list(mapping = mapping)[!is.null(mapping)]))

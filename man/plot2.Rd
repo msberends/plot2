@@ -190,7 +190,7 @@ The \code{category} can also be a date or date/time (class \code{Date} or \code{
 \itemize{
 \item A \code{ggplot2} geom name or their abbreviation such as \code{"col"} and \code{"point"}. All geoms are supported (including \code{\link[ggplot2:geom_blank]{geom_blank()}}).
 
-Full function names can be used (e.g., \code{"geom_histogram"}), but they can also be abbreviated (e.g., \code{"h"}, \code{"hist"}). The following geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), and violin (\code{"v"}).
+Full function names can be used (e.g., \code{"geom_histogram"}), but they can also be abbreviated (e.g., \code{"h"}, \code{"hist"}). The following geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), beeswarm (\code{"bs"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), and violin (\code{"v"}).
 
 Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, \code{type = "bar"} will set \code{type = "col"} and \code{horizontal = TRUE}.
 \item One of these additional types:

@@ -193,7 +193,23 @@ p |>
   add_line(y = mean(Sepal.Width),
            colour = "red",
            legend.value = "Average")
-  
+
+# also works with facets
+iris |>
+  plot2(x = Sepal.Length,
+        y = Sepal.Width,
+        facet = Species) |>
+  add_line(y = mean(Sepal.Width),
+           legend.value = "Average")
+
+iris |>
+  plot2(x = Sepal.Length,
+        y = Sepal.Width,
+        facet = Species) |>
+  add_line(y = range(Sepal.Width),
+           legend.value = "Range")
+
+
 p |> 
   add_line(x = mean(Sepal.Length)) |> 
   add_line(y = mean(Sepal.Width))
