@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9009</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1008,7 +1008,6 @@
 <p>Please note: in <code>ggplot2</code>, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, <code>type = "bar"</code> will set <code>type = "col"</code> and <code>horizontal = TRUE</code>.</p></li>
 <li><p>One of these additional types:</p><ul><li><p><code>"barpercent"</code> (short: <code>"bp"</code>), which is effectively a shortcut to set <code>type = "col"</code> and <code>horizontal = TRUE</code> and <code>x.max_items = 10</code> and <code>x.sort = "freq-desc"</code> and <code>datalabels.format = "%n (%p)"</code>.</p></li>
 <li><p><code>"linedot"</code> (short: <code>"ld"</code>), which sets <code>type = "line"</code> and adds two point geoms using <code><a href="add_type.html">add_point()</a></code>; one with large white dots and one with smaller dots using the colours set in <code>colour</code>. This is essentially equal to base <span style="R">R</span> <code>plot(..., type = "b")</code> but with closed shapes.</p></li>
-<li><p><code>"upset"</code> or <code>"UpSet"</code> (short: <code>"u"</code>) creates an <a href="https://en.wikipedia.org/wiki/UpSet_plot" class="external-link">UpSet plot</a>, which requires <code>x</code> to contain multiple variables from <code>.data</code> that contain <code>0</code>/<code>1</code> or <code>FALSE</code>/<code>TRUE</code> values. Alternatively, <code>x</code> must be one columns with the so-called <em>sets</em> (e.g., <code>x = c("A", "A", "B")</code>) and <code>y</code> must be an identifier (e.g., <code>y = c(1, 2, 2)</code>).</p></li>
 <li><p><code>"dumbbell"</code> (short: <code>"d"</code>), which sets <code>type = "point"</code> and <code>horizontal = TRUE</code>, and adds a line between the points (using <code>geom_segment()</code>). The line colour cannot be changed. This plot type is only possible when the <code>category</code> has two distinct values.</p></li>
 <li><p><code>"sankey"</code> (short: <code>"s"</code>) creates a <a href="https://en.wikipedia.org/wiki/Sankey_diagram" class="external-link">Sankey plot</a> using <code>category</code> for the flows and requires <code>x</code> to contain multiple variables from <code>.data</code>. At default, it also sets <code>x.expand = c(0.05, 0.05)</code> and <code>y.limits = c(NA, NA)</code> and <code>y.expand = c(0.01, 0.01)</code>. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using <code>datalabels.size</code>, <code>datalabels.colour</code>, and <code>datalabels.colour_fill</code>. The transparency of the flows can be set using <code>sankey.alpha</code>, and the width of the nodes can be set using <code>sankey.node_width</code>. Sankey plots can also be flipped using <code>horizontal = TRUE</code>.</p></li>
 </ul></li>
@@ -1280,7 +1279,7 @@
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
-<dd><p>size of the geom. Defaults to <code>2</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">point</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">jitter</a>, <code>5</code> for a dumbbell plots (using <code>type = "dumbbell"</code>), and to <code>0.75</code> otherwise.</p></dd>
+<dd><p>size of the geom. Defaults to <code>2</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">point</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">jitter</a>, and <a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_beeswarm.html" class="external-link">beeswarm</a>; <code>5</code> for a dumbbell plots (using <code>type = "dumbbell"</code>); <code>0.75</code> otherwise.</p></dd>
 
 
 <dt id="arg-linetype">linetype<a class="anchor" aria-label="anchor" href="#arg-linetype"></a></dt>
@@ -1288,7 +1287,7 @@
 
 
 <dt id="arg-linewidth">linewidth<a class="anchor" aria-label="anchor" href="#arg-linewidth"></a></dt>
-<dd><p>linewidth of the geom, only suitable for geoms that draw lines. Defaults to:</p><ul><li><p><code>0.5</code> for geoms that have no area (such as <a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">line</a>), and for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a>/<a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a></p></li>
+<dd><p>linewidth of the geom, only suitable for geoms that draw lines. Defaults to:</p><ul><li><p><code>0.5</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a>, and for geoms that have no area (such as <a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">line</a>)</p></li>
 <li><p><code>0.1</code> for <a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">sf</a></p></li>
 <li><p><code>0.25</code> for geoms that are continous and have fills (such as <a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">area</a>)</p></li>
 <li><p><code>1.0</code> for dumbbell plots (using <code>type = "dumbbell"</code>)</p></li>
