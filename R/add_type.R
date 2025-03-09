@@ -318,8 +318,8 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 #' @param x,y aesthetic arguments
 #' @param colour,colour_fill colour of the line or column, will be evaluated with [get_colour()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
 #' @details The function [add_line()] will add:
-#' * [`geom_hline()`][ggplot2::geom_hline()] if only `y` is provided;
-#' * [`geom_vline()`][ggplot2::geom_vline()] if only `x` is provided;
+#' * [`geom_hline()`][ggplot2::geom_hline()] if only `y` is provided and it contains one unique value;
+#' * [`geom_vline()`][ggplot2::geom_vline()] if only `x` is provided and it contains one unique value;
 #' * [`geom_line()`][ggplot2::geom_line()] in all other cases.
 #' @export
 add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {

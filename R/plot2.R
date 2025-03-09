@@ -62,7 +62,7 @@
 #' 
 #'   - `"barpercent"` (short: `"bp"`), which is effectively a shortcut to set `type = "col"` and `horizontal = TRUE` and `x.max_items = 10` and `x.sort = "freq-desc"` and `datalabels.format = "%n (%p)"`.
 #'   - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds two point geoms using [add_point()]; one with large white dots and one with smaller dots using the colours set in `colour`. This is essentially equal to base \R `plot(..., type = "b")` but with closed shapes.
-#'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. Alternatively, `x` must be one columns with the so-called *sets* (e.g., `x = c("A", "A", "B")`) and `y` must be an identifier (e.g., `y = c(1, 2, 2)`).
+#####   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. Alternatively, `x` must be one columns with the so-called *sets* (e.g., `x = c("A", "A", "B")`) and `y` must be an identifier (e.g., `y = c(1, 2, 2)`).
 #'   - `"dumbbell"` (short: `"d"`), which sets `type = "point"` and `horizontal = TRUE`, and adds a line between the points (using [geom_segment()]). The line colour cannot be changed. This plot type is only possible when the `category` has two distinct values.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
 #' 
@@ -147,10 +147,10 @@
 #' @param reverse a [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth a [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
 #' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour settings for `smooth`
-#' @param size size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()] and [jitter][ggplot2::geom_jitter()], `5` for a dumbbell plots (using `type = "dumbbell"`), and to `0.75` otherwise.
+#' @param size size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
 #' @param linetype linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.
 #' @param linewidth linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
-#' - `0.5` for geoms that have no area (such as [line][ggplot2::geom_line()]), and for geoms [boxplot][ggplot2::geom_boxplot()]/[violin][ggplot2::geom_violin()]
+#' - `0.5` for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()], and for geoms that have no area (such as [line][ggplot2::geom_line()])
 #' - `0.1` for [sf][ggplot2::geom_sf()]
 #' - `0.25` for geoms that are continous and have fills (such as [area][ggplot2::geom_area()])
 #' - `1.0` for dumbbell plots (using `type = "dumbbell"`)

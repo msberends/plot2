@@ -974,7 +974,6 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \itemize{
 \item \code{"barpercent"} (short: \code{"bp"}), which is effectively a shortcut to set \code{type = "col"} and \code{horizontal = TRUE} and \code{x.max_items = 10} and \code{x.sort = "freq-desc"} and \code{datalabels.format = "\%n (\%p)"}.
 \item \code{"linedot"} (short: \code{"ld"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
-\item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. Alternatively, \code{x} must be one columns with the so-called \emph{sets} (e.g., \code{x = c("A", "A", "B")}) and \code{y} must be an identifier (e.g., \code{y = c(1, 2, 2)}).
 \item \code{"dumbbell"} (short: \code{"d"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[=geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
 \item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}.
 }
@@ -1128,13 +1127,13 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{settings for \code{smooth}}
 
-\item{size}{size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point} and \link[ggplot2:geom_jitter]{jitter}, \code{5} for a dumbbell plots (using \code{type = "dumbbell"}), and to \code{0.75} otherwise.}
+\item{size}{size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
 
 \item{linetype}{linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.}
 
 \item{linewidth}{linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 \itemize{
-\item \code{0.5} for geoms that have no area (such as \link[ggplot2:geom_path]{line}), and for geoms \link[ggplot2:geom_boxplot]{boxplot}/\link[ggplot2:geom_violin]{violin}
+\item \code{0.5} for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}, and for geoms that have no area (such as \link[ggplot2:geom_path]{line})
 \item \code{0.1} for \link[ggplot2:ggsf]{sf}
 \item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area})
 \item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"})

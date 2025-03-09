@@ -1841,7 +1841,7 @@ validate_size <- function(size, type, type_backup) {
   if (is.null(size)) {
     if (type_backup == "dumbbell") {
       size <- 5
-    } else if (type %in% c("geom_point", "geom_jitter")) {
+    } else if (type %in% c("geom_point", "geom_jitter", "geom_beeswarm")) {
       size <- 2
     } else {
       size <- 0.75

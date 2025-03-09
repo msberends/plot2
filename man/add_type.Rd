@@ -160,8 +160,8 @@ Quickly and conveniently add a new 'geom' to an existing \code{plot2}/\code{ggpl
 \details{
 The function \code{\link[=add_line]{add_line()}} will add:
 \itemize{
-\item \code{\link[ggplot2:geom_abline]{geom_hline()}} if only \code{y} is provided;
-\item \code{\link[ggplot2:geom_abline]{geom_vline()}} if only \code{x} is provided;
+\item \code{\link[ggplot2:geom_abline]{geom_hline()}} if only \code{y} is provided and it contains one unique value;
+\item \code{\link[ggplot2:geom_abline]{geom_vline()}} if only \code{x} is provided and it contains one unique value;
 \item \code{\link[ggplot2:geom_path]{geom_line()}} in all other cases.
 }
 
