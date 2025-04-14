@@ -929,7 +929,7 @@ plot2_exec <- function(.data,
         )
         y_precalc <- y_precalc$val # will be NULL if y is missing
         
-        if (is.null(y_precalc) && type == "upset") {
+        if (is.null(y_precalc) && identical(type, "upset")) {
           plot2_message("Using ", font_blue(paste0("y = 1")))
           y_precalc <- rep(1, NROW(.data))
           if (isTRUE(y.title)) {
