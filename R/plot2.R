@@ -1098,8 +1098,11 @@ plot2_exec <- function(.data,
     
     colour_layers <- vapply(FUN.VALUE = character(1),
                             upper_right$layers,
-                            function(x) as.character(x$aes_params$colour))
+                            function(x) as.character(x$aes_params$colour[1]))
     colour_layers <- colour_layers[!is.na(colour_layers)][1]
+    if (identical(colour_layers, NA_character_)) {
+      colour_layers <- "black"
+    }
     
     suppressMessages(
       lower_left <- label_data |>
