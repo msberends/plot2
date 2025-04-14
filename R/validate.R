@@ -90,6 +90,7 @@ validate_type <- function(type, df = NULL) {
   }
   
   valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
+  valid_geoms <- c(valid_geoms, "geom_upset")
   if ("ggbeeswarm" %in% rownames(utils::installed.packages())) {
     valid_geoms <- c(valid_geoms, 
                      ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
@@ -755,6 +756,7 @@ validate_x_scale <- function(df,
   
   if (isTRUE(x.zoom) && is.null(x.limits)) {
     x.limits <- c(NA_real_, NA_real_)
+    plot2_env$x_lim <- x.limits
     if (is.null(x.expand)) {
       # set default value to 0.5
       x.expand <- 0.5
@@ -800,19 +802,23 @@ validate_x_scale <- function(df,
     if (length(x.limits) != 2) {
       if (length(x.limits) == 1) {
         x.limits <- rep(x.limits, 2)
+        plot2_env$x_lim <- x.limits
       } else {
         stop("`x.limits` must be of length 1 or 2", call. = FALSE)
       }
     }
     if (inherits(values, "Date")) {
       x.limits <- as.Date(x.limits, origin = "1970-01-01")
+      plot2_env$x_lim <- x.limits
     } else if (inherits(values, "POSIXt")) {
       x.limits <- as.POSIXct(x.limits, origin = "1970-01-01")
+      plot2_env$x_lim <- x.limits
     }
     if (inherits(values, c("Date", "POSIXt"))) {
       # edit limits so x.limits has one spare one at each side
       x.limits[1] <- x.limits[1] - 1
       x.limits[2] <- x.limits[2] + 1
+      plot2_env$x_lim <- x.limits
       # strip that extra ones from x.expand, so that all columns will plot
       if (!is.function(x.expand)) {
         x.expand <- x.expand - 1
@@ -841,6 +847,7 @@ validate_x_scale <- function(df,
                     " based on data")
     }
   }
+  plot2_env$x_lim <- x.limits
   if (inherits(values, "Date")) {
     scale_x_date(position = x.position,
                  date_breaks = x.date_breaks,
@@ -867,10 +874,12 @@ validate_x_scale <- function(df,
       }
       if (is.null(x.limits)) {
         x.limits <- c(ifelse(min(values) < 0, NA_real_, 0), NA_real_)
+        plot2_env$x_lim <- x.limits
       }
       if (tryCatch(length(x.transform) == 1 && x.transform != "identity", error = function(x) FALSE)) {
         # some transformations, such as log, do not allow 0
         x.limits[x.limits == 0] <- NA_real_ 
+        plot2_env$x_lim <- x.limits
       }
       if (is.null(x.labels)) {
         x.labels <- function(x, dec_mark = decimal.mark, big_mark = big.mark, ...) {
@@ -917,6 +926,7 @@ validate_x_scale <- function(df,
         }
         max_lim <- max(values, na.rm = TRUE)
         x.limits <- c(min_lim, max_lim)
+        plot2_env$x_lim <- x.limits
       }
       scale_x_continuous(labels = x.labels,
                          breaks = breaks_fn(values = values,
@@ -966,6 +976,7 @@ validate_y_scale <- function(df,
                              markdown = NULL) {
   if (isTRUE(y.zoom) && is.null(y.limits)) {
     y.limits <- c(NA_real_, NA_real_)
+    plot2_env$y_lim <- y.limits
     if (is.null(y.expand)) {
       y.expand <- c(0.25, 0.25)
     }
@@ -985,6 +996,7 @@ validate_y_scale <- function(df,
   if (!is.null(y.limits) && length(y.limits) != 2) {
     if (length(y.limits) == 1) {
       y.limits <- rep(y.limits, 2)
+      plot2_env$y_lim <- y.limits
     } else {
       stop("`y.limits` must be of length 1 or 2", call. = FALSE)
     }
@@ -996,7 +1008,9 @@ validate_y_scale <- function(df,
          paste0(class(values), collapse = "/"), ").",
          call. = FALSE)
   }
-  
+  if (is.factor(values)) {
+    return(scale_y_discrete(position = y.position))
+  }
   if (is.null(facet.fixed_y) && is.null(y.limits) && has_facet(df) && !isTRUE(stacked_fill) && type != "geom_histogram") {
     # determine if scales should be fixed - if CV_ymax < 25% then fix them:
     # (this does not work for facetted histograms)
@@ -1056,6 +1070,7 @@ validate_y_scale <- function(df,
       # calculate how many labels will be printed, keep around 10
       if (is.null(y.limits)) {
         y.limits <- c(data_min, data_max)
+        plot2_env$y_lim <- y.limits
       }
       labels_n <- (max(y.limits) - min(y.limits)) / y.percent_break
       if (is.na(labels_n)) {
@@ -1219,48 +1234,48 @@ validate_y_scale <- function(df,
     sec_y <- waiver()
   }
   
-  limits_evaluated <- limits_fn(values = values,
-                                y.limits,
-                                y.expand = y.expand,
-                                facet.fixed_y = facet.fixed_y,
-                                y.age = y.age,
-                                y.transform = y.transform,
-                                df)
-  
-  scale_y_continuous(
-    breaks = breaks_fn(values = values,
-                       waiver = waiver(),
-                       y.breaks = y.breaks,
-                       y.n_breaks = y.n_breaks,
-                       y.expand = y.expand,
-                       stacked_fill = stacked_fill,
-                       y.age = y.age,
-                       y.percent = y.percent,
-                       y.percent_break = y.percent_break,
-                       y.24h = y.24h,
-                       y.limits = y.limits,
-                       y.transform = y.transform),
-    n.breaks = y.n_breaks,
-    labels = labels_fn(values = values,
-                       waiver = waiver(),
-                       y.labels,
-                       y.percent = y.percent,
-                       y.age = y.age,
-                       y.24h = y.24h,
-                       y.scientific = y.scientific,
-                       stacked_fill = stacked_fill,
-                       decimal.mark = decimal.mark,
-                       big.mark = big.mark),
-    limits = limits_evaluated,
-    expand = expand_fn(values = values,
-                       y.expand = y.expand,
-                       y.age = y.age,
-                       stacked_fill = stacked_fill,
-                       y.limits = limits_evaluated),
-    transform = y.transform,
-    position = y.position,
-    sec.axis = sec_y
-  )
+    limits_evaluated <- limits_fn(values = values,
+                                  y.limits,
+                                  y.expand = y.expand,
+                                  facet.fixed_y = facet.fixed_y,
+                                  y.age = y.age,
+                                  y.transform = y.transform,
+                                  df)
+    
+    scale_y_continuous(
+      breaks = breaks_fn(values = values,
+                         waiver = waiver(),
+                         y.breaks = y.breaks,
+                         y.n_breaks = y.n_breaks,
+                         y.expand = y.expand,
+                         stacked_fill = stacked_fill,
+                         y.age = y.age,
+                         y.percent = y.percent,
+                         y.percent_break = y.percent_break,
+                         y.24h = y.24h,
+                         y.limits = y.limits,
+                         y.transform = y.transform),
+      n.breaks = y.n_breaks,
+      labels = labels_fn(values = values,
+                         waiver = waiver(),
+                         y.labels,
+                         y.percent = y.percent,
+                         y.age = y.age,
+                         y.24h = y.24h,
+                         y.scientific = y.scientific,
+                         stacked_fill = stacked_fill,
+                         decimal.mark = decimal.mark,
+                         big.mark = big.mark),
+      limits = limits_evaluated,
+      expand = expand_fn(values = values,
+                         y.expand = y.expand,
+                         y.age = y.age,
+                         stacked_fill = stacked_fill,
+                         y.limits = limits_evaluated),
+      transform = y.transform,
+      position = y.position,
+      sec.axis = sec_y
+    )
 }
 
 #' @importFrom ggplot2 scale_colour_gradient2 scale_colour_gradient scale_colour_gradientn expansion guide_colourbar element_text
@@ -2425,7 +2440,7 @@ set_datalabels <- function(p,
   
   if (!isTRUE(stacked) && !isTRUE(stacked_fill) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
     # move label layer to back + 1;
-    # this will make the labels only interfere with plot lines,
+    # this will make the labels only interfere with grid lines,
     # not with the data (such as columns)
     layer_n <- seq_len(length(p$layers))
     layer_label <- length(layer_n) - 1
@@ -2823,7 +2838,11 @@ summarise_data <- function(df,
   has_datalbls <- has_datalabels(df)
   summ_fn <- function(x, fn = summarise_function, ...) {
     # alter summarise_function to remove NAs
-    out <- fn(x, ...)
+    if (is.factor(x)) {
+      out <- x
+    } else {
+      out <- fn(x, ...)
+    }
     out[!is.na(out)]
   }
   df <- df |>

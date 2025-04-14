@@ -62,7 +62,7 @@
 #' 
 #'   - `"barpercent"` (short: `"bp"`), which is effectively a shortcut to set `type = "col"` and `horizontal = TRUE` and `x.max_items = 10` and `x.sort = "freq-desc"` and `datalabels.format = "%n (%p)"`.
 #'   - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds two point geoms using [add_point()]; one with large white dots and one with smaller dots using the colours set in `colour`. This is essentially equal to base \R `plot(..., type = "b")` but with closed shapes.
-#####   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. Alternatively, `x` must be one columns with the so-called *sets* (e.g., `x = c("A", "A", "B")`) and `y` must be an identifier (e.g., `y = c(1, 2, 2)`).
+#'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
 #'   - `"dumbbell"` (short: `"d"`), which sets `type = "point"` and `horizontal = TRUE`, and adds a line between the points (using [geom_segment()]). The line colour cannot be changed. This plot type is only possible when the `category` has two distinct values.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
 #' 
@@ -792,6 +792,10 @@ plot2_exec <- function(.data,
       type_backup <- "linedot"
       type <- "line"
     }
+    if (type %like% "^(upset|u)$") {
+      type_backup <- "upset"
+      type <- "upset"
+    }
     if (type %like% "^(dumbb?ell?|d|db)$") {
       # set point for here, segments will be added in the end
       type_backup <- "dumbbell"
@@ -807,15 +811,13 @@ plot2_exec <- function(.data,
       }
       if (is.null(y.limits)) {
         y.limits <- c(NA, NA)
+        plot2_env$y_lim <- y.limits
       }
       if (is.null(y.expand)) {
         y.expand <- c(0.01, 0.01)
       }
       x.title = ""
     }
-    # if (type == "upset") {
-    #   p <- create_upset_plot(df)
-    # }
     if (type %like% "bar") {
       type <- "col"
       horizontal <- TRUE
@@ -927,6 +929,14 @@ plot2_exec <- function(.data,
         )
         y_precalc <- y_precalc$val # will be NULL if y is missing
         
+        if (is.null(y_precalc) && type == "upset") {
+          plot2_message("Using ", font_blue(paste0("y = 1")))
+          y_precalc <- rep(1, NROW(.data))
+          if (isTRUE(y.title)) {
+            y.title <<- "Intersection size"
+          }
+        }
+        
         if (isTRUE(length(y_precalc) == 1)) {
           # outcome of y is a single calculated value (by using e.g. mean(...) or n_distinct(...)),
           # so calculate it over all groups that are available
@@ -1009,6 +1019,150 @@ plot2_exec <- function(.data,
                   na.rm = na.rm,
                   na.replace = na.replace,
                   ...)
+  
+  # create UpSet plot ----
+
+  if (type == "upset") {
+    if (!has_x(df)) {
+      stop("`x` must be multiple columns for `type = \"upset\"`", call. = FALSE)
+    }
+    df_x <- df |> select(!!str2lang(get_x_name(df)))
+    if (NCOL(df_x) < 2) {
+      stop("`x` must be multiple columns for `type = \"upset\"`", call. = FALSE)
+    }
+    df_x <- df_x |>
+      mutate(across(everything(), as.logical))
+    vars_x <- colnames(df_x)
+    df_original <- bind_cols(df_x,
+                             df |> select(any_of(c(get_y_name(df), "_var_x", "_var_y"))))
+    
+    df_count <- df_original |>
+      group_by(across(all_of(vars_x))) |>
+      reframe(n = n(),
+              out = summarise_function(`_var_y`)) |>
+      # we must not yet use tibble here
+      as.data.frame()
+    
+    label_data <- df_original |>
+      summarise(across(all_of(vars_x), function(x) sum(x, na.rm = TRUE))) |>
+      pivot_longer(all_of(vars_x), names_to = "y", values_to = "n") |>
+      arrange(desc(n))
+    
+    x_sorted <- rownames(df_count)[order(df_count$n, decreasing = TRUE)]
+    y_sorted <- label_data$y
+    
+    df_grid <- expand.grid(x = seq_len(nrow(unique(df_count))),
+                           y = colnames(df_count)) |>
+      filter(!y %in% c("out", "n")) |>
+      mutate(value = as.logical(df_count[cbind(x, match(y, colnames(df_count)))]),
+             x = as.factor(x)) |>
+      as_tibble()
+    
+    line_data <- df_grid %>%
+      filter(value == TRUE, y %in% y_sorted) |>
+      group_by(x) %>%
+      summarise(y_min = min(match(y, y_sorted)),
+                y_max = max(match(y, y_sorted))) %>%
+      mutate(y_min_label = y_sorted[y_min],
+             y_max_label = y_sorted[y_max])
+    
+    upper_left <- ggplot(data.frame(x = 3, y = 2), aes(x, y)) +
+      geom_text(label = if (isTRUE(y.title)) "Intersection size" else y.title, angle = 90) +
+      scale_x_continuous(limits = c(0, 3)) +
+      scale_y_continuous(limits = c(0, 4), expand = c(0, 0)) +
+      theme(panel.background = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            axis.ticks = element_blank(),
+            axis.title = element_blank(),
+            axis.text = element_blank(),
+            axis.line = element_blank()) +
+      labs(tag = tag)
+    
+    upper_right <- df_count |>
+      plot2(x = factor(unique(df_grid$x), levels = x_sorted, ordered = TRUE),
+            y = out,
+            type = "col",
+            width = 0.5,
+            x.title = NULL,
+            y.title = NULL,
+            x.remove = TRUE,
+            y.limits = y.limits,
+            y.expand = y.expand,
+            colour = colour,
+            colour_fill = colour,
+            title = title,
+            subtitle = subtitle) +
+      theme(axis.ticks.x = element_blank(),
+            axis.line = element_blank())
+    
+    colour_layers <- vapply(FUN.VALUE = character(1),
+                            upper_right$layers,
+                            function(x) as.character(x$aes_params$colour))
+    colour_layers <- colour_layers[!is.na(colour_layers)][1]
+    
+    suppressMessages(
+      lower_left <- label_data |>
+        plot2(x = y,
+              y = n,
+              type = "col",
+              colour = colour_layers,
+              width = 0.33,
+              x.sort = rev(y_sorted),
+              horizontal = TRUE,
+              datalabels = FALSE,
+              x.title = NULL,
+              y.title = NULL,
+              x.remove = TRUE) +
+        scale_y_continuous(transform = "reverse",
+                           name = if (isTRUE(x.title)) NULL else x.title,
+                           expand = expansion(mult = c(0.25, 0))) +
+        scale_x_discrete(expand = c(0.05, 0.05)) +
+        theme(panel.background = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              plot.margin = margin(0, 0, 0, 0),
+              axis.ticks = element_blank(),
+              axis.title.y = element_blank(),
+              axis.text.y = element_blank(),
+              axis.line.y = element_blank())
+    )
+    
+    lower_right <- ggplot(df_grid,
+                          aes(x = factor(x, levels = x_sorted, ordered = TRUE),
+                              y = factor(y, levels = y_sorted, ordered = TRUE))) +
+      geom_point(data = filter(df_grid, !value), colour = "grey90", size = 3) +
+      geom_point(data = filter(df_grid, value), colour = colour_layers, size = 3) +
+      geom_segment(data = line_data,
+                   aes(x = x, xend = x, y = y_min_label, yend = y_max_label),
+                   colour = colour_layers,
+                   linewidth = 0.75,
+                   inherit.aes = FALSE) +
+      scale_y_discrete(expand = c(0.05, 0.05)) +
+      theme(panel.background = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.margin = margin(0, 0, 0, 0),
+            axis.ticks = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_text(hjust = 0.5),
+            axis.title = element_blank()) +
+      labs(caption = caption)
+    
+    return(
+      patchwork::wrap_plots(
+        upper_left,
+        upper_right,
+        lower_left,
+        lower_right,
+        ncol = 2,
+        nrow = 2,
+        widths = c(0.2, 0.8),
+        heights = c(0.7, 0.3))
+    )
+  }
+  
+  
   
   # apply taxonomic italics ----
   if (isTRUE(x.lbl_taxonomy) && isTRUE(markdown) && isTRUE("AMR" %in% rownames(utils::installed.packages()))) {
@@ -1671,8 +1825,24 @@ plot2_exec <- function(.data,
   # turn plot horizontal if required ----
   # up until this point, a lot has been done already for `horizontal`.
   # such as switching some x and y axis properties of the theme
+  x.limits <- x.limits %or% plot2_env$x_lim
+  y.limits <- y.limits %or% plot2_env$y_lim
+  put_clip_off <- has_datalabels(df) && type != "geom_sf" && (!is.null(p$labels$title) || !is.null(p$labels$subtitle) || has_facet(df))
   if (isTRUE(horizontal)) {
-    p <- p + coord_flip()
+    p <- p +
+      coord_flip(xlim = x.limits,
+                 ylim = y.limits,
+                 expand = TRUE,
+                 # add off-clipping since datalabels might be outside plotted range
+                 clip = ifelse(put_clip_off, "off", "on"))
+  } else if (put_clip_off && has_datalabels(df)) {
+    p <- p +
+      coord_cartesian(xlim = x.limits,
+                      ylim = y.limits,
+                      expand = TRUE,
+                      default = TRUE,
+                      # add off-clipping since datalabels might be outside plotted range
+                      clip = "off")
   }
   
   # additional geoms for certain types ----

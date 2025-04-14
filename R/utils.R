@@ -516,7 +516,7 @@ is_empty <- function(x) {
 }
 
 geom_is_continuous <- function(geom) {
-  geom %in% c("geom_boxplot", "geom_violin", "geom_point", "geom_jitter", "geom_beeswarm", "geom_histogram", "geom_density", "geom_sf", "geom_line", "geom_area", "geom_ribbon", "geom_tile", "geom_raster", "geom_rect")
+  geom %in% c("geom_boxplot", "geom_violin", "geom_point", "geom_jitter", "geom_beeswarm", "geom_histogram", "geom_density", "geom_sf", "geom_line", "geom_area", "geom_ribbon", "geom_tile", "geom_raster", "geom_rect", "geom_upset")
 }
 geom_is_continuous_x <- function(geom) {
   geom %in% c("geom_histogram", "geom_density")

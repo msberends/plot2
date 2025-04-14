@@ -478,9 +478,9 @@ options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
 
 ## Advanced Plot Types: Geographies, Dumbbells and Sankey Diagrams
 
-`plot2()` shines when it comes to more complex plot types. Let’s explore three advanced options: geography plots, dumbbell plots and Sankey diagrams.
+`plot2()` shines when it comes to more complex plot types. Let’s explore four advanced options: geography plots, UpSet plots, dumbbell plots and Sankey diagrams.
 
-### Plotting geometries (`sf` objects)
+### Plotting Geometries (`sf` objects)
 
 Objects of class `sf` (*simple feature*) are handled by `plot2()` like any other data set; `plot2()` applies spatial functions such as `geom_sf()` and `geom_sf_text()` automatically wherever needed. The built-in `theme_minimal2()` theme makes sure you get a clean map, by removing the unnecessarily verbose axes and background colour.
 
@@ -491,6 +491,35 @@ plot2(netherlands)
 ```
 
 `ggplot2` users would typically need to specify `geom_sf()` and `geom_sf_label()` explicitly and might spend extra time adjusting themes to remove unnecessary axes or background elements. `plot2()` simplifies this by integrating these adjustments automatically.
+
+### UpSet Plots for Complex Set Intersections
+
+[UpSet plots](https://en.wikipedia.org/wiki/UpSet_plot) provide a scalable and interpretable alternative to Venn diagrams for visualising complex set intersections. `plot2()` allowing the quick creation of UpSet plots to explore overlapping elements across multiple groups, revealing patterns not easily captured by traditional methods.
+
+```{r}
+df <- data.frame(var1 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+                 var2 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+                 var3 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+                 var4 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+                 some_value = runif(50))
+print(head(df))
+
+df |>
+  plot2(x = var1:var4,
+        type = "upset",
+        title = "An UpSet plot")
+
+df |>
+  plot2(x = var1:var4,
+        y = some_value,
+        colour = "OurOrganisation",
+        type = "upset",
+        summarise_function = mean,
+        y.title = "Mean Outcome",
+        x.title = "Set Size",
+        title = "Another UpSet plot",
+        caption = "Here a caption")
+```
 
 ### Dumbbell Plots for Comparisons
 
