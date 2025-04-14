@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,9 +16,8 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span> Home</a></li>
-<li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-book-open"></span> Full Manual</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/plot2.html"><span class="fa fa-magnifying-glass-chart"></span> An Intro to plot2</a></li>
-<li class="nav-item"><a class="nav-link" href="../reference/plot2.html"><span class="fa fa-chart-simple"></span> Manual for plot2()</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-book-open"></span> Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/plot2.html"><span class="fa fa-magnifying-glass-chart"></span> Extensive vignette</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/add_type.html"><span class="fa fa-square-plus"></span> Manual for adding types</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/msberends/plot2"><span class="fa fab fa-github"></span> Source Code</a></li>
       </ul></div>
@@ -1008,6 +1007,7 @@
 <p>Please note: in <code>ggplot2</code>, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, <code>type = "bar"</code> will set <code>type = "col"</code> and <code>horizontal = TRUE</code>.</p></li>
 <li><p>One of these additional types:</p><ul><li><p><code>"barpercent"</code> (short: <code>"bp"</code>), which is effectively a shortcut to set <code>type = "col"</code> and <code>horizontal = TRUE</code> and <code>x.max_items = 10</code> and <code>x.sort = "freq-desc"</code> and <code>datalabels.format = "%n (%p)"</code>.</p></li>
 <li><p><code>"linedot"</code> (short: <code>"ld"</code>), which sets <code>type = "line"</code> and adds two point geoms using <code><a href="add_type.html">add_point()</a></code>; one with large white dots and one with smaller dots using the colours set in <code>colour</code>. This is essentially equal to base <span style="R">R</span> <code>plot(..., type = "b")</code> but with closed shapes.</p></li>
+<li><p><code>"upset"</code> or <code>"UpSet"</code> (short: <code>"u"</code>) creates an <a href="https://en.wikipedia.org/wiki/UpSet_plot" class="external-link">UpSet plot</a>, which requires <code>x</code> to contain multiple variables from <code>.data</code> that contain <code>0</code>/<code>1</code> or <code>FALSE</code>/<code>TRUE</code> values. It is also possible to provide <code>y</code>, on which then <code>summarise_function</code> will be applied.</p></li>
 <li><p><code>"dumbbell"</code> (short: <code>"d"</code>), which sets <code>type = "point"</code> and <code>horizontal = TRUE</code>, and adds a line between the points (using <code>geom_segment()</code>). The line colour cannot be changed. This plot type is only possible when the <code>category</code> has two distinct values.</p></li>
 <li><p><code>"sankey"</code> (short: <code>"s"</code>) creates a <a href="https://en.wikipedia.org/wiki/Sankey_diagram" class="external-link">Sankey plot</a> using <code>category</code> for the flows and requires <code>x</code> to contain multiple variables from <code>.data</code>. At default, it also sets <code>x.expand = c(0.05, 0.05)</code> and <code>y.limits = c(NA, NA)</code> and <code>y.expand = c(0.01, 0.01)</code>. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using <code>datalabels.size</code>, <code>datalabels.colour</code>, and <code>datalabels.colour_fill</code>. The transparency of the flows can be set using <code>sankey.alpha</code>, and the width of the nodes can be set using <code>sankey.node_width</code>. Sankey plots can also be flipped using <code>horizontal = TRUE</code>.</p></li>
 </ul></li>
@@ -1099,7 +1099,7 @@
 
 
 <dt id="arg-x-lbl-taxonomy">x.lbl_taxonomy<a class="anchor" aria-label="anchor" href="#arg-x-lbl-taxonomy"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to transform all words of the <code>x</code> labels into italics that are in the <a href="https://msberends.github.io/AMR/reference/microorganisms.html" class="external-link">microorganisms</a> data set of the <code>AMR</code> package. This uses <code><a href="md_to_expression.html">md_to_expression()</a></code> internally and will set <code>x.labels</code> to parse expressions.</p></dd>
+<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to transform all words of the <code>x</code> labels into italics that are in the <a href="https://amr-for-r.org/reference/microorganisms.html" class="external-link">microorganisms</a> data set of the <code>AMR</code> package. This uses <code><a href="md_to_expression.html">md_to_expression()</a></code> internally and will set <code>x.labels</code> to parse expressions.</p></dd>
 
 
 <dt id="arg-x-remove-y-remove">x.remove, y.remove<a class="anchor" aria-label="anchor" href="#arg-x-remove-y-remove"></a></dt>
@@ -1151,7 +1151,7 @@
 
 
 <dt id="arg-x-mic">x.mic<a class="anchor" aria-label="anchor" href="#arg-x-mic"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the x axis should be formatted as <a href="https://msberends.github.io/AMR/reference/as.mic.html" class="external-link">MIC values</a>, by dropping all factor levels and adding missing factors of 2</p></dd>
+<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the x axis should be formatted as <a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">MIC values</a>, by dropping all factor levels and adding missing factors of 2</p></dd>
 
 
 <dt id="arg-x-zoom-y-zoom">x.zoom, y.zoom<a class="anchor" aria-label="anchor" href="#arg-x-zoom-y-zoom"></a></dt>

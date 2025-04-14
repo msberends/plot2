@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   plot2: plot2.html
-last_built: 2025-03-09T08:23Z
+last_built: 2025-04-14T21:01Z
 urls:
   reference: https://msberends.github.io/plot2/reference
   article: https://msberends.github.io/plot2/articles

@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,9 +37,8 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span> Home</a></li>
-<li class="nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-book-open"></span> Full Manual</a></li>
-<li class="active nav-item"><a class="nav-link" href="../articles/plot2.html"><span class="fa fa-magnifying-glass-chart"></span> An Intro to plot2</a></li>
-<li class="nav-item"><a class="nav-link" href="../reference/plot2.html"><span class="fa fa-chart-simple"></span> Manual for plot2()</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-book-open"></span> Reference</a></li>
+<li class="active nav-item"><a class="nav-link" href="../articles/plot2.html"><span class="fa fa-magnifying-glass-chart"></span> Extensive vignette</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/add_type.html"><span class="fa fa-square-plus"></span> Manual for adding types</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -684,10 +683,10 @@ colour palette</a>:</p>
 <h3 id="advanced-plot-types-geographies-dumbbells-and-sankey-diagrams">Advanced Plot Types: Geographies, Dumbbells and Sankey Diagrams<a class="anchor" aria-label="anchor" href="#advanced-plot-types-geographies-dumbbells-and-sankey-diagrams"></a>
 </h3>
 <p><code><a href="../reference/plot2.html">plot2()</a></code> shines when it comes to more complex plot types.
-Let’s explore three advanced options: geography plots, dumbbell plots
-and Sankey diagrams.</p>
+Let’s explore four advanced options: geography plots, UpSet plots,
+dumbbell plots and Sankey diagrams.</p>
 <div class="section level4">
-<h4 id="plotting-geometries-sf-objects">Plotting geometries (<code>sf</code> objects)<a class="anchor" aria-label="anchor" href="#plotting-geometries-sf-objects"></a>
+<h4 id="plotting-geometries-sf-objects">Plotting Geometries (<code>sf</code> objects)<a class="anchor" aria-label="anchor" href="#plotting-geometries-sf-objects"></a>
 </h4>
 <p>Objects of class <code>sf</code> (<em>simple feature</em>) are
 handled by <code><a href="../reference/plot2.html">plot2()</a></code> like any other data set;
@@ -712,17 +711,63 @@ background elements. <code><a href="../reference/plot2.html">plot2()</a></code> 
 these adjustments automatically.</p>
 </div>
 <div class="section level4">
+<h4 id="upset-plots-for-complex-set-intersections">UpSet Plots for Complex Set Intersections<a class="anchor" aria-label="anchor" href="#upset-plots-for-complex-set-intersections"></a>
+</h4>
+<p><a href="https://en.wikipedia.org/wiki/UpSet_plot" class="external-link">UpSet plots</a>
+provide a scalable and interpretable alternative to Venn diagrams for
+visualising complex set intersections. <code><a href="../reference/plot2.html">plot2()</a></code> allowing the
+quick creation of UpSet plots to explore overlapping elements across
+multiple groups, revealing patterns not easily captured by traditional
+methods.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>                 var2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>                 var3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>                 var4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>                 some_value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    var1  var2  var3  var4 some_value</span></span>
+<span><span class="co">#&gt; 1 FALSE  TRUE  TRUE FALSE  0.6734478</span></span>
+<span><span class="co">#&gt; 2  TRUE FALSE  TRUE FALSE  0.3712699</span></span>
+<span><span class="co">#&gt; 3 FALSE  TRUE FALSE  TRUE  0.9180106</span></span>
+<span><span class="co">#&gt; 4  TRUE  TRUE  TRUE  TRUE  0.6779781</span></span>
+<span><span class="co">#&gt; 5 FALSE FALSE FALSE  TRUE  0.6651525</span></span>
+<span><span class="co">#&gt; 6 FALSE FALSE  TRUE FALSE  0.7560411</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">var1</span><span class="op">:</span><span class="va">var4</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"upset"</span>,</span>
+<span>        title <span class="op">=</span> <span class="st">"An UpSet plot"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = c(var1, var2, var3, var4)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = 1</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-40-1.png" width="672"></p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">var1</span><span class="op">:</span><span class="va">var4</span>,</span>
+<span>        y <span class="op">=</span> <span class="va">some_value</span>,</span>
+<span>        colour <span class="op">=</span> <span class="st">"OurOrganisation"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"upset"</span>,</span>
+<span>        summarise_function <span class="op">=</span> <span class="va">mean</span>,</span>
+<span>        y.title <span class="op">=</span> <span class="st">"Mean Outcome"</span>,</span>
+<span>        x.title <span class="op">=</span> <span class="st">"Set Size"</span>,</span>
+<span>        title <span class="op">=</span> <span class="st">"Another UpSet plot"</span>,</span>
+<span>        caption <span class="op">=</span> <span class="st">"Here a caption"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = c(var1, var2, var3, var4)</span></span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-40-2.png" width="672"></p>
+</div>
+<div class="section level4">
 <h4 id="dumbbell-plots-for-comparisons">Dumbbell Plots for Comparisons<a class="anchor" aria-label="anchor" href="#dumbbell-plots-for-comparisons"></a>
 </h4>
 <p>Dumbbell plots are excellent for comparing two categories side by
 side:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>,</span>
 <span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-40-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-41-1.png" width="672"></p>
 <p>This plot type is particularly useful for showing the difference
 between two related metrics across different groups. In
 <code>ggplot2</code>, creating a dumbbell plot often involves using
@@ -736,12 +781,12 @@ alternative.</p>
 </h4>
 <p>Sankey diagrams are another powerful visualisation, perfect for
 showing flow or movement from one state to another:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Titanic</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-41-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-42-1.png" width="672"></p>
 <p>Sankey plots are a great way to visualise transitions, such as the
 survival rates of passengers on the Titanic across different classes and
 age groups. In <code>ggplot2</code>, Sankey diagrams require additional
@@ -761,7 +806,7 @@ are designed to integrate seamlessly with <code><a href="../reference/plot2.html
 </h4>
 <p>Adding a line to an existing plot is as easy as calling
 <code><a href="../reference/add_type.html">add_line()</a></code>:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
@@ -770,12 +815,12 @@ are designed to integrate seamlessly with <code><a href="../reference/plot2.html
 <span><span class="co"># Notice how plot2() adds 3 lines here, since `category` is set</span></span>
 <span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-42-1.png" width="672"></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<p><img src="plot2_files/figure-html/unnamed-chunk-43-1.png" width="672"></p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, legend.value <span class="op">=</span> <span class="st">"Average HP"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-42-2.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-43-2.png" width="672"></p>
 <p>This adds a line at the mean horsepower. The <code>add_*()</code>
 functions automatically correct for <code>category</code>, removing the
 need for pre-processing steps to determine (in this case) the mean. A
@@ -789,10 +834,10 @@ legend item can also be added by just setting
 <h4 id="adding-points">Adding Points<a class="anchor" aria-label="anchor" href="#adding-points"></a>
 </h4>
 <p>Points can be added to highlight specific values or observations:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">4</span>, size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-43-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-44-1.png" width="672"></p>
 <p>In this example, we add a point at the median <code>mpg</code> and
 <code>hp</code>, using a cross shape and a larger size for emphasis.
 This mirrors <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> in <code>ggplot2</code> but is
@@ -804,10 +849,10 @@ interface.</p>
 </h4>
 <p>Adding columns is just as straightforward, and can be used to create
 bar charts or other similar visualisations:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_col</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cyl</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-44-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" width="672"></p>
 <p>Here, we add columns based on the number of cylinders, making it easy
 to compare the counts across different groups. This replaces
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code> or <code>geom_bar(stat = "identity")</code> in
@@ -817,10 +862,10 @@ to compare the counts across different groups. This replaces
 <h4 id="plotting-error-bars">Plotting Error Bars<a class="anchor" aria-label="anchor" href="#plotting-error-bars"></a>
 </h4>
 <p>Plotting error bars is just as simple:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_errorbar</a></span><span class="op">(</span>min <span class="op">=</span> <span class="va">hp</span> <span class="op">-</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="va">hp</span> <span class="op">+</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-46-1.png" width="672"></p>
 <p>This adds error bars to the plot, showing a range of ±10 around the
 <code>hp</code> values. <code><a href="../reference/plot2.html">plot2()</a></code> abstracts away the
 complexities of <code><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_errorbar()</a></code>, offering a more intuitive
@@ -831,14 +876,14 @@ syntax.</p>
 </h4>
 <p>For those working with geographic data, <code><a href="../reference/add_type.html">add_sf()</a></code> makes
 it easy to integrate spatial features:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_sf</a></span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span></span>
 <span><span class="co">#&gt; placing of datalabels.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-46-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-47-1.png" width="672"></p>
 <p>This example adds spatial features to a plot of the Netherlands, with
 an extra border around the provinces. <code>ggplot2</code> users would
 typically use <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf()</a></code> for this purpose, but
@@ -862,7 +907,7 @@ your plots. Missing fonts will be downloaded automatically, and the
 required DPI will be set for you, even in R Markdown outputs.</p>
 <p>Here’s how you can apply a custom font from Google Fonts, which will
 be downloaded automatically:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, <span class="va">wt</span> <span class="op">*</span> <span class="fl">1000</span>,</span>
 <span>        facet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">0</span>, <span class="st">"V-shaped Engine"</span>, <span class="st">"Straight Engine"</span><span class="op">)</span>,</span>
@@ -875,7 +920,7 @@ be downloaded automatically:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_x = TRUE</span> since the two <span style="color: #0000BB;">x</span> scales differ by less than 25%</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-47-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-48-1.png" width="672"></p>
 <p>In this example, the <code>Rock Salt</code> font, a playful and
 hand-drawn style, is applied across the plot.</p>
 <p>In <code>ggplot2</code>, using custom fonts often requires extra
@@ -891,21 +936,22 @@ font scaling.</p>
 consistent styling across multiple plots. This is particularly useful
 when preparing a series of visualisations for a report or
 presentation.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="st">"Lobster"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, title <span class="op">=</span> <span class="st">"Consistent Font Example"</span>,</span>
 <span>        text_factor <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Lobster</span> from Google Fonts</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-48-1.png" width="672"></p>
+<p><img src="plot2_files/figure-html/unnamed-chunk-49-1.png" width="672"></p>
 <p>In this example, all plots will now use the <code>Lobster</code>
 font, ensuring a consistent appearance across your visualisations. The
 <code>text_factor</code> argument shows that it can be used to scale the
 text size of all plot elements, ensuring readability and aesthetic
 balance.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># reset again</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="cn">NULL</span>, plot2.colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p>Customising fonts in <code><a href="../reference/plot2.html">plot2()</a></code> is both flexible and
