@@ -1022,7 +1022,7 @@ plot2_exec <- function(.data,
   
   # create UpSet plot ----
 
-  if (type == "upset") {
+  if (identical(type, "upset")) {
     if (!has_x(df)) {
       stop("`x` must be multiple columns for `type = \"upset\"`", call. = FALSE)
     }
