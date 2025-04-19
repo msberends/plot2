@@ -724,15 +724,16 @@ methods.</p>
 <span>                 var2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>                 var3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>                 var4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>                 some_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>                 some_value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    var1  var2  var3  var4 some_value</span></span>
-<span><span class="co">#&gt; 1 FALSE  TRUE  TRUE FALSE  0.6734478</span></span>
-<span><span class="co">#&gt; 2  TRUE FALSE  TRUE FALSE  0.3712699</span></span>
-<span><span class="co">#&gt; 3 FALSE  TRUE FALSE  TRUE  0.9180106</span></span>
-<span><span class="co">#&gt; 4  TRUE  TRUE  TRUE  TRUE  0.6779781</span></span>
-<span><span class="co">#&gt; 5 FALSE FALSE FALSE  TRUE  0.6651525</span></span>
-<span><span class="co">#&gt; 6 FALSE FALSE  TRUE FALSE  0.7560411</span></span>
+<span><span class="co">#&gt;    var1  var2  var3  var4 some_group some_value</span></span>
+<span><span class="co">#&gt; 1 FALSE  TRUE  TRUE FALSE          B 0.13141851</span></span>
+<span><span class="co">#&gt; 2  TRUE FALSE  TRUE FALSE          B 0.09403037</span></span>
+<span><span class="co">#&gt; 3 FALSE  TRUE FALSE  TRUE          A 0.69658366</span></span>
+<span><span class="co">#&gt; 4  TRUE  TRUE  TRUE  TRUE          B 0.40572872</span></span>
+<span><span class="co">#&gt; 5 FALSE FALSE FALSE  TRUE          B 0.06563664</span></span>
+<span><span class="co">#&gt; 6 FALSE FALSE  TRUE FALSE          B 0.12649262</span></span>
 <span></span>
 <span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">var1</span><span class="op">:</span><span class="va">var4</span>,</span>
@@ -747,14 +748,18 @@ methods.</p>
 <span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">var1</span><span class="op">:</span><span class="va">var4</span>,</span>
 <span>        y <span class="op">=</span> <span class="va">some_value</span>,</span>
-<span>        colour <span class="op">=</span> <span class="st">"OurOrganisation"</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">some_group</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"upset"</span>,</span>
-<span>        summarise_function <span class="op">=</span> <span class="va">mean</span>,</span>
+<span>        colour <span class="op">=</span> <span class="st">"OurOrganisation"</span>,</span>
 <span>        y.title <span class="op">=</span> <span class="st">"Mean Outcome"</span>,</span>
 <span>        x.title <span class="op">=</span> <span class="st">"Set Size"</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"Another UpSet plot"</span>,</span>
-<span>        caption <span class="op">=</span> <span class="st">"Here a caption"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = c(var1, var2, var3, var4)</span></span></span></code></pre></div>
+<span>        caption <span class="op">=</span> <span class="st">"Here a caption"</span>,</span>
+<span>        summarise_function <span class="op">=</span> <span class="va">mean</span>,</span>
+<span>        x.sort <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># sort on dots: 4 first, then 3, then 2, ...</span></span>
+<span>        category.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"A"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = c(var1, var2, var3, var4)</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x.character = TRUE</span> since <span style="color: #0000BB;">x.sort</span> is set</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-40-2.png" width="672"></p>
 </div>
 <div class="section level4">
