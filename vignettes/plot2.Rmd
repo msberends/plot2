@@ -501,6 +501,7 @@ df <- data.frame(var1 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
                  var2 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
                  var3 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
                  var4 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+                 some_group = sample(c("A", "B"), size = 50, replace = TRUE),
                  some_value = runif(50))
 print(head(df))
 
@@ -512,13 +513,16 @@ df |>
 df |>
   plot2(x = var1:var4,
         y = some_value,
-        colour = "OurOrganisation",
+        category = some_group,
         type = "upset",
-        summarise_function = mean,
+        colour = "OurOrganisation",
         y.title = "Mean Outcome",
         x.title = "Set Size",
         title = "Another UpSet plot",
-        caption = "Here a caption")
+        caption = "Here a caption",
+        summarise_function = mean,
+        x.sort = TRUE, # sort on dots: 4 first, then 3, then 2, ...
+        category.sort = c("B", "A"))
 ```
 
 ### Dumbbell Plots for Comparisons

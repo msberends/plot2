@@ -1111,17 +1111,38 @@ plot2_exec <- function(.data,
             category = if (has_category(df)) str2lang(get_category_name(df)) else NULL,
             type = "col",
             stacked = TRUE,
-            width = 0.5,
             x.title = NULL,
             y.title = NULL,
-            # x.remove = TRUE,
+            x.remove = TRUE,
             y.limits = y.limits,
             y.expand = y.expand,
             colour = colour,
             colour_fill = colour,
             title = title,
             subtitle = subtitle,
-            x.sort = x_sorted) +
+            x.sort = x_sorted,
+            title.linelength = title.linelength,
+            title.colour = title.colour,
+            subtitle.linelength = subtitle.linelength,
+            subtitle.colour = subtitle.colour,
+            colour_opacity = colour_opacity,
+            datalabels = FALSE,
+            # datalabels.round = datalabels.round,
+            # datalabels.colour = datalabels.colour,
+            # datalabels.format = datalabels.format,
+            # datalabels.colour_fill = datalabels.colour_fill,
+            # datalabels.size = datalabels.size,
+            # datalabels.angle = datalabels.angle,
+            # datalabels.lineheight = datalabels.lineheight,
+            decimal.mark = decimal.mark,
+            big.mark = big.mark,
+            text_factor = text_factor,
+            font = font,
+            theme = theme,
+            background = background,
+            markdown = markdown,
+            width = width
+            ) +
       theme(axis.ticks.x = element_blank(),
             axis.line = element_blank())
     
@@ -1145,7 +1166,13 @@ plot2_exec <- function(.data,
               datalabels = FALSE,
               x.title = NULL,
               y.title = NULL,
-              x.remove = TRUE) +
+              x.remove = TRUE,
+              text_factor = text_factor,
+              font = font,
+              theme = theme,
+              background = background,
+              markdown = markdown
+              ) +
         scale_y_continuous(transform = "reverse",
                            name = if (isTRUE(x.title)) NULL else x.title,
                            expand = expansion(mult = c(0.25, 0))) +
@@ -1186,23 +1213,27 @@ plot2_exec <- function(.data,
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.margin = margin(0, 0, 0, 0),
-            # axis.ticks = element_blank(),
-            # axis.text.x = element_blank(),
+            axis.ticks = element_blank(),
+            axis.text.x = element_blank(),
             axis.text.y = element_text(hjust = 0.5),
             axis.title = element_blank()) +
       labs(caption = caption)
     
-    return(
-      patchwork::wrap_plots(
-        upper_left,
-        upper_right,
-        lower_left,
-        lower_right,
-        ncol = 2,
-        nrow = 2,
-        widths = c(0.2, 0.8),
-        heights = c(0.7, 0.3))
-    )
+    out <- patchwork::wrap_plots(
+      upper_left,
+      upper_right,
+      lower_left,
+      lower_right,
+      ncol = 2,
+      nrow = 2,
+      widths = c(0.2, 0.8),
+      heights = c(0.7, 0.3))
+    
+    if (isTRUE(print)) {
+      print(out)
+    } else {
+      return(out)
+    }
   }
   
   
