@@ -49,6 +49,7 @@ globalVariables(c(".",
                   "n",
                   "n_cases",
                   "name",
+                  "out",
                   "period",
                   "period_date",
                   "period_txt",
@@ -64,10 +65,12 @@ globalVariables(c(".",
                   "xmax",
                   "xmin",
                   "y_max",
+                  "y_max_label",
                   "y_min",
+                  "y_min_label",
+                  "year",
                   "ymax",
-                  "ymin",
-                  "year"))
+                  "ymin"))
 
 like <- function(x, pattern) {
   x <- tolower(x)

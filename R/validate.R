@@ -943,7 +943,7 @@ validate_x_scale <- function(df,
 }
 
 #' @importFrom dplyr group_by across summarise
-#' @importFrom ggplot2 waiver expansion scale_y_continuous sec_axis
+#' @importFrom ggplot2 waiver expansion scale_y_continuous scale_y_discrete sec_axis
 #' @importFrom cleaner as.percentage
 #' @importFrom scales pretty_breaks
 validate_y_scale <- function(df,

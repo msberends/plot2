@@ -557,9 +557,9 @@ plot2 <- function(.data,
   }
 }
 
-#' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of
+#' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of all_of desc
 #' @importFrom forcats fct_relabel
-#' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete
+#' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete
 #' @importFrom tidyr pivot_longer
 #' @importFrom ggforce geom_parallel_sets geom_parallel_sets_axes geom_parallel_sets_labels
 plot2_exec <- function(.data,
@@ -1034,37 +1034,63 @@ plot2_exec <- function(.data,
       mutate(across(everything(), as.logical))
     vars_x <- colnames(df_x)
     df_original <- bind_cols(df_x,
-                             df |> select(any_of(c(get_y_name(df), "_var_x", "_var_y"))))
+                             df |> select(any_of(c(get_y_name(df), get_category_name(df), "_var_x", "_var_y", "_var_category"))))
     
-    df_count <- df_original |>
-      group_by(across(all_of(vars_x))) |>
+    df_count_total <- df_original |>
+      group_by(across(any_of(c(vars_x, get_category_name(df))))) |>
       reframe(n = n(),
               out = summarise_function(`_var_y`)) |>
       # we must not yet use tibble here
       as.data.frame()
     
-    label_data <- df_original |>
+    if (dots$`_misses.summarise_function` == TRUE) {
+      plot2_message("Using ", font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)), " for UpSet plot")
+    }
+    df_count <- df_original |>
+      group_by(across(any_of(vars_x))) |>
+      reframe(n = n(),
+              out = summarise_function(`_var_y`)) |>
+      dplyr::rowwise() |>
+      mutate(sort = sum(dplyr::c_across(vars_x))) |>
+      # we must not yet use tibble here
+      as.data.frame()
+    
+    lower_left_df <- df_original |>
       summarise(across(all_of(vars_x), function(x) sum(x, na.rm = TRUE))) |>
       pivot_longer(all_of(vars_x), names_to = "y", values_to = "n") |>
       arrange(desc(n))
     
-    x_sorted <- rownames(df_count)[order(df_count$n, decreasing = TRUE)]
-    y_sorted <- label_data$y
+    if (is.null(x.sort)) {
+      x.sort <- "freq-desc"
+    } else if (x.sort == TRUE) {
+      x.sort <- "desc"
+    }
+    x.sort <- validate_sorting(x.sort, horizontal = FALSE)
+    if (x.sort == "desc") {
+      x_sorted <- rownames(df_count)[order(df_count$sort, df_count$out, decreasing = TRUE)]
+    } else if (x.sort == "asc") {
+      x_sorted <- rownames(df_count)[order(df_count$sort, df_count$out, decreasing = FALSE)]
+    } else if (x.sort == "freq-desc") {
+      x_sorted <- rownames(df_count)[order(df_count$out, df_count$sort, decreasing = TRUE)]
+    } else if (x.sort == "freq-asc") {
+      x_sorted <- rownames(df_count)[order(df_count$out, df_count$sort, decreasing = FALSE)]
+    } else {
+      x_sorted <- rownames(df_count)
+    }
+    
+    y_sorted <- lower_left_df$y
     
     df_grid <- expand.grid(x = seq_len(nrow(unique(df_count))),
                            y = colnames(df_count)) |>
-      filter(!y %in% c("out", "n")) |>
+      filter(!y %in% c("out", "n", "sort")) |>
       mutate(value = as.logical(df_count[cbind(x, match(y, colnames(df_count)))]),
              x = as.factor(x)) |>
       as_tibble()
     
-    line_data <- df_grid %>%
-      filter(value == TRUE, y %in% y_sorted) |>
-      group_by(x) %>%
-      summarise(y_min = min(match(y, y_sorted)),
-                y_max = max(match(y, y_sorted))) %>%
-      mutate(y_min_label = y_sorted[y_min],
-             y_max_label = y_sorted[y_max])
+    df_count_total <- df_count_total |>
+      dplyr::left_join(df_grid |>
+                         tidyr::pivot_wider(names_from = y, values_from = value),
+                       by = vars_x)
     
     upper_left <- ggplot(data.frame(x = 3, y = 2), aes(x, y)) +
       geom_text(label = if (isTRUE(y.title)) "Intersection size" else y.title, angle = 90) +
@@ -1079,20 +1105,23 @@ plot2_exec <- function(.data,
             axis.line = element_blank()) +
       labs(tag = tag)
     
-    upper_right <- df_count |>
-      plot2(x = factor(unique(df_grid$x), levels = x_sorted, ordered = TRUE),
+    upper_right <- df_count_total |>
+      plot2(x = x,
             y = out,
+            category = if (has_category(df)) str2lang(get_category_name(df)) else NULL,
             type = "col",
+            stacked = TRUE,
             width = 0.5,
             x.title = NULL,
             y.title = NULL,
-            x.remove = TRUE,
+            # x.remove = TRUE,
             y.limits = y.limits,
             y.expand = y.expand,
             colour = colour,
             colour_fill = colour,
             title = title,
-            subtitle = subtitle) +
+            subtitle = subtitle,
+            x.sort = x_sorted) +
       theme(axis.ticks.x = element_blank(),
             axis.line = element_blank())
     
@@ -1101,11 +1130,11 @@ plot2_exec <- function(.data,
                             function(x) as.character(ifelse(length(x$aes_params$colour) == 0, NA, x$aes_params$colour)))
     colour_layers <- colour_layers[!is.na(colour_layers)][1]
     if (identical(colour_layers, NA_character_)) {
-      colour_layers <- "black"
+      colour_layers <- getOption("plot2.colour_font_primary", "black")
     }
     
     suppressMessages(
-      lower_left <- label_data |>
+      lower_left <- lower_left_df |>
         plot2(x = y,
               y = n,
               type = "col",
@@ -1131,12 +1160,23 @@ plot2_exec <- function(.data,
               axis.line.y = element_blank())
     )
     
+    lower_right_df <- df_grid %>%
+      filter(value == TRUE, y %in% y_sorted) |>
+      group_by(x) %>%
+      summarise(y_min = min(match(y, y_sorted)),
+                y_max = max(match(y, y_sorted))) %>%
+      mutate(y_min_label = y_sorted[y_min],
+             y_max_label = y_sorted[y_max])
+    lower_right_df$x <- factor(lower_right_df$x, levels = x_sorted, ordered = TRUE)
+    df_grid$x <- factor(df_grid$x, levels = x_sorted, ordered = TRUE)
+    df_grid$y <- factor(df_grid$y, levels = y_sorted, ordered = TRUE)
+    
     lower_right <- ggplot(df_grid,
-                          aes(x = factor(x, levels = x_sorted, ordered = TRUE),
-                              y = factor(y, levels = y_sorted, ordered = TRUE))) +
-      geom_point(data = filter(df_grid, !value), colour = "grey90", size = 3) +
+                          aes(x = x,
+                              y = y)) +
       geom_point(data = filter(df_grid, value), colour = colour_layers, size = 3) +
-      geom_segment(data = line_data,
+      geom_point(data = filter(df_grid, !value), colour = "grey90", size = 3) +
+      geom_segment(data = lower_right_df,
                    aes(x = x, xend = x, y = y_min_label, yend = y_max_label),
                    colour = colour_layers,
                    linewidth = 0.75,
@@ -1146,8 +1186,8 @@ plot2_exec <- function(.data,
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.margin = margin(0, 0, 0, 0),
-            axis.ticks = element_blank(),
-            axis.text.x = element_blank(),
+            # axis.ticks = element_blank(),
+            # axis.text.x = element_blank(),
             axis.text.y = element_text(hjust = 0.5),
             axis.title = element_blank()) +
       labs(caption = caption)
@@ -1828,24 +1868,26 @@ plot2_exec <- function(.data,
   # turn plot horizontal if required ----
   # up until this point, a lot has been done already for `horizontal`.
   # such as switching some x and y axis properties of the theme
-  x.limits <- x.limits %or% plot2_env$x_lim
-  y.limits <- y.limits %or% plot2_env$y_lim
-  put_clip_off <- has_datalabels(df) && type != "geom_sf" && (!is.null(p$labels$title) || !is.null(p$labels$subtitle) || has_facet(df))
-  if (isTRUE(horizontal)) {
-    p <- p +
-      coord_flip(xlim = x.limits,
-                 ylim = y.limits,
-                 expand = TRUE,
-                 # add off-clipping since datalabels might be outside plotted range
-                 clip = ifelse(put_clip_off, "off", "on"))
-  } else if (put_clip_off && has_datalabels(df)) {
-    p <- p +
-      coord_cartesian(xlim = x.limits,
-                      ylim = y.limits,
-                      expand = TRUE,
-                      default = TRUE,
-                      # add off-clipping since datalabels might be outside plotted range
-                      clip = "off")
+  if (type != "geom_sf" && (isTRUE(horizontal) || has_datalabels(df))) {
+    x.limits <- x.limits %or% plot2_env$x_lim
+    y.limits <- y.limits %or% plot2_env$y_lim
+    put_clip_off <- has_datalabels(df) && type != "geom_sf" && (!is.null(p$labels$title) || !is.null(p$labels$subtitle) || has_facet(df))
+    if (isTRUE(horizontal)) {
+      p <- p +
+        coord_flip(xlim = x.limits,
+                   ylim = y.limits,
+                   expand = TRUE,
+                   # add off-clipping since datalabels might be outside plotted range
+                   clip = ifelse(put_clip_off, "off", "on"))
+    } else if (put_clip_off && has_datalabels(df)) {
+      p <- p +
+        coord_cartesian(xlim = x.limits,
+                        ylim = y.limits,
+                        expand = TRUE,
+                        default = TRUE,
+                        # add off-clipping since datalabels might be outside plotted range
+                        clip = "off")
+    }
   }
   
   # additional geoms for certain types ----
