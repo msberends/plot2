@@ -11,7 +11,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9011</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.25.0.9012</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -762,16 +762,16 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># or use any function for y</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in coord_cartesian(xlim = x.limits, ylim = y.limits, expand = TRUE,     default = TRUE, clip = "off"):</span> could not find function "coord_cartesian"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.fixed_y = TRUE</span> since the two <span style="color: #0000BB;">y</span> scales differ by less than 25%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
+<span class="r-plt img"><img src="plot2-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in coord_cartesian(xlim = x.limits, ylim = y.limits, expand = TRUE,     default = TRUE, clip = "off"):</span> could not find function "coord_cartesian"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
+<span class="r-plt img"><img src="plot2-14.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span></span>
@@ -783,13 +783,13 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        y.age <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "boxplot"</span> since all groups in <span style="color: #0000BB;">hospital</span><span style="color: #000000;"> and </span><span style="color: #0000BB;">gender</span> contain at</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> least three values</span>
-<span class="r-plt img"><img src="plot2-13.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-15.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">age</span>, type <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">smooth = TRUE</span> for <span style="color: #0000BB;">type = "histogram"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">binwidth = 6.4</span> based on data</span>
-<span class="r-plt img"><img src="plot2-14.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-16.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># even titles support calculations, including support for {glue}</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
@@ -800,7 +800,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        x.title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Age ranging from"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">" to "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">smooth = TRUE</span> for <span style="color: #0000BB;">type = "histogram"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">binwidth = 6.4</span> based on data</span>
-<span class="r-plt img"><img src="plot2-15.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-17.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span> </span></span>
 <span class="r-in"><span><span class="co"># the default type is column, datalabels are automatically</span></span></span>
 <span class="r-in"><span><span class="co"># set in non-continuous types:</span></span></span>
@@ -808,26 +808,26 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
-<span class="r-plt img"><img src="plot2-16.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-18.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
 <span class="r-in"><span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
-<span class="r-plt img"><img src="plot2-17.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-19.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>        </span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
 <span class="r-in"><span>        stacked_fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
-<span class="r-plt img"><img src="plot2-18.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-20.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># two categories might benefit from a dumbbell plot:</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot2-19.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-21.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span> </span></span>
 <span class="r-in"><span><span class="co"># sort on any direction:</span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
@@ -837,7 +837,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Applying <span style="color: #0000BB;">x.sort = "freq-asc"</span> using <span style="color: #0000BB;">summarise_function = sum</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
-<span class="r-plt img"><img src="plot2-20.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-22.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
@@ -846,7 +846,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> To compare single values in two categories (<span style="color: #0000BB;">gender</span>), a dumbbell plot can be</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> used (<span style="color: #0000BB;">type = "dumbbell"</span> or <span style="color: #0000BB;">type = "d"</span>)</span>
-<span class="r-plt img"><img src="plot2-21.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-23.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>        </span></span>
 <span class="r-in"><span><span class="co"># support for Sankey plots</span></span></span>
 <span class="r-in"><span><span class="va">Titanic</span> <span class="op">|&gt;</span> <span class="co"># a table from base R</span></span></span>
@@ -855,7 +855,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Input class 'table' was transformed using `as.data.frame()`</span>
-<span class="r-plt img"><img src="plot2-22.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-24.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># matrix support, such as for cor()</span></span></span>
 <span class="r-in"><span><span class="va">correlation_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
@@ -881,17 +881,17 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">type = "tile"</span> since the matrix contains identical row and column</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> names</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Omitting printing of 121 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span>
-<span class="r-plt img"><img src="plot2-23.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-25.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">correlation_matrix</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue3"</span>, <span class="st">"white"</span>, <span class="st">"red3"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>        category.title <span class="op">=</span> <span class="st">"*r*-value"</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span>  <span class="st">"Correlation matrix"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in coord_cartesian(xlim = x.limits, ylim = y.limits, expand = TRUE,     default = TRUE, clip = "off"):</span> could not find function "coord_cartesian"</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">type = "tile"</span> since the matrix contains identical row and column</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> names</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category.midpoint = 0</span> (the current <span style="color: #0000BB;">category</span> scale centre)</span>
+<span class="r-plt img"><img src="plot2-26.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot2() supports all S3 extensions available through</span></span></span>
@@ -905,7 +905,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"Titles/captions *support* **markdown**"</span>,</span></span>
 <span class="r-in"><span>        subtitle <span class="op">=</span> <span class="st">"Axis titles contain the square notation: x^2"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
-<span class="r-plt img"><img src="plot2-24.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-27.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># sf objects (geographic plots, 'simple features') are also supported</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://r-spatial.github.io/sf/" class="external-link">"sf"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
@@ -917,15 +917,14 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span>
-<span class="r-plt img"><img src="plot2-25.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-28.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># support for any system or Google font</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"This plot uses a Google Font"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Rock+Salt</span> from Google Fonts</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
-<span class="r-plt img"><img src="plot2-26.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-29.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
