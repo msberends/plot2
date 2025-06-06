@@ -937,7 +937,7 @@ plot2_exec <- function(.data,
           }
         }
         
-        if (isTRUE(length(y_precalc) == 1)) {
+        if (isTRUE(length(y_precalc) == 1) && NROW(.data) > 1) {
           # outcome of y is a single calculated value (by using e.g. mean(...) or n_distinct(...)),
           # so calculate it over all groups that are available
           # this will support e.g. `data |> plot2(y = n_distinct(id))`

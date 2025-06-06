@@ -336,11 +336,11 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
                              colour = colour, linetype = linetype, linewidth = linewidth, ...,
                              colour_missing = missing(colour), inherit.aes = inherit.aes)
   
-  if (geom_data$has_y && !geom_data$has_x && !geom_data$plotdata_is_length_y) {
+  if (geom_data$has_y && ((!geom_data$has_x && !geom_data$plotdata_is_length_y) || n_distinct(geom_data$new_df$y) == 1)) {
     type <- "hline"
     mapping <- setup_aes(yintercept = "y", colour = geom_data$plot$mapping$colour)
     geom_data$params$inherit.aes <- NULL
-  } else if (geom_data$has_x && !geom_data$has_y && !geom_data$plotdata_is_length_x) {
+  } else if (geom_data$has_x && ((!geom_data$has_y && !geom_data$plotdata_is_length_x) || n_distinct(geom_data$new_df$x) == 1)) {
     type <- "vline"
     mapping <- setup_aes(xintercept = "x", colour = geom_data$plot$mapping$colour)
     geom_data$params$inherit.aes <- NULL
