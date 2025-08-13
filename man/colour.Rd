@@ -3,6 +3,7 @@
 \name{get_colour}
 \alias{get_colour}
 \alias{register_colour}
+\alias{unregister_colour}
 \alias{as.character.colour}
 \alias{print.colour}
 \alias{add_white}
@@ -11,6 +12,8 @@
 get_colour(x, length = 1, opacity = 0)
 
 register_colour(...)
+
+unregister_colour(regex)
 
 \method{as.character}{colour}(x, ...)
 
@@ -32,7 +35,7 @@ add_white(x, white)
 \item \code{"mako"}
 \item \code{"turbo"}
 }
-\item One of the built-in palettes in \R (these are from \R 4.4.2):
+\item One of the built-in palettes in \R (these are from \R 4.5.1):
 \itemize{
 \item \code{"Accent"}
 \item \code{"Alphabet"}
@@ -57,7 +60,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"darkmagenta"}, \code{"lightseagreen"}, \code{"lightsteelblue3"}, \code{"paleturquoise4"}, \code{"violetred2"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"chocolate2"}, \code{"khaki1"}, \code{"lavender"}, \code{"lightgoldenrod4"}, \code{"peru"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
@@ -66,6 +69,8 @@ add_white(x, white)
 \item{opacity}{amount of opacity (0 = solid, 1 = transparent)}
 
 \item{...}{named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
+
+\item{regex}{a \link{regex} to unregister colours}
 
 \item{white}{number between \verb{[0, 1]} to add white to \code{x}}
 }
@@ -77,6 +82,31 @@ Colours from \R, viridis and more. The output prints in the console with the act
 }
 \details{
 A palette from \R will be expanded where needed, so even \code{get_colour("R4", length = 20)} will work, despite "R4" only supporting a maximum of eight colours.
+
+\subsection{Registering Colours In Another Package}{
+
+To register/unregister colours in another package, add something like this to a package file \code{R/zzz.R}:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{#' @importFrom plot2 register_colour
+.onLoad <- function(...) \{
+  register_colour(
+    my_colour1  = "#007A8A",
+    my_colour2  = "#2E8540",
+    my_colour3  = "#5B3FA8",
+    my_colours  = c("my_colour1", "my_colour2", "my_colour3"))
+
+  options(plot2.colour = "my_colours", plot2.colour_font_secondary = "my_colour1")
+\}
+
+#' @importFrom plot2 unregister_colour
+.onUnload <- function(...) \{
+  register_colour("^my_colour") # this is a regular expression
+  options(plot2.colour = NULL, plot2.colour_font_secondary = NULL)
+\}
+}\if{html}{\out{</div>}}
+
+Do not forget to add \code{plot2} to \verb{Imports:} in the \code{DESCRIPTION} file of your package.
+}
 }
 \examples{
 get_colour(c("red", "tan1", "#ffa", "FFAA00"))

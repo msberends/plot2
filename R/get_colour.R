@@ -183,6 +183,33 @@ get_colour <- function(x, length = 1, opacity = 0) {
 
 #' @rdname colour
 #' @param ... named vectors with known, valid colours. They must be coercible with [get_colour()].
+#' @details
+#' 
+#' ### Registering Colours In Another Package
+#' 
+#' To register/unregister colours in another package, add something like this to a package file `R/zzz.R`:
+#' 
+#' ```r
+#' #' @importFrom plot2 register_colour
+#' .onLoad <- function(...) {
+#'   register_colour(
+#'     my_colour1  = "#007A8A",
+#'     my_colour2  = "#2E8540",
+#'     my_colour3  = "#5B3FA8",
+#'     my_colours  = c("my_colour1", "my_colour2", "my_colour3"))
+#' 
+#'   options(plot2.colour = "my_colours", plot2.colour_font_secondary = "my_colour1")
+#' }
+#'
+#' #' @importFrom plot2 unregister_colour
+#' .onUnload <- function(...) {
+#'   register_colour("^my_colour") # this is a regular expression
+#'   options(plot2.colour = NULL, plot2.colour_font_secondary = NULL)
+#' }
+#' ```
+#' 
+#' Do not forget to add `plot2` to `Imports:` in the `DESCRIPTION` file of your package.
+#' 
 #' @export
 #' @examples
 #' 
@@ -252,6 +279,16 @@ register_colour <- function(...) {
     plot2_env$reg_cols <- c(plot2_env$reg_cols, out)
   }
   message(length(dots), " colour", ifelse(length(dots) == 1, "", "s"), " registered.")
+}
+
+#' @rdname colour
+#' @param regex a [regex] to unregister colours
+#' @export
+unregister_colour <- function(regex) {
+  len <- length(plot2_env$reg_cols)
+  plot2_env$reg_cols <- plot2_env$reg_cols[which(names(plot2_env$reg_cols) %unlike% regex)]
+  changed <- len - length(plot2_env$reg_cols)
+  message(changed, " colour", ifelse(changed == 1, "", "s"), " unregistered.")
 }
 
 get_registered_colour <- function(name) {
