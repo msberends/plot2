@@ -709,14 +709,7 @@ digit_to_text <- function(x) {
 
 #' @importFrom rlang cnd_message
 format_error <- function(e, replace = character(0), by = character(0)) {
-  if (inherits(e, "rlang_error")) {
-    txt <- cnd_message(e)
-    txt <- font_stripstyle(txt)
-    txt <- gsub(".*Caused by error[:](\n!)?", "", txt)
-  } else {
-    txt <- c(e$message, e$parent$message, e$parent$parent$message, e$parent$parent$parent$message, e$call)
-  }
-  txt <- txt[txt %unlike% "^Problem while"]
+  txt <- conditionMessage(e)
   if (length(txt) == 0) {
     # return original error
     stop(e, call. = FALSE)

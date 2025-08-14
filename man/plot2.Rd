@@ -149,7 +149,7 @@ plot2(
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
-  text_factor = 1,
+  text_factor = getOption("plot2.text_factor", 1),
   font = getOption("plot2.font"),
   theme = getOption("plot2.theme", "theme_minimal2"),
   background = getOption("plot2.colour_background", "white"),
