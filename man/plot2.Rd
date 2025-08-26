@@ -124,9 +124,9 @@ plot2(
   smooth.formula = NULL,
   smooth.se = TRUE,
   smooth.level = 0.95,
-  smooth.alpha = 0.25,
-  smooth.linewidth = 0.75,
-  smooth.linetype = 3,
+  smooth.alpha = NULL,
+  smooth.linewidth = NULL,
+  smooth.linetype = NULL,
   smooth.colour = NULL,
   size = NULL,
   linetype = 1,
@@ -410,7 +410,7 @@ a \code{ggplot} object
 \description{
 The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \code{\link[ggplot2:ggplot]{ggplot2}} functions. By design, the \code{ggplot2} package requires users to use a lot of functions and manual settings, while the \code{\link[=plot2]{plot2()}} function does all the heavy lifting automatically and only requires users to define some arguments in one single function, greatly increases convenience.
 
-Moreover, \code{\link[=plot2]{plot2()}} allows for in-place calculation of \code{y}, all axes, and all axis labels, often preventing the need to use \code{\link[=group_by]{group_by()}}, \code{\link[=count]{count()}}, \code{\link[=mutate]{mutate()}}, or \code{\link[=summarise]{summarise()}}.
+Moreover, \code{\link[=plot2]{plot2()}} allows for in-place calculation of \code{y}, all axes, and all axis labels, often preventing the need to use \code{\link[dplyr:group_by]{group_by()}}, \code{\link[dplyr:count]{count()}}, \code{\link[dplyr:mutate]{mutate()}}, or \code{\link[dplyr:summarise]{summarise()}}.
 
 See \link{plot2-methods} for all implemented methods for different object classes.
 }

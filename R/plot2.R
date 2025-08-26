@@ -16,7 +16,7 @@
 #'
 #' @description  The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions. By design, the `ggplot2` package requires users to use a lot of functions and manual settings, while the [plot2()] function does all the heavy lifting automatically and only requires users to define some arguments in one single function, greatly increases convenience.
 #'
-#' Moreover, [plot2()] allows for in-place calculation of `y`, all axes, and all axis labels, often preventing the need to use [group_by()], [count()], [mutate()], or [summarise()].
+#' Moreover, [plot2()] allows for in-place calculation of `y`, all axes, and all axis labels, often preventing the need to use [`group_by()`][dplyr::group_by()], [`count()`][dplyr::count()], [`mutate()`][dplyr::mutate()], or [`summarise()`][dplyr::summarise()].
 #' 
 #' See [plot2-methods] for all implemented methods for different object classes.
 #' @param .data data to plot
@@ -469,9 +469,9 @@ plot2 <- function(.data,
                   smooth.formula = NULL,
                   smooth.se = TRUE,
                   smooth.level = 0.95,
-                  smooth.alpha = 0.25,
-                  smooth.linewidth = 0.75,
-                  smooth.linetype = 3,
+                  smooth.alpha = NULL,
+                  smooth.linewidth = NULL,
+                  smooth.linetype = NULL,
                   smooth.colour = NULL,
                   size = NULL,
                   linetype = 1,
@@ -1524,39 +1524,38 @@ plot2_exec <- function(.data,
     smooth <- TRUE
   }
   if (isTRUE(smooth)) {
-    if (is.null(smooth.colour)) {
-      smooth.colour <- cols$colour[1L]
-      has_smooth.colour <- FALSE
-    } else {
-      smooth.colour <- get_colour(smooth.colour)
-      has_smooth.colour <- TRUE
-    }
     if (type == "geom_histogram") {
       # add a density count
       set_binwidth <- p$layers[[1]]$stat_params$binwidth
       p <- p +
         do.call(geom_density,
                 c(list(mapping = aes(y = after_stat(count) * set_binwidth),
-                       alpha = smooth.alpha,
-                       linetype = smooth.linetype,
+                       colour = ifelse(is.null(smooth.colour), get_colour(colour), get_colour(smooth.colour)),
+                       linetype = ifelse(is.null(smooth.linetype), 1, smooth.linetype),
                        linewidth = smooth.linewidth,
-                       na.rm = na.rm),
-                  list(colour = smooth.colour)[(!has_category(df) | has_smooth.colour) & !isTRUE(original_colours)]))
+                       na.rm = na.rm)))
+    } else if (is.null(smooth.colour)) {
+      p <- p |>
+        add_smooth(formula = smooth.formula,
+                   se = smooth.se,
+                   method = smooth.method,
+                   level = smooth.level,
+                   alpha = smooth.alpha,
+                   linetype = smooth.linetype,
+                   linewidth = smooth.linewidth,
+                   move = -1)
     } else {
-      # add smooth with geom_smooth()
-      p <- p +
-        do.call(geom_smooth,
-                c(list(mapping = utils::modifyList(mapping, aes(group = 1)),
-                       formula = smooth.formula,
-                       se = smooth.se,
-                       method = smooth.method,
-                       level = smooth.level,
-                       alpha = smooth.alpha,
-                       linetype = smooth.linetype,
-                       linewidth = smooth.linewidth,
-                       na.rm = na.rm),
-                  list(colour = smooth.colour)[(!has_category(df) | has_smooth.colour) & !isTRUE(original_colours)],
-                  list(fill = smooth.colour)[(!has_category(df) | has_smooth.colour) & !isTRUE(original_colours)]))
+      p <- p |>
+        add_smooth(colour = smooth.colour,
+                   fill = smooth.colour,
+                   formula = smooth.formula,
+                   se = smooth.se,
+                   method = smooth.method,
+                   level = smooth.level,
+                   alpha = smooth.alpha,
+                   linetype = smooth.linetype,
+                   linewidth = smooth.linewidth,
+                   move = -1)
     }
   }
   
