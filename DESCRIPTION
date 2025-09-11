@@ -1,6 +1,6 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
-Version: 1.25.0.9017
+Version: 1.25.0.9018
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -31,6 +31,7 @@ Imports:
   tibble (>= 3.0.0),
   tidyselect (>= 1.2.0),
   tidyr (>= 1.0.0),
+  vctrs,
   viridisLite (>= 0.4.0)
 Suggests: 
   AMR (>= 2.1.0),
@@ -52,6 +53,6 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 2
 VignetteBuilder: knitr

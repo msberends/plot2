@@ -140,7 +140,7 @@ If you have fewer than 1,000 observations but want to use the same \code{gam()}
 model that \code{method = NULL} would use, then set
 \verb{method = "gam", formula = y ~ s(x, bs = "cs")}.}
 
-\item{se}{Display confidence interval around smooth? (\code{TRUE} by default, see
+\item{se}{Display confidence band around smooth? (\code{TRUE} by default, see
 \code{level} to control.)}
 
 \item{sf_data}{an 'sf' \link{data.frame}}

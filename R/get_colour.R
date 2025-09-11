@@ -306,6 +306,13 @@ as.character.colour <- function(x, ...) {
   substr(unclass(x), 1, 9)
 }
 
+#' @method as.character colour
+#' @rdname colour
+#' @export
+as.colour <- function(x, ...) {
+  get_colour(x)
+}
+
 #' @method print colour
 #' @importFrom crayon make_style
 #' @rdname colour
@@ -385,6 +392,22 @@ unique.colour <- function(x, ...) {
 #' @export
 c.colour <- function(...) {
   get_colour(unlist(lapply(list(...), as.character)))
+}
+
+#' @importFrom vctrs vec_cast
+#' @export
+vec_cast.colour.colour <- function(x, to, ...) {
+  as.colour(x)
+}
+#' @importFrom vctrs vec_cast
+#' @export
+vec_cast.character.colour <- function(x, to, ...) {
+  unclass(x)
+}
+#' @importFrom vctrs vec_cast
+#' @export
+vec_cast.colour.character <- function(x, to, ...) {
+  as.colour(x)
 }
 
 #' @rdname colour

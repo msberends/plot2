@@ -1416,11 +1416,7 @@ plot2_exec <- function(.data,
   }
   
   # generate ggplot ----
-  if (isTRUE(original_colours)) {
-    p <- ggplot(data = df, mapping = mapping)
-  } else {
-    p <- ggplot(data = df, mapping = mapping, colour = cols$colour, fill = cols$colour_fill)
-  }
+  p <- ggplot(data = df, mapping = mapping)
   
   # generate geom ----
   if (type == "geom_boxplot") {

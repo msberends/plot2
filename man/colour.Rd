@@ -5,6 +5,7 @@
 \alias{register_colour}
 \alias{unregister_colour}
 \alias{as.character.colour}
+\alias{as.colour}
 \alias{print.colour}
 \alias{add_white}
 \title{Colours from \R, Viridis and More}
@@ -14,6 +15,8 @@ get_colour(x, length = 1, opacity = 0)
 register_colour(...)
 
 unregister_colour(regex)
+
+\method{as.character}{colour}(x, ...)
 
 \method{as.character}{colour}(x, ...)
 
@@ -60,7 +63,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"brown4"}, \code{"burlywood4"}, \code{"darkorchid2"}, \code{"gainsboro"}, \code{"olivedrab3"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"antiquewhite2"}, \code{"darkolivegreen2"}, \code{"lightpink"}, \code{"palegreen"}, \code{"peachpuff1"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
@@ -70,7 +73,7 @@ add_white(x, white)
 
 \item{...}{named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{regex}{a \link{regex} to unregister colours}
+\item{regex}{a \link[stringr:modifiers]{stringr::regex} to unregister colours}
 
 \item{white}{number between \verb{[0, 1]} to add white to \code{x}}
 }
