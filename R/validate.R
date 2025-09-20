@@ -753,7 +753,6 @@ validate_x_scale <- function(df,
                              big.mark,
                              horizontal,
                              type_backup) {
-  
   if (isTRUE(x.zoom) && is.null(x.limits)) {
     x.limits <- c(NA_real_, NA_real_)
     plot2_env$x_lim <- x.limits
@@ -1452,11 +1451,12 @@ validate_category_scale <- function(values,
                                   category.transform = category.transform,
                                   category.date_breaks = category.date_breaks,
                                   waiver = waiver()),
-               limits = limits_fn(values = values,
-                                  category.limits = category.limits,
-                                  category.percent = category.percent,
-                                  category.transform = category.transform,
-                                  category.date_breaks = category.date_breaks),
+               limits = as.numeric(
+                 limits_fn(values = values,
+                           category.limits = category.limits,
+                           category.percent = category.percent,
+                           category.transform = category.transform,
+                           category.date_breaks = category.date_breaks)),
                transform = category.transform)
   
   if (isTRUE(original_colours)) {
@@ -2106,7 +2106,9 @@ validate_theme <- function(theme,
     theme$axis.title.y.right$face <- "bold"
   }
   
-  theme$axis.text.x$angle <- x.lbl_angle
+  if ("angle" %in% names(theme$axis.text.x)) {
+    theme$axis.text.x$angle <- x.lbl_angle
+  }
   if (is.null(x.lbl_align) && x.lbl_angle != 0) {
     # determine the better alignment
     if (abs(x.lbl_angle) %in% c(0:10, 171:190, 351:360)) {

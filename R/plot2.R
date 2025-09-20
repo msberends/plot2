@@ -557,10 +557,10 @@ plot2 <- function(.data,
   }
 }
 
-#' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of all_of desc
+#' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of all_of desc rowwise c_across left_join
 #' @importFrom forcats fct_relabel
 #' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete
-#' @importFrom tidyr pivot_longer
+#' @importFrom tidyr pivot_longer pivot_wider
 #' @importFrom ggforce geom_parallel_sets geom_parallel_sets_axes geom_parallel_sets_labels
 plot2_exec <- function(.data,
                        x,
@@ -1050,8 +1050,8 @@ plot2_exec <- function(.data,
       group_by(across(any_of(vars_x))) |>
       reframe(n = n(),
               out = summarise_function(`_var_y`)) |>
-      dplyr::rowwise() |>
-      mutate(sort = sum(dplyr::c_across(vars_x))) |>
+      rowwise() |>
+      mutate(sort = sum(c_across(vars_x))) |>
       # we must not yet use tibble here
       as.data.frame()
     
@@ -1088,8 +1088,8 @@ plot2_exec <- function(.data,
       as_tibble()
     
     df_count_total <- df_count_total |>
-      dplyr::left_join(df_grid |>
-                         tidyr::pivot_wider(names_from = y, values_from = value),
+      left_join(df_grid |>
+                         pivot_wider(names_from = y, values_from = value),
                        by = vars_x)
     
     upper_left <- ggplot(data.frame(x = 3, y = 2), aes(x, y)) +
@@ -1142,16 +1142,18 @@ plot2_exec <- function(.data,
             background = background,
             markdown = markdown,
             width = width
-            ) +
+      )  +
       theme(axis.ticks.x = element_blank(),
             axis.line = element_blank())
     
+    
+    layers <- tryCatch(upper_right@layers, error = function(e) upper_right$layers)
     colour_layers <- vapply(FUN.VALUE = character(1),
-                            upper_right$layers,
+                            layers,
                             function(x) as.character(ifelse(length(x$aes_params$colour) == 0, NA, x$aes_params$colour)))
     colour_layers <- colour_layers[!is.na(colour_layers)][1]
-    if (identical(colour_layers, NA_character_)) {
-      colour_layers <- getOption("plot2.colour_font_primary", "black")
+    if (is.na(colour_layers)) {
+      colour_layers <- get_colour(getOption("plot2.colour_font_primary", colour))
     }
     
     suppressMessages(
