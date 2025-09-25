@@ -1064,6 +1064,7 @@ plot2_exec <- function(.data,
       summarise(across(all_of(vars_x), function(x) sum(x, na.rm = TRUE))) |>
       pivot_longer(all_of(vars_x), names_to = "y", values_to = "n") |>
       arrange(desc(n))
+    y_sorted <- lower_left_df$y
     
     if (is.null(x.sort)) {
       x.sort <- "freq-desc"
@@ -1071,7 +1072,6 @@ plot2_exec <- function(.data,
       x.sort <- "desc"
     }
     x.sort <- validate_sorting(x.sort, horizontal = FALSE)
-    
     if (x.sort == "desc") {
       sort_cols <- c("count", y_sorted)
       ord_list <- lapply(df_count[sort_cols], function(x) -xtfrm(x))
@@ -1092,7 +1092,7 @@ plot2_exec <- function(.data,
       x_sorted <- rownames(df_count)
     }
     
-    y_sorted <- lower_left_df$y
+
     
     df_grid <- expand.grid(x = seq_len(nrow(unique(df_count))),
                            y = colnames(df_count)) |>
