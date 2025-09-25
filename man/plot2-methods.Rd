@@ -1128,7 +1128,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{settings for \code{smooth}}
 
-\item{size}{size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
+\item{size}{size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for a UpSet plots (using \code{type = "upset"}); \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
 
 \item{linetype}{linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.}
 
@@ -1137,7 +1137,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 \item \code{0.5} for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}, and for geoms that have no area (such as \link[ggplot2:geom_path]{line})
 \item \code{0.1} for \link[ggplot2:ggsf]{sf}
 \item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area})
-\item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"})
+\item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
 \item \code{0.5} otherwise (such as \link[ggplot2:geom_histogram]{histogram} and \link[ggplot2:geom_ribbon]{area})
 }}
 

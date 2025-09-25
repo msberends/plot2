@@ -147,13 +147,13 @@
 #' @param reverse a [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth a [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
 #' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour settings for `smooth`
-#' @param size size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
+#' @param size size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for a UpSet plots (using `type = "upset"`); `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
 #' @param linetype linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.
 #' @param linewidth linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 #' - `0.5` for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()], and for geoms that have no area (such as [line][ggplot2::geom_line()])
 #' - `0.1` for [sf][ggplot2::geom_sf()]
 #' - `0.25` for geoms that are continous and have fills (such as [area][ggplot2::geom_area()])
-#' - `1.0` for dumbbell plots (using `type = "dumbbell"`)
+#' - `1.0` for dumbbell plots (using `type = "dumbbell"`) and UpSet plots (using `type = "upset"`)
 #' - `0.5` otherwise (such as [histogram][ggplot2::geom_histogram()] and [area][ggplot2::geom_area()])
 #' @param binwidth width of bins (only useful for `geom = "histogram"`), can be specified as a numeric value or as a function that calculates width from `x`, see [`geom_histogram()`][ggplot2::geom_histogram()]. It defaults to approx. `diff(range(x))` divided by 12 to 22 based on the data.
 #' @param width width of the geom. Defaults to `0.75` for geoms [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()] and [jitter][ggplot2::geom_jitter()], and to `0.5` otherwise.
@@ -1023,6 +1023,11 @@ plot2_exec <- function(.data,
   # create UpSet plot ----
 
   if (identical(type, "upset")) {
+    
+    size <- validate_size(size = size, type = "upset", type_backup = "upset")
+    width <- validate_width(width = width, type = "geom_col")
+    linewidth <- validate_linewidth(linewidth = linewidth, type = "upset", type_backup = "upset")
+    
     if (!has_x(df)) {
       stop("`x` must be multiple columns for `type = \"upset\"`", call. = FALSE)
     }
@@ -1051,8 +1056,8 @@ plot2_exec <- function(.data,
       reframe(n = n(),
               out = summarise_function(`_var_y`)) |>
       rowwise() |>
-      mutate(sort = sum(c_across(vars_x))) |>
-      # we must not yet use tibble here
+      mutate(count = sum(c_across(vars_x))) |>
+      # we must not yet use tibble here - we need row names later on
       as.data.frame()
     
     lower_left_df <- df_original |>
@@ -1066,14 +1071,23 @@ plot2_exec <- function(.data,
       x.sort <- "desc"
     }
     x.sort <- validate_sorting(x.sort, horizontal = FALSE)
+    
     if (x.sort == "desc") {
-      x_sorted <- rownames(df_count)[order(df_count$sort, df_count$out, decreasing = TRUE)]
+      sort_cols <- c("count", y_sorted)
+      ord_list <- lapply(df_count[sort_cols], function(x) -xtfrm(x))
+      x_sorted <- do.call(order, ord_list)
     } else if (x.sort == "asc") {
-      x_sorted <- rownames(df_count)[order(df_count$sort, df_count$out, decreasing = FALSE)]
+      sort_cols <- c("count", y_sorted)
+      ord_list <- lapply(df_count[sort_cols], function(x) xtfrm(x))
+      x_sorted <- do.call(order, ord_list)
     } else if (x.sort == "freq-desc") {
-      x_sorted <- rownames(df_count)[order(df_count$out, df_count$sort, decreasing = TRUE)]
+      sort_cols <- c("out", y_sorted)
+      ord_list <- lapply(df_count[sort_cols], function(x) -xtfrm(x))
+      x_sorted <- do.call(order, ord_list)
     } else if (x.sort == "freq-asc") {
-      x_sorted <- rownames(df_count)[order(df_count$out, df_count$sort, decreasing = FALSE)]
+      sort_cols <- c("out", y_sorted)
+      ord_list <- lapply(df_count[sort_cols], function(x) xtfrm(x))
+      x_sorted <- do.call(order, ord_list)
     } else {
       x_sorted <- rownames(df_count)
     }
@@ -1082,15 +1096,14 @@ plot2_exec <- function(.data,
     
     df_grid <- expand.grid(x = seq_len(nrow(unique(df_count))),
                            y = colnames(df_count)) |>
-      filter(!y %in% c("out", "n", "sort")) |>
+      filter(!y %in% c("out", "n", "count")) |>
       mutate(value = as.logical(df_count[cbind(x, match(y, colnames(df_count)))]),
              x = as.factor(x)) |>
       as_tibble()
-    
+
     df_count_total <- df_count_total |>
-      left_join(df_grid |>
-                         pivot_wider(names_from = y, values_from = value),
-                       by = vars_x)
+      left_join(df_grid |> pivot_wider(names_from = y, values_from = value),
+                by = vars_x)
     
     upper_left <- ggplot(data.frame(x = 3, y = 2), aes(x, y)) +
       geom_text(label = if (isTRUE(y.title)) "Intersection size" else y.title, angle = 90) +
@@ -1127,13 +1140,6 @@ plot2_exec <- function(.data,
             subtitle.colour = subtitle.colour,
             colour_opacity = colour_opacity,
             datalabels = FALSE,
-            # datalabels.round = datalabels.round,
-            # datalabels.colour = datalabels.colour,
-            # datalabels.format = datalabels.format,
-            # datalabels.colour_fill = datalabels.colour_fill,
-            # datalabels.size = datalabels.size,
-            # datalabels.angle = datalabels.angle,
-            # datalabels.lineheight = datalabels.lineheight,
             decimal.mark = decimal.mark,
             big.mark = big.mark,
             text_factor = text_factor,
@@ -1162,8 +1168,8 @@ plot2_exec <- function(.data,
               y = n,
               type = "col",
               colour = colour_layers,
-              width = 0.33,
-              x.sort = rev(y_sorted),
+              width = width,
+              x.sort = y_sorted,
               horizontal = TRUE,
               datalabels = FALSE,
               x.title = NULL,
@@ -1189,26 +1195,27 @@ plot2_exec <- function(.data,
               axis.line.y = element_blank())
     )
     
-    lower_right_df <- df_grid %>%
+    lower_right_seqments_df <- df_grid |>
       filter(value == TRUE, y %in% y_sorted) |>
-      group_by(x) %>%
+      group_by(x) |>
       summarise(y_min = min(match(y, y_sorted)),
-                y_max = max(match(y, y_sorted))) %>%
+                y_max = max(match(y, y_sorted))) |>
       mutate(y_min_label = y_sorted[y_min],
              y_max_label = y_sorted[y_max])
-    lower_right_df$x <- factor(lower_right_df$x, levels = x_sorted, ordered = TRUE)
+    lower_right_seqments_df$x <- factor(lower_right_seqments_df$x, levels = x_sorted, ordered = TRUE)
+    
     df_grid$x <- factor(df_grid$x, levels = x_sorted, ordered = TRUE)
-    df_grid$y <- factor(df_grid$y, levels = y_sorted, ordered = TRUE)
+    df_grid$y <- factor(df_grid$y, levels = rev(y_sorted), ordered = TRUE)
+    df_grid$point_colour <- ifelse(df_grid$value, colour_layers, "grey90")
     
     lower_right <- ggplot(df_grid,
                           aes(x = x,
                               y = y)) +
-      geom_point(data = filter(df_grid, value), colour = colour_layers, size = 3) +
-      geom_point(data = filter(df_grid, !value), colour = "grey90", size = 3) +
-      geom_segment(data = lower_right_df,
+      geom_point(colour = df_grid$point_colour, size = size) +
+      geom_segment(data = lower_right_seqments_df,
                    aes(x = x, xend = x, y = y_min_label, yend = y_max_label),
                    colour = colour_layers,
-                   linewidth = 0.75,
+                   linewidth = linewidth,
                    inherit.aes = FALSE) +
       scale_y_discrete(expand = c(0.05, 0.05)) +
       theme(panel.background = element_blank(),

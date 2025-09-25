@@ -1856,6 +1856,8 @@ validate_size <- function(size, type, type_backup) {
   if (is.null(size)) {
     if (type_backup == "dumbbell") {
       size <- 5
+    } else if (type_backup == "upset") {
+      size <- 4
     } else if (type %in% c("geom_point", "geom_jitter", "geom_beeswarm")) {
       size <- 2
     } else {
@@ -1882,7 +1884,7 @@ validate_linewidth <- function(linewidth, type, type_backup) {
       linewidth <- 0.1
     } else if (type %in% c("geom_boxplot", "geom_violin")) {
       linewidth <- 0.5
-    } else if (type_backup == "dumbbell") {
+    } else if (type_backup %in% c("dumbbell", "upset")) {
       linewidth <- 1
     } else if (geom_is_continuous(type) && !geom_has_only_colour(type)) {
       linewidth <- 0.25
