@@ -42,7 +42,7 @@ Before we dive into the code, let's talk briefly about the philosophy behind `pl
 
 The concept is simple, and the exact opposite of `ggplot2`: give `plot2()` your data, and it will figure out the rest, while enabling many popular plotting options without ever needing to leave this single function. The goal is to get you from data to visualisation with as little friction as possible. And since `plot2()` just returns a `ggplot` object, you can extend it in any way you would with the outcome of `ggplot()`.
 
-This philosophy shines particularly in how `plot2()` simplifies functionalities like faceting, theming, and applying inline transformations. Rather than managing multiple functions and layers, `plot2()` allows you to achieve the same results more directly.
+This philosophy shines particularly in how `plot2()` simplifies functionalities like faceting, theming, and applying in-line transformations. Rather than managing multiple functions and layers, `plot2()` allows you to achieve the same results more directly.
 
 # Getting Started with `plot2()`
 
@@ -192,7 +192,7 @@ mtcars |>
 
 In this example, we limit the facet grid to two rows and ensure that all y-axes have the same scale. This simplifies `ggplot2`'s more complex `facet_wrap()` options like `scales = "free_y"` and `nrow`, which often require additional parameters.
 
-## Leveraging Inline Transformations with `plot2()`
+## Leveraging In-line Transformations with `plot2()`
 
 One of the standout features of `plot2()` is its ability to perform transformations directly within the function call. This capability can dramatically reduce the need for additional data manipulation steps, allowing you to focus on the visualisation itself. Whether you’re calculating aggregates, formatting labels, or even applying mathematical transformations, `plot2()` lets you do it all on the fly.
 
@@ -208,9 +208,9 @@ admitted_patients |>
 
 This will produce a column plot showing the number of admissions per hospital, calculated directly within `plot2()`.
 
-### Combining Data with Inline Transformations
+### Combining Data with In-line Transformations
 
-The real power of `plot2()` comes when you start combining these inline transformations. Want to add another dimension, like the number of unique age groups within each hospital? You can do that just as easily:
+The real power of `plot2()` comes when you start combining these in-line transformations. Want to add another dimension, like the number of unique age groups within each hospital? You can do that just as easily:
 
 ```{r}
 admitted_patients |> 
@@ -232,7 +232,7 @@ admitted_patients |>
   plot2(x = hospital, y = median(age), category = gender)
 ```
 
-### Inline Math Transformations
+### In-line Math Transformations
 
 You can also apply mathematical transformations directly within `plot2()`, making it easy to explore relationships in your data. For example, to plot the logarithm of patient ages across different wards, you can do this:
 
@@ -272,7 +272,7 @@ admitted_patients |>
         category.title = "Year")
 ```
 
-In this plot, we’re using multiple inline transformations, showcasing the use of only 8 lines of code without using `dplyr` transformations manually. This level of complexity, achieved with just one `plot2()` call, demonstrates the power and flexibility of inline transformations.
+In this plot, we’re using multiple in-line transformations, showcasing the use of only 8 lines of code without using `dplyr` transformations manually. This level of complexity, achieved with just one `plot2()` call, demonstrates the power and flexibility of in-line transformations.
 
 ## Sorting and Limiting Data
 
@@ -517,7 +517,6 @@ df |>
         type = "upset",
         colour = "OurOrganisation",
         y.title = "Mean Outcome",
-        x.title = "Set Size",
         title = "Another UpSet plot",
         caption = "Here a caption",
         summarise_function = mean,
@@ -675,7 +674,7 @@ Customising fonts in `plot2()` is both flexible and straightforward, allowing yo
 
 The primary goal of `plot2()` is to make data visualisation faster and more intuitive by automating many of the routine tasks involved in creating plots. Whether you’re working with simple data or complex datasets requiring advanced transformations, `plot2()` helps you get to the final visualisation with fewer lines of code and less cognitive load. This not only speeds up your workflow but also makes your code more readable and maintainable.
 
-For instance, the ability to perform inline transformations directly within the plotting function eliminates the need for pre-processing steps that would otherwise require additional code blocks using, e.g., `dplyr` or `tidyr`. This feature of `plot2()` alone can drastically reduce the complexity of your code, especially when working with large and multifaceted datasets.
+For instance, the ability to perform in-line transformations directly within the plotting function eliminates the need for pre-processing steps that would otherwise require additional code blocks using, e.g., `dplyr` or `tidyr`. This feature of `plot2()` alone can drastically reduce the complexity of your code, especially when working with large and multifaceted datasets.
 
 ### A Natural Extension of `ggplot2`
 

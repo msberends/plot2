@@ -34,7 +34,10 @@ Imports:
   vctrs,
   viridisLite (>= 0.4.0)
 Suggests: 
-  AMR (>= 2.1.0),
+  AMR (>= 3.0.1),
+  bslib,
+  DT,
+  fansi,
   ggbeeswarm (>= 0.7.0),
   glue (>= 1.2.0),
   grDevices,
@@ -45,6 +48,8 @@ Suggests:
   plotly (>= 4.8.0),
   rstudioapi (>= 0.10.0),
   sf (>= 0.9.5),
+  shiny (>= 1.10.0),
+  shinyjs,
   showtext (>= 0.9.0),
   showtextdb (>= 3.0.0),
   sysfonts (>= 0.8.0),
