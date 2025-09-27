@@ -99,7 +99,7 @@ create_interactively <- function(data = NULL) {
   y_inputs <- lapply(names(y_args), function(nm) {
     make_input(nm, y_args[[nm]])
   })
-  category_args <- plot2_formals[grep("^category\\.", names(plot2_formals))]
+  category_args <- plot2_formals[grep("^(category\\.|category_type)", names(plot2_formals))]
   category_inputs <- lapply(names(category_args), function(nm) {
     make_input(nm, category_args[[nm]])
   })
@@ -107,7 +107,7 @@ create_interactively <- function(data = NULL) {
   facet_inputs <- lapply(names(facet_args), function(nm) {
     make_input(nm, facet_args[[nm]])
   })
-  datalabels_args <- plot2_formals[grep("^datalabels\\.", names(plot2_formals))]
+  datalabels_args <- plot2_formals[grep("^datalabels", names(plot2_formals))]
   datalabels_inputs <- lapply(names(datalabels_args), function(nm) {
     make_input(nm, datalabels_args[[nm]])
   })
@@ -122,7 +122,7 @@ create_interactively <- function(data = NULL) {
   title_inputs <- lapply(names(title_args), function(nm) {
     make_input(nm, title_args[[nm]])
   })
-  smooth_args <- plot2_formals[grep("smooth", names(plot2_formals))]
+  smooth_args <- plot2_formals[grep("^smooth", names(plot2_formals))]
   smooth_inputs <- lapply(names(smooth_args), function(nm) {
     make_input(nm, smooth_args[[nm]])
   })
@@ -267,7 +267,6 @@ create_interactively <- function(data = NULL) {
     )
   )
   
-  
   server <- function(input, output, session) {
     shinyjs::hide("datatable")
     
@@ -301,6 +300,10 @@ create_interactively <- function(data = NULL) {
     call_string <- shiny::reactive({
       plot2_args <- setdiff(names(formals(plot2)), c("...", ".data", "data"))
       arg_names  <- intersect(changed_inputs$names, plot2_args)
+      # sort on this
+      arg_names <- arg_names[order(ifelse(arg_names %in% c("type","x","y","category","facet"),
+                                          match(arg_names, c("type","x","y","category","facet")),
+                                          5 + rank(arg_names)))]
       
       args <- vapply(FUN.VALUE = character(1), arg_names, function(nm) {
         val <- input[[nm]]
@@ -426,7 +429,7 @@ make_input <- function(name, default) {
     default <- NULL
   }
   
-  if ((is.logical(default) && !is.na(default)) || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y)" || name == "smooth") {
+  if ((is.logical(default) && !is.na(default)) || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)" || name == "smooth") {
     if (is.null(default)) default <- FALSE
     create_field(bslib::input_switch(name, NULL, value = default), name, default)
   } else if (is.numeric(default) && is.null(default)) {
@@ -434,7 +437,7 @@ make_input <- function(name, default) {
   } else if (name %like% "angle$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 360, step = 45, width = "100%"), name, default, slider = TRUE)
-  } else if (name %like% "linewidth$") {
+  } else if (name %like% "(linewidth|size|width|text_factor)$") {
     if (is.null(default) || is.infinite(default)) default <- 1
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 10, step = 0.5, width = "100%"), name, default, slider = TRUE)
   } else if (name %like% "alpha$") {
@@ -443,6 +446,8 @@ make_input <- function(name, default) {
   } else if (name %like% "[.]level$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0.75, max = 1, step = 0.005, width = "100%"), name, default, slider = TRUE)
+  } else if (name == "category_type") {
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), width = "100%"), name, default)
   } else if (name %like% "linetype$") {
     if (is.null(default) || is.infinite(default)) default <- 1
     create_field(shiny::selectInput(name, NULL, selected = default, choices = c("1 (solid)" = 1, "2 (dashed)" = 2, "3 (dotted)" = 3, "4 (dotdash)" = 4, "5 (longash)" = 5, "6 (twodash)" = 6), width = "100%"), name, default)

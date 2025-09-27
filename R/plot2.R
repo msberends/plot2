@@ -112,6 +112,7 @@
 #' @param x.transform,y.transform,category.transform a transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position position of the axis
 #' @param x.zoom,y.zoom a [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis
+#' @param category_type type of the `category`, one of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"fill"`, `"alpha"`
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint settings for the plotting direction `category`.
 #' @param category.limits limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
 #' @param category.date_breaks breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
@@ -433,6 +434,7 @@ plot2 <- function(.data,
                   y_secondary.scientific = NULL,
                   y_secondary.percent = FALSE,
                   y_secondary.labels = NULL,
+                  category_type = "colour",
                   category.labels = NULL,
                   category.percent = FALSE,
                   category.breaks = NULL,
@@ -645,6 +647,7 @@ plot2_exec <- function(.data,
                        y_secondary.scientific,
                        y_secondary.percent,
                        y_secondary.labels,
+                       category_type,
                        category.labels,
                        category.percent,
                        category.breaks,
@@ -829,6 +832,19 @@ plot2_exec <- function(.data,
   if (decimal.mark == big.mark) {
     big.mark <- " "
   }
+  
+  if (length(category_type) > 1 || !category_type %in% c("colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha")) {
+    stop(('`category_type` must be one of: "colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"'), call. = FALSE)
+  } else {
+    if (category_type == "color") {
+      category_type <- "colour"
+    }
+    if (category_type %in% c("colour", "fill")) {
+      # always do both
+      category_type <- c("colour", "fill")
+    }
+  }
+  
   
   # set environment ----
   set_plot2_env(x = dots$`_label.x`,
@@ -1394,13 +1410,18 @@ plot2_exec <- function(.data,
     }
   }
   if (has_x(df)) {
-    mapping <- utils::modifyList(mapping, aes(x = `_var_x`,
-                                              group = `_var_x`))
+    mapping <- utils::modifyList(mapping, aes(x = `_var_x`, group = `_var_x`))
   }
   if (has_category(df)) {
-    mapping <- utils::modifyList(mapping, aes(fill = `_var_category`,
-                                              colour = `_var_category`,
-                                              group = `_var_category`))
+    if (identical(category_type, c("colour", "fill"))) {
+      mapping <- utils::modifyList(mapping, aes(colour = `_var_category`, fill = `_var_category`))
+    } else {
+      map <- aes(cat = `_var_category`)
+      names(map) <- category_type
+      mapping <- utils::modifyList(mapping, map)
+    }
+    mapping <- utils::modifyList(mapping, aes(group = `_var_category`))
+    
     if (type == "geom_sf") {
       # no colour in sf's
       mapping <- utils::modifyList(mapping, aes(colour = NULL))
@@ -1477,9 +1498,9 @@ plot2_exec <- function(.data,
                     stacked_fill = stacked_fill,
                     horizontal = horizontal,
                     width = width,
-                    size = size,
-                    linetype = linetype,
-                    linewidth = linewidth,
+                    size = if (identical(category_type, "size")) NULL else size,
+                    linetype = if (identical(category_type, "linetype")) NULL else linetype,
+                    linewidth = if (identical(category_type, "linewidth")) NULL else linewidth,
                     reverse = reverse,
                     na.rm = na.rm,
                     violin_scale = violin_scale,
@@ -1563,13 +1584,18 @@ plot2_exec <- function(.data,
                    move = -1)
     }
   }
-  
+  p0 <<- p
   # add axis labels ----
+  labs_set <- list(category = get_category_name(df))
+  names(labs_set) <- category_type[1]
+  if ("fill" %in% category_type) {
+    # "colour" was the first, now add fill too
+    labs_set$fill <- get_category_name(df)
+  }
+  labs_set$x <- get_x_name(df)
+  labs_set$y <- get_y_name(df)
   p <- p +
-    labs(x = get_x_name(df),
-         y = get_y_name(df),
-         fill = get_category_name(df),
-         colour = get_category_name(df)) # will return NULL if not available, so always works
+    do.call(labs, labs_set) # will return NULL if not available, so always works
   if (geom_is_continuous_x(type)) {
     if (type %like% "density") {
       p <- p +
@@ -1584,12 +1610,14 @@ plot2_exec <- function(.data,
   }
   
   # add the right scales ----
+  p1 <<- p
   font <- validate_font(font)
   if (has_category(df) && (is.numeric(get_category(df)) || is_date(get_category(df)))) {
     p <- p +
       validate_category_scale(values = get_category(df),
                               type = type,
                               cols = cols,
+                              category_type = category_type,
                               category.labels = category.labels,
                               category.percent = category.percent,
                               category.breaks = category.breaks,
@@ -1625,39 +1653,28 @@ plot2_exec <- function(.data,
     }
     if (original_colours == TRUE) {
       # these scale functions do not have 'values' set
+      discrete_scale <- getExportedValue(paste0("scale_", category_type[1], "_discrete"), ns = asNamespace("ggplot2"))
       p <- p +
-        scale_colour_discrete(labels = if (is.null(category.labels)) waiver() else category.labels,
-                              limits = if (is.null(names(cols$colour))) {
-                                NULL
-                              } else {
-                                # remove unneeded labels
-                                base::force
-                              }) +
-        scale_fill_discrete(labels = if (is.null(category.labels)) waiver() else category.labels,
-                            limits = if (is.null(names(cols$colour))) {
-                              NULL
-                            } else {
-                              # remove unneeded labels
-                              base::force
-                            })
+        discrete_scale(aesthetics = category_type,
+                       labels = if (is.null(category.labels)) waiver() else category.labels,
+                       limits = if (is.null(names(cols$colour))) {
+                         NULL
+                       } else {
+                         # remove unneeded labels
+                         base::force
+                       })
     } else {
+      manual_scale <- getExportedValue(paste0("scale_", category_type[1], "_manual"), ns = asNamespace("ggplot2"))
       p <- p +
-        scale_colour_manual(values = cols$colour,
-                            labels = if (is.null(category.labels)) waiver() else category.labels,
-                            limits = if (is.null(names(cols$colour))) {
-                              NULL
-                            } else {
-                              # remove unneeded labels
-                              base::force
-                            }) +
-        scale_fill_manual(values = cols$colour_fill,
-                          labels = if (is.null(category.labels)) waiver() else category.labels,
-                          limits = if (is.null(names(cols$colour))) {
-                            NULL
-                          } else {
-                            # remove unneeded labels
-                            base::force
-                          })
+        manual_scale(aesthetics = category_type,
+                     values = cols$colour,
+                     labels = if (is.null(category.labels)) waiver() else category.labels,
+                     limits = if (is.null(names(cols$colour))) {
+                       NULL
+                     } else {
+                       # remove unneeded labels
+                       base::force
+                     })
     }
     # hack the possibility to print values as expressions
     if (identical(category.labels, md_to_expression)) {
@@ -1668,6 +1685,7 @@ plot2_exec <- function(.data,
       }
     }
   }
+  p2 <<- p
   if (!type %in% c("geom_sf", "geom_tile", "geom_raster", "geom_rect")) {
     if (has_x(df)) {
       if (isTRUE(x.mic)) {

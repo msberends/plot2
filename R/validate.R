@@ -1283,6 +1283,7 @@ validate_y_scale <- function(df,
 validate_category_scale <- function(values,
                                     type,
                                     cols,
+                                    category_type,
                                     category.labels,
                                     category.percent,
                                     category.breaks,
@@ -1304,8 +1305,8 @@ validate_category_scale <- function(values,
                                     colour_fill,
                                     original_colours,
                                     ...) {
-  # only for a numeric and date category scale
   
+  # only for a numeric and date category scale
   if (is.null(category.transform)) {
     category.transform <- "identity"
   }
@@ -1416,28 +1417,33 @@ validate_category_scale <- function(values,
     category.expand <- expansion(mult = c(0, category.expand))
   }
   
-  if (geom_has_only_colour(type) || identical(cols$colour, cols$colour_fill)) {
+  is_colour_type <- "colour" %in% category_type
+  if ((geom_has_only_colour(type) || identical(cols$colour, cols$colour_fill)) && is_colour_type) {
     aest <- c("colour", "fill")
     cols_category <- cols$colour
-  } else {
+  } else if (is_colour_type) {
     aest <- "fill"
     cols_category <- cols$colour_fill
+  } else {
+    aest <- category_type
+    cols_category <- cols$colour
   }
   
   # general arguments for any scale function below (they are called with do.call())
   args <- list(aesthetics = aest,
-               na.value = "white",
-               guide = guide_colourbar(ticks = FALSE,
-                                       draw.ulim = TRUE,
-                                       draw.llim = TRUE,
-                                       reverse = isTRUE(legend.reverse),
-                                       nbin = legend.nbin,
-                                       barheight = ifelse(legend.position %in% c("top", "bottom"),
-                                                          legend.barwidth,
-                                                          legend.barheight),
-                                       barwidth = ifelse(legend.position %in% c("top", "bottom"),
-                                                         legend.barheight,
-                                                         legend.barwidth)),
+               na.value = if (!is_colour_type) NULL else "white",
+               guide = if (!is_colour_type) NULL else
+                 guide_colourbar(ticks = FALSE,
+                                 draw.ulim = TRUE,
+                                 draw.llim = TRUE,
+                                 reverse = isTRUE(legend.reverse),
+                                 nbin = legend.nbin,
+                                 barheight = ifelse(legend.position %in% c("top", "bottom"),
+                                                    legend.barwidth,
+                                                    legend.barheight),
+                                 barwidth = ifelse(legend.position %in% c("top", "bottom"),
+                                                   legend.barheight,
+                                                   legend.barwidth)),
                labels = labels_fn(values = values,
                                   category.labels = category.labels,
                                   category.percent = category.percent,
@@ -1458,10 +1464,16 @@ validate_category_scale <- function(values,
                            category.transform = category.transform,
                            category.date_breaks = category.date_breaks)),
                transform = category.transform)
+  args <- Filter(Negate(is.null), args)
   
   if (isTRUE(original_colours)) {
     # original ggplot2 colours chosen, so just return scale without setting manual colours
-    return(do.call(scale_colour_gradient, args = args))
+    if ("colour" %in% category_type) {
+      return(do.call(scale_colour_gradient, args = args))
+    } else {
+      fn <- getExportedValue(paste0("scale_", category_type, "_continuous"), ns = asNamespace("ggplot2"))
+      return(do.call(fn, args = args))
+    }
   }
   
   if (length(cols_category) == 1) {
@@ -1566,7 +1578,9 @@ generate_geom <- function(type,
   
   set_arguments <- function(..., dots = dots_geom) {
     arguments <- c(...)
-    c(arguments[!names(arguments) %in% names(dots)], dots)
+    arguments <- c(arguments[!names(arguments) %in% names(dots)], dots)
+    arguments <- Filter(Negate(is.null), arguments)
+    arguments
   }
   
   # set geoms - do.call() applies all arguments to the geom_fn function
@@ -1618,18 +1632,18 @@ generate_geom <- function(type,
   } else if (type == "geom_beeswarm") {
     do.call(geom_fn,
             args = set_arguments(list(size = size,
-                                      #position = ggbeeswarm::position_beeswarm(),
+                                      # position = ggbeeswarm::position_beeswarm(),
                                       na.rm = na.rm),
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
                                  list(mapping = mapping)[!is.null(mapping)]))
     
   } else if (type == "geom_boxplot") {
     do.call(geom_fn,
-            args = set_arguments(list(outlier.size = size * 3,
+            args = set_arguments(list(outlier.size = (size %or% 0.75) * 3,
                                       outlier.alpha = 0.75,
                                       width = width,
                                       linewidth = linewidth, # line width of whole box
-                                      fatten = ifelse(linewidth < 1, 1.5, linewidth + 0.5), # factor to make median thicker compared to lwd
+                                      fatten = ifelse((linewidth %or% 0.5) < 1, 1.5, (linewidth %or% 0.5) + 0.5), # factor to make median thicker compared to lwd
                                       na.rm = na.rm),
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
                                  list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
