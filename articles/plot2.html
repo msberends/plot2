@@ -104,7 +104,7 @@ since <code><a href="../reference/plot2.html">plot2()</a></code> just returns a 
 you can extend it in any way you would with the outcome of
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>.</p>
 <p>This philosophy shines particularly in how <code><a href="../reference/plot2.html">plot2()</a></code>
-simplifies functionalities like faceting, theming, and applying inline
+simplifies functionalities like faceting, theming, and applying in-line
 transformations. Rather than managing multiple functions and layers,
 <code><a href="../reference/plot2.html">plot2()</a></code> allows you to achieve the same results more
 directly.</p>
@@ -317,7 +317,7 @@ require additional parameters.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="leveraging-inline-transformations-with-plot2">Leveraging Inline Transformations with <code>plot2()</code><a class="anchor" aria-label="anchor" href="#leveraging-inline-transformations-with-plot2"></a>
+<h3 id="leveraging-in-line-transformations-with-plot2">Leveraging In-line Transformations with <code>plot2()</code><a class="anchor" aria-label="anchor" href="#leveraging-in-line-transformations-with-plot2"></a>
 </h3>
 <p>One of the standout features of <code><a href="../reference/plot2.html">plot2()</a></code> is its ability
 to perform transformations directly within the function call. This
@@ -342,10 +342,10 @@ unique numbers of patients directly within the function:</p>
 hospital, calculated directly within <code><a href="../reference/plot2.html">plot2()</a></code>.</p>
 </div>
 <div class="section level4">
-<h4 id="combining-data-with-inline-transformations">Combining Data with Inline Transformations<a class="anchor" aria-label="anchor" href="#combining-data-with-inline-transformations"></a>
+<h4 id="combining-data-with-in-line-transformations">Combining Data with In-line Transformations<a class="anchor" aria-label="anchor" href="#combining-data-with-in-line-transformations"></a>
 </h4>
 <p>The real power of <code><a href="../reference/plot2.html">plot2()</a></code> comes when you start combining
-these inline transformations. Want to add another dimension, like the
+these in-line transformations. Want to add another dimension, like the
 number of unique age groups within each hospital? You can do that just
 as easily:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -383,7 +383,7 @@ without loading other packages: <code>%&gt;%()</code>,
 <p><img src="plot2_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 </div>
 <div class="section level4">
-<h4 id="inline-math-transformations">Inline Math Transformations<a class="anchor" aria-label="anchor" href="#inline-math-transformations"></a>
+<h4 id="in-line-math-transformations">In-line Math Transformations<a class="anchor" aria-label="anchor" href="#in-line-math-transformations"></a>
 </h4>
 <p>You can also apply mathematical transformations directly within
 <code><a href="../reference/plot2.html">plot2()</a></code>, making it easy to explore relationships in your
@@ -442,11 +442,11 @@ name and use facets for the year of admission:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">facet.repeat_lbls_y = FALSE</span> since <span style="color: #0000BB;">y</span> has fixed scales</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Omitting printing of 106 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
-<p>In this plot, we’re using multiple inline transformations, showcasing
-the use of only 8 lines of code without using <code>dplyr</code>
-transformations manually. This level of complexity, achieved with just
-one <code><a href="../reference/plot2.html">plot2()</a></code> call, demonstrates the power and flexibility of
-inline transformations.</p>
+<p>In this plot, we’re using multiple in-line transformations,
+showcasing the use of only 8 lines of code without using
+<code>dplyr</code> transformations manually. This level of complexity,
+achieved with just one <code><a href="../reference/plot2.html">plot2()</a></code> call, demonstrates the power
+and flexibility of in-line transformations.</p>
 </div>
 </div>
 <div class="section level3">
@@ -761,7 +761,6 @@ methods.</p>
 <span>        type <span class="op">=</span> <span class="st">"upset"</span>,</span>
 <span>        colour <span class="op">=</span> <span class="st">"OurOrganisation"</span>,</span>
 <span>        y.title <span class="op">=</span> <span class="st">"Mean Outcome"</span>,</span>
-<span>        x.title <span class="op">=</span> <span class="st">"Set Size"</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"Another UpSet plot"</span>,</span>
 <span>        caption <span class="op">=</span> <span class="st">"Here a caption"</span>,</span>
 <span>        summarise_function <span class="op">=</span> <span class="va">mean</span>,</span>
@@ -1002,7 +1001,7 @@ simple data or complex datasets requiring advanced transformations,
 <code><a href="../reference/plot2.html">plot2()</a></code> helps you get to the final visualisation with fewer
 lines of code and less cognitive load. This not only speeds up your
 workflow but also makes your code more readable and maintainable.</p>
-<p>For instance, the ability to perform inline transformations directly
+<p>For instance, the ability to perform in-line transformations directly
 within the plotting function eliminates the need for pre-processing
 steps that would otherwise require additional code blocks using, e.g.,
 <code>dplyr</code> or <code>tidyr</code>. This feature of
