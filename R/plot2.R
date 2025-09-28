@@ -1654,28 +1654,30 @@ plot2_exec <- function(.data,
     }
     if (original_colours == TRUE) {
       # these scale functions do not have 'values' set
-      discrete_scale <- getExportedValue(paste0("scale_", category_type[1], "_discrete"), ns = asNamespace("ggplot2"))
-      p <- p +
-        discrete_scale(aesthetics = category_type,
+      for (cat_type in category_type) {
+        discrete_scale <- getExportedValue(paste0("scale_", cat_type, "_discrete"), ns = asNamespace("ggplot2"))
+        p <- p +
+          discrete_scale(labels = if (is.null(category.labels)) waiver() else category.labels,
+                         limits = if (is.null(names(if (cat_type == "fill") cols$colour_fill else cols$colour))) {
+                           NULL
+                         } else {
+                           # remove unneeded labels
+                           base::force
+                         })
+      }
+    } else {
+      for (cat_type in category_type) {
+        manual_scale <- getExportedValue(paste0("scale_", cat_type, "_manual"), ns = asNamespace("ggplot2"))
+        p <- p +
+          manual_scale(values = if (cat_type == "fill") cols$colour_fill else cols$colour,
                        labels = if (is.null(category.labels)) waiver() else category.labels,
                        limits = if (is.null(names(cols$colour))) {
                          NULL
                        } else {
                          # remove unneeded labels
                          base::force
-                       })
-    } else {
-      manual_scale <- getExportedValue(paste0("scale_", category_type[1], "_manual"), ns = asNamespace("ggplot2"))
-      p <- p +
-        manual_scale(aesthetics = category_type,
-                     values = cols$colour,
-                     labels = if (is.null(category.labels)) waiver() else category.labels,
-                     limits = if (is.null(names(cols$colour))) {
-                       NULL
-                     } else {
-                       # remove unneeded labels
-                       base::force
-                     })
+                       }) 
+      }
     }
     # hack the possibility to print values as expressions
     if (identical(category.labels, md_to_expression)) {
