@@ -11,7 +11,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,6 +128,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -415,6 +416,10 @@ See plot2-methods for all implemented methods for different object classes."><me
 <dd><p>colours to set for the secondary y axis, will be evaluated with <code><a href="colour.html">get_colour()</a></code></p></dd>
 
 
+<dt id="arg-category-type">category_type<a class="anchor" aria-label="anchor" href="#arg-category-type"></a></dt>
+<dd><p>type of the <code>category</code>, one of: <code>"colour"</code> or <code>"color"</code> (default), <code>"shape"</code>, <code>"size"</code>, <code>"linetype"</code>, <code>"linewidth"</code>, <code>"alpha"</code>. There is never a need to set <code>"fill"</code> as that will be included in <code>"colour"</code>.</p></dd>
+
+
 <dt id="arg-category-labels-category-percent-category-breaks-category-expand-category-midpoint">category.labels, category.percent, category.breaks, category.expand, category.midpoint<a class="anchor" aria-label="anchor" href="#arg-category-labels-category-percent-category-breaks-category-expand-category-midpoint"></a></dt>
 <dd><p>settings for the plotting direction <code>category</code>.</p></dd>
 
@@ -625,7 +630,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <li><p>Labels with data values can easily be printed and are automatically determined</p></li>
 </ul></li>
 <li><p>Support for any <code>ggplot2</code> extension based on <code><a href="https://ggplot2.tidyverse.org/reference/fortify.html" class="external-link">ggplot2::fortify()</a></code></p></li>
-</ul><p>The <code>ggplot2</code> package in conjunction with the <code>tidyr</code>, <code>forcats</code> and <code>cleaner</code> packages can provide above functionalities, but the goal of the <code>plot2()</code> function is to generalise this into one function. The generic <code>plot2()</code> function currently has 150 arguments, all with a default value. <strong>Less typing, faster coding.</strong></p>
+</ul><p>The <code>ggplot2</code> package in conjunction with the <code>tidyr</code>, <code>forcats</code> and <code>cleaner</code> packages can provide above functionalities, but the goal of the <code>plot2()</code> function is to generalise this into one function. The generic <code>plot2()</code> function currently has 151 arguments, all with a default value. <strong>Less typing, faster coding.</strong></p>
     </div>
 
     <div class="section level2">
@@ -880,14 +885,16 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-out co"><span class="r-pr">#&gt;</span> hp   -0.70822339 -0.7230967 -0.2432043 -0.1257043  0.7498125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> drat  0.09120476  0.4402785  0.7127111  0.6996101 -0.0907898</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> wt   -0.17471588 -0.5549157 -0.6924953 -0.5832870  0.4276059</span>
-<span class="r-in"><span><span class="va">correlation_matrix</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">type = "tile"</span> since the matrix contains identical row and column</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> names</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Omitting printing of 121 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span>
 <span class="r-plt img"><img src="plot2-25.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">correlation_matrix</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue3"</span>, <span class="st">"white"</span>, <span class="st">"red3"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>        category.title <span class="op">=</span> <span class="st">"*r*-value"</span>,</span></span>
@@ -908,10 +915,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        smooth.formula <span class="op">=</span> <span class="st">"y ~ log(x)"</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"Titles/captions *support* **markdown**"</span>,</span></span>
 <span class="r-in"><span>        subtitle <span class="op">=</span> <span class="st">"Axis titles contain the square notation: x^2"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`fortify(&lt;lm&gt;)` was deprecated in ggplot2 3.6.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `broom::augment(&lt;lm&gt;)` instead.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">plot2</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue to the authors.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-27.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

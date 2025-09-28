@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,6 +123,7 @@
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -277,6 +278,7 @@
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -432,6 +434,7 @@
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -586,6 +589,7 @@
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -746,6 +750,7 @@
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -900,6 +905,7 @@
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -1184,6 +1190,10 @@
 
 <dt id="arg-y-secondary-colour-y-secondary-colour-fill">y_secondary.colour, y_secondary.colour_fill<a class="anchor" aria-label="anchor" href="#arg-y-secondary-colour-y-secondary-colour-fill"></a></dt>
 <dd><p>colours to set for the secondary y axis, will be evaluated with <code><a href="colour.html">get_colour()</a></code></p></dd>
+
+
+<dt id="arg-category-type">category_type<a class="anchor" aria-label="anchor" href="#arg-category-type"></a></dt>
+<dd><p>type of the <code>category</code>, one of: <code>"colour"</code> or <code>"color"</code> (default), <code>"shape"</code>, <code>"size"</code>, <code>"linetype"</code>, <code>"linewidth"</code>, <code>"alpha"</code>. There is never a need to set <code>"fill"</code> as that will be included in <code>"colour"</code>.</p></dd>
 
 
 <dt id="arg-category-labels-category-percent-category-breaks-category-expand-category-midpoint">category.labels, category.percent, category.breaks, category.expand, category.midpoint<a class="anchor" aria-label="anchor" href="#arg-category-labels-category-percent-category-breaks-category-expand-category-midpoint"></a></dt>
