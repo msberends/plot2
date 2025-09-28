@@ -515,7 +515,7 @@ unify_years <- function(x, as_leap_year = NULL) {
 }
 
 is_empty <- function(x) {
-  is.null(x) || isFALSE(x) || identical(x, "") || all(is.na(as.character(x)))
+  is.null(x) || isFALSE(x) || identical(x, "") || tryCatch(all(is.na(as.character(x))), error = function(x) FALSE)
 }
 
 geom_is_continuous <- function(geom) {
