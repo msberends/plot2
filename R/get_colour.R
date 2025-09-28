@@ -203,7 +203,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
 #'
 #' #' @importFrom plot2 unregister_colour
 #' .onUnload <- function(...) {
-#'   register_colour("^my_colour") # this is a regular expression
+#'   unregister_colour("^my_colour") # this is a regular expression
 #'   options(plot2.colour = NULL, plot2.colour_font_secondary = NULL)
 #' }
 #' ```

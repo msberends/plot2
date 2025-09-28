@@ -145,6 +145,8 @@ create_interactively <- function(data = NULL) {
                       "#y_calc, #y_calc * { margin-left: 5px; }",
                       " #plot2_msgs * { font-size: 0.9rem; }",
                       ".selectize-dropdown-content { max-height: 400px; }",
+                      ".short .selectize-dropdown-content { max-height: 275px; }",
+                      "#colour .selectize-dropdown-content, #colour_fill .selectize-dropdown-content { max-height: 200px; }",
                       ".settings * { margin-bottom: 2px; }",
                       ".bslib-input-switch input { width: 3.5em !important; height: 30px !important; }",
                       ".bslib-input-switch, .bslib-input-switch input { cursor: pointer; }",
@@ -434,6 +436,9 @@ make_input <- function(name, default) {
     create_field(bslib::input_switch(name, NULL, value = default), name, default)
   } else if (is.numeric(default) && is.null(default)) {
     create_field(shiny::numericInput(name, NULL, value = default, width = "100%"), name, default)
+  } else if (name %in% c("colour", "colour_fill")) {
+    if (is.null(default)) default <- "ggplot2"
+    create_field(shiny::selectizeInput(name, NULL, selected = default, choices = list("plot2 registered colours" = names(plot2_env$reg_cols), viridis = viridisLite_colours, "Base R" = grDevices::palette.pals()), width = "100%", options = list(create = TRUE)), name, default, class = "short")
   } else if (name %like% "angle$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 360, step = 45, width = "100%"), name, default, slider = TRUE)
@@ -470,11 +475,12 @@ make_input <- function(name, default) {
   }
 }
 
-create_field <- function(inputTag, name, default, slider = FALSE) {
+create_field <- function(inputTag, name, default, slider = FALSE, class = NULL) {
   # store to list
   plot2_env$shiny_defaults[[name]] <- default
   # create element
   shiny::div(
+    class = class,
     style = ifelse(slider, 
                    "display: flex; align-items: center; margin-bottom: -10px;",
                    "display: flex; align-items: center; margin-bottom: 4px;"),

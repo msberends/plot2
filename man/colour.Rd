@@ -63,7 +63,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"azure"}, \code{"lemonchiffon2"}, \code{"lightseagreen"}, \code{"mediumslateblue"}, \code{"seashell1"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"lightcyan3"}, \code{"lightsalmon2"}, \code{"lightslateblue"}, \code{"pink2"}, \code{"seagreen3"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
@@ -103,7 +103,7 @@ To register/unregister colours in another package, add something like this to a 
 
 #' @importFrom plot2 unregister_colour
 .onUnload <- function(...) \{
-  register_colour("^my_colour") # this is a regular expression
+  unregister_colour("^my_colour") # this is a regular expression
   options(plot2.colour = NULL, plot2.colour_font_secondary = NULL)
 \}
 }\if{html}{\out{</div>}}
