@@ -1,6 +1,6 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
-Version: 1.99.0.9001
+Version: 1.99.0.9002
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -16,6 +16,7 @@ URL: https://msberends.github.io/plot2, https://github.com/msberends/plot2
 Depends: 
   R (>= 4.1.0)
 Imports: 
+  broom (>= 1.0.0),
   cleaner (>= 1.5.1),
   cli (>= 3.6.0),
   crayon (>= 1.5.0),

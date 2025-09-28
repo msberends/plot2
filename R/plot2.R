@@ -112,7 +112,7 @@
 #' @param x.transform,y.transform,category.transform a transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position position of the axis
 #' @param x.zoom,y.zoom a [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis
-#' @param category_type type of the `category`, one of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"fill"`, `"alpha"`
+#' @param category_type type of the `category`, one of: `"colour"` or `"color"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is never a need to set `"fill"` as that will be included in `"colour"`.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint settings for the plotting direction `category`.
 #' @param category.limits limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
 #' @param category.date_breaks breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
@@ -320,10 +320,12 @@
 #' correlation_matrix <- cor(mtcars)
 #' class(correlation_matrix)
 #' head(correlation_matrix)
-#' correlation_matrix |> 
+#' mtcars |> 
+#'   cor() |>
 #'   plot2()
 #' 
-#' correlation_matrix |> 
+#' mtcars |> 
+#'   cor() |>
 #'   plot2(colour = c("blue3", "white", "red3"),
 #'         datalabels = TRUE,
 #'         category.title = "*r*-value",
@@ -564,6 +566,7 @@ plot2 <- function(.data,
 #' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @importFrom ggforce geom_parallel_sets geom_parallel_sets_axes geom_parallel_sets_labels
+#' @importFrom rlang check_installed
 plot2_exec <- function(.data,
                        x,
                        y,
@@ -1584,7 +1587,6 @@ plot2_exec <- function(.data,
                    move = -1)
     }
   }
-  p0 <<- p
   # add axis labels ----
   labs_set <- list(category = get_category_name(df))
   names(labs_set) <- category_type[1]
@@ -1610,7 +1612,6 @@ plot2_exec <- function(.data,
   }
   
   # add the right scales ----
-  p1 <<- p
   font <- validate_font(font)
   if (has_category(df) && (is.numeric(get_category(df)) || is_date(get_category(df)))) {
     p <- p +
@@ -1685,18 +1686,11 @@ plot2_exec <- function(.data,
       }
     }
   }
-  p2 <<- p
   if (!type %in% c("geom_sf", "geom_tile", "geom_raster", "geom_rect")) {
     if (has_x(df)) {
       if (isTRUE(x.mic)) {
-        loadNamespace("AMR") # will throw an error if not installed
-        if ("scale_x_mic" %in% ls(envir = asNamespace("AMR"))) {
-          fn <- get("scale_x_mic", envir = asNamespace("AMR"))
-          p <- p +
-            fn(drop = x.drop, mic_range = x.limits)
-        } else {
-          plot2_caution("AMR::scale_x_mic() not found, update to latest AMR version or use `x.mic = FALSE`")
-        }
+        check_installed("AMR")
+        p <- p + AMR::scale_x_mic(drop = x.drop, mic_range = x.limits)
       } else {
         p <- p + 
           validate_x_scale(df,

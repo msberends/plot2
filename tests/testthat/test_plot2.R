@@ -34,6 +34,7 @@ get_range_y <- function(plot) {
 }
 
 test_that("general types work", {
+  skip_on_cran()
   expect_s3_class(plot2(rnorm(10, 10)), "gg")
   expect_s3_class(plot2(rnorm(10, 10), type = "l"), "gg")
   expect_s3_class(plot2(mtcars, mpg^2, hp^2), "gg")
@@ -67,6 +68,7 @@ test_that("general types work", {
 })
 
 test_that("na.rm works", {
+  skip_on_cran()
   # as characters
   df <- data.frame(hp = mtcars$hp,
                    letters = letters[seq_len(nrow(mtcars))],
@@ -83,6 +85,7 @@ test_that("na.rm works", {
 
 
 test_that("infinite values are removed", {
+  skip_on_cran()
   expect_equal(data.frame(x = letters[1:10],
                           y123 = c(1:9, Inf)) |>
                  plot2() |>
@@ -92,6 +95,7 @@ test_that("infinite values are removed", {
 })
 
 test_that("S3 implementations work", {
+  skip_on_cran()
   # lm
   expect_s3_class(lm(mpg ~ hp, mtcars) |> plot2(), "gg")
   # freq
@@ -127,8 +131,15 @@ test_that("S3 implementations work", {
 })
 
 test_that("general mapping works", {
+  skip_on_cran()
   expect_equal(plotdata |> plot2() |> get_mapping() |> names(),
-               c("y", "x", "fill", "colour"))
+               c("y", "x", "colour", "fill"))
+  expect_equal(plotdata |> plot2(category_type = "color") |> get_mapping() |> names(),
+               c("y", "x", "colour", "fill"))
+  expect_equal(plotdata |> plot2(category_type = "fill") |> get_mapping() |> names(),
+               c("y", "x", "colour", "fill"))
+  expect_equal(plotdata |> plot2(category = n, category_type = "size") |> get_mapping() |> names(),
+               c("y", "x", "size"))
   # remove x axis
   expect_s3_class(admitted_patients |> plot2(x = NULL, y = age), "gg")
   expect_s3_class(admitted_patients |> plot2(x = 1:250, y = age), "gg")
@@ -138,6 +149,7 @@ test_that("general mapping works", {
 })
 
 test_that("adding mapping works", {
+  skip_on_cran()
   p <- iris |> plot2(Sepal.Length, Sepal.Width)
   expect_length(p$mapping, 3)
   p2 <- p |> add_mapping(shape = Species)
@@ -146,6 +158,7 @@ test_that("adding mapping works", {
 })
 
 test_that("adding types works", {
+  skip_on_cran()
   
   expect_length(mtcars |> plot2(mpg, hp, cyl) |> get_layers(), 1)
   expect_length(mtcars |> plot2(mpg, hp, cyl) |> add_line() |> get_layers(), 2)
@@ -170,6 +183,7 @@ test_that("adding types works", {
 })
 
 test_that("titles work", {
+  skip_on_cran()
   expect_true(all(c(caption = "caption",
                     tag = "tag",
                     subtitle = "subtitle",
@@ -187,6 +201,7 @@ test_that("titles work", {
 })
 
 test_that("max items and sorting work", {
+  skip_on_cran()
   expect_equal(admitted_patients |>
                  plot2(x = hospital,
                        y = n(),
@@ -245,6 +260,7 @@ test_that("max items and sorting work", {
 })
 
 test_that("x scale works", {
+  skip_on_cran()
   expect_s3_class(plotdata |> plot2(x = x_date), "gg")
   plotdata |> plot2(x = x_date, x.limits = c(Sys.Date() - 13, Sys.Date() + 2))
   expect_s3_class(plotdata |> plot2(x = x_char), "gg")
@@ -295,6 +311,7 @@ test_that("x scale works", {
 })
 
 test_that("y scale works", {
+  skip_on_cran()
   expect_error(data.frame(a = 1:10, b = letters[10]) |> plot2(x = a, y = b))
   expect_s3_class(plotdata |> plot2(y = n * 24, y.24h = TRUE), "gg")
   expect_s3_class(plotdata |> plot2(y = n * 12, y.age = TRUE), "gg")
@@ -326,6 +343,7 @@ test_that("y scale works", {
 })
 
 test_that("category scale works", {
+  skip_on_cran()
   # set as numeric
   expect_s3_class(plotdata[1:4, ] |> plot2(x = x_char, y = 1, category = n), "gg")
   # 2-colour scale
@@ -371,6 +389,7 @@ test_that("category scale works", {
 })
 
 test_that("facet scale works", {
+  skip_on_cran()
   expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
                                 Species), "gg")
   expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
@@ -395,6 +414,7 @@ test_that("facet scale works", {
 })
 
 test_that("blank plot works", {
+  skip_on_cran()
   expect_s3_class(plotdata |> subset(n < 0) |> plot2(), "gg")
   expect_s3_class(data.frame() |> plot2(type = "blank",
                                         x.title = "test",
@@ -406,6 +426,7 @@ test_that("blank plot works", {
 })
 
 test_that("misc elements works", {
+  skip_on_cran()
   expect_s3_class(plotdata |> plot2(x_char, x.lbl_taxonomy = TRUE), "gg")
   expect_s3_class(AMR::example_isolates |>
                     cleaner::freq(AMR::mo_name(mo, "nl")) |>
@@ -413,6 +434,7 @@ test_that("misc elements works", {
 })
 
 test_that("completing data works", {
+  skip_on_cran()
   expect_s3_class(data.frame(x = c(1, 5, 6, 9),
                              y = 10) |>
                     plot2(type = "l", x.complete = 5),
@@ -420,6 +442,7 @@ test_that("completing data works", {
 })
 
 test_that("get title works", {
+  skip_on_cran()
   p <- plot2(mtcars, title = "Plotting **mpg** vs. **cyl**!")
   expect_equal(get_plot_title(p), "plotting_mpg_vs_cyl")
   expect_equal(get_plot_title(p, valid_filename = FALSE), "Plotting mpg vs. cyl!")
@@ -428,6 +451,7 @@ test_that("get title works", {
 })
 
 test_that("type validation works", {
+  skip_on_cran()
   library(dplyr, warn.conflicts = FALSE)
   df <- tibble(x = letters[1:10],
                y = 1:10,
@@ -449,6 +473,7 @@ test_that("type validation works", {
 })
 
 test_that("moving layer works", {
+  skip_on_cran()
   expect_s3_class((mtcars |>
                      plot2(mpg, hp, cyl) +
                      geom_line(colour = "grey75")) |>
@@ -456,6 +481,7 @@ test_that("moving layer works", {
 })
 
 test_that("messaging works", {
+  skip_on_cran()
   expect_null(plot2_env$infos)
   expect_null(plot2_env$cautions)
   expect_null(plot2_env$warning)
@@ -466,6 +492,7 @@ test_that("messaging works", {
 })
 
 test_that("date labels work", {
+  skip_on_cran()
   expect_equal(determine_date_breaks_labels(c(as.POSIXct("2023-01-01 10:00:00"), as.POSIXct("2023-01-01 10:50:00"))),
                list(breaks = "10 min", labels = "HH:MM"))
   expect_equal(determine_date_breaks_labels(c(as.POSIXct("2023-01-01 10:00:00"), as.POSIXct("2023-01-01 15:00:00"))),
@@ -499,6 +526,7 @@ test_that("date labels work", {
 })
 
 test_that("manual fonts work", {
+  skip_on_cran()
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Rock Salt"), "gg")
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Rock Salt"), "gg") # already downloaded
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Courier"), "gg")
@@ -506,6 +534,7 @@ test_that("manual fonts work", {
 })
 
 test_that("Plotly works", {
+  skip_on_cran()
   expect_error(as_plotly(mtcars))
   expect_s3_class(mtcars |> plot2(mpg, hp) |> as_plotly(), "plotly")
   expect_s3_class(mtcars |>
@@ -518,6 +547,7 @@ test_that("Plotly works", {
 })
 
 test_that("md to expression works", {
+  skip_on_cran()
   expr1 <- md_to_expression("test1 *test2* **test3** ***test4*** _test5_ test6 **_test7_** _**test8**_ test_{9} test<sub>10</sub> test^{11} test<sup>12</sup>")
   expect_true(is.expression(expr1))
   expect_identical(as.character(expr1),
@@ -533,6 +563,7 @@ test_that("md to expression works", {
 })
 
 test_that("secondary y axis works", {
+  skip_on_cran()
   expect_s3_class(mtcars |> plot2(mpg, hp, y_secondary = disp), "gg")
   expect_s3_class(mtcars |> plot2(mpg, hp, y_secondary = disp ^ 2), "gg")
   
@@ -543,6 +574,7 @@ test_that("secondary y axis works", {
 })
 
 test_that("matrices works", {
+  skip_on_cran()
   expect_s3_class(mtcars |>
                     stats::cor() |>
                     plot2(), "gg")
@@ -553,6 +585,7 @@ test_that("matrices works", {
 })
 
 test_that("errorbars work", {
+  skip_on_cran()
   expect_s3_class(plotdata |>
                     dplyr::mutate(error1 = n * 0.9, error2 = n * 1.1) |> 
                     plot2(type = "c", colour = "pink") |>
@@ -560,6 +593,7 @@ test_that("errorbars work", {
 })
 
 test_that("aes works", {
+  skip_on_cran()
   expect_identical(
     aes(x = some_var, y = `as.character(some_var)`),
     setup_aes(x = "some_var", y = "as.character(some_var)"))
