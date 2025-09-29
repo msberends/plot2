@@ -1125,6 +1125,7 @@ plot2.freq <- function(.data,
 #' @details For geographic information system (GIS) analysis, use the `sf` package with a data set containing geometries. The result can be used as input for [plot2()].
 #' @param crs the coordinate reference system (CRS) to use. If this is not left blank, [sf::st_transform()] will be used to transform the geometric data to the new CRS.
 #' @param datalabels.centroid a [logical] to indicate whether datalabels must be centred on the polygon (using [sf::st_centroid()], the default), or be placed on the 'best' spot on the surface (using [sf::st_point_on_surface()])
+#' @importFrom rlang check_installed
 #' @export
 plot2.sf <- function(.data,
                      x = NULL,
@@ -1288,7 +1289,8 @@ plot2.sf <- function(.data,
                      datalabels.centroid = NULL,
                      ...) {
   
-  loadNamespace("sf") # will throw an error if not installed
+  check_installed("sf")
+  loadNamespace("sf")
   
   if (!inherits(.data, "sf")) {
     plot2_caution("Transforming plot data to an sf model using ", font_blue("sf::st_as_sf()"))

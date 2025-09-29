@@ -14,9 +14,9 @@
 
 viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "rocket", "mako", "turbo")
 
-#' Colours from \R, Viridis and More
+#' Get (and Register) Colours from \R, Viridis and More
 #'
-#' Colours from \R, viridis and more. The output prints in the console with the actual colours.
+#' Retrieves, expands, and prints colours or palettes from \R, `viridisLite`, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
 #' @param x colour or colour palette name. Input can be:
 #' * One of the colourblind-safe `viridisLite` palettes: `r paste0('\n  - \u0060"', viridisLite_colours, '"\u0060', collapse = "")`
 #' * One of the built-in palettes in \R (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
@@ -262,23 +262,37 @@ register_colour <- function(...) {
   if (length(dots) == 1 && is.null(names(dots)) && !is.null(names(dots[[1]]))) {
     dots <- as.list(dots[[1]])
   }
-  for (i in seq_len(length(dots))) {
-    if (is.null(names(dots)[i])) {
+  
+  n_colours <- 0
+  n_sets <- 0
+  
+  for (i in seq_along(dots)) {
+    name <- names(dots)[i]
+    if (is.null(name) || name == "") {
       stop("Input must be named")
     }
-    # try to coerce
+    
     out <- as.character(suppressWarnings(suppressMessages(get_colour(dots[[i]]))))
     if (anyNA(out)) {
       stop("Input must not be NA, and must be known, valid colours")
     }
-    out <- list(out)
-    names(out) <- names(dots)[i]
-    # if a previous identical names was registered, overwrite it
-    plot2_env$reg_cols <- plot2_env$reg_cols[which(names(plot2_env$reg_cols) != names(out))]
-    # save the colour
-    plot2_env$reg_cols <- c(plot2_env$reg_cols, out)
+    
+    if (length(out) == 1) {
+      n_colours <- n_colours + 1
+    } else {
+      n_sets <- n_sets + 1
+    }
+    
+    # Store as a named list
+    plot2_env$reg_cols <- plot2_env$reg_cols[names(plot2_env$reg_cols) != name]
+    plot2_env$reg_cols[[name]] <- out
   }
-  message(length(dots), " colour", ifelse(length(dots) == 1, "", "s"), " registered.")
+  
+  msg_parts <- c()
+  if (n_colours > 0) msg_parts <- c(msg_parts, paste0(n_colours, " colour", ifelse(n_colours > 1, "s", "")))
+  if (n_sets > 0)    msg_parts <- c(msg_parts, paste0(n_sets, " colour set", ifelse(n_sets > 1, "s", "")))
+  
+  message(paste(msg_parts, collapse = " and "), " registered.")
 }
 
 #' @rdname colour

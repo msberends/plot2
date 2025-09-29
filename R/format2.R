@@ -242,15 +242,14 @@ format2_scientific <- function(x,
   txt <- format(as.double(x), scientific = TRUE)
   out <- rep(NA_character_, length(x))
   
-  out[!is.na(x)] <- paste0("'", 
-                           gsub(".", decimal.mark, round(as.double(gsub("^(.*?)e.*", "\\1", txt[!is.na(x)])), digits = round), fixed = TRUE), 
-                           "'%*%10^", 
+  out[!is.na(x)] <- paste0(gsub(".", decimal.mark, round(as.double(gsub("^(.*?)e.*", "\\1", txt[!is.na(x)])), digits = round), fixed = TRUE), 
+                           " x 10^", 
                            as.double(gsub("^.*?e(.*)", "\\1", txt[!is.na(x)])))
   # remove leading zeroes
-  out[!is.na(x) & out == "'0'%*%10^0"] <- "0"
+  out[!is.na(x) & out == "0 x 10^0"] <- "0"
   # and ones
-  out[!is.na(x)] <- gsub("'1'%*%", "", out[!is.na(x)], fixed = TRUE)
-  parse(text = out)
+  out[!is.na(x)] <- gsub("1 x", "", out[!is.na(x)], fixed = TRUE)
+  out
 }
 
 posix_date_format <- function(format) {

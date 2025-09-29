@@ -142,9 +142,18 @@
 #'   add_errorbar(error1, error2)
 #' 
 #' # adding sf objects is just as convenient as all else
-#' plot2(netherlands)
-#' plot2(netherlands) |>
-#'   add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 1)
+#' netherlands |> 
+#'   plot2()
+#' netherlands |> 
+#'   plot2(colour_fill = "viridis", colour_opacity = 0.75)
+#' netherlands |> 
+#'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+#'   # add the same sf object, but now with empty fill and other options
+#'   add_sf(netherlands,
+#'          colour = "black",
+#'          colour_fill = NA,
+#'          linetype = 2,
+#'          linewidth = 0.5)
 add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move = 0) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
@@ -596,6 +605,7 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
 #' @importFrom dplyr mutate
 #' @importFrom ggplot2 geom_sf geom_sf_text aes is.ggplot
+#' @importFrom rlang check_installed
 #' @export
 add_sf <- function(plot,
                    sf_data,
@@ -612,7 +622,8 @@ add_sf <- function(plot,
                    ...,
                    inherit.aes = FALSE) {
   
-  loadNamespace("sf") # will throw an error if not installed
+  check_installed("sf")
+  loadNamespace("sf")
   
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)

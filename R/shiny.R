@@ -320,6 +320,8 @@ create_interactively <- function(data = NULL) {
             out <- paste0(gsub("[\\(\\)]", "", input$y_calc), "(", out, ")")
           }
           return(paste0(nm, " = ", out))
+        } else if (nm == "category_type") {
+          return(paste0(nm, " = c(", paste0('"', val, '"', collapse = ", "), ")"))
         }
         if (nm == "summarise_function") {
           # must be a function
@@ -438,7 +440,15 @@ make_input <- function(name, default) {
     create_field(shiny::numericInput(name, NULL, value = default, width = "100%"), name, default)
   } else if (name %in% c("colour", "colour_fill")) {
     if (is.null(default)) default <- "ggplot2"
-    create_field(shiny::selectizeInput(name, NULL, selected = default, choices = list("plot2 registered colours" = names(plot2_env$reg_cols), viridis = viridisLite_colours, "Base R" = grDevices::palette.pals()), width = "100%", options = list(create = TRUE)), name, default, class = "short")
+    registered <- names(Filter(function(x) length(x) > 1, plot2_env$reg_cols))
+    if (length(registered) == 1) {
+      registered <- list(registered)
+    }
+    create_field(shiny::selectizeInput(name, NULL, selected = default,
+                                       choices = list("plot2 (registered colour sets)" = registered,
+                                                      "viridis" = viridisLite_colours,
+                                                      "Base R" = grDevices::palette.pals()),
+                                       width = "100%", options = list(create = TRUE)), name, default, class = "short")
   } else if (name %like% "angle$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 360, step = 45, width = "100%"), name, default, slider = TRUE)
@@ -452,7 +462,7 @@ make_input <- function(name, default) {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0.75, max = 1, step = 0.005, width = "100%"), name, default, slider = TRUE)
   } else if (name == "category_type") {
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), multiple = TRUE, width = "100%"), name, default)
   } else if (name %like% "linetype$") {
     if (is.null(default) || is.infinite(default)) default <- 1
     create_field(shiny::selectInput(name, NULL, selected = default, choices = c("1 (solid)" = 1, "2 (dashed)" = 2, "3 (dotted)" = 3, "4 (dotdash)" = 4, "5 (longash)" = 5, "6 (twodash)" = 6), width = "100%"), name, default)

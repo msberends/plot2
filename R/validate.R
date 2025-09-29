@@ -53,9 +53,9 @@ validate_type <- function(type, df = NULL) {
           if (length(plot2_env$x_variable_names) > 1) {
             plot2_message("To view the relation between multiple variables of ", font_blue("x"), ", a Sankey plot can be used (",
                           font_blue("type = \"sankey\""), " or ", font_blue("type = \"s\""), ")")
-          } else if (all(count_nrs$n, na.rm = TRUE) == 1) {
-            plot2_message("To compare single values in two categories (", font_blue(get_category_name(df)), "), a dumbbell plot can be used (",
-                          font_blue("type = \"dumbbell\""), " or ", font_blue("type = \"d\""), ")")
+          # } else if (all(count_nrs$n, na.rm = TRUE) == 1) {
+          #   plot2_message("To compare single values in two categories (", font_blue(get_category_name(df)), "), a dumbbell plot can be used (",
+          #                 font_blue("type = \"dumbbell\""), " or ", font_blue("type = \"d\""), ")")
           }
         }
       }

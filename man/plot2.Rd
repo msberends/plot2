@@ -296,7 +296,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y_secondary.colour, y_secondary.colour_fill}{colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}}
 
-\item{category_type}{type of the \code{category}, one of: \code{"colour"} or \code{"color"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is never a need to set \code{"fill"} as that will be included in \code{"colour"}.}
+\item{category_type}{type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{settings for the plotting direction \code{category}.}
 
@@ -464,10 +464,11 @@ iris |>
 iris |> 
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
         colour = "viridis") # set the viridis colours
-      
+
+# set your own colours
 iris |> 
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-        colour = c("white", "red", "black")) # set own colours
+        colour = c("white", "red", "black"))
 
 # y can also be multiple (named) columns
 iris |> 
@@ -478,6 +479,26 @@ iris |>
   # with included selection helpers such as where(), starts_with(), etc.:
   plot2(x = Species, y = where(is.double))
   
+# the category type can be one or more aesthetics
+iris |>
+  plot2(zoom = TRUE,
+        category_type = c("colour", "shape"),
+        size = 3)
+iris |>
+  plot2(zoom = TRUE,
+        category = Petal.Length,
+        category_type = c("colour", "size"),
+        colour = "viridis")
+
+# easily add a smooth
+iris |>
+  plot2(zoom = TRUE,
+        smooth = TRUE)
+iris |>
+  plot2(zoom = TRUE,
+        smooth = TRUE,
+        smooth.method = "lm")
+
 # support for secondary y axis
 mtcars |>
   plot2(x = mpg,
@@ -577,7 +598,7 @@ mtcars |>
 
 
 # plot2() supports all S3 extensions available through
-# ggplot2::fortify(), such as regression models:
+# ggplot2::fortify() and broom::augment(), such as regression models:
 lm(mpg ~ hp, data = mtcars) |> 
   plot2(x = mpg ^ -3,
         y = hp ^ 2,
@@ -588,13 +609,16 @@ lm(mpg ~ hp, data = mtcars) |>
         subtitle = "Axis titles contain the square notation: x^2")
 
 # sf objects (geographic plots, 'simple features') are also supported
-if (require("sf")) {
-  netherlands |> 
-    plot2(datalabels = paste0(province, "\n", round(area_km2)))
-}
+netherlands |> 
+  plot2()
+netherlands |> 
+  plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+  add_sf(netherlands, colour = "black", colour_fill = NA)
 
 # support for any system or Google font
 mtcars |>
-  plot2(mpg, hp, font = "Rock Salt",
+  plot2(mpg, hp,
+        font = "Rock Salt",
+        text_factor = 1.25,
         title = "This plot uses a Google Font")
 }

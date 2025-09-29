@@ -112,7 +112,7 @@
 #' @param x.transform,y.transform,category.transform a transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position position of the axis
 #' @param x.zoom,y.zoom a [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis
-#' @param category_type type of the `category`, one of: `"colour"` or `"color"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is never a need to set `"fill"` as that will be included in `"colour"`.
+#' @param category_type type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint settings for the plotting direction `category`.
 #' @param category.limits limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
 #' @param category.date_breaks breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
@@ -196,6 +196,7 @@
 #' The `ggplot2` package in conjunction with the `tidyr`, `forcats` and `cleaner` packages can provide above functionalities, but the goal of the [plot2()] function is to generalise this into one function. The generic [plot2()] function currently has `r length(formals(plot2)) - 1` arguments, all with a default value. **Less typing, faster coding.**
 #' @return a `ggplot` object
 #' @importFrom ggplot2 ggplot labs
+#' @importFrom rlang check_installed
 #' @export
 #' @examples
 #' options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
@@ -220,10 +221,11 @@
 #' iris |> 
 #'   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
 #'         colour = "viridis") # set the viridis colours
-#'       
+#'
+#' # set your own colours
 #' iris |> 
 #'   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-#'         colour = c("white", "red", "black")) # set own colours
+#'         colour = c("white", "red", "black"))
 #'
 #' # y can also be multiple (named) columns
 #' iris |> 
@@ -234,6 +236,26 @@
 #'   # with included selection helpers such as where(), starts_with(), etc.:
 #'   plot2(x = Species, y = where(is.double))
 #'   
+#' # the category type can be one or more aesthetics
+#' iris |>
+#'   plot2(zoom = TRUE,
+#'         category_type = c("colour", "shape"),
+#'         size = 3)
+#' iris |>
+#'   plot2(zoom = TRUE,
+#'         category = Petal.Length,
+#'         category_type = c("colour", "size"),
+#'         colour = "viridis")
+#' 
+#' # easily add a smooth
+#' iris |>
+#'   plot2(zoom = TRUE,
+#'         smooth = TRUE)
+#' iris |>
+#'   plot2(zoom = TRUE,
+#'         smooth = TRUE,
+#'         smooth.method = "lm")
+#' 
 #' # support for secondary y axis
 #' mtcars |>
 #'   plot2(x = mpg,
@@ -333,7 +355,7 @@
 #' 
 #' 
 #' # plot2() supports all S3 extensions available through
-#' # ggplot2::fortify(), such as regression models:
+#' # ggplot2::fortify() and broom::augment(), such as regression models:
 #' lm(mpg ~ hp, data = mtcars) |> 
 #'   plot2(x = mpg ^ -3,
 #'         y = hp ^ 2,
@@ -344,14 +366,17 @@
 #'         subtitle = "Axis titles contain the square notation: x^2")
 #' 
 #' # sf objects (geographic plots, 'simple features') are also supported
-#' if (require("sf")) {
-#'   netherlands |> 
-#'     plot2(datalabels = paste0(province, "\n", round(area_km2)))
-#' }
+#' netherlands |> 
+#'   plot2()
+#' netherlands |> 
+#'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+#'   add_sf(netherlands, colour = "black", colour_fill = NA)
 #' 
 #' # support for any system or Google font
 #' mtcars |>
-#'   plot2(mpg, hp, font = "Rock Salt",
+#'   plot2(mpg, hp,
+#'         font = "Rock Salt",
+#'         text_factor = 1.25,
 #'         title = "This plot uses a Google Font")
 plot2 <- function(.data,
                   x = NULL,
@@ -555,6 +580,7 @@ plot2 <- function(.data,
                "sf" %in% rownames(utils::installed.packages()),
                error = function(e) FALSE)) {
     # force calling plot2.sf() and its arguments, data will be transformed in that function:
+    check_installed("sf")
     UseMethod("plot2", object = structure(data.frame(), class = "sf"))
   } else {
     UseMethod("plot2")
@@ -566,7 +592,7 @@ plot2 <- function(.data,
 #' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @importFrom ggforce geom_parallel_sets geom_parallel_sets_axes geom_parallel_sets_labels
-#' @importFrom rlang check_installed
+#' @importFrom rlang check_installed syms
 plot2_exec <- function(.data,
                        x,
                        y,
@@ -836,18 +862,17 @@ plot2_exec <- function(.data,
     big.mark <- " "
   }
   
-  if (length(category_type) > 1 || !category_type %in% c("colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha")) {
-    stop(('`category_type` must be one of: "colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"'), call. = FALSE)
+  if (!all(category_type %in% c("colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"), na.rm = TRUE)) {
+    stop(('`category_type` must be: "colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"'), call. = FALSE)
   } else {
-    if (category_type == "color") {
-      category_type <- "colour"
+    if ("color" %in% category_type) {
+      category_type[category_type == "color"] <- "colour"
     }
-    if (category_type %in% c("colour", "fill")) {
-      # always do both
-      category_type <- c("colour", "fill")
+    if (any(c("colour", "fill") %in% category_type)) {
+      category_type <- c("colour", "fill", category_type)
     }
+    category_type <- unique(category_type)
   }
-  
   
   # set environment ----
   set_plot2_env(x = dots$`_label.x`,
@@ -1366,6 +1391,10 @@ plot2_exec <- function(.data,
     original_colours <- (is.null(colour) || identical(colour, "ggplot2")) &&
       (identical(colour_fill, "ggplot2") || (is.null(colour_fill) && (is.null(colour) || identical(colour, "ggplot2"))))
   }
+  if (!any(c("colour", "fill") %in% category_type)) {
+    # "colour" and "fill" are not in category_type, so do not set colours regardless of the `colour` argument
+    original_colours <- TRUE
+  }
   
   if (has_category(df) && !is.null(category.focus)) {
     category.focus <- category.focus[1L]
@@ -1416,14 +1445,8 @@ plot2_exec <- function(.data,
     mapping <- utils::modifyList(mapping, aes(x = `_var_x`, group = `_var_x`))
   }
   if (has_category(df)) {
-    if (identical(category_type, c("colour", "fill"))) {
-      mapping <- utils::modifyList(mapping, aes(colour = `_var_category`, fill = `_var_category`))
-    } else {
-      map <- aes(cat = `_var_category`)
-      names(map) <- category_type
-      mapping <- utils::modifyList(mapping, map)
-    }
     mapping <- utils::modifyList(mapping, aes(group = `_var_category`))
+    mapping <- utils::modifyList(mapping, syms(stats::setNames(rep("_var_category", length(category_type)), category_type)))
     
     if (type == "geom_sf") {
       # no colour in sf's
@@ -1501,9 +1524,9 @@ plot2_exec <- function(.data,
                     stacked_fill = stacked_fill,
                     horizontal = horizontal,
                     width = width,
-                    size = if (identical(category_type, "size")) NULL else size,
-                    linetype = if (identical(category_type, "linetype")) NULL else linetype,
-                    linewidth = if (identical(category_type, "linewidth")) NULL else linewidth,
+                    size = if ("size" %in% category_type) NULL else size,
+                    linetype = if ("linetype" %in% category_type) NULL else linetype,
+                    linewidth = if ("linewidth" %in% category_type) NULL else linewidth,
                     reverse = reverse,
                     na.rm = na.rm,
                     violin_scale = violin_scale,
@@ -1561,7 +1584,7 @@ plot2_exec <- function(.data,
                 c(list(mapping = aes(y = after_stat(count) * set_binwidth),
                        colour = ifelse(is.null(smooth.colour), get_colour(colour), get_colour(smooth.colour)),
                        linetype = ifelse(is.null(smooth.linetype), 1, smooth.linetype),
-                       linewidth = smooth.linewidth,
+                       linewidth = ifelse(is.null(smooth.linewidth), 0.5, smooth.linewidth),
                        na.rm = na.rm)))
     } else if (is.null(smooth.colour)) {
       p <- p |>
@@ -1588,14 +1611,14 @@ plot2_exec <- function(.data,
     }
   }
   # add axis labels ----
-  labs_set <- list(category = get_category_name(df))
-  names(labs_set) <- category_type[1]
-  if ("fill" %in% category_type) {
-    # "colour" was the first, now add fill too
-    labs_set$fill <- get_category_name(df)
+  if (has_category(df)) {
+    labs_set <- as.list(stats::setNames(rep(get_category_name(df), length(category_type)), category_type))
+  } else {
+    labs_set <- list()
   }
   labs_set$x <- get_x_name(df)
   labs_set$y <- get_y_name(df)
+  labs_set <- labs_set[names(labs_set) %in% names(p$mapping)]
   p <- p +
     do.call(labs, labs_set) # will return NULL if not available, so always works
   if (geom_is_continuous_x(type)) {
@@ -1825,7 +1848,11 @@ plot2_exec <- function(.data,
   p <- p + labs(x = x.title)
   
   if (isTRUE(y.title)) {
-    y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
+    if (type == "geom_histogram") {
+      y.title <- "Count"
+    } else {
+      y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
+    }
   }
   p <- p + labs(y = y.title)
   
@@ -1837,10 +1864,12 @@ plot2_exec <- function(.data,
     if (isTRUE(legend.title)) {
       legend.title <- validate_title(get_category_name(df), markdown = isTRUE(markdown), df = df)
     }
-    if ("colour" %in% names(mapping)) {
-      p <- p + labs(colour = legend.title)
+    for (cat in category_type) {
+      if (cat %in% names(mapping)) {
+        p <- p + do.call(labs, stats::setNames(list(legend.title), cat))
+      }
     }
-    if ("fill" %in% names(mapping) || type_backup == "sankey") {
+    if (type_backup == "sankey") {
       p <- p + labs(fill = legend.title)
     }
     if ("group" %in% names(mapping)) {

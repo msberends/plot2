@@ -282,7 +282,16 @@ df2 |>
   add_errorbar(error1, error2)
 
 # adding sf objects is just as convenient as all else
-plot2(netherlands)
-plot2(netherlands) |>
-  add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 1)
+netherlands |> 
+  plot2()
+netherlands |> 
+  plot2(colour_fill = "viridis", colour_opacity = 0.75)
+netherlands |> 
+  plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+  # add the same sf object, but now with empty fill and other options
+  add_sf(netherlands,
+         colour = "black",
+         colour_fill = NA,
+         linetype = 2,
+         linewidth = 0.5)
 }

@@ -8,7 +8,7 @@
 \alias{as.colour}
 \alias{print.colour}
 \alias{add_white}
-\title{Colours from \R, Viridis and More}
+\title{Get (and Register) Colours from \R, Viridis and More}
 \usage{
 get_colour(x, length = 1, opacity = 0)
 
@@ -63,7 +63,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"lightcyan3"}, \code{"lightsalmon2"}, \code{"lightslateblue"}, \code{"pink2"}, \code{"seagreen3"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"black"}, \code{"darkgoldenrod4"}, \code{"darkseagreen3"}, \code{"mediumpurple3"}, \code{"tomato4"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
@@ -81,7 +81,7 @@ add_white(x, white)
 \link{character} vector in HTML format (i.e., \code{"#AABBCC"}) with new class \code{colour}
 }
 \description{
-Colours from \R, viridis and more. The output prints in the console with the actual colours.
+Retrieves, expands, and prints colours or palettes from \R, \code{viridisLite}, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
 }
 \details{
 A palette from \R will be expanded where needed, so even \code{get_colour("R4", length = 20)} will work, despite "R4" only supporting a maximum of eight colours.
