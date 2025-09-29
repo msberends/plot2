@@ -1,5 +1,6 @@
 
 <!-- README.md is generated from README.Rmd; please edit that file. -->
+
 <!-- Run with: suppressWarnings(rmarkdown::render("README.Rmd", quiet = TRUE)) -->
 
 # `plot2`: Simplified and Enhanced Data Visualisation in R
@@ -155,6 +156,7 @@ iris |>
 #> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
 #> ℹ Using category.midpoint = 3.45 (the current category scale centre)
 #> ℹ Using type = "point" since both axes are numeric
+#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-6.png" width="100%" />
@@ -219,7 +221,6 @@ iris |>
 #> ℹ Using type = "point" since both axes are numeric
 #> ℹ Using x = Sepal.Length
 #> ℹ Using y = Sepal.Width
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 #> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
 ```
 
@@ -296,7 +297,6 @@ admitted_patients |>
 #> ℹ Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
 #> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
 #> ℹ Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-16.png" width="100%" />
@@ -427,7 +427,6 @@ Titanic |> # a table from base R
         type = "sankey")
 #> ℹ Assuming sankey.remove_axes = TRUE
 #> ! Input class 'table' was transformed using `as.data.frame()`
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-28.png" width="100%" />
@@ -450,7 +449,6 @@ mtcars |>
   plot2()
 #> ℹ Assuming type = "tile" since the matrix contains identical row and column names
 #> ! Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-29.png" width="100%" />

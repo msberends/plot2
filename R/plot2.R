@@ -1675,9 +1675,10 @@ plot2_exec <- function(.data,
       plot2_message("The ", font_blue("category"), " seems to contain markdown, assuming ", font_blue("category.labels = md_to_expression"))
       category.labels <- md_to_expression
     }
-    if (original_colours == TRUE) {
-      # these scale functions do not have 'values' set
-      for (cat_type in category_type) {
+    
+    for (cat_type in category_type) {
+      if (original_colours == TRUE || !cat_type %in% c("colour", "fill")) {
+        # these scale functions do not have 'values' set
         discrete_scale <- getExportedValue(paste0("scale_", cat_type, "_discrete"), ns = asNamespace("ggplot2"))
         p <- p +
           discrete_scale(labels = if (is.null(category.labels)) waiver() else category.labels,
@@ -1687,9 +1688,7 @@ plot2_exec <- function(.data,
                            # remove unneeded labels
                            base::force
                          })
-      }
-    } else {
-      for (cat_type in category_type) {
+      } else {
         manual_scale <- getExportedValue(paste0("scale_", cat_type, "_manual"), ns = asNamespace("ggplot2"))
         p <- p +
           manual_scale(values = if (cat_type == "fill") cols$colour_fill else cols$colour,
@@ -1699,7 +1698,7 @@ plot2_exec <- function(.data,
                        } else {
                          # remove unneeded labels
                          base::force
-                       }) 
+                       })
       }
     }
     # hack the possibility to print values as expressions
