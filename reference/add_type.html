@@ -402,23 +402,33 @@ model that <code>method = NULL</code> would use, then set
 <span class="r-plt img"><img src="add_type-16.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># adding sf objects is just as convenient as all else</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">netherlands</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Ignoring unknown labels:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">colour</span> : <span style="color: #0000BB;">"area_km2"</span></span>
 <span class="r-plt img"><img src="add_type-17.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">add_sf</span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">netherlands</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span>colour_fill <span class="op">=</span> <span class="st">"viridis"</span>, colour_opacity <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Ignoring unknown labels:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">colour</span> : <span style="color: #0000BB;">"area_km2"</span></span>
 <span class="r-plt img"><img src="add_type-18.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">netherlands</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot2.html">plot2</a></span><span class="op">(</span>colour_fill <span class="op">=</span> <span class="st">"viridis"</span>, colour_opacity <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="co"># add the same sf object, but now with empty fill and other options</span></span></span>
+<span class="r-in"><span>  <span class="fu">add_sf</span><span class="op">(</span><span class="va">netherlands</span>,</span></span>
+<span class="r-in"><span>         colour <span class="op">=</span> <span class="st">"black"</span>,</span></span>
+<span class="r-in"><span>         colour_fill <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>         linetype <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>         linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">datalabels.centroid = TRUE</span>. Set to FALSE for a point-on-surface</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> placing of datalabels.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
+<span class="r-plt img"><img src="add_type-19.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
