@@ -7,8 +7,19 @@
 create_interactively(data = NULL)
 }
 \arguments{
-\item{data}{A data set to load.}
+\item{data}{A data set to load. Not strictly required, since all data sets in the global environment will be shown.}
 }
 \description{
 This Shiny app allows for interactive creation of a \code{plot2}.
+}
+\details{
+\figure{create_interactively.jpg}
+}
+\examples{
+\dontrun{
+
+create_interactively()
+
+iris |> create_interactively()
+}
 }

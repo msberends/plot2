@@ -129,6 +129,7 @@ iris |>
 #> ℹ Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
 #> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
 #> ℹ Using type = "point" since both axes are numeric
+#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-4.png" width="100%" />
@@ -156,7 +157,6 @@ iris |>
 #> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
 #> ℹ Using category.midpoint = 3.45 (the current category scale centre)
 #> ℹ Using type = "point" since both axes are numeric
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-6.png" width="100%" />
@@ -339,6 +339,7 @@ admitted_patients |>
   plot2(age, type = "hist")
 #> ℹ Assuming smooth = TRUE for type = "histogram"
 #> ℹ Using binwidth = 6.4 based on data
+#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-20.png" width="100%" />
@@ -449,6 +450,7 @@ mtcars |>
   plot2()
 #> ℹ Assuming type = "tile" since the matrix contains identical row and column names
 #> ! Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
+#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-29.png" width="100%" />
@@ -513,7 +515,6 @@ netherlands |>
 mtcars |>
   plot2(mpg, hp,
         font = "Rock Salt",
-        text_factor = 1.25,
         title = "This plot uses a Google Font")
 #> ℹ Using type = "point" since both axes are numeric
 ```
@@ -531,6 +532,23 @@ plot2(hp ~ mpg, data = mtcars)
 
 mtcars |> plot2(mpg, hp) # preferred method
 ```
+
+## Shiny app
+
+You can your plots interactively as well with the built-in Shiny app.
+All `plot2` arguments are available in it. In RStudio, there is an addin
+menu item too.
+
+``` r
+iris |>
+  create_interactively()
+```
+
+<figure>
+<img src="man/figures/create_interactively.jpg"
+alt="Shiny app example" />
+<figcaption aria-hidden="true">Shiny app example</figcaption>
+</figure>
 
 ## Getting Involved
 

@@ -234,7 +234,6 @@ netherlands |>
 mtcars |>
   plot2(mpg, hp,
         font = "Rock Salt",
-        text_factor = 1.25,
         title = "This plot uses a Google Font")
 ```
 
@@ -249,6 +248,17 @@ plot2(hp ~ mpg, data = mtcars)
 
 mtcars |> plot2(mpg, hp) # preferred method
 ```
+
+## Shiny app
+
+You can your plots interactively as well with the built-in Shiny app. All `plot2` arguments are available in it. In RStudio, there is an addin menu item too.
+
+```{r, eval = FALSE}
+iris |>
+  create_interactively()
+```
+
+![Shiny app example](man/figures/create_interactively.jpg)
 
 ## Getting Involved
 

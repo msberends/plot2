@@ -15,9 +15,18 @@
 #' Interactively Create a `plot2`
 #' 
 #' This Shiny app allows for interactive creation of a `plot2`.
-#' @param data A data set to load.
+#' @param data A data set to load. Not strictly required, since all data sets in the global environment will be shown.
+#' @details
+#' ![Shiny app example](create_interactively.jpg)
 #' @importFrom rlang check_installed
 #' @export
+#' @examples
+#' \dontrun{
+#' 
+#' create_interactively()
+#' 
+#' iris |> create_interactively()
+#' }
 create_interactively <- function(data = NULL) {
   
   check_installed("shiny")
@@ -147,6 +156,8 @@ create_interactively <- function(data = NULL) {
                       ".selectize-dropdown-content { max-height: 400px; }",
                       ".short .selectize-dropdown-content { max-height: 275px; }",
                       "#colour .selectize-dropdown-content, #colour_fill .selectize-dropdown-content { max-height: 200px; }",
+                      ".copy-container { position: relative; }",
+                      "#copy_btn { position: absolute; top: 5px; right: 5px; background-color: var(--bs-primary); border-color: var(--bs-primary); }",
                       ".settings * { margin-bottom: 2px; }",
                       ".bslib-input-switch input { width: 3.5em !important; height: 30px !important; }",
                       ".bslib-input-switch, .bslib-input-switch input { cursor: pointer; }",
@@ -258,7 +269,11 @@ create_interactively <- function(data = NULL) {
         shiny::uiOutput("plot2_msgs"),
         shiny::br(),
         shiny::p("Generated code:"),
-        shiny::fluidRow(shiny::verbatimTextOutput("code")),
+        shiny::tags$div(
+          class = "copy-container",
+          shiny::actionButton("copy_btn", "Copy", class = "copy-button", 
+                       onclick = "copyTextFrom('my_output')"),
+          shiny::verbatimTextOutput("code")),
         shiny::textOutput("error_msg"),
         shiny::br(),
         shiny::actionLink("showdata", "Show data >"),
@@ -330,6 +345,9 @@ create_interactively <- function(data = NULL) {
           val <- NULL
         } else if (is.character(val) && val %like% "^([0-9]|[.])+$") {
           val <- as.numeric(val)
+        }
+        if (val %in% c("TRUE", "FALSE", "NULL")) {
+          val <- eval(str2lang(val))
         }
         # skip NULL or empty
         if (is.null(val) || (is.character(val) && !nzchar(val))) return("")
@@ -410,14 +428,19 @@ create_interactively <- function(data = NULL) {
     })
   }
   
-  suppressMessages(
-    shiny::runGadget(
-      app = ui,
-      server = server,
-      viewer = shiny::dialogViewer("Create plot2", width = 1600, height = 900),
-      stopOnCancel = FALSE
+  if (identical(Sys.getenv("RSTUDIO"), "1") && interactive()) {
+    suppressMessages(
+      shiny::runGadget(
+        app = ui,
+        server = server,
+        viewer = shiny::dialogViewer("Create plot2", width = 1600, height = 900),
+        stopOnCancel = FALSE)
     )
-  )
+  } else {
+    suppressMessages(
+      shiny::runApp(list(ui = ui, server = server))
+    )
+  }
 }
 
 # This function creates all the elements and makes sure they have sensible (default) values
@@ -433,7 +456,7 @@ make_input <- function(name, default) {
     default <- NULL
   }
   
-  if ((is.logical(default) && !is.na(default)) || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)" || name == "smooth") {
+  if ((is.logical(default) && !is.na(default) && name %unlike% "title$") || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)" || name == "smooth") {
     if (is.null(default)) default <- FALSE
     create_field(bslib::input_switch(name, NULL, value = default), name, default)
   } else if (is.numeric(default) && is.null(default)) {
