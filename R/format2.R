@@ -147,7 +147,6 @@ format2.difftime <- function(x,
                   ...)
 }
 
-#' @importFrom rlang check_installed
 coerce_datetime <- function(x, format, locale, ...) {
   
   format <- posix_date_format(format)
@@ -169,11 +168,11 @@ coerce_datetime <- function(x, format, locale, ...) {
   
   if (format == "%B") {
     # same as format = "mmmm"
-    check_installed("lubridate")
+    rlang::check_installed("lubridate")
     return(lubridate::month(x, label = TRUE, abbr = FALSE, locale = locale))
   } else if (format == "%b") {
     # same as format = "mmm"
-    check_installed("lubridate")
+    rlang::check_installed("lubridate")
     return(lubridate::month(x, label = TRUE, abbr = TRUE, locale = locale))
   }
   
@@ -198,7 +197,7 @@ coerce_datetime <- function(x, format, locale, ...) {
   
   # replace quarters
   if (any(df$form %like% "(q|qq)")) {
-    check_installed("lubridate")
+    rlang::check_installed("lubridate")
     df$quarter <- lubridate::quarter(df$dat)
     df$quarter[df$form %like% "qq"] <- paste0("Q", df$quarter[df$form %like% "qq"])
     df$form <- unlist(Map(gsub,

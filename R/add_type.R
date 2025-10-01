@@ -187,10 +187,9 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
 NA_missing_ <- structure(NA, class = c("missing", "logical"))
 
 #' @importFrom dplyr mutate group_by across reframe arrange select pull any_of if_else as_tibble bind_cols
-#' @importFrom rlang as_label
 new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!is.null(plot$mapping$colour) && isTRUE(colour_missing)) {
-    category_name <- as_label(plot$mapping$colour)
+    category_name <- rlang::as_label(plot$mapping$colour)
     colour_unique <- unique(plot$data[[category_name]])
   } else {
     category_name <- NULL
@@ -198,7 +197,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   }
   
   if (!is.null(plot$facet$params) && length(plot$facet$params) != 0) {
-    facet_name <- as_label(plot$facet$params$facets[[1]])
+    facet_name <- rlang::as_label(plot$facet$params$facets[[1]])
     facet_unique <- unique(plot$data[[facet_name]])
   } else {
     facet_name <- NULL
@@ -246,8 +245,8 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   
   if (length(colnames(new_df)) == 0) {
     # something went wrong - get the original data
-    x_name <- as_label(plot$mapping$x)
-    y_name <- as_label(plot$mapping$y)
+    x_name <- rlang::as_label(plot$mapping$x)
+    y_name <- rlang::as_label(plot$mapping$y)
     new_df <- plot$data |> select(any_of(c(x_name, y_name, category_name)))
     has_x <- "x" %in% colnames(new_df)
     has_y <- "y" %in% colnames(new_df)
@@ -256,8 +255,8 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!has_x && !has_y) {
     # just used e.g. `plot_object |> add_line()`
     inherit.aes <- TRUE
-    x_name <- as_label(plot$mapping$x)
-    y_name <- as_label(plot$mapping$y)
+    x_name <- rlang::as_label(plot$mapping$x)
+    y_name <- rlang::as_label(plot$mapping$y)
     new_df <- plot$data |> select(any_of(c(x_name, y_name, category_name)))
   }
   
@@ -270,14 +269,14 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
     # add x to data
     new_df <- new_df |>
       bind_cols(plot$data |>
-                  select(x = as_label(plot$mapping$x)))
+                  select(x = rlang::as_label(plot$mapping$x)))
     has_x <- TRUE
   }
   if (inherit.aes == FALSE && !has_y && has_x && NROW(plot$data) == NROW(new_df$x)) {
     # add y to data
     new_df <- new_df |>
       bind_cols(plot$data |>
-                  select(y = as_label(plot$mapping$y)))
+                  select(y = rlang::as_label(plot$mapping$y)))
     has_y <- TRUE
   }
   
@@ -300,8 +299,8 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
               plotdata_is_length_x = has_x && NROW(plot$data) == NROW(new_df$x),
               plotdata_is_length_y = has_y && NROW(plot$data) == NROW(new_df$y),
               params = params,
-              mapping = setup_aes(x = if (has_x) "x" else as_label(plot$mapping$x),
-                                   y = if (has_y) "y" else as_label(plot$mapping$y),
+              mapping = setup_aes(x = if (has_x) "x" else rlang::as_label(plot$mapping$x),
+                                   y = if (has_y) "y" else rlang::as_label(plot$mapping$y),
                                    group = 1),
               data = if (inherit.aes) NULL else new_df,
               new_df = new_df)
@@ -479,7 +478,6 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 #' @param min,max minimum (lower) and maximum (upper) values of the error bars
 #' @importFrom dplyr group_by across reframe
 #' @importFrom ggplot2 aes
-#' @importFrom rlang as_label
 #' @details
 #' The function [add_errorbar()] only adds error bars to the `y` values, see *Examples*.
 #' @export
@@ -489,7 +487,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   }
   
   if (!is.null(plot$mapping$colour) && missing(colour)) {
-    category_name <- as_label(plot$mapping$colour)
+    category_name <- rlang::as_label(plot$mapping$colour)
     colour_unique <- unique(plot$data[[category_name]])
   } else {
     category_name <- NULL
@@ -506,7 +504,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
     arrange(`_row_index`) |> 
     select(-`_row_index`)
   
-  new_df$x <- plot$data[[as_label(plot$mapping$x)]]
+  new_df$x <- plot$data[[rlang::as_label(plot$mapping$x)]]
   
   if (!missing(colour) && is.null(inherit.aes)) {
     inherit.aes <- FALSE
@@ -605,7 +603,6 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
 #' @importFrom dplyr mutate
 #' @importFrom ggplot2 geom_sf geom_sf_text aes is.ggplot
-#' @importFrom rlang check_installed
 #' @export
 add_sf <- function(plot,
                    sf_data,
@@ -622,7 +619,7 @@ add_sf <- function(plot,
                    ...,
                    inherit.aes = FALSE) {
   
-  check_installed("sf")
+  rlang::check_installed("sf")
   loadNamespace("sf")
   
   if (!is.ggplot(plot)) {

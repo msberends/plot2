@@ -18,5 +18,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Matthijs S. Berends \email{m.s.berends@umcg.nl}
 
+Authors:
+\itemize{
+  \item Erwin E. A. Hassing [contributor]
+  \item Wikje E. Berends-Hoekstra [contributor]
+}
+
 }
 \keyword{internal}

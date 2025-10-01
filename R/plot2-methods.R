@@ -21,7 +21,6 @@
 #' @importFrom ggplot2 fortify
 #' @importFrom broom augment
 #' @importFrom dplyr count filter mutate select
-#' @importFrom rlang `:=`
 #' @export
 plot2.default <- function(.data,
                           x = NULL,
@@ -240,6 +239,7 @@ plot2.default <- function(.data,
           y <- str2lang("count")
         } else {
           # this is when y is set to something - put that to the y axis and adjust the data set
+          `:=` <- rlang::`:=`
           col_fn <- function(y = NULL) data.frame() |> mutate({{ y }} := 0)
           y <- colnames(col_fn({{ y }}))
           colnames(new_df)[colnames(new_df) == "Freq"] <- y
@@ -1125,7 +1125,6 @@ plot2.freq <- function(.data,
 #' @details For geographic information system (GIS) analysis, use the `sf` package with a data set containing geometries. The result can be used as input for [plot2()].
 #' @param crs the coordinate reference system (CRS) to use. If this is not left blank, [sf::st_transform()] will be used to transform the geometric data to the new CRS.
 #' @param datalabels.centroid a [logical] to indicate whether datalabels must be centred on the polygon (using [sf::st_centroid()], the default), or be placed on the 'best' spot on the surface (using [sf::st_point_on_surface()])
-#' @importFrom rlang check_installed
 #' @export
 plot2.sf <- function(.data,
                      x = NULL,
@@ -1289,7 +1288,7 @@ plot2.sf <- function(.data,
                      datalabels.centroid = NULL,
                      ...) {
   
-  check_installed("sf")
+  rlang::check_installed("sf")
   loadNamespace("sf")
   
   if (!inherits(.data, "sf")) {

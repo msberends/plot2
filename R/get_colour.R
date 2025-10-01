@@ -28,7 +28,6 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
 #' @rdname colour
 #' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
-#' @importFrom rlang check_installed
 #' @export
 #' @examples
 #' get_colour(c("red", "tan1", "#ffa", "FFAA00"))
@@ -85,7 +84,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
       return(structure(x, class = c("colour", "character")))
       
     } else if (x %in% viridisLite_colours) {
-      check_installed("viridisLite")
+      rlang::check_installed("viridisLite")
       x <- viridisLite::viridis(length, option = x)
       
     } else if (tolower(x) %in% tolower(c("R", grDevices::palette.pals()))) {

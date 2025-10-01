@@ -151,18 +151,17 @@ plot2_warning <- function(...) {
   plot2_env$warnings <- c(plot2_env$warnings, paste0(c(...), collapse = ""))
 }
 
-#' @importFrom cli cli_alert_info cli_alert_warning cli_alert_danger
 plot2_message_out <- function(txt,
                           print = (interactive() | Sys.getenv("IN_PKGDOWN") != "") & !identical(as.logical(getOption("plot2.silent", default = FALSE)), TRUE),
                           type = "info") {
   # at default, only prints in interactive mode and for the website generation
   if (isTRUE(print)) {
     if (type == "info") {
-      cli_alert_info(txt, wrap = TRUE)
+      cli::cli_alert_info(txt, wrap = TRUE)
     } else if (type == "caution") {
-      cli_alert_warning(txt, wrap = TRUE)
+      cli::cli_alert_warning(txt, wrap = TRUE)
     } else if (type == "warning") {
-      cli_alert_danger(txt, wrap = TRUE)
+      cli::cli_alert_danger(txt, wrap = TRUE)
     }
   }
 }
@@ -546,7 +545,6 @@ group_sizes <- function(df) {
 
 # this replaces ggplot2::aes_string(), which was deprecated in 3.4.0
 #' @importFrom ggplot2 aes
-#' @importFrom rlang is_quosure as_label new_quosure
 setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
   mapping <- list(...)
   caller_env <- parent.frame()
@@ -555,9 +553,9 @@ setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
       # this will ultimately remove the aesthetic from the list, after running utils::modifyList()
       return(NULL)
     }
-    if (is_quosure(x)) {
+    if (rlang::is_quosure(x)) {
       # as regular text
-      x <- as_label(x)
+      x <- rlang::as_label(x)
     }
     if (isTRUE(as_symbol)) {
       # this is required for restore_mapping()
@@ -570,7 +568,7 @@ setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
       }
       x <- str2lang(x)
     }
-    new_quosure(x, env = caller_env)
+    rlang::new_quosure(x, env = caller_env)
   })
   out <- structure(mapping, class = class(aes()))
   utils::modifyList(current, out)
@@ -707,7 +705,6 @@ digit_to_text <- function(x) {
   out
 }
 
-#' @importFrom rlang cnd_message
 format_error <- function(e, replace = character(0), by = character(0)) {
   txt <- conditionMessage(e)
   if (length(txt) == 0) {

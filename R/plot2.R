@@ -196,7 +196,6 @@
 #' The `ggplot2` package in conjunction with the `tidyr`, `forcats` and `cleaner` packages can provide above functionalities, but the goal of the [plot2()] function is to generalise this into one function. The generic [plot2()] function currently has `r length(formals(plot2)) - 1` arguments, all with a default value. **Less typing, faster coding.**
 #' @return a `ggplot` object
 #' @importFrom ggplot2 ggplot labs
-#' @importFrom rlang check_installed
 #' @export
 #' @examples
 #' options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
@@ -580,7 +579,7 @@ plot2 <- function(.data,
                "sf" %in% rownames(utils::installed.packages()),
                error = function(e) FALSE)) {
     # force calling plot2.sf() and its arguments, data will be transformed in that function:
-    check_installed("sf")
+    rlang::check_installed("sf")
     UseMethod("plot2", object = structure(data.frame(), class = "sf"))
   } else {
     UseMethod("plot2")
@@ -588,11 +587,8 @@ plot2 <- function(.data,
 }
 
 #' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of all_of desc rowwise c_across left_join
-#' @importFrom forcats fct_relabel
 #' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete
 #' @importFrom tidyr pivot_longer pivot_wider
-#' @importFrom ggforce geom_parallel_sets geom_parallel_sets_axes geom_parallel_sets_labels
-#' @importFrom rlang check_installed syms
 plot2_exec <- function(.data,
                        x,
                        y,
@@ -1446,7 +1442,7 @@ plot2_exec <- function(.data,
   }
   if (has_category(df)) {
     mapping <- utils::modifyList(mapping, aes(group = `_var_category`))
-    mapping <- utils::modifyList(mapping, syms(stats::setNames(rep("_var_category", length(category_type)), category_type)))
+    mapping <- utils::modifyList(mapping, rlang::syms(stats::setNames(rep("_var_category", length(category_type)), category_type)))
     
     if (type == "geom_sf") {
       # no colour in sf's
@@ -1493,24 +1489,25 @@ plot2_exec <- function(.data,
     }
   }
   if (type_backup == "sankey") {
+    rlang::check_installed("ggforce")
     p <- p +
-      geom_parallel_sets(aes(fill = `_var_category`),
-                         alpha = sankey.alpha,
-                         # whitespace between nodes
-                         sep = sankey.node_whitespace,
-                         # width for flows, i.e., category
-                         axis.width = sankey.node_width) +
-      geom_parallel_sets_axes(fill = get_colour(datalabels.colour_fill[1]),
-                              colour = get_colour(datalabels.colour[1]),
-                              # whitespace between nodes
-                              sep = sankey.node_whitespace,
-                              # width of nodes
-                              axis.width = sankey.node_width) +
-      geom_parallel_sets_labels(colour = get_colour(datalabels.colour[1]),
-                                size = datalabels.size,
-                                # whitespace between labels in nodes
-                                sep = sankey.node_whitespace,
-                                angle = ifelse(isTRUE(horizontal), 0, -90))
+      ggforce::geom_parallel_sets(aes(fill = `_var_category`),
+                                  alpha = sankey.alpha,
+                                  # whitespace between nodes
+                                  sep = sankey.node_whitespace,
+                                  # width for flows, i.e., category
+                                  axis.width = sankey.node_width) +
+      ggforce::geom_parallel_sets_axes(fill = get_colour(datalabels.colour_fill[1]),
+                                       colour = get_colour(datalabels.colour[1]),
+                                       # whitespace between nodes
+                                       sep = sankey.node_whitespace,
+                                       # width of nodes
+                                       axis.width = sankey.node_width) +
+      ggforce::geom_parallel_sets_labels(colour = get_colour(datalabels.colour[1]),
+                                         size = datalabels.size,
+                                         # whitespace between labels in nodes
+                                         sep = sankey.node_whitespace,
+                                         angle = ifelse(isTRUE(horizontal), 0, -90))
     if (is.null(sankey.remove_axes)) {
       # make the default TRUE, but give message so users will know which argument to set
       sankey.remove_axes <- TRUE
@@ -1713,7 +1710,7 @@ plot2_exec <- function(.data,
   if (!type %in% c("geom_sf", "geom_tile", "geom_raster", "geom_rect")) {
     if (has_x(df)) {
       if (isTRUE(x.mic)) {
-        check_installed("AMR")
+        rlang::check_installed("AMR")
         p <- p + AMR::scale_x_mic(drop = x.drop, mic_range = x.limits)
       } else {
         p <- p + 

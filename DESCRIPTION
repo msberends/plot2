@@ -1,11 +1,18 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
-Version: 1.99.0.9004
+Date: 2025-10-01
+Version: 1.99.0.9005
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
          role = c("aut", "cre"),
-         email = "m.s.berends@umcg.nl"))
+         email = "m.s.berends@umcg.nl"),
+  person(given = c("Erwin", "E.", "A."), 
+         family = "Hassing",
+         role = c("aut", "ctb")),
+  person(given = c("Wikje", "E."), 
+         family = "Berends-Hoekstra",
+         role = c("aut", "ctb")))
 Description: A streamlined extension of 'ggplot2' designed to simplify and accelerate
   the creation of data visualisations. 'plot2' automates common tasks such as axis handling,
   plot type selection, and data transformation, allowing users to create complex,
@@ -18,31 +25,32 @@ Depends:
 Imports: 
   broom (>= 1.0.0),
   cleaner (>= 1.5.1),
-  cli (>= 3.6.0),
   crayon (>= 1.5.0),
   dplyr (>= 1.0.0),
   forcats (>= 0.5.1),
-  ggforce (>= 0.4.0),
   ggplot2 (>= 3.5.1),
-  rlang (>= 1.1.0),
-  scales (>= 1.3.0),
   tidyselect (>= 1.2.0),
   tidyr (>= 1.0.0)
 Suggests: 
   AMR (>= 3.0.1),
   bslib,
+  cli (>= 3.6.0),
+  clipr,
   DT,
   fansi,
   ggbeeswarm (>= 0.7.0),
-  glue (>= 1.2.0),
+  ggforce (>= 0.4.0),
+  glue,
   grDevices,
   grid (>= 4.3.0),
   rmarkdown (>= 2.11),
   knitr (>= 1.30),
-  lubridate (>= 1.2.0),
-  patchwork (>= 1.0.0),
+  lubridate,
+  patchwork,
   plotly (>= 4.8.0),
+  rlang,
   rstudioapi (>= 0.10.0),
+  scales,
   sf (>= 0.9.5),
   shiny (>= 1.10.0),
   shinyjs,
@@ -50,9 +58,9 @@ Suggests:
   showtextdb (>= 3.0.0),
   stringr (>= 1.4.0),
   sysfonts (>= 0.8.0),
-  testthat (>= 2.0.0),
+  testthat,
   vctrs,
-  viridisLite (>= 0.4.0)
+  viridisLite
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

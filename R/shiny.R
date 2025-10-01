@@ -18,7 +18,6 @@
 #' @param data A data set to load. Not strictly required, since all data sets in the global environment will be shown.
 #' @details
 #' ![Shiny app example](create_interactively.jpg)
-#' @importFrom rlang check_installed
 #' @export
 #' @examples
 #' \dontrun{
@@ -29,7 +28,8 @@
 #' }
 create_interactively <- function(data = NULL) {
   
-  check_installed("shiny")
+  rlang::check_installed("shiny")
+  rlang::check_installed("clipr")
   
   # in server or before shiny::runGadget()
   shiny::addResourcePath("plot2res", system.file(package = "plot2"))
@@ -271,8 +271,7 @@ create_interactively <- function(data = NULL) {
         shiny::p("Generated code:"),
         shiny::tags$div(
           class = "copy-container",
-          shiny::actionButton("copy_btn", "Copy", class = "copy-button", 
-                       onclick = "copyTextFrom('my_output')"),
+          shiny::actionButton("copy_btn", "Copy", class = "copy-button"),
           shiny::verbatimTextOutput("code")),
         shiny::textOutput("error_msg"),
         shiny::br(),
@@ -347,7 +346,7 @@ create_interactively <- function(data = NULL) {
           val <- as.numeric(val)
         }
         if (val %in% c("TRUE", "FALSE", "NULL")) {
-          val <- eval(str2lang(val))
+          val <- eval(str2lang(as.character(val)))
         }
         # skip NULL or empty
         if (is.null(val) || (is.character(val) && !nzchar(val))) return("")
@@ -419,6 +418,11 @@ create_interactively <- function(data = NULL) {
       
       p
     }, res = 100)
+    
+    shiny::observeEvent(input$copy_btn, {
+      clipr::write_clip(paste0(call_string(), "\n"), object_type = "character")
+      shiny::showNotification("Code copied to clipboard.", duration = 2, closeButton = FALSE, type = "message")
+    })
     
     shiny::observeEvent(input$showdata, {
       shinyjs::toggle("datatable")

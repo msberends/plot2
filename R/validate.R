@@ -734,7 +734,6 @@ validate_taxonomy <- function(df) {
 }
 
 #' @importFrom ggplot2 scale_x_discrete scale_x_date scale_x_datetime scale_x_continuous expansion waiver
-#' @importFrom scales reverse_trans pretty_breaks
 validate_x_scale <- function(df,
                              values,
                              x.date_breaks,
@@ -869,7 +868,7 @@ validate_x_scale <- function(df,
                        expand = if (set_x.expand) x.expand else waiver())
     } else {
       if (x.transform == "identity" && isTRUE(horizontal)) {
-        x.transform <- reverse_trans()
+        x.transform <- scales::reverse_trans()
       }
       if (is.null(x.limits)) {
         x.limits <- c(ifelse(min(values) < 0, NA_real_, 0), NA_real_)
@@ -895,7 +894,7 @@ validate_x_scale <- function(df,
           # whole numbers - only strip decimal numbers if total y range is low
           function(x, ...) unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
         } else {
-          pretty_breaks(n = ifelse(is.null(x.n_breaks), 5, x.n_breaks))
+          scales::pretty_breaks(n = ifelse(is.null(x.n_breaks), 5, x.n_breaks))
         }
       }
       
@@ -944,7 +943,6 @@ validate_x_scale <- function(df,
 #' @importFrom dplyr group_by across summarise
 #' @importFrom ggplot2 waiver expansion scale_y_continuous scale_y_discrete sec_axis
 #' @importFrom cleaner as.percentage
-#' @importFrom scales pretty_breaks
 validate_y_scale <- function(df,
                              type,
                              y.24h,
@@ -1101,7 +1099,7 @@ validate_y_scale <- function(df,
         unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
       }
     } else {
-      pretty_breaks(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
+      scales::pretty_breaks(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
     }
   }
   
@@ -1279,7 +1277,6 @@ validate_y_scale <- function(df,
 
 #' @importFrom ggplot2 scale_colour_gradient2 scale_colour_gradient scale_colour_gradientn expansion guide_colourbar element_text
 #' @importFrom cleaner as.percentage
-#' @importFrom scales pretty_breaks
 validate_category_scale <- function(values,
                                     type,
                                     cols,
@@ -1350,7 +1347,7 @@ validate_category_scale <- function(values,
         seq(0, 1, 0.25)
       } else {
         # print 5 labels nicely
-        pretty_breaks(n = 5)
+        scales::pretty_breaks(n = 5)
       }
     } else if (is_date(values)) {
       if (is.null(category.date_breaks)) {
@@ -1362,7 +1359,7 @@ validate_category_scale <- function(values,
       seq.Date(from = min(values, na.rm = TRUE),
                to = max(values, na.rm = TRUE),
                by = breaks)
-      # pretty_breaks(n = 5)(values)
+      # scales::pretty_breaks(n = 5)(values)
     } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
       # whole numbers - only strip decimal numbers if total y range is low
       if (diff(range(values, na.rm = TRUE)) < 5 && 0 %in% values[!is.na(values)]) {
@@ -1372,7 +1369,7 @@ validate_category_scale <- function(values,
       }
     } else {
       # print 5 labels nicely
-      pretty_breaks(n = 5)
+      scales::pretty_breaks(n = 5)
     }
   }
   limits_fn <- function(values, category.limits, category.percent, category.transform, category.date_breaks, waiver) {
@@ -1536,7 +1533,6 @@ validate_category_scale <- function(values,
 }
 
 #' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter
-#' @importFrom rlang check_installed
 generate_geom <- function(type,
                           df,
                           stacked,
@@ -1560,7 +1556,7 @@ generate_geom <- function(type,
     type <- "geom_bar"
   }
   if (type == "geom_beeswarm") {
-    check_installed("ggbeeswarm")
+    rlang::check_installed("ggbeeswarm")
     geom_fn <- ggbeeswarm::geom_beeswarm
   } else {
     geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
@@ -2632,7 +2628,6 @@ validate_sorting <- function(sort_method, horizontal) {
 }
 
 #' @importFrom forcats fct_inorder fct_reorder
-#' @importFrom rlang check_installed
 sort_data <- function(values,
                       original_values, # required for sort = FALSE, should be according to original values
                       sort_method,
@@ -2701,13 +2696,13 @@ sort_data <- function(values,
   # start the sorting
   numeric_sort <- any(values %like% "[0-9]", na.rm = TRUE)
   if (sort_method %in% c("alpha", "alpha-asc", "asc")) {
-    check_installed("stringr")
+    rlang::check_installed("stringr")
     # alphabetical, or ascending
     out <- factor(values,
                   levels = stringr::str_sort(unique(values),
                                              numeric = numeric_sort))
   } else if (sort_method %in% c("alpha-desc", "desc")) {
-    check_installed("stringr")
+    rlang::check_installed("stringr")
     out <- factor(values,
                   levels = stringr::str_sort(unique(values),
                                              numeric = numeric_sort,
