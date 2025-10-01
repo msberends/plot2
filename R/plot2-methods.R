@@ -1831,7 +1831,6 @@ plot2.data.frame <- function(.data,
 
 #' @rdname plot2-methods
 #' @importFrom tidyr pivot_longer
-#' @importFrom tibble rownames_to_column
 #' @importFrom dplyr rename
 #' @export
 plot2.matrix <- function(.data,
@@ -1989,6 +1988,12 @@ plot2.matrix <- function(.data,
   df <- .data |>
     as.data.frame(stringsAsFactors = FALSE)
   
+  row_to_col <- function(df, var) {
+    df[[var]] <- rownames(df)
+    rownames(df) <- NULL
+    df
+  }
+  
   if (is.null(type) && identical(rownames(df), colnames(df))) {
     # rows and columns are identical, while the data are numeric
     # this is the outcome of cor(), a correlation matrix
@@ -1998,12 +2003,12 @@ plot2.matrix <- function(.data,
     type <- "tile"
     # make long format
     df <- df |> 
-      rownames_to_column(var = "rowname") |> 
+      row_to_col(var = "rowname") |> 
       pivot_longer(-rowname, names_to = "y", values_to = "category") |> 
       rename(x = rowname)
   } else if (!identical(rownames(df), as.character(seq_len(nrow(df))))) {
     df <- df |> 
-      rownames_to_column(var = "x")
+      row_to_col(var = "x")
   }
   
   df |> 

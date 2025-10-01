@@ -2632,7 +2632,7 @@ validate_sorting <- function(sort_method, horizontal) {
 }
 
 #' @importFrom forcats fct_inorder fct_reorder
-#' @importFrom stringr str_sort
+#' @importFrom rlang check_installed
 sort_data <- function(values,
                       original_values, # required for sort = FALSE, should be according to original values
                       sort_method,
@@ -2701,15 +2701,17 @@ sort_data <- function(values,
   # start the sorting
   numeric_sort <- any(values %like% "[0-9]", na.rm = TRUE)
   if (sort_method %in% c("alpha", "alpha-asc", "asc")) {
+    check_installed("stringr")
     # alphabetical, or ascending
     out <- factor(values,
-                  levels = str_sort(unique(values),
-                                    numeric = numeric_sort))
+                  levels = stringr::str_sort(unique(values),
+                                             numeric = numeric_sort))
   } else if (sort_method %in% c("alpha-desc", "desc")) {
+    check_installed("stringr")
     out <- factor(values,
-                  levels = str_sort(unique(values),
-                                    numeric = numeric_sort,
-                                    decreasing = TRUE))
+                  levels = stringr::str_sort(unique(values),
+                                             numeric = numeric_sort,
+                                             decreasing = TRUE))
   } else if (sort_method == "inorder") {
     out <- factor(as.character(values),
                   levels = levels(fct_inorder(as.character(original_values))))

@@ -12,33 +12,19 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# ===================================================================== #
-#  An R package for Fast 'ggplot2' Plotting:                            #
-#  https://github.com/msberends/plot2                                   #
-#                                                                       #
-#  This R package is free software; you can freely use and distribute   #
-#  it for both personal and commercial purposes under the terms of the  #
-#  GNU General Public License version 2.0 (GNU GPL-2), as published by  #
-#  the Free Software Foundation.                                        #
-#                                                                       #
-#  We created this package for both routine data analysis and academic  #
-#  research and it was publicly released in the hope that it will be    #
-#  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
-# ===================================================================== #
-
 format2 <- function(x, ...) {
   UseMethod("format2")
 }
 
-#' @importFrom readr guess_parser
+#' @method format default
 format2.default <- function(x, ...) {
   if (isTRUE(list(...)$percent)) {
     format2(as.percentage(x), ...)
   } else {
     # all below have to be wrapped in tryCatch to also work for e.g. functions and calls
-    if (tryCatch(guess_parser(x) == "date", error = function(e) FALSE)) {
+    if (tryCatch(all(x %like% "^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}$", na.rm = TRUE), error = function(e) FALSE)) {
       format2(as.Date(x), ...)
-    } else if (tryCatch(guess_parser(x) == "datetime", error = function(e) FALSE)) {
+    } else if (tryCatch(all(x %like% "^([0-9]{4}\\-[0-9]{2}\\-[0-9]{2} [0-9]{2}:[0-9]{2}(:[0-9]{2})?|[0-9]+T[0-9]+)$", na.rm = TRUE), error = function(e) FALSE)) {
       format2(as.POSIXct(gsub("([0-9])T([0-9])", "\\1 \\2", x)), ...)
     } else if (tryCatch(all(is.double(x)), error = function(e) FALSE)) {
       format2(as.double(x), ...)
@@ -50,6 +36,7 @@ format2.default <- function(x, ...) {
 }
 
 #' @importFrom cleaner as.percentage
+#' @method format numeric
 format2.numeric <- function(x,
                             round = ifelse(percent, 1, 2),
                             force_decimals = ifelse(percent, TRUE, FALSE),
@@ -160,7 +147,7 @@ format2.difftime <- function(x,
                   ...)
 }
 
-#' @importFrom lubridate month quarter
+#' @importFrom rlang check_installed
 coerce_datetime <- function(x, format, locale, ...) {
   
   format <- posix_date_format(format)
@@ -182,10 +169,12 @@ coerce_datetime <- function(x, format, locale, ...) {
   
   if (format == "%B") {
     # same as format = "mmmm"
-    return(month(x, label = TRUE, abbr = FALSE, locale = locale))
+    check_installed("lubridate")
+    return(lubridate::month(x, label = TRUE, abbr = FALSE, locale = locale))
   } else if (format == "%b") {
     # same as format = "mmm"
-    return(month(x, label = TRUE, abbr = TRUE, locale = locale))
+    check_installed("lubridate")
+    return(lubridate::month(x, label = TRUE, abbr = TRUE, locale = locale))
   }
   
   if (Sys.getlocale("LC_TIME") %unlike% locale) {
@@ -209,7 +198,8 @@ coerce_datetime <- function(x, format, locale, ...) {
   
   # replace quarters
   if (any(df$form %like% "(q|qq)")) {
-    df$quarter <- quarter(df$dat)
+    check_installed("lubridate")
+    df$quarter <- lubridate::quarter(df$dat)
     df$quarter[df$form %like% "qq"] <- paste0("Q", df$quarter[df$form %like% "qq"])
     df$form <- unlist(Map(gsub,
                           df$quarter,

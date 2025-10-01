@@ -28,7 +28,7 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
 #' @rdname colour
 #' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
-#' @importFrom viridisLite viridis
+#' @importFrom rlang check_installed
 #' @export
 #' @examples
 #' get_colour(c("red", "tan1", "#ffa", "FFAA00"))
@@ -85,7 +85,8 @@ get_colour <- function(x, length = 1, opacity = 0) {
       return(structure(x, class = c("colour", "character")))
       
     } else if (x %in% viridisLite_colours) {
-      x <- viridis(length, option = x)
+      check_installed("viridisLite")
+      x <- viridisLite::viridis(length, option = x)
       
     } else if (tolower(x) %in% tolower(c("R", grDevices::palette.pals()))) {
       if (toupper(x) == "R") {
@@ -401,29 +402,6 @@ unique.colour <- function(x, ...) {
   get_colour(stats::setNames(out$vals, out$nms))
 }
 
-#' @method c colour
-#' @noRd
-#' @export
-c.colour <- function(...) {
-  get_colour(unlist(lapply(list(...), as.character)))
-}
-
-#' @importFrom vctrs vec_cast
-#' @export
-vec_cast.colour.colour <- function(x, to, ...) {
-  as.colour(x)
-}
-#' @importFrom vctrs vec_cast
-#' @export
-vec_cast.character.colour <- function(x, to, ...) {
-  unclass(x)
-}
-#' @importFrom vctrs vec_cast
-#' @export
-vec_cast.colour.character <- function(x, to, ...) {
-  as.colour(x)
-}
-
 #' @rdname colour
 #' @param white number between `[0, 1]` to add white to `x`
 #' @export
@@ -447,3 +425,24 @@ add_white <- function(x, white) {
                        function(y) grDevices::colorRampPalette(c("white", y))(1000)[white]))
   get_colour(out)
 }
+
+#' @method c colour
+#' @noRd
+#' @export
+c.colour <- function(...) {
+  get_colour(unlist(lapply(list(...), as.character)))
+}
+
+#' @exportS3Method vctrs::vec_cast
+vec_cast.colour.colour <- function(x, to, ...) {
+  as.colour(x)
+}
+#' @exportS3Method vctrs::vec_cast
+vec_cast.character.colour <- function(x, to, ...) {
+  unclass(x)
+}
+#' @exportS3Method vctrs::vec_cast
+vec_cast.colour.character <- function(x, to, ...) {
+  as.colour(x)
+}
+
