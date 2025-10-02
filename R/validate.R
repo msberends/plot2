@@ -795,8 +795,11 @@ validate_x_scale <- function(df,
       }
     }
   }
-  
+
   if (!is.null(x.limits)) {
+    if (!any(class(x.limits) %in% class(values))) {
+      plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
+    }
     if (length(x.limits) != 2) {
       if (length(x.limits) == 1) {
         x.limits <- rep(x.limits, 2)
@@ -1784,13 +1787,6 @@ validate_colour <- function(df,
       # take only the first
       colour <- colour[1]
       colour_fill <- colour_fill[1]
-      # take the official ggplot2 colour
-      if (identical(colour, "ggplot2")) {
-        colour <- "#595959"
-      }
-      if (identical(colour_fill, "ggplot2")) {
-        colour_fill <- "#595959"
-      }
     }
     colour <- get_colour(colour, opacity = colour_opacity)
     if (geom_is_continuous(type) && is.null(colour_fill)) {

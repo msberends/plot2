@@ -31,6 +31,16 @@ create_interactively <- function(data = NULL) {
   rlang::check_installed("shiny")
   rlang::check_installed("clipr")
   
+  rstudio_viewer <- identical(Sys.getenv("RSTUDIO"), "1") && interactive()
+  rstudio_viewer <- FALSE # turn off for now
+  max_height <- 900
+  if (rstudio_viewer && .Platform$OS.type == "windows") {
+    res <- system("wmic path Win32_VideoController get CurrentHorizontalResolution,CurrentVerticalResolution", intern = TRUE)
+    res <- trimws(unlist(strsplit(res, " ")))
+    res <- as.numeric(res[res %like% "^[0-9]+$"])
+    max_height <- min(res[length(res)] - 400, max_height)
+  }
+  
   # in server or before shiny::runGadget()
   shiny::addResourcePath("plot2res", system.file(package = "plot2"))
   
@@ -145,7 +155,7 @@ create_interactively <- function(data = NULL) {
     title = "Generate plot2",
     theme = bslib::bs_theme(version = 5, preset = "united"),
     
-    shiny::tags$style("#sidebar { overflow-y: auto; height: 900px; background-color: #f9f4f2; border-radius: 0; border: none; }",
+    shiny::tags$style(paste0("#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }"),
                       "#logo-container { position: absolute; bottom: 10px; left: 10px; }",
                       "#error_msg { color: red; }",
                       ".container-fluid { overflow-x: hidden; padding-left: 0; }",
@@ -432,12 +442,12 @@ create_interactively <- function(data = NULL) {
     })
   }
   
-  if (identical(Sys.getenv("RSTUDIO"), "1") && interactive()) {
+  if (rstudio_viewer) {
     suppressMessages(
       shiny::runGadget(
         app = ui,
         server = server,
-        viewer = shiny::dialogViewer("Create plot2", width = 1600, height = 900),
+        viewer = shiny::dialogViewer("Create plot2", width = 1600, height = max_height),
         stopOnCancel = FALSE)
     )
   } else {

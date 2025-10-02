@@ -16,7 +16,8 @@ format2 <- function(x, ...) {
   UseMethod("format2")
 }
 
-#' @method format default
+#' @method format2 default
+#' @exportS3Method
 format2.default <- function(x, ...) {
   if (isTRUE(list(...)$percent)) {
     format2(as.percentage(x), ...)
@@ -36,7 +37,8 @@ format2.default <- function(x, ...) {
 }
 
 #' @importFrom cleaner as.percentage
-#' @method format numeric
+#' @method format2 numeric
+#' @exportS3Method
 format2.numeric <- function(x,
                             round = ifelse(percent, 1, 2),
                             force_decimals = ifelse(percent, TRUE, FALSE),
@@ -110,6 +112,7 @@ format2.percentage <- function(x,
 }
 
 #' @method format2 Date
+#' @exportS3Method
 format2.Date <- function(x,
                          format = "d mmmm yyyy",
                          locale = "nl",
@@ -118,6 +121,7 @@ format2.Date <- function(x,
 }
 
 #' @method format2 POSIXt
+#' @exportS3Method
 format2.POSIXt <- function(x,
                            format = "yyyy-mm-dd HH:MM:SS",
                            locale = "nl",
@@ -126,6 +130,7 @@ format2.POSIXt <- function(x,
 }
 
 #' @method format2 hms
+#' @exportS3Method
 format2.hms <- function(x,
                         format = "HH:MM:SS",
                         ...) {
@@ -133,6 +138,7 @@ format2.hms <- function(x,
 }
 
 #' @method format2 difftime
+#' @exportS3Method
 format2.difftime <- function(x,
                              round = 2,
                              force_decimals = FALSE,

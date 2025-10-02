@@ -2,6 +2,12 @@
 
 S3method(as.character,colour)
 S3method(c,colour)
+S3method(format2,Date)
+S3method(format2,POSIXt)
+S3method(format2,default)
+S3method(format2,difftime)
+S3method(format2,hms)
+S3method(format2,numeric)
 S3method(plot2,data.frame)
 S3method(plot2,default)
 S3method(plot2,formula)

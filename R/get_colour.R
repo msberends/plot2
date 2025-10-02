@@ -91,13 +91,26 @@ get_colour <- function(x, length = 1, opacity = 0) {
       if (toupper(x) == "R") {
         x <- "R4"
       }
-      new_cols <- tryCatch(grDevices::palette.colors(length, palette = x),
-                           error = function(e) NULL,
-                           warning = function(w) NULL)
-      if (is.null(new_cols)) {
-        # failed or returned a warning, so now try to expand the colour palette with an 8-sized basis
-        new_cols <- grDevices::colorRampPalette(grDevices::palette.colors(8, palette = x))(length)
-        # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
+      if (tolower(x) == "ggplot2" && length == 1) {
+        # special case for ggplot2 - they did not actually get it right (#595959 is the official first colour)
+        new_cols <- "#595959"
+      } else {
+        if (tolower(x) == "ggplot2") {
+          # we request 1 more colour, then remove the first grey one later on
+          length <- length + 1
+        }
+        
+        new_cols <- tryCatch(grDevices::palette.colors(length, palette = x),
+                             error = function(e) NULL,
+                             warning = function(w) NULL)
+        if (is.null(new_cols)) {
+          # failed or returned a warning, so now try to expand the colour palette with an 8-sized basis
+          new_cols <- grDevices::colorRampPalette(grDevices::palette.colors(8, palette = x))(length)
+          # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
+        }
+        if (tolower(x) == "ggplot2") {
+          new_cols <- new_cols[2:length(new_cols)]
+        }
       }
       # some support names, so return the object
       return(structure(new_cols, class = c("colour", "character")))
@@ -150,11 +163,8 @@ get_colour <- function(x, length = 1, opacity = 0) {
   invalid <- x %unlike% "^#[0-F]{6,8}$"
   if (any(invalid)) {
     inv <- unique(x[invalid])
-    plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), ", replacing with a grey: ", paste0(font_magenta(paste0('"', inv, '"'), collapse = NULL), collapse = ", "))
-    x[invalid] <- sapply(seq_len(length(invalid)), function(i) {
-      int <- sample(c(38:217), 1, replace = FALSE)
-      rgb(int, int, int, maxColorValue = 255)
-    })
+    plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), " set, replacing with default ggplot2 colour", ifelse(length(inv) != 1, "s", ""))
+    return(get_colour("ggplot2", length = length))
   }
   
   if (length > length(x)) {
