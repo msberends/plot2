@@ -163,7 +163,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
   invalid <- x %unlike% "^#[0-F]{6,8}$"
   if (any(invalid)) {
     inv <- unique(x[invalid])
-    plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), " set, replacing with default ggplot2 colour", ifelse(length(inv) != 1, "s", ""))
+    plot2_caution("Invalid colour", ifelse(length(inv) != 1, "s", ""), " set (", toString(paste0('"', inv, '"')), "), replacing with default ggplot2 colour", ifelse(length(inv) != 1, "s", ""))
     return(get_colour("ggplot2", length = length))
   }
   

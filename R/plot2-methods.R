@@ -1300,13 +1300,14 @@ plot2.sf <- function(.data,
   }
   
   if (!is.null(x)) {
-    plot2_warning("In 'sf' plots, ", font_blue("x"), " will be ignored - did you mean ", font_blue("category"), "?")
+    plot2_caution("In 'sf' plots, ", font_blue("x"), " will be ignored - did you mean ", font_blue("category"), "?")
   }
   if (!is.null(y)) {
-    plot2_warning("In 'sf' plots, ", font_blue("y"), " will be ignored - did you mean ", font_blue("category"), "?")
+    plot2_caution("In 'sf' plots, ", font_blue("y"), " will be ignored - did you mean ", font_blue("category"), "?")
   }
-  if (!missing(colour) && !identical(colour, "white")) {
-    plot2_message("In 'sf' plots, " , font_blue("colour"), " will set the borders, not the areas - did you mean ", font_blue(paste0("colour_fill = ", deparse(colour))), "?")
+  colour_fill_default <- getOption("plot2.colour_sf_fill", getOption("plot2.colour", "ggplot2"))
+  if (!missing(colour) && identical(colour_fill, colour_fill_default) && !identical(colour, "white")) {
+    plot2_caution("In 'sf' plots, " , font_blue("colour"), " will set the borders, not the areas - did you mean ", font_blue(paste0("colour_fill = ", deparse(colour))), "?")
   }
   
   df <- .data

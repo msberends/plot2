@@ -880,7 +880,7 @@ plot2_exec <- function(.data,
   
   on.exit({
     throw_messages()
-    clean_plot2_env()
+    clear_plot2_env()
   })
   
   plot2_env$facet.fixed_y <- facet.fixed_y
@@ -1882,7 +1882,7 @@ plot2_exec <- function(.data,
     }
   }
   legend.position <- validate_legend.position(legend.position)
-  p <- p + theme(legend.position = legend.position)
+  p <- p + ggplot2::theme(legend.position = legend.position)
   
   if (!(has_category(df) && is.numeric(get_category(df)))) {
     # only change this when there is no guide_colourbar(), see validate_category_scale()

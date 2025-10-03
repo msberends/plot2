@@ -53,9 +53,9 @@ validate_type <- function(type, df = NULL) {
           if (length(plot2_env$x_variable_names) > 1) {
             plot2_message("To view the relation between multiple variables of ", font_blue("x"), ", a Sankey plot can be used (",
                           font_blue("type = \"sankey\""), " or ", font_blue("type = \"s\""), ")")
-          # } else if (all(count_nrs$n, na.rm = TRUE) == 1) {
-          #   plot2_message("To compare single values in two categories (", font_blue(get_category_name(df)), "), a dumbbell plot can be used (",
-          #                 font_blue("type = \"dumbbell\""), " or ", font_blue("type = \"d\""), ")")
+            # } else if (all(count_nrs$n, na.rm = TRUE) == 1) {
+            #   plot2_message("To compare single values in two categories (", font_blue(get_category_name(df)), "), a dumbbell plot can be used (",
+            #                 font_blue("type = \"dumbbell\""), " or ", font_blue("type = \"d\""), ")")
           }
         }
       }
@@ -421,20 +421,20 @@ validate_data <- function(df,
       plot2_message("Assuming ", font_blue("category.character = TRUE"),
                     " since ", font_blue("category"), " seems to be months")
       dots$category.character <- TRUE
-    } else if (is.numeric(get_category(df)) &&
-               is.null(dots$category.character) &&
-               !geom_is_continuous(type)) {
-      type_prelim <- type
-      if (type_prelim == "") {
-        # get preliminary type
-        type_prelim <- tryCatch(suppressMessages(validate_type("", df = df)), error = function(e) "geom_col")
-      }
-      if (!geom_is_continuous(type_prelim)) {
-        plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                      " for discrete plot type (", font_blue(type_prelim), ")",
-                      " since ", font_blue(get_category_name(df)), " is numeric")
-        dots$category.character <- TRUE
-      }
+      # } else if (is.numeric(get_category(df)) &&
+      #            is.null(dots$category.character) &&
+      #            !geom_is_continuous(type)) {
+      #   type_prelim <- type
+      #   if (type_prelim == "") {
+      #     # get preliminary type
+      #     type_prelim <- tryCatch(suppressMessages(validate_type("", df = df)), error = function(e) "geom_col")
+      #   }
+      #   if (!geom_is_continuous(type_prelim)) {
+      #     plot2_message("Assuming ", font_blue("category.character = TRUE"),
+      #                   " for discrete plot type (", font_blue(type_prelim), ")",
+      #                   " since ", font_blue(get_category_name(df)), " is numeric")
+      #     dots$category.character <- TRUE
+      #   }
     }
   }
   if (isTRUE(dots$category.character) && has_category(df)) {
@@ -635,9 +635,8 @@ validate_data <- function(df,
     df[, y_name] <- df$`_var_y`
     
     if (!dots$summarise_fn_name %in% c("summarise_function", "function(x) x")) {
-      plot2_warning("Values in ", font_blue("y"), " were not summarised, now using ",
-                    font_blue(paste0("y = ", dots$summarise_fn_name, "(", get_y_name(df), ")")), " since ",
-                    font_blue(paste0("summarise_function = ", dots$summarise_fn_name)), " was set.\n",
+      plot2_caution("Applying ", font_blue(paste0("y = ", dots$summarise_fn_name, "(", get_y_name(df), ")")),
+                    " since ", font_blue(paste0("summarise_function = ", dots$summarise_fn_name)), " was set.\n",
                     "  When using a transformation function on ", font_blue("x"), 
                     ifelse(has_category(df), paste0(" or ", font_blue("category")), ""),
                     ifelse(has_facet(df), paste0(" or ", font_blue("facet")), ""),
@@ -795,7 +794,7 @@ validate_x_scale <- function(df,
       }
     }
   }
-
+  
   if (!is.null(x.limits)) {
     if (!any(class(x.limits) %in% class(values))) {
       plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
@@ -897,7 +896,7 @@ validate_x_scale <- function(df,
           # whole numbers - only strip decimal numbers if total y range is low
           function(x, ...) unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
         } else {
-          scales::pretty_breaks(n = ifelse(is.null(x.n_breaks), 5, x.n_breaks))
+          scales::breaks_pretty(n = ifelse(is.null(x.n_breaks), 5, x.n_breaks))
         }
       }
       
@@ -1102,7 +1101,7 @@ validate_y_scale <- function(df,
         unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
       }
     } else {
-      scales::pretty_breaks(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
+      scales::breaks_pretty(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
     }
   }
   
@@ -1178,7 +1177,17 @@ validate_y_scale <- function(df,
         c(min_value, max(values, na.rm = TRUE))
       }
     } else {
-      function(x, y_expand = y.expand, min_val = min_value, ...) c(min(min_val, x, na.rm = TRUE), max(x, na.rm = TRUE))
+      function(x, min_val = min_value, ...) {
+        if (all(x == 0, na.rm = TRUE)) {
+          if (identical(x, floor(x))) {
+            c(0, 8) # will not print half ones if they are integers
+          } else {
+            c(0, 1)
+          }
+        } else {
+          c(min(min_val, x, na.rm = TRUE), max(x, na.rm = TRUE))
+        }
+      }
     }
   }
   
@@ -1234,48 +1243,48 @@ validate_y_scale <- function(df,
     sec_y <- waiver()
   }
   
-    limits_evaluated <- limits_fn(values = values,
-                                  y.limits,
-                                  y.expand = y.expand,
-                                  facet.fixed_y = facet.fixed_y,
-                                  y.age = y.age,
-                                  y.transform = y.transform,
-                                  df)
-    
-    scale_y_continuous(
-      breaks = breaks_fn(values = values,
-                         waiver = waiver(),
-                         y.breaks = y.breaks,
-                         y.n_breaks = y.n_breaks,
-                         y.expand = y.expand,
-                         stacked_fill = stacked_fill,
-                         y.age = y.age,
-                         y.percent = y.percent,
-                         y.percent_break = y.percent_break,
-                         y.24h = y.24h,
-                         y.limits = y.limits,
-                         y.transform = y.transform),
-      n.breaks = y.n_breaks,
-      labels = labels_fn(values = values,
-                         waiver = waiver(),
-                         y.labels,
-                         y.percent = y.percent,
-                         y.age = y.age,
-                         y.24h = y.24h,
-                         y.scientific = y.scientific,
-                         stacked_fill = stacked_fill,
-                         decimal.mark = decimal.mark,
-                         big.mark = big.mark),
-      limits = limits_evaluated,
-      expand = expand_fn(values = values,
-                         y.expand = y.expand,
-                         y.age = y.age,
-                         stacked_fill = stacked_fill,
-                         y.limits = limits_evaluated),
-      transform = y.transform,
-      position = y.position,
-      sec.axis = sec_y
-    )
+  limits_evaluated <- limits_fn(values = values,
+                                y.limits,
+                                y.expand = y.expand,
+                                facet.fixed_y = facet.fixed_y,
+                                y.age = y.age,
+                                y.transform = y.transform,
+                                df)
+  
+  scale_y_continuous(
+    breaks = breaks_fn(values = values,
+                       waiver = waiver(),
+                       y.breaks = y.breaks,
+                       y.n_breaks = y.n_breaks,
+                       y.expand = y.expand,
+                       stacked_fill = stacked_fill,
+                       y.age = y.age,
+                       y.percent = y.percent,
+                       y.percent_break = y.percent_break,
+                       y.24h = y.24h,
+                       y.limits = y.limits,
+                       y.transform = y.transform),
+    n.breaks = y.n_breaks,
+    labels = labels_fn(values = values,
+                       waiver = waiver(),
+                       y.labels,
+                       y.percent = y.percent,
+                       y.age = y.age,
+                       y.24h = y.24h,
+                       y.scientific = y.scientific,
+                       stacked_fill = stacked_fill,
+                       decimal.mark = decimal.mark,
+                       big.mark = big.mark),
+    limits = limits_evaluated,
+    expand = expand_fn(values = values,
+                       y.expand = y.expand,
+                       y.age = y.age,
+                       stacked_fill = stacked_fill,
+                       y.limits = limits_evaluated),
+    transform = y.transform,
+    position = y.position,
+    sec.axis = sec_y
+  )
 }
 
 #' @importFrom ggplot2 scale_colour_gradient2 scale_colour_gradient scale_colour_gradientn expansion guide_colourbar element_text
@@ -1350,7 +1359,7 @@ validate_category_scale <- function(values,
         seq(0, 1, 0.25)
       } else {
         # print 5 labels nicely
-        scales::pretty_breaks(n = 5)
+        scales::breaks_pretty(n = 5)
       }
     } else if (is_date(values)) {
       if (is.null(category.date_breaks)) {
@@ -1362,7 +1371,7 @@ validate_category_scale <- function(values,
       seq.Date(from = min(values, na.rm = TRUE),
                to = max(values, na.rm = TRUE),
                by = breaks)
-      # scales::pretty_breaks(n = 5)(values)
+      # scales::breaks_pretty(n = 5)(values)
     } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
       # whole numbers - only strip decimal numbers if total y range is low
       if (diff(range(values, na.rm = TRUE)) < 5 && 0 %in% values[!is.na(values)]) {
@@ -1372,7 +1381,7 @@ validate_category_scale <- function(values,
       }
     } else {
       # print 5 labels nicely
-      scales::pretty_breaks(n = 5)
+      scales::breaks_pretty(n = 5)
     }
   }
   limits_fn <- function(values, category.limits, category.percent, category.transform, category.date_breaks, waiver) {
@@ -1800,16 +1809,16 @@ validate_colour <- function(df,
     # has also category, and it's not numeric
     n_unique <- length(unique(get_category(df)))
     colour <- get_colour(colour,
-                     length = ifelse(length(colour) == 1, n_unique, 1),
-                     opacity = colour_opacity)
+                         length = ifelse(length(colour) == 1, n_unique, 1),
+                         opacity = colour_opacity)
     if (geom_is_continuous(type) && is.null(colour_fill) && type_backup != "sankey") {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
       # but not for Sankey plots - they have sankey.alpha
       colour_fill <- add_white(colour, white = 0.75)
     } else {
       colour_fill <- get_colour(colour_fill,
-                            length = ifelse(length(colour_fill) == 1, n_unique, 1),
-                            opacity = colour_opacity)
+                                length = ifelse(length(colour_fill) == 1, n_unique, 1),
+                                opacity = colour_opacity)
     }
     
     if (isTRUE(horizontal)) {
@@ -2114,9 +2123,7 @@ validate_theme <- function(theme,
     theme$axis.title.y.right$face <- "bold"
   }
   
-  if ("angle" %in% names(theme$axis.text.x)) {
-    theme$axis.text.x$angle <- x.lbl_angle
-  }
+  theme$axis.text.x$angle <- x.lbl_angle
   if (is.null(x.lbl_align) && x.lbl_angle != 0) {
     # determine the better alignment
     if (abs(x.lbl_angle) %in% c(0:10, 171:190, 351:360)) {

@@ -1,7 +1,7 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
 Date: 2025-10-02
-Version: 1.99.0.9006
+Version: 1.99.0.9007
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -26,23 +26,23 @@ Imports:
   broom (>= 1.0.0),
   cleaner (>= 1.5.1),
   crayon (>= 1.5.0),
-  dplyr (>= 1.0.0),
-  forcats (>= 0.5.1),
-  ggplot2 (>= 3.5.1),
+  dplyr (>= 1.1.0),
+  forcats (>= 1.0.0),
+  ggplot2 (>= 4.0.0),
   tidyselect (>= 1.2.0),
-  tidyr (>= 1.0.0)
+  tidyr (>= 1.3.0)
 Suggests: 
   AMR (>= 3.0.1),
   bslib,
-  cli (>= 3.6.0),
+  cli,
   clipr,
   DT,
   fansi,
   ggbeeswarm (>= 0.7.0),
-  ggforce (>= 0.4.0),
+  ggforce (>= 0.5.0),
   glue,
   grDevices,
-  grid (>= 4.3.0),
+  grid (>= 4.5.0),
   rmarkdown (>= 2.11),
   knitr (>= 1.30),
   lubridate,
@@ -51,12 +51,12 @@ Suggests:
   rlang,
   rstudioapi (>= 0.10.0),
   scales,
-  sf (>= 0.9.5),
+  sf (>= 1.0.0),
   shiny (>= 1.10.0),
   shinyjs,
   showtext (>= 0.9.0),
   showtextdb (>= 3.0.0),
-  stringr (>= 1.4.0),
+  stringr (>= 1.5.0),
   sysfonts (>= 0.8.0),
   testthat,
   vctrs,

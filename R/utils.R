@@ -192,7 +192,7 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
       plot2_message_out(plot2_env$warnings[i], print = print, type = "warning")
     }
   }
-  if (isTRUE(has_given_note) && stats::runif(1) < 0.1 && Sys.getenv("IN_PKGDOWN") == "") {
+  if (isTRUE(has_given_note) && stats::runif(1) < 0.01 && Sys.getenv("IN_PKGDOWN") == "") {
     message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
     has_given_note <- FALSE
   }
@@ -653,17 +653,11 @@ set_plot2_env <- function(x = NULL, y = NULL, category = NULL, facet = NULL, y_s
   }
   plot2_env$x_variable_names <- x_variable_names
 }
-clean_plot2_env <- function() {
-  plot2_env$mapping_x <- NULL
-  plot2_env$mapping_y <- NULL
-  plot2_env$mapping_category <- NULL
-  plot2_env$mapping_facet <- NULL
-  plot2_env$mapping_y_secondary <- NULL
-  plot2_env$x_variable_names <- NULL
-  plot2_env$y_secondary_factor <- NULL
-  plot2_env$infos <- NULL
-  plot2_env$cautions <- NULL
-  plot2_env$warnings <- NULL
+clear_plot2_env <- function() {
+  # clear everything from local environment, except for registered colours ("reg_cols")
+  vars_in_env <- ls(envir = plot2_env)
+  vars_to_remove <- setdiff(vars_in_env, "reg_cols")
+  rm(list = vars_to_remove, envir = plot2_env)
 }
 
 sigfigs <- function(x) {
