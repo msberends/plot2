@@ -11,13 +11,13 @@ euros(x, big.mark = big_mark(), decimal.mark = dec_mark(), ...)
 dollars(x, big.mark = big_mark(), decimal.mark = dec_mark(), ...)
 }
 \arguments{
-\item{x}{values}
+\item{x}{Values.}
 
-\item{big.mark}{thousands separator, defaults to \code{\link[=big_mark]{big_mark()}}}
+\item{big.mark}{Thousands separator, defaults to \code{\link[=big_mark]{big_mark()}}.}
 
-\item{decimal.mark}{decimal mark, defaults to \code{\link[=dec_mark]{dec_mark()}}}
+\item{decimal.mark}{Decimal mark, defaults to \code{\link[=dec_mark]{dec_mark()}}.}
 
-\item{...}{any argument to give to the geom. This will override automatically-set settings for the geom.}
+\item{...}{Any argument to give to the geom. This will override automatically-set settings for the geom.}
 }
 \description{
 Format numbers as currency, rounding values to dollars or cents using a convenient heuristic.

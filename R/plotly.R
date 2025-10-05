@@ -15,7 +15,7 @@
 #' Create Interactive Plotly
 #' 
 #' Transform a `ggplot2`/`plot2` object to an interactive plot using the [Plotly R Open Source Graphing Library](https://plotly.com/r/).
-#' @param plot a `ggplot2` plot
+#' @param plot A `ggplot2` plot.
 #' @param ...
 #' In case of [as_plotly()]: arguments to pass on to [`layout()`][plotly::layout()] to change the Plotly layout object
 #' 

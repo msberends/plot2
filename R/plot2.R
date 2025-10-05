@@ -14,20 +14,20 @@
 
 #' Conveniently Create a New `ggplot`
 #'
-#' @description  The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions. By design, the `ggplot2` package requires users to use a lot of functions and manual settings, while the [plot2()] function does all the heavy lifting automatically and only requires users to define some arguments in one single function, greatly increases convenience.
+#' @description The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions. By design, the `ggplot2` package requires users to use a lot of functions and manual settings, while the [plot2()] function does all the heavy lifting automatically and only requires users to define some arguments in one single function, greatly increases convenience.
 #'
 #' Moreover, [plot2()] allows for in-place calculation of `y`, all axes, and all axis labels, often preventing the need to use [`group_by()`][dplyr::group_by()], [`count()`][dplyr::count()], [`mutate()`][dplyr::mutate()], or [`summarise()`][dplyr::summarise()].
 #' 
 #' See [plot2-methods] for all implemented methods for different object classes.
-#' @param .data data to plot
-#' @param x plotting 'direction' for the x axis. This can be:
+#' @param .data Data to plot.
+#' @param x Plotting 'direction' for the x axis. This can be:
 #' 
 #' - A single variable from `.data`, such as `x = column1`
 #' 
 #' - A [function] to calculate over one or more variables from `.data`, such as `x = format(column1, "%Y")`, or `x = ifelse(column1 == "A", "Group A", "Other")`
 #' 
 #' - Multiple variables from `.data`, such as `x = c(column1, column2, column2)`, or using [selection helpers][tidyselect::language] such as `x = where(is.character)` or `x = starts_with("var_")` *(only allowed and required for Sankey plots using `type = "sankey"`)*
-#' @param y values to use for plotting along the y axis. This can be:
+#' @param y Values to use for plotting along the y axis. This can be:
 #' 
 #' - A single variable from `.data`, such as `y = column1`
 #' 
@@ -36,7 +36,7 @@
 #' - A [function] to calculate over `.data` returning a single value, such as `y = n()` for the row count, or based on other variables such as `y = n_distinct(person_id)`, `y = max(column1)`, or `y = median(column2) / column3`
 #' 
 #' - A [function] to calculate over `.data` returning multiple values, such as `y = quantile(column1, c(0.25, 0.75))` or `y = range(age)`  *(multiple values only allowed if `category` is not set)*
-#' @param category,facet plotting 'direction' (`category` is called 'fill' and 'colour' in `ggplot2`). This can be:
+#' @param category,facet Plotting 'direction' (`category` is called 'fill' and 'colour' in `ggplot2`). This can be:
 #' 
 #' - A single variable from `.data`, such as `category = column1`
 #' 
@@ -48,9 +48,9 @@
 #' 
 #'  The `category` can also be a date or date/time (class `Date` or `POSIXt`).
 #' 
-#' @param y_secondary values to use for plotting along the secondary y axis. This functionality is poorly supported by `ggplot2` and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.
-#' @param y_secondary.colour,y_secondary.colour_fill colours to set for the secondary y axis, will be evaluated with [get_colour()]
-#' @param type,y_secondary.type type of visualisation to use. This can be:
+#' @param y_secondary Values to use for plotting along the secondary y axis. This functionality is poorly supported by `ggplot2` and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.
+#' @param y_secondary.colour,y_secondary.colour_fill Colours to set for the secondary y axis, will be evaluated with [get_colour()].
+#' @param type,y_secondary.type Type of visualisation to use. This can be:
 #' 
 #' - A `ggplot2` geom name or their abbreviation such as `"col"` and `"point"`. All geoms are supported (including [`geom_blank()`][ggplot2::geom_blank()]).
 #' 
@@ -67,60 +67,60 @@
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no x axis or if the length of unique values per x axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
-#' @param title,subtitle,caption,tag,x.title,y.title,category.title,legend.title,y_secondary.title a title to use. This can be:
+#' @param title,subtitle,caption,tag,x.title,y.title,category.title,legend.title,y_secondary.title A title to use. This can be:
 #' 
 #' - A [character], which supports markdown by using [md_to_expression()] internally if `markdown = TRUE` (which is the default)
 #' - A [function] to calculate over `.data`, such as `title = paste("Based on n =", n_distinct(person_id), "individuals")` or `subtitle = paste("Total rows:", n())`, see *Examples*
 #' - An [expression], e.g. using `parse(text = "...")`
 #' 
 #' The `category.title` defaults to `TRUE` if the legend items are numeric.
-#' @param title.linelength maximum number of characters per line in the title, before a linebreak occurs
-#' @param title.colour text colour of the title
-#' @param subtitle.linelength maximum number of characters per line in the subtitle, before a linebreak occurs
-#' @param subtitle.colour text colour of the subtitle
-#' @param na.replace character to put in place of `NA` values if `na.rm = FALSE`
-#' @param na.rm remove `NA` values from showing in the plot
-#' @param facet.fixed_y a [logical] to indicate whether all y scales should have the same limits. Defaults to `TRUE` only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25%.
-#' @param facet.fixed_x a [logical] to indicate whether all x scales should have the same breaks. This acts like the inverse of `x.drop`.
-#' @param facet.position,facet.fill,facet.bold,facet.italic,facet.size,facet.margin,facet.repeat_lbls_x,facet.repeat_lbls_y,facet.drop,facet.nrow,facet.relative additional settings for the plotting direction `facet`
-#' @param x.date_breaks breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as `"1 day"` and `"2 years"`.
-#' @param x.date_labels labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
-#' @param x.date_remove_years a [logical] to indicate whether the years of all `x` values must be unified. This will set the years of all `x` values [to 1970](https://en.wikipedia.org/wiki/Unix_time) if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the `category` while maintaining a date range on `x`. The default is `FALSE`, unless `category` contains all years present in `x`.
-#' @param category.focus a value of `category` that should be highlighted, meaning that all other values in `category` will be greyed out. This can also be a numeric value between 1 and the length of unique values of `category`, e.g. `category.focus = 2` to focus on the second legend item.
-#' @param colour get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can be a named vector to match values of `category`, see *Examples*. Using a named vector can be used to manually sort the values of `category`.
-#' @param colour_fill get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()]
-#' @param colour_opacity amount of opacity for `colour`/`colour_fill` (0 = solid, 1 = transparent)
-#' @param x.lbl_angle angle to use for the x axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom)
-#' @param x.lbl_align alignment for the x axis between `0` (left aligned) and `1` (right aligned)
-#' @param x.lbl_italic [logical] to indicate whether the x labels should in in *italics*
-#' @param x.lbl_taxonomy a [logical] to transform all words of the `x` labels into italics that are in the [microorganisms][AMR::microorganisms] data set of the `AMR` package. This uses [md_to_expression()] internally and will set `x.labels` to parse expressions.
-#' @param x.character a [logical] to indicate whether the values of the x axis should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
-#' @param x.drop [logical] to indicate whether factor levels should be dropped
-#' @param x.complete,category.complete,facet.complete a value to complete the data. This makes use of [tidyr::full_seq()] and [tidyr::complete()]. For example, using `x.complete = 0` will apply `data |> complete(full_seq(x, ...), fill = list(x = 0))`. Using value `TRUE` (e.g., `x.complete = TRUE`) is identical to using value `0`.
-#' @param x.mic [logical] to indicate whether the x axis should be formatted as [MIC values][AMR::as.mic()], by dropping all factor levels and adding missing factors of 2
-#' @param x.remove,y.remove a [logical] to indicate whether the axis labels and title should be removed
+#' @param title.linelength Maximum number of characters per line in the title, before a linebreak occurs.
+#' @param title.colour Text colour of the title.
+#' @param subtitle.linelength Maximum number of characters per line in the subtitle, before a linebreak occurs.
+#' @param subtitle.colour Text colour of the subtitle.
+#' @param na.replace Character to put in place of `NA` values if `na.rm = FALSE`.
+#' @param na.rm Remove `NA` values from showing in the plot.
+#' @param facet.fixed_y A [logical] to indicate whether all y scales should have the same limits. Defaults to `TRUE` only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25%.
+#' @param facet.fixed_x A [logical] to indicate whether all x scales should have the same breaks. This acts like the inverse of `x.drop`.
+#' @param facet.position,facet.fill,facet.bold,facet.italic,facet.size,facet.margin,facet.repeat_lbls_x,facet.repeat_lbls_y,facet.drop,facet.nrow,facet.relative Additional settings for the plotting direction `facet`.
+#' @param x.date_breaks Breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as `"1 day"` and `"2 years"`.
+#' @param x.date_labels Labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
+#' @param x.date_remove_years A [logical] to indicate whether the years of all `x` values must be unified. This will set the years of all `x` values [to 1970](https://en.wikipedia.org/wiki/Unix_time) if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the `category` while maintaining a date range on `x`. The default is `FALSE`, unless `category` contains all years present in `x`.
+#' @param category.focus A value of `category` that should be highlighted, meaning that all other values in `category` will be greyed out. This can also be a numeric value between 1 and the length of unique values of `category`, e.g. `category.focus = 2` to focus on the second legend item.
+#' @param colour Get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can be a named vector to match values of `category`, see *Examples*. Using a named vector can be used to manually sort the values of `category`.
+#' @param colour_fill Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()].
+#' @param colour_opacity Amount of opacity for `colour`/`colour_fill` (0 = solid, 1 = transparent).
+#' @param x.lbl_angle Angle to use for the x axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom).
+#' @param x.lbl_align Alignment for the x axis between `0` (left aligned) and `1` (right aligned).
+#' @param x.lbl_italic [logical] to indicate whether the x labels should in in *italics*.
+#' @param x.lbl_taxonomy A [logical] to transform all words of the `x` labels into italics that are in the [microorganisms][AMR::microorganisms] data set of the `AMR` package. This uses [md_to_expression()] internally and will set `x.labels` to parse expressions.
+#' @param x.character A [logical] to indicate whether the values of the x axis should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
+#' @param x.drop [logical] to indicate whether factor levels should be dropped.
+#' @param x.complete,category.complete,facet.complete A value to complete the data. This makes use of [tidyr::full_seq()] and [tidyr::complete()]. For example, using `x.complete = 0` will apply `data |> complete(full_seq(x, ...), fill = list(x = 0))`. Using value `TRUE` (e.g., `x.complete = TRUE`) is identical to using value `0`.
+#' @param x.mic [logical] to indicate whether the x axis should be formatted as [MIC values][AMR::as.mic()], by dropping all factor levels and adding missing factors of 2.
+#' @param x.remove,y.remove A [logical] to indicate whether the axis labels and title should be removed.
 #' @param y.24h a [logical] to indicate whether the y labels and breaks should be formatted as 24-hour sequences
-#' @param y.age a [logical] to indicate whether the y labels and breaks should be formatted as ages in years
-#' @param y.scientific,y_secondary.scientific a [logical] to indicate whether the y labels should be formatted in scientific notation. Defaults to `TRUE` only if the range of the y values spans more than `10e5`.
-#' @param y.percent,y_secondary.percent a [logical] to indicate whether the y labels should be formatted as percentages
-#' @param y.percent_break a value on which the y axis should have breaks
-#' @param x.breaks,y.breaks a breaks function or numeric vector to use for the axis
-#' @param x.n_breaks,y.n_breaks number of breaks, only useful if `x.breaks` cq. `y.breaks` is `NULL`
-#' @param x.limits,y.limits limits to use for the axis, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `y.limits = c(0, NA)` to have the y scale start at zero.
-#' @param x.labels,y.labels,y_secondary.labels a labels function or character vector to use for the axis
+#' @param y.age A [logical] to indicate whether the y labels and breaks should be formatted as ages in years.
+#' @param y.scientific,y_secondary.scientific A [logical] to indicate whether the y labels should be formatted in scientific notation. Defaults to `TRUE` only if the range of the y values spans more than `10e5`.
+#' @param y.percent,y_secondary.percent A [logical] to indicate whether the y labels should be formatted as percentages.
+#' @param y.percent_break A value on which the y axis should have breaks.
+#' @param x.breaks,y.breaks A breaks function or numeric vector to use for the axis.
+#' @param x.n_breaks,y.n_breaks Number of breaks, only useful if `x.breaks` cq. `y.breaks` is `NULL`.
+#' @param x.limits,y.limits Limits to use for the axis, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `y.limits = c(0, NA)` to have the y scale start at zero.
+#' @param x.labels,y.labels,y_secondary.labels A labels function or character vector to use for the axis.
 #' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. `x.expand` defaults to 0.5 and `y.expand` defaults to `0.25`, except for sf objects (then both default to 0).
-#' @param x.transform,y.transform,category.transform a transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
-#' @param x.position,y.position position of the axis
-#' @param x.zoom,y.zoom a [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis
-#' @param category_type type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
-#' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint settings for the plotting direction `category`.
-#' @param category.limits limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
-#' @param category.date_breaks breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
-#' @param category.date_labels labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
-#' @param category.character a [logical] to indicate whether the values of the category should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
-#' @param x.max_items,category.max_items,facet.max_items number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, allowing to e.g. plot the top *n* most frequent values of the x axis by combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
-#' @param x.max_txt,category.max_txt,facet.max_txt the text to use of values not included number of `*.max_items`. The placeholder `%n` will be replaced with the outcome of the `summarise_function` function, the placeholder `%p` will be replaced with the percentage.
-#' @param x.sort,category.sort,facet.sort sorting of the plotting direction, defaults to `TRUE`, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
+#' @param x.transform,y.transform,category.transform A transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
+#' @param x.position,y.position Position of the axis.
+#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis.
+#' @param category_type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
+#' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint Settings for the plotting direction `category`.
+#' @param category.limits Limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
+#' @param category.date_breaks Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
+#' @param category.date_labels Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
+#' @param category.character A [logical] to indicate whether the values of the category should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
+#' @param x.max_items,category.max_items,facet.max_items Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, allowing to e.g. plot the top *n* most frequent values of the x axis by combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
+#' @param x.max_txt,category.max_txt,facet.max_txt The text to use of values not included number of `*.max_items`. The placeholder `%n` will be replaced with the outcome of the `summarise_function` function, the placeholder `%p` will be replaced with the percentage.
+#' @param x.sort,category.sort,facet.sort Sorting of the plotting direction, defaults to `TRUE`, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
 #' 
 #' - A manual vector of values
 #' - `TRUE`: sort [factor]s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (*numeric* sort)
@@ -131,51 +131,56 @@
 #' - `"order"` or `"inorder"`: sort as `FALSE`
 #' - `"freq"` or `"freq-desc"`: sort descending according to the frequencies of `y` computed by `summarise_function` (highest value first)
 #' - `"freq-asc"`: sort ascending according to the frequencies of `y` computed by `summarise_function` (lowest value first)
-#' @param datalabels values to show as datalabels, see also `datalabels.format`. This can be:
+#' @param datalabels Values to show as datalabels, see also `datalabels.format`. This can be:
 #' 
 #' - Left blank. This will default to the values of `y` in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless `datalabels = TRUE`.
 #' - `TRUE` or `FALSE` to force or remove datalabels
 #' - A function to calculate over `.data`, such as `datalabels = paste(round(column1), "\n", column2)`
-#' @param datalabels.round number of digits to round the datalabels, applies to both `"%n"` and `"%p"` for replacement (see `datalabels.format`)
-#' @param datalabels.format format to use for datalabels. This can be a function (such as [euros()]) or a text. For the text, `"%n"` will be replaced by the count number, and `"%p"` will be replaced by the percentage of the total count. Use `datalabels.format = NULL` to *not* transform the datalabels.
-#' @param datalabels.colour,datalabels.colour_fill,datalabels.size,datalabels.angle,datalabels.lineheight settings for the datalabels
-#' @param decimal.mark decimal mark, defaults to [dec_mark()]
-#' @param big.mark thousands separator, defaults to [big_mark()]
-#' @param summarise_function a [function] to use if the data has to be summarised, see *Examples*. This can also be `NULL`, which will be converted to `function(x) x`.
-#' @param stacked a [logical] to indicate that values must be [stacked][ggplot2::position_stack()]
-#' @param stacked_fill a [logical] to indicate that values must be [filled][ggplot2::position_fill()] (i.e., stacked to 100%)
-#' @param horizontal a [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original x axis.
-#' @param reverse a [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
-#' @param smooth a [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
-#' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour settings for `smooth`
-#' @param size size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for a UpSet plots (using `type = "upset"`); `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
-#' @param linetype linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.
-#' @param linewidth linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
-#' - `0.5` for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()], and for geoms that have no area (such as [line][ggplot2::geom_line()])
-#' - `0.1` for [sf][ggplot2::geom_sf()]
-#' - `0.25` for geoms that are continous and have fills (such as [area][ggplot2::geom_area()])
+#' @param datalabels.round Number of digits to round the datalabels, applies to both `"%n"` and `"%p"` for replacement (see `datalabels.format`).
+#' @param datalabels.format Format to use for datalabels. This can be a function (such as [euros()]) or a text. For the text, `"%n"` will be replaced by the count number, and `"%p"` will be replaced by the percentage of the total count. Use `datalabels.format = NULL` to *not* transform the datalabels.
+#' @param datalabels.colour,datalabels.colour_fill,datalabels.size,datalabels.angle,datalabels.lineheight Settings for the datalabels.
+#' @param decimal.mark Decimal mark, defaults to [dec_mark()].
+#' @param big.mark Thousands separator, defaults to [big_mark()].
+#' @param summarise_function A [function] to use if the data has to be summarised, see *Examples*. This can also be `NULL`, which will be converted to `function(x) x`.
+#' @param stacked A [logical] to indicate that values must be [stacked][ggplot2::position_stack()].
+#' @param stacked_fill A [logical] to indicate that values must be [filled][ggplot2::position_fill()] (i.e., stacked to 100%).
+#' @param horizontal A [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original x axis.
+#' @param reverse A [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
+#' @param smooth A [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
+#' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour Settings for `smooth`.
+#' @param size Size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for a UpSet plots (using `type = "upset"`); `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
+#' @param linetype Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
+#'   1. solid (default)
+#'   2. dashed
+#'   3. dotted
+#'   4. dotdash
+#'   5. longash
+#'   6. twodash
+#' @param linewidth Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
+#' - `0.10` for [sf][ggplot2::geom_sf()]
+#' - `0.25` for geoms that are continous and have fills (such as [area][ggplot2::geom_area()]), except for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()]
 #' - `1.0` for dumbbell plots (using `type = "dumbbell"`) and UpSet plots (using `type = "upset"`)
-#' - `0.5` otherwise (such as [histogram][ggplot2::geom_histogram()] and [area][ggplot2::geom_area()])
-#' @param binwidth width of bins (only useful for `geom = "histogram"`), can be specified as a numeric value or as a function that calculates width from `x`, see [`geom_histogram()`][ggplot2::geom_histogram()]. It defaults to approx. `diff(range(x))` divided by 12 to 22 based on the data.
-#' @param width width of the geom. Defaults to `0.75` for geoms [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()] and [jitter][ggplot2::geom_jitter()], and to `0.5` otherwise.
-#' @param jitter_seed seed (randomisation factor) to be set when using `type = "jitter"`
-#' @param violin_scale scale to be set when using `type = "violin"`, can also be set to `"area"`
-#' @param legend.position position of the legend, must be `"top"`, `"right"`, `"bottom"`, `"left"` or `"none"` (or `NA` or `NULL`), can be abbreviated. Defaults to `"right"` for numeric `category` values and 'sf' plots, and `"top"` otherwise.
-#' @param legend.reverse,legend.barheight,legend.barwidth,legend.nbin,legend.italic other settings for the legend
-#' @param sankey.node_width width of the vertical nodes in a Sankey plot
-#' @param sankey.node_whitespace whitespace between the nodes in a Sankey plot
-#' @param sankey.alpha alpha of the flows in a Sankey plot
-#' @param sankey.remove_axes logical to indicate whether all axes must be removed in a Sankey plot
-#' @param zoom a [logical] to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set `x.zoom = TRUE` and `y.zoom = TRUE`.
-#' @param sep separator character to use if multiple columns are given to either of the three directions: `x`, `category` and `facet`, e.g. `facet = c(column1, column2)`
-#' @param print a [logical] to indicate if the result should be [printed][print()] instead of just returned
-#' @param text_factor text factor to use, which will apply to all texts shown in the plot
-#' @param font font (family) to use, can be set with `options(plot2.font = "...")`. Can be any installed system font or any of the > 1400 font names from [Google Fonts](https://fonts.google.com). When using custom fonts in R Markdown, be sure to set the chunk option `fig.showtext = TRUE`, otherwise an informative error will be generated.
-#' @param theme a valid `ggplot2` [theme][ggplot2::theme()] to apply, or `NULL` to use the default [`theme_grey()`][ggplot2::theme_grey()]. This argument accepts themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and characters themes (e.g., `"theme_bw"`). The default is [theme_minimal2()], but can be set with `options(plot2.theme = "...")`.
-#' @param background the background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [get_colour()]. Only applies when `theme` is not `NULL`.
-#' @param markdown a [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`)
-#' @param data substitute for `.data`, used in formula notation, e.g., `plot2(hp ~ mpg, data = mtcars)`
-#' @param ... any argument to give to the geom. This will override automatically-set settings for the geom.
+#' - `0.5` otherwise (such as geoms [line][ggplot2::geom_line()], [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()], and [histogram][ggplot2::geom_histogram()])
+#' @param binwidth Width of bins (only useful for `geom = "histogram"`), can be specified as a numeric value or as a function that calculates width from `x`, see [`geom_histogram()`][ggplot2::geom_histogram()]. It defaults to approx. `diff(range(x))` divided by 12 to 22 based on the data.
+#' @param width Width of the geom. Defaults to `0.66` for geoms [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()] and [jitter][ggplot2::geom_jitter()], and to `0.5` otherwise.
+#' @param jitter_seed Seed (randomisation factor) to be set when using `type = "jitter"`.
+#' @param violin_scale Scale to be set when using `type = "violin"`, can also be set to `"area"`.
+#' @param legend.position Position of the legend, must be `"top"`, `"right"`, `"bottom"`, `"left"` or `"none"` (or `NA` or `NULL`), can be abbreviated. Defaults to `"right"` for numeric `category` values and 'sf' plots, and `"top"` otherwise.
+#' @param legend.reverse,legend.barheight,legend.barwidth,legend.nbin,legend.italic Other settings for the legend.
+#' @param sankey.node_width Width of the vertical nodes in a Sankey plot.
+#' @param sankey.node_whitespace Whitespace between the nodes in a Sankey plot.
+#' @param sankey.alpha Alpha of the flows in a Sankey plot.
+#' @param sankey.remove_axes Logical to indicate whether all axes must be removed in a Sankey plot.
+#' @param zoom A [logical] to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set `x.zoom = TRUE` and `y.zoom = TRUE`.
+#' @param sep Separator character to use if multiple columns are given to either of the three directions: `x`, `category` and `facet`, e.g. `facet = c(column1, column2)`.
+#' @param print A [logical] to indicate if the result should be [printed][print()] instead of just returned.
+#' @param text_factor Text factor to use, which will apply to all texts shown in the plot.
+#' @param font Font (family) to use, can be set with `options(plot2.font = "...")`. Can be any installed system font or any of the > 1400 font names from [Google Fonts](https://fonts.google.com). When using custom fonts in R Markdown, be sure to set the chunk option `fig.showtext = TRUE`, otherwise an informative error will be generated.
+#' @param theme A valid `ggplot2` [theme][ggplot2::theme()] to apply, or `NULL` to use the default [`theme_grey()`][ggplot2::theme_grey()]. This argument accepts themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and characters themes (e.g., `"theme_bw"`). The default is [theme_minimal2()], but can be set with `options(plot2.theme = "...")`.
+#' @param background The background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [get_colour()]. Only applies when `theme` is not `NULL`.
+#' @param markdown A [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`).
+#' @param data Substitute for `.data`, used in formula notation, e.g., `plot2(hp ~ mpg, data = mtcars)`.
+#' @param ... Any argument to give to the geom. This will override automatically-set settings for the geom.
 #' @details The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions such as [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], [`geom_col()`][ggplot2::geom_col()], [`facet_wrap()`][ggplot2::facet_wrap()], [`labs()`][ggplot2::labs()], etc., and provides:
 #'   - Writing as few lines of codes as possible
 #'   - Easy plotting in three 'directions': `x` (the regular x axis), `category` (replaces 'fill' and 'colour') and `facet`

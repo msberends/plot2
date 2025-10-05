@@ -17,13 +17,13 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' Get (and Register) Colours from \R, Viridis and More
 #'
 #' Retrieves, expands, and prints colours or palettes from \R, `viridisLite`, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
-#' @param x colour or colour palette name. Input can be:
+#' @param x Colour or colour palette name. Input can be:
 #' * One of the colourblind-safe `viridisLite` palettes: `r paste0('\n  - \u0060"', viridisLite_colours, '"\u0060', collapse = "")`
 #' * One of the built-in palettes in \R (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
 #' * One of the `r length(colours())` built-in [colours()] in \R (even case-insensitive), such as `r paste0('\u0060"', sort(sample(colours()[colours() %unlike% "^grey|gray"], 5)), '"\u0060', collapse = ", ")`
 #' * One of the pre-registered colours using [register_colour()]
-#' @param length size of the vector to be returned
-#' @param opacity amount of opacity (0 = solid, 1 = transparent)
+#' @param length Size of the vector to be returned.
+#' @param opacity Amount of opacity (0 = solid, 1 = transparent).
 #' @details A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
 #' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
 #' @rdname colour
@@ -192,7 +192,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
 }
 
 #' @rdname colour
-#' @param ... named vectors with known, valid colours. They must be coercible with [get_colour()].
+#' @param ... Named vectors with known, valid colours. They must be coercible with [get_colour()].
 #' @details
 #' 
 #' ### Registering Colours In Another Package
@@ -306,7 +306,7 @@ register_colour <- function(...) {
 }
 
 #' @rdname colour
-#' @param regex a [regex] to unregister colours
+#' @param regex A [regex] to unregister colours.
 #' @export
 unregister_colour <- function(regex) {
   len <- length(plot2_env$reg_cols)
@@ -412,7 +412,7 @@ unique.colour <- function(x, ...) {
 }
 
 #' @rdname colour
-#' @param white number between `[0, 1]` to add white to `x`
+#' @param white A number between `[0, 1]` to add white to `x`.
 #' @export
 #' @examples
 #' 

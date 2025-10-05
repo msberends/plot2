@@ -96,25 +96,25 @@ add_sf(
 )
 }
 \arguments{
-\item{plot}{a \code{ggplot2} plot}
+\item{plot}{A \code{ggplot2} plot.}
 
-\item{type}{a \code{ggplot2} geom name, all geoms are supported. Full function names can be used (e.g., \code{"geom_line"}), but they can also be abbreviated (e.g., \code{"l"}, \code{"line"}). These geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), violin (\code{"v"}).}
+\item{type}{A \code{ggplot2} geom name, all geoms are supported. Full function names can be used (e.g., \code{"geom_line"}), but they can also be abbreviated (e.g., \code{"l"}, \code{"line"}). These geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), violin (\code{"v"}).}
 
-\item{mapping}{a mapping created with \code{\link[ggplot2:aes]{aes()}} to pass on to the geom}
+\item{mapping}{A mapping created with \code{\link[ggplot2:aes]{aes()}} to pass on to the geom.}
 
-\item{data}{data to use in mapping}
+\item{data}{Data to use in mapping.}
 
-\item{move}{number of layers to move the newly added geom down, e.g., \code{move = 1} will place the newly added geom down 1 layer, thus directly under the highest layer}
+\item{move}{Number of layers to move the newly added geom down, e.g., \code{move = 1} will place the newly added geom down 1 layer, thus directly under the highest layer.}
 
 \item{x, y}{aesthetic arguments}
 
 \item{colour, colour_fill}{colour of the line or column, will be evaluated with \code{\link[=get_colour]{get_colour()}}. If \code{colour_fill} is missing but \code{colour} is given, \code{colour_fill} will inherit the colour set with \code{colour}.}
 
-\item{linetype, linewidth, shape, size, width, ...}{arguments passed on to the geom}
+\item{linetype, linewidth, shape, size, width, ...}{Arguments passed on to the geom.}
 
-\item{inherit.aes}{a \link{logical} to indicate whether the default aesthetics should be inherited, rather than combining with them}
+\item{inherit.aes}{A \link{logical} to indicate whether the default aesthetics should be inherited, rather than combining with them.}
 
-\item{legend.value}{text to show in an additional legend that will be created. Since \code{ggplot2} does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".}
+\item{legend.value}{Text to show in an additional legend that will be created. Since \code{ggplot2} does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".}
 
 \item{min, max}{minimum (lower) and maximum (upper) values of the error bars}
 
@@ -140,7 +140,7 @@ If you have fewer than 1,000 observations but want to use the same \code{gam()}
 model that \code{method = NULL} would use, then set
 \verb{method = "gam", formula = y ~ s(x, bs = "cs")}.}
 
-\item{se}{Display confidence interval around smooth? (\code{TRUE} by default, see
+\item{se}{Display confidence band around smooth? (\code{TRUE} by default, see
 \code{level} to control.)}
 
 \item{sf_data}{an 'sf' \link{data.frame}}

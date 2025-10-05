@@ -15,14 +15,14 @@
 #' Add Plot Element
 #' 
 #' Quickly and conveniently add a new 'geom' to an existing `plot2`/`ggplot` model. Like [plot2()], these functions support tidy evaluation, meaning that variables can be unquoted. Better yet, they can contain any function with any output length, or any vector. They can be added using the pipe (new base \R's `|>` or tidyverse's `%>%`).
-#' @param plot a `ggplot2` plot
-#' @param type a `ggplot2` geom name, all geoms are supported. Full function names can be used (e.g., `"geom_line"`), but they can also be abbreviated (e.g., `"l"`, `"line"`). These geoms can be abbreviated by their first character: area (`"a"`), boxplot (`"b"`), column (`"c"`), histogram (`"h"`), jitter (`"j"`), line (`"l"`), point (`"p"`), ribbon (`"r"`), violin (`"v"`).
-#' @param mapping a mapping created with [`aes()`][ggplot2::aes()] to pass on to the geom
-#' @param linetype,linewidth,shape,size,width,... arguments passed on to the geom
-#' @param data data to use in mapping
-#' @param move number of layers to move the newly added geom down, e.g., `move = 1` will place the newly added geom down 1 layer, thus directly under the highest layer
-#' @param inherit.aes a [logical] to indicate whether the default aesthetics should be inherited, rather than combining with them
-#' @param legend.value text to show in an additional legend that will be created. Since `ggplot2` does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".
+#' @param plot A `ggplot2` plot.
+#' @param type A `ggplot2` geom name, all geoms are supported. Full function names can be used (e.g., `"geom_line"`), but they can also be abbreviated (e.g., `"l"`, `"line"`). These geoms can be abbreviated by their first character: area (`"a"`), boxplot (`"b"`), column (`"c"`), histogram (`"h"`), jitter (`"j"`), line (`"l"`), point (`"p"`), ribbon (`"r"`), violin (`"v"`).
+#' @param mapping A mapping created with [`aes()`][ggplot2::aes()] to pass on to the geom.
+#' @param linetype,linewidth,shape,size,width,... Arguments passed on to the geom.
+#' @param data Data to use in mapping.
+#' @param move Number of layers to move the newly added geom down, e.g., `move = 1` will place the newly added geom down 1 layer, thus directly under the highest layer.
+#' @param inherit.aes A [logical] to indicate whether the default aesthetics should be inherited, rather than combining with them.
+#' @param legend.value Text to show in an additional legend that will be created. Since `ggplot2` does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".
 #' @importFrom ggplot2 is.ggplot aes
 #' @rdname add_type
 #' @return a `ggplot` object

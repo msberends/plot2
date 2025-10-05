@@ -1885,7 +1885,7 @@ validate_size <- function(size, type, type_backup) {
 validate_width <- function(width, type) {
   if (is.null(width)) {
     if (type %in% c("geom_boxplot", "geom_violin", "geom_jitter")) {
-      width <- 0.75
+      width <- 0.66
     } else {
       width <- 0.5
     }
@@ -2122,8 +2122,10 @@ validate_theme <- function(theme,
     theme$axis.title.y.right$colour <- col_y_secondary
     theme$axis.title.y.right$face <- "bold"
   }
-  
-  theme$axis.text.x$angle <- x.lbl_angle
+
+  if (x.lbl_angle != 0) {
+    theme$axis.text.x$angle <- x.lbl_angle
+  }
   if (is.null(x.lbl_align) && x.lbl_angle != 0) {
     # determine the better alignment
     if (abs(x.lbl_angle) %in% c(0:10, 171:190, 351:360)) {

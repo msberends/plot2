@@ -15,7 +15,7 @@
 #' Convert Markdown to Plotmath Expression
 #' 
 #' This function converts common markdown language to an \R [plotmath][grDevices::plotmath] expression. [plot2()] uses this function internally to convert plot titles and axis titles.
-#' @param x text to convert, only the first value will be evaluated
+#' @param x Text to convert, only the first value will be evaluated.
 #' @details This function only supports common markdown (italic, bold, bold-italic, subscript, superscript), but also supports some additional functionalities for more advanced expressions using \R [plotmath][grDevices::plotmath]. Please see *Examples*.
 #' 
 #' In [plot2()], this function can be also set to argument `category.labels` to print the data values as expressions:

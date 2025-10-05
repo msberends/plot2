@@ -7,11 +7,11 @@
 get_plot_title(plot, valid_filename = TRUE, default = NULL)
 }
 \arguments{
-\item{plot}{a \code{ggplot2} plot}
+\item{plot}{A \code{ggplot2} plot.}
 
-\item{valid_filename}{a \link{logical} to indicate whether the returned value should be a valid filename, defaults to \code{TRUE}}
+\item{valid_filename}{A \link{logical} to indicate whether the returned value should be a valid filename, defaults to \code{TRUE}.}
 
-\item{default}{the default value, if a plot title is absent}
+\item{default}{The default value, if a plot title is absent.}
 }
 \description{
 Get the title of the plot, or a default value. If the title is not set in a plot, this function tries to generate one from the plot mapping.

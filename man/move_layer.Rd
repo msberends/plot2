@@ -7,11 +7,11 @@
 move_layer(plot, move = -1, layer = length(plot$layers))
 }
 \arguments{
-\item{plot}{a \code{ggplot} object}
+\item{plot}{A \code{ggplot} object.}
 
-\item{move}{number of layers to move \code{layer} up or down}
+\item{move}{Number of layers to move \code{layer} up or down.}
 
-\item{layer}{the layer to affect, defaults to top layer}
+\item{layer}{The layer to affect, defaults to top layer.}
 }
 \description{
 Use this function to move a certain plot layer up or down. This function returns a \code{ggplot} object.

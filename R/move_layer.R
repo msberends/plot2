@@ -15,9 +15,9 @@
 #' Move a `ggplot` Layer
 #' 
 #' Use this function to move a certain plot layer up or down. This function returns a `ggplot` object.
-#' @param plot a `ggplot` object
-#' @param move number of layers to move `layer` up or down
-#' @param layer the layer to affect, defaults to top layer
+#' @param plot A `ggplot` object.
+#' @param move Number of layers to move `layer` up or down.
+#' @param layer The layer to affect, defaults to top layer.
 #' @importFrom ggplot2 is.ggplot
 #' @export
 move_layer <- function(plot, move = -1, layer = length(plot$layers)) {

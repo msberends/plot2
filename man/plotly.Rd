@@ -10,7 +10,7 @@ as_plotly(plot, ...)
 plotly_style(plot, ...)
 }
 \arguments{
-\item{plot}{a \code{ggplot2} plot}
+\item{plot}{A \code{ggplot2} plot.}
 
 \item{...}{In case of \code{\link[=as_plotly]{as_plotly()}}: arguments to pass on to \code{\link[plotly:layout]{layout()}} to change the Plotly layout object
 

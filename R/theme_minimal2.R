@@ -15,11 +15,11 @@
 #' An Even More Minimal Theme
 #' 
 #' This `ggplot2` theme provides even more white area and less clutter than [`theme_minimal()`][ggplot2::theme_minimal()].
-#' @param ... arguments passed on to [ggplot2::theme()]
-#' @param colour_font_primary colour to set for the plot title and tag
-#' @param colour_font_secondary colour to set for the plot subtitle and caption
-#' @param colour_font_axis colour to set for the axis titles on both x and y
-#' @param colour_background colour to set for the background
+#' @param ... Arguments passed on to [ggplot2::theme()].
+#' @param colour_font_primary Colour to set for the plot title and tag.
+#' @param colour_font_secondary Colour to set for the plot subtitle and caption.
+#' @param colour_font_axis Colour to set for the axis titles on both x and y.
+#' @param colour_background Colour to set for the background.
 #' @importFrom ggplot2 element_text `%+replace%` theme_bw theme margin element_line element_blank unit element_rect
 #' @export
 #' @examples 

@@ -942,16 +942,16 @@
 )
 }
 \arguments{
-\item{.data, data}{data to plot}
+\item{.data, data}{Data to plot.}
 
-\item{x}{plotting 'direction' for the x axis. This can be:
+\item{x}{Plotting 'direction' for the x axis. This can be:
 \itemize{
 \item A single variable from \code{.data}, such as \code{x = column1}
 \item A \link{function} to calculate over one or more variables from \code{.data}, such as \code{x = format(column1, "\%Y")}, or \code{x = ifelse(column1 == "A", "Group A", "Other")}
 \item Multiple variables from \code{.data}, such as \code{x = c(column1, column2, column2)}, or using \link[tidyselect:language]{selection helpers} such as \code{x = where(is.character)} or \code{x = starts_with("var_")} \emph{(only allowed and required for Sankey plots using \code{type = "sankey"})}
 }}
 
-\item{y}{values to use for plotting along the y axis. This can be:
+\item{y}{Values to use for plotting along the y axis. This can be:
 \itemize{
 \item A single variable from \code{.data}, such as \code{y = column1}
 \item Multiple variables from \code{.data}, such as \code{y = c(column1, column2)} or \code{y = c(name1 = column1, "name 2" = column2)}, or using \link[tidyselect:language]{selection helpers} such as \code{y = where(is.double)} or \code{y = starts_with("var_")} \emph{(multiple variables only allowed if \code{category} is not set)}
@@ -959,7 +959,7 @@
 \item A \link{function} to calculate over \code{.data} returning multiple values, such as \code{y = quantile(column1, c(0.25, 0.75))} or \code{y = range(age)}  \emph{(multiple values only allowed if \code{category} is not set)}
 }}
 
-\item{category, facet}{plotting 'direction' (\code{category} is called 'fill' and 'colour' in \code{ggplot2}). This can be:
+\item{category, facet}{Plotting 'direction' (\code{category} is called 'fill' and 'colour' in \code{ggplot2}). This can be:
 \itemize{
 \item A single variable from \code{.data}, such as \code{category = column1}
 \item A \link{function} to calculate over one or more variables from \code{.data}, such as \code{category = median(column2) / column3}, or \code{facet = ifelse(column1 == "A", "Group A", "Other")}
@@ -969,7 +969,7 @@
 
 The \code{category} can also be a date or date/time (class \code{Date} or \code{POSIXt}).}
 
-\item{type, y_secondary.type}{type of visualisation to use. This can be:
+\item{type, y_secondary.type}{Type of visualisation to use. This can be:
 \itemize{
 \item A \code{ggplot2} geom name or their abbreviation such as \code{"col"} and \code{"point"}. All geoms are supported (including \code{\link[ggplot2:geom_blank]{geom_blank()}}).
 
@@ -987,7 +987,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no x axis or if the length of unique values per x axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
 }}
 
-\item{title, subtitle, caption, tag, x.title, y.title, category.title, legend.title, y_secondary.title}{a title to use. This can be:
+\item{title, subtitle, caption, tag, x.title, y.title, category.title, legend.title, y_secondary.title}{A title to use. This can be:
 \itemize{
 \item A \link{character}, which supports markdown by using \code{\link[=md_to_expression]{md_to_expression()}} internally if \code{markdown = TRUE} (which is the default)
 \item A \link{function} to calculate over \code{.data}, such as \code{title = paste("Based on n =", n_distinct(person_id), "individuals")} or \code{subtitle = paste("Total rows:", n())}, see \emph{Examples}
@@ -996,101 +996,101 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 
 The \code{category.title} defaults to \code{TRUE} if the legend items are numeric.}
 
-\item{title.linelength}{maximum number of characters per line in the title, before a linebreak occurs}
+\item{title.linelength}{Maximum number of characters per line in the title, before a linebreak occurs.}
 
-\item{title.colour}{text colour of the title}
+\item{title.colour}{Text colour of the title.}
 
-\item{subtitle.linelength}{maximum number of characters per line in the subtitle, before a linebreak occurs}
+\item{subtitle.linelength}{Maximum number of characters per line in the subtitle, before a linebreak occurs.}
 
-\item{subtitle.colour}{text colour of the subtitle}
+\item{subtitle.colour}{Text colour of the subtitle.}
 
-\item{na.replace}{character to put in place of \code{NA} values if \code{na.rm = FALSE}}
+\item{na.replace}{Character to put in place of \code{NA} values if \code{na.rm = FALSE}.}
 
-\item{na.rm}{remove \code{NA} values from showing in the plot}
+\item{na.rm}{Remove \code{NA} values from showing in the plot.}
 
-\item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{additional settings for the plotting direction \code{facet}}
+\item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}.}
 
-\item{facet.fixed_y}{a \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25\%.}
+\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25\%.}
 
-\item{facet.fixed_x}{a \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
+\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
 
-\item{x.date_breaks}{breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
+\item{x.date_breaks}{Breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
 
-\item{x.date_labels}{labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
+\item{x.date_labels}{Labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
 
-\item{x.date_remove_years}{a \link{logical} to indicate whether the years of all \code{x} values must be unified. This will set the years of all \code{x} values \href{https://en.wikipedia.org/wiki/Unix_time}{to 1970} if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the \code{category} while maintaining a date range on \code{x}. The default is \code{FALSE}, unless \code{category} contains all years present in \code{x}.}
+\item{x.date_remove_years}{A \link{logical} to indicate whether the years of all \code{x} values must be unified. This will set the years of all \code{x} values \href{https://en.wikipedia.org/wiki/Unix_time}{to 1970} if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the \code{category} while maintaining a date range on \code{x}. The default is \code{FALSE}, unless \code{category} contains all years present in \code{x}.}
 
-\item{category.focus}{a value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
+\item{category.focus}{A value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
 
-\item{colour}{get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
+\item{colour}{Get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
 
-\item{colour_fill}{get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}}
+\item{colour_fill}{Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{colour_opacity}{amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent)}
+\item{colour_opacity}{Amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent).}
 
-\item{x.lbl_angle}{angle to use for the x axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom)}
+\item{x.lbl_angle}{Angle to use for the x axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
 
-\item{x.lbl_align}{alignment for the x axis between \code{0} (left aligned) and \code{1} (right aligned)}
+\item{x.lbl_align}{Alignment for the x axis between \code{0} (left aligned) and \code{1} (right aligned).}
 
-\item{x.lbl_italic}{\link{logical} to indicate whether the x labels should in in \emph{italics}}
+\item{x.lbl_italic}{\link{logical} to indicate whether the x labels should in in \emph{italics}.}
 
-\item{x.lbl_taxonomy}{a \link{logical} to transform all words of the \code{x} labels into italics that are in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package. This uses \code{\link[=md_to_expression]{md_to_expression()}} internally and will set \code{x.labels} to parse expressions.}
+\item{x.lbl_taxonomy}{A \link{logical} to transform all words of the \code{x} labels into italics that are in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package. This uses \code{\link[=md_to_expression]{md_to_expression()}} internally and will set \code{x.labels} to parse expressions.}
 
-\item{x.remove, y.remove}{a \link{logical} to indicate whether the axis labels and title should be removed}
+\item{x.remove, y.remove}{A \link{logical} to indicate whether the axis labels and title should be removed.}
 
-\item{x.position, y.position}{position of the axis}
+\item{x.position, y.position}{Position of the axis.}
 
-\item{x.max_items, category.max_items, facet.max_items}{number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the x axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
+\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the x axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
 
-\item{x.max_txt, category.max_txt, facet.max_txt}{the text to use of values not included number of \verb{*.max_items}. The placeholder \verb{\%n} will be replaced with the outcome of the \code{summarise_function} function, the placeholder \verb{\%p} will be replaced with the percentage.}
+\item{x.max_txt, category.max_txt, facet.max_txt}{The text to use of values not included number of \verb{*.max_items}. The placeholder \verb{\%n} will be replaced with the outcome of the \code{summarise_function} function, the placeholder \verb{\%p} will be replaced with the percentage.}
 
-\item{x.breaks, y.breaks}{a breaks function or numeric vector to use for the axis}
+\item{x.breaks, y.breaks}{A breaks function or numeric vector to use for the axis.}
 
-\item{x.n_breaks, y.n_breaks}{number of breaks, only useful if \code{x.breaks} cq. \code{y.breaks} is \code{NULL}}
+\item{x.n_breaks, y.n_breaks}{Number of breaks, only useful if \code{x.breaks} cq. \code{y.breaks} is \code{NULL}.}
 
-\item{x.transform, y.transform, category.transform}{a transformation function to use, e.g. \code{"log2"}. This can be: \code{"asinh"}, \code{"asn"}, \code{"atanh"}, \code{"boxcox"}, \code{"compose"}, \code{"date"}, \code{"exp"}, \code{"hms"}, \code{"identity"}, \code{"log"}, \code{"log10"}, \code{"log1p"}, \code{"log2"}, \code{"logit"}, \code{"modulus"}, \code{"probability"}, \code{"probit"}, \code{"pseudo_log"}, \code{"reciprocal"}, \code{"reverse"}, \code{"sqrt"}, \code{"time"}, \code{"timespan"}, \code{"yj"}.}
+\item{x.transform, y.transform, category.transform}{A transformation function to use, e.g. \code{"log2"}. This can be: \code{"asinh"}, \code{"asn"}, \code{"atanh"}, \code{"boxcox"}, \code{"compose"}, \code{"date"}, \code{"exp"}, \code{"hms"}, \code{"identity"}, \code{"log"}, \code{"log10"}, \code{"log1p"}, \code{"log2"}, \code{"logit"}, \code{"modulus"}, \code{"probability"}, \code{"probit"}, \code{"pseudo_log"}, \code{"reciprocal"}, \code{"reverse"}, \code{"sqrt"}, \code{"time"}, \code{"timespan"}, \code{"yj"}.}
 
 \item{x.expand, y.expand}{\link[ggplot2:expansion]{expansion} to use for the axis, can be length 1 or 2. \code{x.expand} defaults to 0.5 and \code{y.expand} defaults to \code{0.25}, except for sf objects (then both default to 0).}
 
-\item{x.limits, y.limits}{limits to use for the axis, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero.}
+\item{x.limits, y.limits}{Limits to use for the axis, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero.}
 
-\item{x.labels, y.labels, y_secondary.labels}{a labels function or character vector to use for the axis}
+\item{x.labels, y.labels, y_secondary.labels}{A labels function or character vector to use for the axis.}
 
-\item{x.character}{a \link{logical} to indicate whether the values of the x axis should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{x.character}{A \link{logical} to indicate whether the values of the x axis should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
 
-\item{x.drop}{\link{logical} to indicate whether factor levels should be dropped}
+\item{x.drop}{\link{logical} to indicate whether factor levels should be dropped.}
 
-\item{x.mic}{\link{logical} to indicate whether the x axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2}
+\item{x.mic}{\link{logical} to indicate whether the x axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
 
-\item{x.zoom, y.zoom}{a \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the x axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the y axis}
+\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the x axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the y axis.}
 
 \item{y.24h}{a \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences}
 
-\item{y.age}{a \link{logical} to indicate whether the y labels and breaks should be formatted as ages in years}
+\item{y.age}{A \link{logical} to indicate whether the y labels and breaks should be formatted as ages in years.}
 
-\item{y.scientific, y_secondary.scientific}{a \link{logical} to indicate whether the y labels should be formatted in scientific notation. Defaults to \code{TRUE} only if the range of the y values spans more than \code{10e5}.}
+\item{y.scientific, y_secondary.scientific}{A \link{logical} to indicate whether the y labels should be formatted in scientific notation. Defaults to \code{TRUE} only if the range of the y values spans more than \code{10e5}.}
 
-\item{y.percent, y_secondary.percent}{a \link{logical} to indicate whether the y labels should be formatted as percentages}
+\item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages.}
 
-\item{y.percent_break}{a value on which the y axis should have breaks}
+\item{y.percent_break}{A value on which the y axis should have breaks.}
 
-\item{y_secondary}{values to use for plotting along the secondary y axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.}
+\item{y_secondary}{Values to use for plotting along the secondary y axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.}
 
-\item{y_secondary.colour, y_secondary.colour_fill}{colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}}
+\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{category_type}{type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
+\item{category_type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
-\item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{settings for the plotting direction \code{category}.}
+\item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{Settings for the plotting direction \code{category}.}
 
-\item{category.limits}{limits to use for a numeric category, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{category.limits = c(0, NA)} to have the scale start at zero.}
+\item{category.limits}{Limits to use for a numeric category, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{category.limits = c(0, NA)} to have the scale start at zero.}
 
-\item{category.date_breaks}{breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to \code{\link[=seq.Date]{seq.Date(by = ...)}} and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").}
+\item{category.date_breaks}{Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to \code{\link[=seq.Date]{seq.Date(by = ...)}} and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").}
 
-\item{category.date_labels}{labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
+\item{category.date_labels}{Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
 
-\item{category.character}{a \link{logical} to indicate whether the values of the category should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
 
-\item{x.sort, category.sort, facet.sort}{sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
+\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
 \itemize{
 \item A manual vector of values
 \item \code{TRUE}: sort \link{factor}s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
@@ -1103,93 +1103,100 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 \item \code{"freq-asc"}: sort ascending according to the frequencies of \code{y} computed by \code{summarise_function} (lowest value first)
 }}
 
-\item{x.complete, category.complete, facet.complete}{a value to complete the data. This makes use of \code{\link[tidyr:full_seq]{tidyr::full_seq()}} and \code{\link[tidyr:complete]{tidyr::complete()}}. For example, using \code{x.complete = 0} will apply \code{data |> complete(full_seq(x, ...), fill = list(x = 0))}. Using value \code{TRUE} (e.g., \code{x.complete = TRUE}) is identical to using value \code{0}.}
+\item{x.complete, category.complete, facet.complete}{A value to complete the data. This makes use of \code{\link[tidyr:full_seq]{tidyr::full_seq()}} and \code{\link[tidyr:complete]{tidyr::complete()}}. For example, using \code{x.complete = 0} will apply \code{data |> complete(full_seq(x, ...), fill = list(x = 0))}. Using value \code{TRUE} (e.g., \code{x.complete = TRUE}) is identical to using value \code{0}.}
 
-\item{datalabels}{values to show as datalabels, see also \code{datalabels.format}. This can be:
+\item{datalabels}{Values to show as datalabels, see also \code{datalabels.format}. This can be:
 \itemize{
 \item Left blank. This will default to the values of \code{y} in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless \code{datalabels = TRUE}.
 \item \code{TRUE} or \code{FALSE} to force or remove datalabels
 \item A function to calculate over \code{.data}, such as \code{datalabels = paste(round(column1), "\\n", column2)}
 }}
 
-\item{datalabels.round}{number of digits to round the datalabels, applies to both \code{"\%n"} and \code{"\%p"} for replacement (see \code{datalabels.format})}
+\item{datalabels.round}{Number of digits to round the datalabels, applies to both \code{"\%n"} and \code{"\%p"} for replacement (see \code{datalabels.format}).}
 
-\item{datalabels.format}{format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage of the total count. Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
+\item{datalabels.format}{Format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage of the total count. Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
 
-\item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{settings for the datalabels}
+\item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{Settings for the datalabels.}
 
-\item{decimal.mark}{decimal mark, defaults to \code{\link[=dec_mark]{dec_mark()}}}
+\item{decimal.mark}{Decimal mark, defaults to \code{\link[=dec_mark]{dec_mark()}}.}
 
-\item{big.mark}{thousands separator, defaults to \code{\link[=big_mark]{big_mark()}}}
+\item{big.mark}{Thousands separator, defaults to \code{\link[=big_mark]{big_mark()}}.}
 
-\item{summarise_function}{a \link{function} to use if the data has to be summarised, see \emph{Examples}. This can also be \code{NULL}, which will be converted to \code{function(x) x}.}
+\item{summarise_function}{A \link{function} to use if the data has to be summarised, see \emph{Examples}. This can also be \code{NULL}, which will be converted to \code{function(x) x}.}
 
-\item{stacked}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}}
+\item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}.}
 
-\item{stacked_fill}{a \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%)}
+\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%).}
 
-\item{horizontal}{a \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original x axis.}
+\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original x axis.}
 
-\item{reverse}{a \link{logical} to reverse the \emph{values} of \code{category}. Use \code{legend.reverse} to reverse the \emph{legend} of \code{category}.}
+\item{reverse}{A \link{logical} to reverse the \emph{values} of \code{category}. Use \code{legend.reverse} to reverse the \emph{legend} of \code{category}.}
 
-\item{smooth}{a \link{logical} to add a smooth. In histograms, this will add the density count as an overlaying line (default: \code{TRUE}). In all other cases, a smooth will be added using \code{\link[ggplot2:geom_smooth]{geom_smooth()}} (default: \code{FALSE}).}
+\item{smooth}{A \link{logical} to add a smooth. In histograms, this will add the density count as an overlaying line (default: \code{TRUE}). In all other cases, a smooth will be added using \code{\link[ggplot2:geom_smooth]{geom_smooth()}} (default: \code{FALSE}).}
 
-\item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{settings for \code{smooth}}
+\item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{Settings for \code{smooth}.}
 
-\item{size}{size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for a UpSet plots (using \code{type = "upset"}); \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
+\item{size}{Size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for a UpSet plots (using \code{type = "upset"}); \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
 
-\item{linetype}{linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.}
-
-\item{linewidth}{linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
-\itemize{
-\item \code{0.5} for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}, and for geoms that have no area (such as \link[ggplot2:geom_path]{line})
-\item \code{0.1} for \link[ggplot2:ggsf]{sf}
-\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area})
-\item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
-\item \code{0.5} otherwise (such as \link[ggplot2:geom_histogram]{histogram} and \link[ggplot2:geom_ribbon]{area})
+\item{linetype}{Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
+\enumerate{
+\item solid (default)
+\item dashed
+\item dotted
+\item dotdash
+\item longash
+\item twodash
 }}
 
-\item{binwidth}{width of bins (only useful for \code{geom = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
+\item{linewidth}{Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
+\itemize{
+\item \code{0.10} for \link[ggplot2:ggsf]{sf}
+\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
+\item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
+\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_path]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
+}}
 
-\item{width}{width of the geom. Defaults to \code{0.75} for geoms \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin} and \link[ggplot2:geom_jitter]{jitter}, and to \code{0.5} otherwise.}
+\item{binwidth}{Width of bins (only useful for \code{geom = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
 
-\item{jitter_seed}{seed (randomisation factor) to be set when using \code{type = "jitter"}}
+\item{width}{Width of the geom. Defaults to \code{0.66} for geoms \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin} and \link[ggplot2:geom_jitter]{jitter}, and to \code{0.5} otherwise.}
 
-\item{violin_scale}{scale to be set when using \code{type = "violin"}, can also be set to \code{"area"}}
+\item{jitter_seed}{Seed (randomisation factor) to be set when using \code{type = "jitter"}.}
 
-\item{legend.position}{position of the legend, must be \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"} or \code{"none"} (or \code{NA} or \code{NULL}), can be abbreviated. Defaults to \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
+\item{violin_scale}{Scale to be set when using \code{type = "violin"}, can also be set to \code{"area"}.}
 
-\item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic}{other settings for the legend}
+\item{legend.position}{Position of the legend, must be \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"} or \code{"none"} (or \code{NA} or \code{NULL}), can be abbreviated. Defaults to \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
 
-\item{sankey.node_width}{width of the vertical nodes in a Sankey plot}
+\item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic}{Other settings for the legend.}
 
-\item{sankey.node_whitespace}{whitespace between the nodes in a Sankey plot}
+\item{sankey.node_width}{Width of the vertical nodes in a Sankey plot.}
 
-\item{sankey.alpha}{alpha of the flows in a Sankey plot}
+\item{sankey.node_whitespace}{Whitespace between the nodes in a Sankey plot.}
 
-\item{sankey.remove_axes}{logical to indicate whether all axes must be removed in a Sankey plot}
+\item{sankey.alpha}{Alpha of the flows in a Sankey plot.}
 
-\item{zoom}{a \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
+\item{sankey.remove_axes}{Logical to indicate whether all axes must be removed in a Sankey plot.}
 
-\item{sep}{separator character to use if multiple columns are given to either of the three directions: \code{x}, \code{category} and \code{facet}, e.g. \code{facet = c(column1, column2)}}
+\item{zoom}{A \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
 
-\item{print}{a \link{logical} to indicate if the result should be \link[=print]{printed} instead of just returned}
+\item{sep}{Separator character to use if multiple columns are given to either of the three directions: \code{x}, \code{category} and \code{facet}, e.g. \code{facet = c(column1, column2)}.}
 
-\item{text_factor}{text factor to use, which will apply to all texts shown in the plot}
+\item{print}{A \link{logical} to indicate if the result should be \link[=print]{printed} instead of just returned.}
 
-\item{font}{font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
+\item{text_factor}{Text factor to use, which will apply to all texts shown in the plot.}
 
-\item{theme}{a valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
+\item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
 
-\item{background}{the background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=get_colour]{get_colour()}}. Only applies when \code{theme} is not \code{NULL}.}
+\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
-\item{markdown}{a \link{logical} to turn all labels and titles into \link{plotmath} expressions, by converting common markdown language using the \code{\link[=md_to_expression]{md_to_expression()}} function (defaults to \code{TRUE})}
+\item{background}{The background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=get_colour]{get_colour()}}. Only applies when \code{theme} is not \code{NULL}.}
 
-\item{...}{any argument to give to the geom. This will override automatically-set settings for the geom.}
+\item{markdown}{A \link{logical} to turn all labels and titles into \link{plotmath} expressions, by converting common markdown language using the \code{\link[=md_to_expression]{md_to_expression()}} function (defaults to \code{TRUE}).}
 
-\item{crs}{the coordinate reference system (CRS) to use. If this is not left blank, \code{\link[sf:st_transform]{sf::st_transform()}} will be used to transform the geometric data to the new CRS.}
+\item{...}{Any argument to give to the geom. This will override automatically-set settings for the geom.}
 
-\item{datalabels.centroid}{a \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:geos_unary]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:geos_unary]{sf::st_point_on_surface()}})}
+\item{crs}{The coordinate reference system (CRS) to use. If this is not left blank, \code{\link[sf:st_transform]{sf::st_transform()}} will be used to transform the geometric data to the new CRS.}
+
+\item{datalabels.centroid}{A \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:geos_unary]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:geos_unary]{sf::st_point_on_surface()}}).}
 }
 \description{
 These are the implemented methods for different S3 classes to be used in \code{\link[=plot2]{plot2()}}. Since they have an extensive list of arguments, they are placed here on a separate manual page.

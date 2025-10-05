@@ -13,15 +13,15 @@ theme_minimal2(
 )
 }
 \arguments{
-\item{...}{arguments passed on to \code{\link[ggplot2:theme]{ggplot2::theme()}}}
+\item{...}{Arguments passed on to \code{\link[ggplot2:theme]{ggplot2::theme()}}.}
 
-\item{colour_font_primary}{colour to set for the plot title and tag}
+\item{colour_font_primary}{Colour to set for the plot title and tag.}
 
-\item{colour_font_secondary}{colour to set for the plot subtitle and caption}
+\item{colour_font_secondary}{Colour to set for the plot subtitle and caption.}
 
-\item{colour_font_axis}{colour to set for the axis titles on both x and y}
+\item{colour_font_axis}{Colour to set for the axis titles on both x and y.}
 
-\item{colour_background}{colour to set for the background}
+\item{colour_background}{Colour to set for the background.}
 }
 \description{
 This \code{ggplot2} theme provides even more white area and less clutter than \code{\link[ggplot2:ggtheme]{theme_minimal()}}.

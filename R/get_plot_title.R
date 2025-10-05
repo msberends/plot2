@@ -15,9 +15,9 @@
 #' Get Plot Title
 #' 
 #' Get the title of the plot, or a default value. If the title is not set in a plot, this function tries to generate one from the plot mapping.
-#' @param plot a `ggplot2` plot
-#' @param valid_filename a [logical] to indicate whether the returned value should be a valid filename, defaults to `TRUE`
-#' @param default the default value, if a plot title is absent
+#' @param plot A `ggplot2` plot.
+#' @param valid_filename A [logical] to indicate whether the returned value should be a valid filename, defaults to `TRUE`.
+#' @param default The default value, if a plot title is absent.
 #' @importFrom ggplot2 is.ggplot
 #' @export
 #' @examples

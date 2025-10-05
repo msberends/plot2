@@ -15,7 +15,7 @@
 #' Label Euro currencies
 #' 
 #' Format numbers as currency, rounding values to dollars or cents using a convenient heuristic.
-#' @param x values
+#' @param x Values.
 #' @inheritParams plot2
 #' @name labellers
 #' @rdname labellers

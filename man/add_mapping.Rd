@@ -7,9 +7,9 @@
 add_mapping(plot, ...)
 }
 \arguments{
-\item{plot}{a \code{ggplot2} plot}
+\item{plot}{A \code{ggplot2} plot.}
 
-\item{...}{arguments passed on to \code{\link[ggplot2:aes]{ggplot2::aes()}}}
+\item{...}{Arguments passed on to \code{\link[ggplot2:aes]{ggplot2::aes()}}.}
 }
 \description{
 This function can be used to adjust the mapping of a plot.

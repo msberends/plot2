@@ -25,7 +25,7 @@ unregister_colour(regex)
 add_white(x, white)
 }
 \arguments{
-\item{x}{colour or colour palette name. Input can be:
+\item{x}{Colour or colour palette name. Input can be:
 \itemize{
 \item One of the colourblind-safe \code{viridisLite} palettes:
 \itemize{
@@ -38,7 +38,7 @@ add_white(x, white)
 \item \code{"mako"}
 \item \code{"turbo"}
 }
-\item One of the built-in palettes in \R (these are from \R 4.4.2):
+\item One of the built-in palettes in \R (these are from \R 4.5.1):
 \itemize{
 \item \code{"Accent"}
 \item \code{"Alphabet"}
@@ -63,19 +63,19 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"azure1"}, \code{"cornsilk2"}, \code{"cyan"}, \code{"lightyellow2"}, \code{"moccasin"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"darkseagreen4"}, \code{"lightgoldenrod2"}, \code{"snow1"}, \code{"springgreen2"}, \code{"tan2"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
-\item{length}{size of the vector to be returned}
+\item{length}{Size of the vector to be returned.}
 
-\item{opacity}{amount of opacity (0 = solid, 1 = transparent)}
+\item{opacity}{Amount of opacity (0 = solid, 1 = transparent).}
 
-\item{...}{named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
+\item{...}{Named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{regex}{a \link[stringr:modifiers]{stringr::regex} to unregister colours}
+\item{regex}{A \link[stringr:modifiers]{stringr::regex} to unregister colours.}
 
-\item{white}{number between \verb{[0, 1]} to add white to \code{x}}
+\item{white}{A number between \verb{[0, 1]} to add white to \code{x}.}
 }
 \value{
 \link{character} vector in HTML format (i.e., \code{"#AABBCC"}) with new class \code{colour}

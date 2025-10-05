@@ -15,8 +15,8 @@
 #' Add Additional Mapping
 #' 
 #' This function can be used to adjust the mapping of a plot.
-#' @param plot a `ggplot2` plot
-#' @param ... arguments passed on to [ggplot2::aes()]
+#' @param plot A `ggplot2` plot.
+#' @param ... Arguments passed on to [ggplot2::aes()].
 #' @importFrom ggplot2 is.ggplot aes
 #' @export
 #' @examples 
