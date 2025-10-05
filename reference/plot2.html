@@ -11,7 +11,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -205,18 +205,18 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dl><dt id="arg--data">.data<a class="anchor" aria-label="anchor" href="#arg--data"></a></dt>
-<dd><p>data to plot</p></dd>
+<dd><p>Data to plot.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>plotting 'direction' for the x axis. This can be:</p><ul><li><p>A single variable from <code>.data</code>, such as <code>x = column1</code></p></li>
+<dd><p>Plotting 'direction' for the x axis. This can be:</p><ul><li><p>A single variable from <code>.data</code>, such as <code>x = column1</code></p></li>
 <li><p>A <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to calculate over one or more variables from <code>.data</code>, such as <code>x = format(column1, "%Y")</code>, or <code>x = ifelse(column1 == "A", "Group A", "Other")</code></p></li>
 <li><p>Multiple variables from <code>.data</code>, such as <code>x = c(column1, column2, column2)</code>, or using <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">selection helpers</a> such as <code>x = where(is.character)</code> or <code>x = starts_with("var_")</code> <em>(only allowed and required for Sankey plots using <code>type = "sankey"</code>)</em></p></li>
 </ul></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
-<dd><p>values to use for plotting along the y axis. This can be:</p><ul><li><p>A single variable from <code>.data</code>, such as <code>y = column1</code></p></li>
+<dd><p>Values to use for plotting along the y axis. This can be:</p><ul><li><p>A single variable from <code>.data</code>, such as <code>y = column1</code></p></li>
 <li><p>Multiple variables from <code>.data</code>, such as <code>y = c(column1, column2)</code> or <code>y = c(name1 = column1, "name 2" = column2)</code>, or using <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">selection helpers</a> such as <code>y = where(is.double)</code> or <code>y = starts_with("var_")</code> <em>(multiple variables only allowed if <code>category</code> is not set)</em></p></li>
 <li><p>A <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to calculate over <code>.data</code> returning a single value, such as <code>y = n()</code> for the row count, or based on other variables such as <code>y = n_distinct(person_id)</code>, <code>y = max(column1)</code>, or <code>y = median(column2) / column3</code></p></li>
 <li><p>A <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to calculate over <code>.data</code> returning multiple values, such as <code>y = quantile(column1, c(0.25, 0.75))</code> or <code>y = range(age)</code>  <em>(multiple values only allowed if <code>category</code> is not set)</em></p></li>
@@ -224,7 +224,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dt id="arg-category-facet">category, facet<a class="anchor" aria-label="anchor" href="#arg-category-facet"></a></dt>
-<dd><p>plotting 'direction' (<code>category</code> is called 'fill' and 'colour' in <code>ggplot2</code>). This can be:</p><ul><li><p>A single variable from <code>.data</code>, such as <code>category = column1</code></p></li>
+<dd><p>Plotting 'direction' (<code>category</code> is called 'fill' and 'colour' in <code>ggplot2</code>). This can be:</p><ul><li><p>A single variable from <code>.data</code>, such as <code>category = column1</code></p></li>
 <li><p>A <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to calculate over one or more variables from <code>.data</code>, such as <code>category = median(column2) / column3</code>, or <code>facet = ifelse(column1 == "A", "Group A", "Other")</code></p></li>
 <li><p>Multiple variables from <code>.data</code>, such as <code>facet = c(column1, column2)</code> (use <code>sep</code> to control the separator character)</p></li>
 <li><p>One or more variables from <code>.data</code> using <a href="https://tidyselect.r-lib.org/reference/language.html" class="external-link">selection helpers</a>, such as <code>category = where(is.double)</code> or <code>facet = starts_with("var_")</code></p></li>
@@ -232,7 +232,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dt id="arg-type-y-secondary-type">type, y_secondary.type<a class="anchor" aria-label="anchor" href="#arg-type-y-secondary-type"></a></dt>
-<dd><p>type of visualisation to use. This can be:</p><ul><li><p>A <code>ggplot2</code> geom name or their abbreviation such as <code>"col"</code> and <code>"point"</code>. All geoms are supported (including <code><a href="https://ggplot2.tidyverse.org/reference/geom_blank.html" class="external-link">geom_blank()</a></code>).</p>
+<dd><p>Type of visualisation to use. This can be:</p><ul><li><p>A <code>ggplot2</code> geom name or their abbreviation such as <code>"col"</code> and <code>"point"</code>. All geoms are supported (including <code><a href="https://ggplot2.tidyverse.org/reference/geom_blank.html" class="external-link">geom_blank()</a></code>).</p>
 <p>Full function names can be used (e.g., <code>"geom_histogram"</code>), but they can also be abbreviated (e.g., <code>"h"</code>, <code>"hist"</code>). The following geoms can be abbreviated by their first character: area (<code>"a"</code>), boxplot (<code>"b"</code>), beeswarm (<code>"bs"</code>), column (<code>"c"</code>), histogram (<code>"h"</code>), jitter (<code>"j"</code>), line (<code>"l"</code>), point (<code>"p"</code>), ribbon (<code>"r"</code>), and violin (<code>"v"</code>).</p>
 <p>Please note: in <code>ggplot2</code>, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, <code>type = "bar"</code> will set <code>type = "col"</code> and <code>horizontal = TRUE</code>.</p></li>
 <li><p>One of these additional types:</p><ul><li><p><code>"barpercent"</code> (short: <code>"bp"</code>), which is effectively a shortcut to set <code>type = "col"</code> and <code>horizontal = TRUE</code> and <code>x.max_items = 10</code> and <code>x.sort = "freq-desc"</code> and <code>datalabels.format = "%n (%p)"</code>.</p></li>
@@ -246,118 +246,118 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dt id="arg-title-subtitle-caption-tag-x-title-y-title-category-title-legend-title-y-secondary-title">title, subtitle, caption, tag, x.title, y.title, category.title, legend.title, y_secondary.title<a class="anchor" aria-label="anchor" href="#arg-title-subtitle-caption-tag-x-title-y-title-category-title-legend-title-y-secondary-title"></a></dt>
-<dd><p>a title to use. This can be:</p><ul><li><p>A <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>, which supports markdown by using <code><a href="md_to_expression.html">md_to_expression()</a></code> internally if <code>markdown = TRUE</code> (which is the default)</p></li>
+<dd><p>A title to use. This can be:</p><ul><li><p>A <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>, which supports markdown by using <code><a href="md_to_expression.html">md_to_expression()</a></code> internally if <code>markdown = TRUE</code> (which is the default)</p></li>
 <li><p>A <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to calculate over <code>.data</code>, such as <code>title = paste("Based on n =", n_distinct(person_id), "individuals")</code> or <code>subtitle = paste("Total rows:", n())</code>, see <em>Examples</em></p></li>
 <li><p>An <a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a>, e.g. using <code>parse(text = "...")</code></p></li>
 </ul><p>The <code>category.title</code> defaults to <code>TRUE</code> if the legend items are numeric.</p></dd>
 
 
 <dt id="arg-title-linelength">title.linelength<a class="anchor" aria-label="anchor" href="#arg-title-linelength"></a></dt>
-<dd><p>maximum number of characters per line in the title, before a linebreak occurs</p></dd>
+<dd><p>Maximum number of characters per line in the title, before a linebreak occurs.</p></dd>
 
 
 <dt id="arg-title-colour">title.colour<a class="anchor" aria-label="anchor" href="#arg-title-colour"></a></dt>
-<dd><p>text colour of the title</p></dd>
+<dd><p>Text colour of the title.</p></dd>
 
 
 <dt id="arg-subtitle-linelength">subtitle.linelength<a class="anchor" aria-label="anchor" href="#arg-subtitle-linelength"></a></dt>
-<dd><p>maximum number of characters per line in the subtitle, before a linebreak occurs</p></dd>
+<dd><p>Maximum number of characters per line in the subtitle, before a linebreak occurs.</p></dd>
 
 
 <dt id="arg-subtitle-colour">subtitle.colour<a class="anchor" aria-label="anchor" href="#arg-subtitle-colour"></a></dt>
-<dd><p>text colour of the subtitle</p></dd>
+<dd><p>Text colour of the subtitle.</p></dd>
 
 
 <dt id="arg-na-replace">na.replace<a class="anchor" aria-label="anchor" href="#arg-na-replace"></a></dt>
-<dd><p>character to put in place of <code>NA</code> values if <code>na.rm = FALSE</code></p></dd>
+<dd><p>Character to put in place of <code>NA</code> values if <code>na.rm = FALSE</code>.</p></dd>
 
 
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
-<dd><p>remove <code>NA</code> values from showing in the plot</p></dd>
+<dd><p>Remove <code>NA</code> values from showing in the plot.</p></dd>
 
 
 <dt id="arg-facet-position-facet-fill-facet-bold-facet-italic-facet-size-facet-margin-facet-repeat-lbls-x-facet-repeat-lbls-y-facet-drop-facet-nrow-facet-relative">facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative<a class="anchor" aria-label="anchor" href="#arg-facet-position-facet-fill-facet-bold-facet-italic-facet-size-facet-margin-facet-repeat-lbls-x-facet-repeat-lbls-y-facet-drop-facet-nrow-facet-relative"></a></dt>
-<dd><p>additional settings for the plotting direction <code>facet</code></p></dd>
+<dd><p>Additional settings for the plotting direction <code>facet</code>.</p></dd>
 
 
 <dt id="arg-facet-fixed-y">facet.fixed_y<a class="anchor" aria-label="anchor" href="#arg-facet-fixed-y"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all y scales should have the same limits. Defaults to <code>TRUE</code> only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25%.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all y scales should have the same limits. Defaults to <code>TRUE</code> only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25%.</p></dd>
 
 
 <dt id="arg-facet-fixed-x">facet.fixed_x<a class="anchor" aria-label="anchor" href="#arg-facet-fixed-x"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all x scales should have the same breaks. This acts like the inverse of <code>x.drop</code>.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all x scales should have the same breaks. This acts like the inverse of <code>x.drop</code>.</p></dd>
 
 
 <dt id="arg-x-date-breaks">x.date_breaks<a class="anchor" aria-label="anchor" href="#arg-x-date-breaks"></a></dt>
-<dd><p>breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as <code>"1 day"</code> and <code>"2 years"</code>.</p></dd>
+<dd><p>Breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as <code>"1 day"</code> and <code>"2 years"</code>.</p></dd>
 
 
 <dt id="arg-x-date-labels">x.date_labels<a class="anchor" aria-label="anchor" href="#arg-x-date-labels"></a></dt>
-<dd><p>labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as <code>"d mmmm yyyy"</code>.</p></dd>
+<dd><p>Labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as <code>"d mmmm yyyy"</code>.</p></dd>
 
 
 <dt id="arg-x-date-remove-years">x.date_remove_years<a class="anchor" aria-label="anchor" href="#arg-x-date-remove-years"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the years of all <code>x</code> values must be unified. This will set the years of all <code>x</code> values <a href="https://en.wikipedia.org/wiki/Unix_time" class="external-link">to 1970</a> if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the <code>category</code> while maintaining a date range on <code>x</code>. The default is <code>FALSE</code>, unless <code>category</code> contains all years present in <code>x</code>.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the years of all <code>x</code> values must be unified. This will set the years of all <code>x</code> values <a href="https://en.wikipedia.org/wiki/Unix_time" class="external-link">to 1970</a> if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the <code>category</code> while maintaining a date range on <code>x</code>. The default is <code>FALSE</code>, unless <code>category</code> contains all years present in <code>x</code>.</p></dd>
 
 
 <dt id="arg-category-focus">category.focus<a class="anchor" aria-label="anchor" href="#arg-category-focus"></a></dt>
-<dd><p>a value of <code>category</code> that should be highlighted, meaning that all other values in <code>category</code> will be greyed out. This can also be a numeric value between 1 and the length of unique values of <code>category</code>, e.g. <code>category.focus = 2</code> to focus on the second legend item.</p></dd>
+<dd><p>A value of <code>category</code> that should be highlighted, meaning that all other values in <code>category</code> will be greyed out. This can also be a numeric value between 1 and the length of unique values of <code>category</code>, e.g. <code>category.focus = 2</code> to focus on the second legend item.</p></dd>
 
 
 <dt id="arg-colour">colour<a class="anchor" aria-label="anchor" href="#arg-colour"></a></dt>
-<dd><p>get_colour(s) to set, will be evaluated with <code><a href="colour.html">get_colour()</a></code> if set. This can also be one of the viridis colours with automatic implementation for any plot: <code>"viridis"</code>, <code>"magma"</code>, <code>"inferno"</code>, <code>"plasma"</code>, <code>"cividis"</code>, <code>"rocket"</code>, <code>"mako"</code> or <code>"turbo"</code>. Also, this can be a named vector to match values of <code>category</code>, see <em>Examples</em>. Using a named vector can be used to manually sort the values of <code>category</code>.</p></dd>
+<dd><p>Get_colour(s) to set, will be evaluated with <code><a href="colour.html">get_colour()</a></code> if set. This can also be one of the viridis colours with automatic implementation for any plot: <code>"viridis"</code>, <code>"magma"</code>, <code>"inferno"</code>, <code>"plasma"</code>, <code>"cividis"</code>, <code>"rocket"</code>, <code>"mako"</code> or <code>"turbo"</code>. Also, this can be a named vector to match values of <code>category</code>, see <em>Examples</em>. Using a named vector can be used to manually sort the values of <code>category</code>.</p></dd>
 
 
 <dt id="arg-colour-fill">colour_fill<a class="anchor" aria-label="anchor" href="#arg-colour-fill"></a></dt>
-<dd><p>get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with <code><a href="colour.html">get_colour()</a></code></p></dd>
+<dd><p>Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with <code><a href="colour.html">get_colour()</a></code>.</p></dd>
 
 
 <dt id="arg-colour-opacity">colour_opacity<a class="anchor" aria-label="anchor" href="#arg-colour-opacity"></a></dt>
-<dd><p>amount of opacity for <code>colour</code>/<code>colour_fill</code> (0 = solid, 1 = transparent)</p></dd>
+<dd><p>Amount of opacity for <code>colour</code>/<code>colour_fill</code> (0 = solid, 1 = transparent).</p></dd>
 
 
 <dt id="arg-x-lbl-angle">x.lbl_angle<a class="anchor" aria-label="anchor" href="#arg-x-lbl-angle"></a></dt>
-<dd><p>angle to use for the x axis in a counter-clockwise direction (i.e., a value of <code>90</code> will orient the axis labels from bottom to top, a value of <code>270</code> will orient the axis labels from top to bottom)</p></dd>
+<dd><p>Angle to use for the x axis in a counter-clockwise direction (i.e., a value of <code>90</code> will orient the axis labels from bottom to top, a value of <code>270</code> will orient the axis labels from top to bottom).</p></dd>
 
 
 <dt id="arg-x-lbl-align">x.lbl_align<a class="anchor" aria-label="anchor" href="#arg-x-lbl-align"></a></dt>
-<dd><p>alignment for the x axis between <code>0</code> (left aligned) and <code>1</code> (right aligned)</p></dd>
+<dd><p>Alignment for the x axis between <code>0</code> (left aligned) and <code>1</code> (right aligned).</p></dd>
 
 
 <dt id="arg-x-lbl-italic">x.lbl_italic<a class="anchor" aria-label="anchor" href="#arg-x-lbl-italic"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the x labels should in in <em>italics</em></p></dd>
+<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the x labels should in in <em>italics</em>.</p></dd>
 
 
 <dt id="arg-x-lbl-taxonomy">x.lbl_taxonomy<a class="anchor" aria-label="anchor" href="#arg-x-lbl-taxonomy"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to transform all words of the <code>x</code> labels into italics that are in the <a href="https://amr-for-r.org/reference/microorganisms.html" class="external-link">microorganisms</a> data set of the <code>AMR</code> package. This uses <code><a href="md_to_expression.html">md_to_expression()</a></code> internally and will set <code>x.labels</code> to parse expressions.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to transform all words of the <code>x</code> labels into italics that are in the <a href="https://amr-for-r.org/reference/microorganisms.html" class="external-link">microorganisms</a> data set of the <code>AMR</code> package. This uses <code><a href="md_to_expression.html">md_to_expression()</a></code> internally and will set <code>x.labels</code> to parse expressions.</p></dd>
 
 
 <dt id="arg-x-remove-y-remove">x.remove, y.remove<a class="anchor" aria-label="anchor" href="#arg-x-remove-y-remove"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the axis labels and title should be removed</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the axis labels and title should be removed.</p></dd>
 
 
 <dt id="arg-x-position-y-position">x.position, y.position<a class="anchor" aria-label="anchor" href="#arg-x-position-y-position"></a></dt>
-<dd><p>position of the axis</p></dd>
+<dd><p>Position of the axis.</p></dd>
 
 
 <dt id="arg-x-max-items-category-max-items-facet-max-items">x.max_items, category.max_items, facet.max_items<a class="anchor" aria-label="anchor" href="#arg-x-max-items-category-max-items-facet-max-items"></a></dt>
-<dd><p>number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the <code>summarise_function</code> function. <strong>Please note:</strong> the sorting will be applied first, allowing to e.g. plot the top <em>n</em> most frequent values of the x axis by combining <code>x.sort = "freq-desc"</code> with <code>x.max_items =</code> <em>n</em>.</p></dd>
+<dd><p>Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the <code>summarise_function</code> function. <strong>Please note:</strong> the sorting will be applied first, allowing to e.g. plot the top <em>n</em> most frequent values of the x axis by combining <code>x.sort = "freq-desc"</code> with <code>x.max_items =</code> <em>n</em>.</p></dd>
 
 
 <dt id="arg-x-max-txt-category-max-txt-facet-max-txt">x.max_txt, category.max_txt, facet.max_txt<a class="anchor" aria-label="anchor" href="#arg-x-max-txt-category-max-txt-facet-max-txt"></a></dt>
-<dd><p>the text to use of values not included number of <code>*.max_items</code>. The placeholder <code>%n</code> will be replaced with the outcome of the <code>summarise_function</code> function, the placeholder <code>%p</code> will be replaced with the percentage.</p></dd>
+<dd><p>The text to use of values not included number of <code>*.max_items</code>. The placeholder <code>%n</code> will be replaced with the outcome of the <code>summarise_function</code> function, the placeholder <code>%p</code> will be replaced with the percentage.</p></dd>
 
 
 <dt id="arg-x-breaks-y-breaks">x.breaks, y.breaks<a class="anchor" aria-label="anchor" href="#arg-x-breaks-y-breaks"></a></dt>
-<dd><p>a breaks function or numeric vector to use for the axis</p></dd>
+<dd><p>A breaks function or numeric vector to use for the axis.</p></dd>
 
 
 <dt id="arg-x-n-breaks-y-n-breaks">x.n_breaks, y.n_breaks<a class="anchor" aria-label="anchor" href="#arg-x-n-breaks-y-n-breaks"></a></dt>
-<dd><p>number of breaks, only useful if <code>x.breaks</code> cq. <code>y.breaks</code> is <code>NULL</code></p></dd>
+<dd><p>Number of breaks, only useful if <code>x.breaks</code> cq. <code>y.breaks</code> is <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-x-transform-y-transform-category-transform">x.transform, y.transform, category.transform<a class="anchor" aria-label="anchor" href="#arg-x-transform-y-transform-category-transform"></a></dt>
-<dd><p>a transformation function to use, e.g. <code>"log2"</code>. This can be: <code>"asinh"</code>, <code>"asn"</code>, <code>"atanh"</code>, <code>"boxcox"</code>, <code>"compose"</code>, <code>"date"</code>, <code>"exp"</code>, <code>"hms"</code>, <code>"identity"</code>, <code>"log"</code>, <code>"log10"</code>, <code>"log1p"</code>, <code>"log2"</code>, <code>"logit"</code>, <code>"modulus"</code>, <code>"probability"</code>, <code>"probit"</code>, <code>"pseudo_log"</code>, <code>"reciprocal"</code>, <code>"reverse"</code>, <code>"sqrt"</code>, <code>"time"</code>, <code>"timespan"</code>, <code>"yj"</code>.</p></dd>
+<dd><p>A transformation function to use, e.g. <code>"log2"</code>. This can be: <code>"asinh"</code>, <code>"asn"</code>, <code>"atanh"</code>, <code>"boxcox"</code>, <code>"compose"</code>, <code>"date"</code>, <code>"exp"</code>, <code>"hms"</code>, <code>"identity"</code>, <code>"log"</code>, <code>"log10"</code>, <code>"log1p"</code>, <code>"log2"</code>, <code>"logit"</code>, <code>"modulus"</code>, <code>"probability"</code>, <code>"probit"</code>, <code>"pseudo_log"</code>, <code>"reciprocal"</code>, <code>"reverse"</code>, <code>"sqrt"</code>, <code>"time"</code>, <code>"timespan"</code>, <code>"yj"</code>.</p></dd>
 
 
 <dt id="arg-x-expand-y-expand">x.expand, y.expand<a class="anchor" aria-label="anchor" href="#arg-x-expand-y-expand"></a></dt>
@@ -365,27 +365,27 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dt id="arg-x-limits-y-limits">x.limits, y.limits<a class="anchor" aria-label="anchor" href="#arg-x-limits-y-limits"></a></dt>
-<dd><p>limits to use for the axis, can be length 1 or 2. Use <code>NA</code> for the highest or lowest value in the data, e.g. <code>y.limits = c(0, NA)</code> to have the y scale start at zero.</p></dd>
+<dd><p>Limits to use for the axis, can be length 1 or 2. Use <code>NA</code> for the highest or lowest value in the data, e.g. <code>y.limits = c(0, NA)</code> to have the y scale start at zero.</p></dd>
 
 
 <dt id="arg-x-labels-y-labels-y-secondary-labels">x.labels, y.labels, y_secondary.labels<a class="anchor" aria-label="anchor" href="#arg-x-labels-y-labels-y-secondary-labels"></a></dt>
-<dd><p>a labels function or character vector to use for the axis</p></dd>
+<dd><p>A labels function or character vector to use for the axis.</p></dd>
 
 
 <dt id="arg-x-character">x.character<a class="anchor" aria-label="anchor" href="#arg-x-character"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the x axis should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. The default is <code>FALSE</code>, except for years (values between 2000 and 2050) and months (values from 1 to 12).</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the x axis should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. The default is <code>FALSE</code>, except for years (values between 2000 and 2050) and months (values from 1 to 12).</p></dd>
 
 
 <dt id="arg-x-drop">x.drop<a class="anchor" aria-label="anchor" href="#arg-x-drop"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether factor levels should be dropped</p></dd>
+<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether factor levels should be dropped.</p></dd>
 
 
 <dt id="arg-x-mic">x.mic<a class="anchor" aria-label="anchor" href="#arg-x-mic"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the x axis should be formatted as <a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">MIC values</a>, by dropping all factor levels and adding missing factors of 2</p></dd>
+<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the x axis should be formatted as <a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">MIC values</a>, by dropping all factor levels and adding missing factors of 2.</p></dd>
 
 
 <dt id="arg-x-zoom-y-zoom">x.zoom, y.zoom<a class="anchor" aria-label="anchor" href="#arg-x-zoom-y-zoom"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the axis should be zoomed on the data, by setting <code>x.limits = c(NA, NA)</code> and <code>x.expand = 0</code> for the x axis, or <code>y.limits = c(NA, NA)</code> and <code>y.expand = 0</code> for the y axis</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the axis should be zoomed on the data, by setting <code>x.limits = c(NA, NA)</code> and <code>x.expand = 0</code> for the x axis, or <code>y.limits = c(NA, NA)</code> and <code>y.expand = 0</code> for the y axis.</p></dd>
 
 
 <dt id="arg-y-h">y.24h<a class="anchor" aria-label="anchor" href="#arg-y-h"></a></dt>
@@ -393,55 +393,55 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dt id="arg-y-age">y.age<a class="anchor" aria-label="anchor" href="#arg-y-age"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the y labels and breaks should be formatted as ages in years</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the y labels and breaks should be formatted as ages in years.</p></dd>
 
 
 <dt id="arg-y-scientific-y-secondary-scientific">y.scientific, y_secondary.scientific<a class="anchor" aria-label="anchor" href="#arg-y-scientific-y-secondary-scientific"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the y labels should be formatted in scientific notation. Defaults to <code>TRUE</code> only if the range of the y values spans more than <code>10e5</code>.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the y labels should be formatted in scientific notation. Defaults to <code>TRUE</code> only if the range of the y values spans more than <code>10e5</code>.</p></dd>
 
 
 <dt id="arg-y-percent-y-secondary-percent">y.percent, y_secondary.percent<a class="anchor" aria-label="anchor" href="#arg-y-percent-y-secondary-percent"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the y labels should be formatted as percentages</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the y labels should be formatted as percentages.</p></dd>
 
 
 <dt id="arg-y-percent-break">y.percent_break<a class="anchor" aria-label="anchor" href="#arg-y-percent-break"></a></dt>
-<dd><p>a value on which the y axis should have breaks</p></dd>
+<dd><p>A value on which the y axis should have breaks.</p></dd>
 
 
 <dt id="arg-y-secondary">y_secondary<a class="anchor" aria-label="anchor" href="#arg-y-secondary"></a></dt>
-<dd><p>values to use for plotting along the secondary y axis. This functionality is poorly supported by <code>ggplot2</code> and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.</p></dd>
+<dd><p>Values to use for plotting along the secondary y axis. This functionality is poorly supported by <code>ggplot2</code> and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.</p></dd>
 
 
 <dt id="arg-y-secondary-colour-y-secondary-colour-fill">y_secondary.colour, y_secondary.colour_fill<a class="anchor" aria-label="anchor" href="#arg-y-secondary-colour-y-secondary-colour-fill"></a></dt>
-<dd><p>colours to set for the secondary y axis, will be evaluated with <code><a href="colour.html">get_colour()</a></code></p></dd>
+<dd><p>Colours to set for the secondary y axis, will be evaluated with <code><a href="colour.html">get_colour()</a></code>.</p></dd>
 
 
 <dt id="arg-category-type">category_type<a class="anchor" aria-label="anchor" href="#arg-category-type"></a></dt>
-<dd><p>type of the <code>category</code>, one or more of: <code>"colour"</code> (default), <code>"shape"</code>, <code>"size"</code>, <code>"linetype"</code>, <code>"linewidth"</code>, <code>"alpha"</code>. There is no need to set <code>"fill"</code>, as <code>plot2</code> handles colour-setting internally and determines automatically whether the <code>colour</code> or <code>fill</code> aesthetic must be used.</p></dd>
+<dd><p>Type of the <code>category</code>, one or more of: <code>"colour"</code> (default), <code>"shape"</code>, <code>"size"</code>, <code>"linetype"</code>, <code>"linewidth"</code>, <code>"alpha"</code>. There is no need to set <code>"fill"</code>, as <code>plot2</code> handles colour-setting internally and determines automatically whether the <code>colour</code> or <code>fill</code> aesthetic must be used.</p></dd>
 
 
 <dt id="arg-category-labels-category-percent-category-breaks-category-expand-category-midpoint">category.labels, category.percent, category.breaks, category.expand, category.midpoint<a class="anchor" aria-label="anchor" href="#arg-category-labels-category-percent-category-breaks-category-expand-category-midpoint"></a></dt>
-<dd><p>settings for the plotting direction <code>category</code>.</p></dd>
+<dd><p>Settings for the plotting direction <code>category</code>.</p></dd>
 
 
 <dt id="arg-category-limits">category.limits<a class="anchor" aria-label="anchor" href="#arg-category-limits"></a></dt>
-<dd><p>limits to use for a numeric category, can be length 1 or 2. Use <code>NA</code> for the highest or lowest value in the data, e.g. <code>category.limits = c(0, NA)</code> to have the scale start at zero.</p></dd>
+<dd><p>Limits to use for a numeric category, can be length 1 or 2. Use <code>NA</code> for the highest or lowest value in the data, e.g. <code>category.limits = c(0, NA)</code> to have the scale start at zero.</p></dd>
 
 
 <dt id="arg-category-date-breaks">category.date_breaks<a class="anchor" aria-label="anchor" href="#arg-category-date-breaks"></a></dt>
-<dd><p>breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to <code><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date(by = ...)</a></code> and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").</p></dd>
+<dd><p>Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to <code><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date(by = ...)</a></code> and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").</p></dd>
 
 
 <dt id="arg-category-date-labels">category.date_labels<a class="anchor" aria-label="anchor" href="#arg-category-date-labels"></a></dt>
-<dd><p>labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as <code>"d mmmm yyyy"</code>.</p></dd>
+<dd><p>Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as <code>"d mmmm yyyy"</code>.</p></dd>
 
 
 <dt id="arg-category-character">category.character<a class="anchor" aria-label="anchor" href="#arg-category-character"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the category should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. The default is <code>FALSE</code>, except for years (values between 2000 and 2050) and months (values from 1 to 12).</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the category should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. The default is <code>FALSE</code>, except for years (values between 2000 and 2050) and months (values from 1 to 12).</p></dd>
 
 
 <dt id="arg-x-sort-category-sort-facet-sort">x.sort, category.sort, facet.sort<a class="anchor" aria-label="anchor" href="#arg-x-sort-category-sort-facet-sort"></a></dt>
-<dd><p>sorting of the plotting direction, defaults to <code>TRUE</code>, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered <a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a>, which <code>ggplot2</code> uses to orient the data. Valid values are:</p><ul><li><p>A manual vector of values</p></li>
+<dd><p>Sorting of the plotting direction, defaults to <code>TRUE</code>, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered <a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a>, which <code>ggplot2</code> uses to orient the data. Valid values are:</p><ul><li><p>A manual vector of values</p></li>
 <li><p><code>TRUE</code>: sort <a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a>s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (<em>numeric</em> sort)</p></li>
 <li><p><code>FALSE</code>: sort according to the order in the data</p></li>
 <li><p><code>NULL</code>: do not sort/transform at all</p></li>
@@ -454,159 +454,164 @@ See plot2-methods for all implemented methods for different object classes."><me
 
 
 <dt id="arg-x-complete-category-complete-facet-complete">x.complete, category.complete, facet.complete<a class="anchor" aria-label="anchor" href="#arg-x-complete-category-complete-facet-complete"></a></dt>
-<dd><p>a value to complete the data. This makes use of <code><a href="https://tidyr.tidyverse.org/reference/full_seq.html" class="external-link">tidyr::full_seq()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/complete.html" class="external-link">tidyr::complete()</a></code>. For example, using <code>x.complete = 0</code> will apply <code>data |&gt; complete(full_seq(x, ...), fill = list(x = 0))</code>. Using value <code>TRUE</code> (e.g., <code>x.complete = TRUE</code>) is identical to using value <code>0</code>.</p></dd>
+<dd><p>A value to complete the data. This makes use of <code><a href="https://tidyr.tidyverse.org/reference/full_seq.html" class="external-link">tidyr::full_seq()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/complete.html" class="external-link">tidyr::complete()</a></code>. For example, using <code>x.complete = 0</code> will apply <code>data |&gt; complete(full_seq(x, ...), fill = list(x = 0))</code>. Using value <code>TRUE</code> (e.g., <code>x.complete = TRUE</code>) is identical to using value <code>0</code>.</p></dd>
 
 
 <dt id="arg-datalabels">datalabels<a class="anchor" aria-label="anchor" href="#arg-datalabels"></a></dt>
-<dd><p>values to show as datalabels, see also <code>datalabels.format</code>. This can be:</p><ul><li><p>Left blank. This will default to the values of <code>y</code> in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless <code>datalabels = TRUE</code>.</p></li>
+<dd><p>Values to show as datalabels, see also <code>datalabels.format</code>. This can be:</p><ul><li><p>Left blank. This will default to the values of <code>y</code> in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless <code>datalabels = TRUE</code>.</p></li>
 <li><p><code>TRUE</code> or <code>FALSE</code> to force or remove datalabels</p></li>
 <li><p>A function to calculate over <code>.data</code>, such as <code>datalabels = paste(round(column1), "\n", column2)</code></p></li>
 </ul></dd>
 
 
 <dt id="arg-datalabels-round">datalabels.round<a class="anchor" aria-label="anchor" href="#arg-datalabels-round"></a></dt>
-<dd><p>number of digits to round the datalabels, applies to both <code>"%n"</code> and <code>"%p"</code> for replacement (see <code>datalabels.format</code>)</p></dd>
+<dd><p>Number of digits to round the datalabels, applies to both <code>"%n"</code> and <code>"%p"</code> for replacement (see <code>datalabels.format</code>).</p></dd>
 
 
 <dt id="arg-datalabels-format">datalabels.format<a class="anchor" aria-label="anchor" href="#arg-datalabels-format"></a></dt>
-<dd><p>format to use for datalabels. This can be a function (such as <code><a href="labellers.html">euros()</a></code>) or a text. For the text, <code>"%n"</code> will be replaced by the count number, and <code>"%p"</code> will be replaced by the percentage of the total count. Use <code>datalabels.format = NULL</code> to <em>not</em> transform the datalabels.</p></dd>
+<dd><p>Format to use for datalabels. This can be a function (such as <code><a href="labellers.html">euros()</a></code>) or a text. For the text, <code>"%n"</code> will be replaced by the count number, and <code>"%p"</code> will be replaced by the percentage of the total count. Use <code>datalabels.format = NULL</code> to <em>not</em> transform the datalabels.</p></dd>
 
 
 <dt id="arg-datalabels-colour-datalabels-colour-fill-datalabels-size-datalabels-angle-datalabels-lineheight">datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight<a class="anchor" aria-label="anchor" href="#arg-datalabels-colour-datalabels-colour-fill-datalabels-size-datalabels-angle-datalabels-lineheight"></a></dt>
-<dd><p>settings for the datalabels</p></dd>
+<dd><p>Settings for the datalabels.</p></dd>
 
 
 <dt id="arg-decimal-mark">decimal.mark<a class="anchor" aria-label="anchor" href="#arg-decimal-mark"></a></dt>
-<dd><p>decimal mark, defaults to <code><a href="dec_mark.html">dec_mark()</a></code></p></dd>
+<dd><p>Decimal mark, defaults to <code><a href="dec_mark.html">dec_mark()</a></code>.</p></dd>
 
 
 <dt id="arg-big-mark">big.mark<a class="anchor" aria-label="anchor" href="#arg-big-mark"></a></dt>
-<dd><p>thousands separator, defaults to <code><a href="dec_mark.html">big_mark()</a></code></p></dd>
+<dd><p>Thousands separator, defaults to <code><a href="dec_mark.html">big_mark()</a></code>.</p></dd>
 
 
 <dt id="arg-summarise-function">summarise_function<a class="anchor" aria-label="anchor" href="#arg-summarise-function"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to use if the data has to be summarised, see <em>Examples</em>. This can also be <code>NULL</code>, which will be converted to <code>function(x) x</code>.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/function.html" class="external-link">function</a> to use if the data has to be summarised, see <em>Examples</em>. This can also be <code>NULL</code>, which will be converted to <code>function(x) x</code>.</p></dd>
 
 
 <dt id="arg-stacked">stacked<a class="anchor" aria-label="anchor" href="#arg-stacked"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate that values must be <a href="https://ggplot2.tidyverse.org/reference/position_stack.html" class="external-link">stacked</a></p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate that values must be <a href="https://ggplot2.tidyverse.org/reference/position_stack.html" class="external-link">stacked</a>.</p></dd>
 
 
 <dt id="arg-stacked-fill">stacked_fill<a class="anchor" aria-label="anchor" href="#arg-stacked-fill"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate that values must be <a href="https://ggplot2.tidyverse.org/reference/position_stack.html" class="external-link">filled</a> (i.e., stacked to 100%)</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate that values must be <a href="https://ggplot2.tidyverse.org/reference/position_stack.html" class="external-link">filled</a> (i.e., stacked to 100%).</p></dd>
 
 
 <dt id="arg-horizontal">horizontal<a class="anchor" aria-label="anchor" href="#arg-horizontal"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to turn the plot 90 degrees using <code><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip()</a></code>. This option also updates some theme options, so that e.g., <code>x.lbl_italic</code> will still apply to the original x axis.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to turn the plot 90 degrees using <code><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip()</a></code>. This option also updates some theme options, so that e.g., <code>x.lbl_italic</code> will still apply to the original x axis.</p></dd>
 
 
 <dt id="arg-reverse">reverse<a class="anchor" aria-label="anchor" href="#arg-reverse"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to reverse the <em>values</em> of <code>category</code>. Use <code>legend.reverse</code> to reverse the <em>legend</em> of <code>category</code>.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to reverse the <em>values</em> of <code>category</code>. Use <code>legend.reverse</code> to reverse the <em>legend</em> of <code>category</code>.</p></dd>
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to add a smooth. In histograms, this will add the density count as an overlaying line (default: <code>TRUE</code>). In all other cases, a smooth will be added using <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth()</a></code> (default: <code>FALSE</code>).</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to add a smooth. In histograms, this will add the density count as an overlaying line (default: <code>TRUE</code>). In all other cases, a smooth will be added using <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth()</a></code> (default: <code>FALSE</code>).</p></dd>
 
 
 <dt id="arg-smooth-method-smooth-formula-smooth-se-smooth-level-smooth-alpha-smooth-linewidth-smooth-linetype-smooth-colour">smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour<a class="anchor" aria-label="anchor" href="#arg-smooth-method-smooth-formula-smooth-se-smooth-level-smooth-alpha-smooth-linewidth-smooth-linetype-smooth-colour"></a></dt>
-<dd><p>settings for <code>smooth</code></p></dd>
+<dd><p>Settings for <code>smooth</code>.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
-<dd><p>size of the geom. Defaults to <code>2</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">point</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">jitter</a>, and <a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_beeswarm.html" class="external-link">beeswarm</a>; <code>4</code> for a UpSet plots (using <code>type = "upset"</code>); <code>5</code> for a dumbbell plots (using <code>type = "dumbbell"</code>); <code>0.75</code> otherwise.</p></dd>
+<dd><p>Size of the geom. Defaults to <code>2</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">point</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">jitter</a>, and <a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_beeswarm.html" class="external-link">beeswarm</a>; <code>4</code> for a UpSet plots (using <code>type = "upset"</code>); <code>5</code> for a dumbbell plots (using <code>type = "dumbbell"</code>); <code>0.75</code> otherwise.</p></dd>
 
 
 <dt id="arg-linetype">linetype<a class="anchor" aria-label="anchor" href="#arg-linetype"></a></dt>
-<dd><p>linetype of the geom, only suitable for geoms that draw lines. Defaults to 1.</p></dd>
+<dd><p>Linetype of the geom, only suitable for geoms that draw lines. Possible options are:</p><ol><li><p>solid (default)</p></li>
+<li><p>dashed</p></li>
+<li><p>dotted</p></li>
+<li><p>dotdash</p></li>
+<li><p>longash</p></li>
+<li><p>twodash</p></li>
+</ol></dd>
 
 
 <dt id="arg-linewidth">linewidth<a class="anchor" aria-label="anchor" href="#arg-linewidth"></a></dt>
-<dd><p>linewidth of the geom, only suitable for geoms that draw lines. Defaults to:</p><ul><li><p><code>0.5</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a>, and for geoms that have no area (such as <a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">line</a>)</p></li>
-<li><p><code>0.1</code> for <a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">sf</a></p></li>
-<li><p><code>0.25</code> for geoms that are continous and have fills (such as <a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">area</a>)</p></li>
+<dd><p>Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:</p><ul><li><p><code>0.10</code> for <a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">sf</a></p></li>
+<li><p><code>0.25</code> for geoms that are continous and have fills (such as <a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">area</a>), except for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a></p></li>
 <li><p><code>1.0</code> for dumbbell plots (using <code>type = "dumbbell"</code>) and UpSet plots (using <code>type = "upset"</code>)</p></li>
-<li><p><code>0.5</code> otherwise (such as <a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">histogram</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">area</a>)</p></li>
+<li><p><code>0.5</code> otherwise (such as geoms <a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">line</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a>, and <a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">histogram</a>)</p></li>
 </ul></dd>
 
 
 <dt id="arg-binwidth">binwidth<a class="anchor" aria-label="anchor" href="#arg-binwidth"></a></dt>
-<dd><p>width of bins (only useful for <code>geom = "histogram"</code>), can be specified as a numeric value or as a function that calculates width from <code>x</code>, see <code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram()</a></code>. It defaults to approx. <code>diff(range(x))</code> divided by 12 to 22 based on the data.</p></dd>
+<dd><p>Width of bins (only useful for <code>geom = "histogram"</code>), can be specified as a numeric value or as a function that calculates width from <code>x</code>, see <code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram()</a></code>. It defaults to approx. <code>diff(range(x))</code> divided by 12 to 22 based on the data.</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
-<dd><p>width of the geom. Defaults to <code>0.75</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">jitter</a>, and to <code>0.5</code> otherwise.</p></dd>
+<dd><p>Width of the geom. Defaults to <code>0.66</code> for geoms <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">boxplot</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">violin</a> and <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">jitter</a>, and to <code>0.5</code> otherwise.</p></dd>
 
 
 <dt id="arg-jitter-seed">jitter_seed<a class="anchor" aria-label="anchor" href="#arg-jitter-seed"></a></dt>
-<dd><p>seed (randomisation factor) to be set when using <code>type = "jitter"</code></p></dd>
+<dd><p>Seed (randomisation factor) to be set when using <code>type = "jitter"</code>.</p></dd>
 
 
 <dt id="arg-violin-scale">violin_scale<a class="anchor" aria-label="anchor" href="#arg-violin-scale"></a></dt>
-<dd><p>scale to be set when using <code>type = "violin"</code>, can also be set to <code>"area"</code></p></dd>
+<dd><p>Scale to be set when using <code>type = "violin"</code>, can also be set to <code>"area"</code>.</p></dd>
 
 
 <dt id="arg-legend-position">legend.position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
-<dd><p>position of the legend, must be <code>"top"</code>, <code>"right"</code>, <code>"bottom"</code>, <code>"left"</code> or <code>"none"</code> (or <code>NA</code> or <code>NULL</code>), can be abbreviated. Defaults to <code>"right"</code> for numeric <code>category</code> values and 'sf' plots, and <code>"top"</code> otherwise.</p></dd>
+<dd><p>Position of the legend, must be <code>"top"</code>, <code>"right"</code>, <code>"bottom"</code>, <code>"left"</code> or <code>"none"</code> (or <code>NA</code> or <code>NULL</code>), can be abbreviated. Defaults to <code>"right"</code> for numeric <code>category</code> values and 'sf' plots, and <code>"top"</code> otherwise.</p></dd>
 
 
 <dt id="arg-legend-reverse-legend-barheight-legend-barwidth-legend-nbin-legend-italic">legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic<a class="anchor" aria-label="anchor" href="#arg-legend-reverse-legend-barheight-legend-barwidth-legend-nbin-legend-italic"></a></dt>
-<dd><p>other settings for the legend</p></dd>
+<dd><p>Other settings for the legend.</p></dd>
 
 
 <dt id="arg-sankey-node-width">sankey.node_width<a class="anchor" aria-label="anchor" href="#arg-sankey-node-width"></a></dt>
-<dd><p>width of the vertical nodes in a Sankey plot</p></dd>
+<dd><p>Width of the vertical nodes in a Sankey plot.</p></dd>
 
 
 <dt id="arg-sankey-node-whitespace">sankey.node_whitespace<a class="anchor" aria-label="anchor" href="#arg-sankey-node-whitespace"></a></dt>
-<dd><p>whitespace between the nodes in a Sankey plot</p></dd>
+<dd><p>Whitespace between the nodes in a Sankey plot.</p></dd>
 
 
 <dt id="arg-sankey-alpha">sankey.alpha<a class="anchor" aria-label="anchor" href="#arg-sankey-alpha"></a></dt>
-<dd><p>alpha of the flows in a Sankey plot</p></dd>
+<dd><p>Alpha of the flows in a Sankey plot.</p></dd>
 
 
 <dt id="arg-sankey-remove-axes">sankey.remove_axes<a class="anchor" aria-label="anchor" href="#arg-sankey-remove-axes"></a></dt>
-<dd><p>logical to indicate whether all axes must be removed in a Sankey plot</p></dd>
+<dd><p>Logical to indicate whether all axes must be removed in a Sankey plot.</p></dd>
 
 
 <dt id="arg-zoom">zoom<a class="anchor" aria-label="anchor" href="#arg-zoom"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set <code>x.zoom = TRUE</code> and <code>y.zoom = TRUE</code>.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set <code>x.zoom = TRUE</code> and <code>y.zoom = TRUE</code>.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
-<dd><p>separator character to use if multiple columns are given to either of the three directions: <code>x</code>, <code>category</code> and <code>facet</code>, e.g. <code>facet = c(column1, column2)</code></p></dd>
+<dd><p>Separator character to use if multiple columns are given to either of the three directions: <code>x</code>, <code>category</code> and <code>facet</code>, e.g. <code>facet = c(column1, column2)</code>.</p></dd>
 
 
 <dt id="arg-print">print<a class="anchor" aria-label="anchor" href="#arg-print"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the result should be <a href="https://rdrr.io/r/base/print.html" class="external-link">printed</a> instead of just returned</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the result should be <a href="https://rdrr.io/r/base/print.html" class="external-link">printed</a> instead of just returned.</p></dd>
 
 
 <dt id="arg-text-factor">text_factor<a class="anchor" aria-label="anchor" href="#arg-text-factor"></a></dt>
-<dd><p>text factor to use, which will apply to all texts shown in the plot</p></dd>
+<dd><p>Text factor to use, which will apply to all texts shown in the plot.</p></dd>
 
 
 <dt id="arg-font">font<a class="anchor" aria-label="anchor" href="#arg-font"></a></dt>
-<dd><p>font (family) to use, can be set with <code>options(plot2.font = "...")</code>. Can be any installed system font or any of the &gt; 1400 font names from <a href="https://fonts.google.com" class="external-link">Google Fonts</a>. When using custom fonts in R Markdown, be sure to set the chunk option <code>fig.showtext = TRUE</code>, otherwise an informative error will be generated.</p></dd>
+<dd><p>Font (family) to use, can be set with <code>options(plot2.font = "...")</code>. Can be any installed system font or any of the &gt; 1400 font names from <a href="https://fonts.google.com" class="external-link">Google Fonts</a>. When using custom fonts in R Markdown, be sure to set the chunk option <code>fig.showtext = TRUE</code>, otherwise an informative error will be generated.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>a valid <code>ggplot2</code> <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a> to apply, or <code>NULL</code> to use the default <code>theme_grey()</code>. This argument accepts themes (e.g., <code>theme_bw()</code>), functions (e.g., <code>theme_bw</code>) and characters themes (e.g., <code>"theme_bw"</code>). The default is <code><a href="theme_minimal2.html">theme_minimal2()</a></code>, but can be set with <code>options(plot2.theme = "...")</code>.</p></dd>
+<dd><p>A valid <code>ggplot2</code> <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a> to apply, or <code>NULL</code> to use the default <code>theme_grey()</code>. This argument accepts themes (e.g., <code>theme_bw()</code>), functions (e.g., <code>theme_bw</code>) and characters themes (e.g., <code>"theme_bw"</code>). The default is <code><a href="theme_minimal2.html">theme_minimal2()</a></code>, but can be set with <code>options(plot2.theme = "...")</code>.</p></dd>
 
 
 <dt id="arg-background">background<a class="anchor" aria-label="anchor" href="#arg-background"></a></dt>
-<dd><p>the background colour of the entire plot, can also be <code>NA</code> to remove it. Will be evaluated with <code><a href="colour.html">get_colour()</a></code>. Only applies when <code>theme</code> is not <code>NULL</code>.</p></dd>
+<dd><p>The background colour of the entire plot, can also be <code>NA</code> to remove it. Will be evaluated with <code><a href="colour.html">get_colour()</a></code>. Only applies when <code>theme</code> is not <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-markdown">markdown<a class="anchor" aria-label="anchor" href="#arg-markdown"></a></dt>
-<dd><p>a <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to turn all labels and titles into <a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">plotmath</a> expressions, by converting common markdown language using the <code><a href="md_to_expression.html">md_to_expression()</a></code> function (defaults to <code>TRUE</code>)</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to turn all labels and titles into <a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">plotmath</a> expressions, by converting common markdown language using the <code><a href="md_to_expression.html">md_to_expression()</a></code> function (defaults to <code>TRUE</code>).</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>substitute for <code>.data</code>, used in formula notation, e.g., <code>plot2(hp ~ mpg, data = mtcars)</code></p></dd>
+<dd><p>Substitute for <code>.data</code>, used in formula notation, e.g., <code>plot2(hp ~ mpg, data = mtcars)</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>any argument to give to the geom. This will override automatically-set settings for the geom.</p></dd>
+<dd><p>Any argument to give to the geom. This will override automatically-set settings for the geom.</p></dd>
 
 </dl></div>
     <div class="section level2">
