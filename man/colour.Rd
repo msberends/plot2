@@ -4,9 +4,6 @@
 \alias{get_colour}
 \alias{register_colour}
 \alias{unregister_colour}
-\alias{as.character.colour}
-\alias{as.colour}
-\alias{print.colour}
 \alias{add_white}
 \title{Get (and Register) Colours from \R, Viridis and More}
 \usage{
@@ -15,12 +12,6 @@ get_colour(x, length = 1, opacity = 0)
 register_colour(...)
 
 unregister_colour(regex)
-
-\method{as.character}{colour}(x, ...)
-
-\method{as.character}{colour}(x, ...)
-
-\method{print}{colour}(x, ...)
 
 add_white(x, white)
 }
@@ -38,7 +29,7 @@ add_white(x, white)
 \item \code{"mako"}
 \item \code{"turbo"}
 }
-\item One of the built-in palettes in \R (these are from \R 4.5.1):
+\item One of the built-in \R palettes (these are from \R 4.5.1):
 \itemize{
 \item \code{"Accent"}
 \item \code{"Alphabet"}
@@ -63,7 +54,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"darkseagreen4"}, \code{"lightgoldenrod2"}, \code{"snow1"}, \code{"springgreen2"}, \code{"tan2"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"indianred2"}, \code{"ivory1"}, \code{"lightsalmon3"}, \code{"mediumpurple"}, \code{"palevioletred"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 
@@ -73,7 +64,7 @@ add_white(x, white)
 
 \item{...}{Named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{regex}{A \link[stringr:modifiers]{stringr::regex} to unregister colours.}
+\item{regex}{A \link[base:regex]{regular expression} to unregister colours.}
 
 \item{white}{A number between \verb{[0, 1]} to add white to \code{x}.}
 }
@@ -84,7 +75,10 @@ add_white(x, white)
 Retrieves, expands, and prints colours or palettes from \R, \code{viridisLite}, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
 }
 \details{
+\subsection{Limitless Palette Length}{
+
 A palette from \R will be expanded where needed, so even \code{get_colour("R4", length = 20)} will work, despite "R4" only supporting a maximum of eight colours.
+}
 
 \subsection{Registering Colours In Another Package}{
 
@@ -98,13 +92,16 @@ To register/unregister colours in another package, add something like this to a 
     my_colour3  = "#5B3FA8",
     my_colours  = c("my_colour1", "my_colour2", "my_colour3"))
 
-  options(plot2.colour = "my_colours", plot2.colour_font_secondary = "my_colour1")
+  # set as default upon package load
+  options(plot2.colour = "my_colours",
+          plot2.colour_font_secondary = "my_colour1")
 \}
 
 #' @importFrom plot2 unregister_colour
 .onUnload <- function(...) \{
   unregister_colour("^my_colour") # this is a regular expression
-  options(plot2.colour = NULL, plot2.colour_font_secondary = NULL)
+  options(plot2.colour = NULL,
+          plot2.colour_font_secondary = NULL)
 \}
 }\if{html}{\out{</div>}}
 
@@ -182,7 +179,14 @@ add_white(colours, 0.25)
 add_white(colours, 0.5)
 add_white(colours, 0.75)
 
+add_white("red", 0)     # 100\% red
+add_white("red", 1/256)
 add_white("red", 1/128)
 add_white("red", 1/64)
 add_white("red", 1/32)
+add_white("red", 1/16)
+add_white("red", 1/8)
+add_white("red", 1/4)
+add_white("red", 1/2)
+add_white("red", 1)     # 100\% white
 }

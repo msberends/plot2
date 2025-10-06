@@ -19,12 +19,14 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' Retrieves, expands, and prints colours or palettes from \R, `viridisLite`, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
 #' @param x Colour or colour palette name. Input can be:
 #' * One of the colourblind-safe `viridisLite` palettes: `r paste0('\n  - \u0060"', viridisLite_colours, '"\u0060', collapse = "")`
-#' * One of the built-in palettes in \R (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
+#' * One of the built-in \R palettes (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
 #' * One of the `r length(colours())` built-in [colours()] in \R (even case-insensitive), such as `r paste0('\u0060"', sort(sample(colours()[colours() %unlike% "^grey|gray"], 5)), '"\u0060', collapse = ", ")`
 #' * One of the pre-registered colours using [register_colour()]
 #' @param length Size of the vector to be returned.
 #' @param opacity Amount of opacity (0 = solid, 1 = transparent).
-#' @details A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
+#' @details 
+#' ### Limitless Palette Length
+#' A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
 #' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
 #' @rdname colour
 #' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
@@ -208,13 +210,16 @@ get_colour <- function(x, length = 1, opacity = 0) {
 #'     my_colour3  = "#5B3FA8",
 #'     my_colours  = c("my_colour1", "my_colour2", "my_colour3"))
 #' 
-#'   options(plot2.colour = "my_colours", plot2.colour_font_secondary = "my_colour1")
+#'   # set as default upon package load
+#'   options(plot2.colour = "my_colours",
+#'           plot2.colour_font_secondary = "my_colour1")
 #' }
 #'
 #' #' @importFrom plot2 unregister_colour
 #' .onUnload <- function(...) {
 #'   unregister_colour("^my_colour") # this is a regular expression
-#'   options(plot2.colour = NULL, plot2.colour_font_secondary = NULL)
+#'   options(plot2.colour = NULL,
+#'           plot2.colour_font_secondary = NULL)
 #' }
 #' ```
 #' 
@@ -306,13 +311,44 @@ register_colour <- function(...) {
 }
 
 #' @rdname colour
-#' @param regex A [regex] to unregister colours.
+#' @param regex A [regular expression][base::regex] to unregister colours.
 #' @export
 unregister_colour <- function(regex) {
   len <- length(plot2_env$reg_cols)
   plot2_env$reg_cols <- plot2_env$reg_cols[which(names(plot2_env$reg_cols) %unlike% regex)]
   changed <- len - length(plot2_env$reg_cols)
   message(changed, " colour", ifelse(changed == 1, "", "s"), " unregistered.")
+}
+
+#' @rdname colour
+#' @param white A number between `[0, 1]` to add white to `x`.
+#' @export
+#' @examples
+#' 
+#' 
+#' # Use add_white() to add white to existing colours:
+#' colours <- get_colour("R4", 6)
+#' colours
+#' add_white(colours, 0.25)
+#' add_white(colours, 0.5)
+#' add_white(colours, 0.75)
+#' 
+#' add_white("red", 0)     # 100% red
+#' add_white("red", 1/256)
+#' add_white("red", 1/128)
+#' add_white("red", 1/64)
+#' add_white("red", 1/32)
+#' add_white("red", 1/16)
+#' add_white("red", 1/8)
+#' add_white("red", 1/4)
+#' add_white("red", 1/2)
+#' add_white("red", 1)     # 100% white
+add_white <- function(x, white) {
+  white <- min(1000, max(1, 1000 - (white * 1000)))
+  out <- unname(vapply(FUN.VALUE = character(1),
+                       x,
+                       function(y) grDevices::colorRampPalette(c("white", y))(1000)[white]))
+  get_colour(out)
 }
 
 get_registered_colour <- function(name) {
@@ -324,22 +360,15 @@ get_registered_colour <- function(name) {
 }
 
 #' @method as.character colour
-#' @rdname colour
+#' @noRd
 #' @export
 as.character.colour <- function(x, ...) {
   substr(unclass(x), 1, 9)
 }
 
-#' @method as.character colour
-#' @rdname colour
-#' @export
-as.colour <- function(x, ...) {
-  get_colour(x)
-}
-
 #' @method print colour
 #' @importFrom crayon make_style
-#' @rdname colour
+#' @noRd
 #' @export
 print.colour <- function(x, ...) {
   tryCatch({
@@ -411,30 +440,6 @@ unique.colour <- function(x, ...) {
   get_colour(stats::setNames(out$vals, out$nms))
 }
 
-#' @rdname colour
-#' @param white A number between `[0, 1]` to add white to `x`.
-#' @export
-#' @examples
-#' 
-#' 
-#' # Use add_white() to add white to existing colours:
-#' colours <- get_colour("R4", 6)
-#' colours
-#' add_white(colours, 0.25)
-#' add_white(colours, 0.5)
-#' add_white(colours, 0.75)
-#' 
-#' add_white("red", 1/128)
-#' add_white("red", 1/64)
-#' add_white("red", 1/32)
-add_white <- function(x, white) {
-  white <- min(1000, max(1, 1000 - (white * 1000)))
-  out <- unname(vapply(FUN.VALUE = character(1),
-                       x,
-                       function(y) grDevices::colorRampPalette(c("white", y))(1000)[white]))
-  get_colour(out)
-}
-
 #' @method c colour
 #' @noRd
 #' @export
@@ -444,7 +449,7 @@ c.colour <- function(...) {
 
 #' @exportS3Method vctrs::vec_cast
 vec_cast.colour.colour <- function(x, to, ...) {
-  as.colour(x)
+  get_colour(x)
 }
 #' @exportS3Method vctrs::vec_cast
 vec_cast.character.colour <- function(x, to, ...) {
@@ -452,6 +457,6 @@ vec_cast.character.colour <- function(x, to, ...) {
 }
 #' @exportS3Method vctrs::vec_cast
 vec_cast.colour.character <- function(x, to, ...) {
-  as.colour(x)
+  get_colour(x)
 }
 

@@ -502,7 +502,7 @@ make_input <- function(name, default) {
     create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), multiple = TRUE, width = "100%"), name, default)
   } else if (name %like% "linetype$") {
     if (is.null(default) || is.infinite(default)) default <- 1
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("1 (solid)" = 1, "2 (dashed)" = 2, "3 (dotted)" = 3, "4 (dotdash)" = 4, "5 (longash)" = 5, "6 (twodash)" = 6), width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("1 (solid)" = 1, "2 (dashed)" = 2, "3 (dotted)" = 3, "4 (dotdash)" = 4, "5 (longdash)" = 5, "6 (twodash)" = 6), width = "100%"), name, default)
   } else if (name %like% "(max_items|n_breaks)$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 25, step = 1, width = "100%"), name, default, slider = TRUE)

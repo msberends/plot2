@@ -358,13 +358,15 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{linetype}{Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
 \enumerate{
-\item solid (default)
-\item dashed
-\item dotted
-\item dotdash
-\item longash
-\item twodash
-}}
+\item \code{"solid"} (default)
+\item \code{"dashed"}
+\item \code{"dotted"}
+\item \code{"dotdash"}
+\item \code{"longdash"}
+\item \code{"twodash"}
+}
+
+Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetype = "dashed"} yield the same results.}
 
 \item{linewidth}{Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 \itemize{

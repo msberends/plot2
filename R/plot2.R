@@ -150,12 +150,14 @@
 #' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour Settings for `smooth`.
 #' @param size Size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for a UpSet plots (using `type = "upset"`); `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
 #' @param linetype Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
-#'   1. solid (default)
-#'   2. dashed
-#'   3. dotted
-#'   4. dotdash
-#'   5. longash
-#'   6. twodash
+#'   1. `"solid"` (default)
+#'   2. `"dashed"`
+#'   3. `"dotted"`
+#'   4. `"dotdash"`
+#'   5. `"longdash"`
+#'   6. `"twodash"`
+#'   
+#'   Both numbers and text are supported, e.g., `linetype = 2` and `linetype = "dashed"` yield the same results.
 #' @param linewidth Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 #' - `0.10` for [sf][ggplot2::geom_sf()]
 #' - `0.25` for geoms that are continous and have fills (such as [area][ggplot2::geom_area()]), except for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()]
