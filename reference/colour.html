@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,15 +44,6 @@
 <span></span>
 <span><span class="fu">unregister_colour</span><span class="op">(</span><span class="va">regex</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'colour'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'colour'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'colour'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">add_white</span><span class="op">(</span><span class="va">x</span>, <span class="va">white</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -70,7 +61,7 @@
 <li><p><code>"mako"</code></p></li>
 <li><p><code>"turbo"</code></p></li>
 </ul></li>
-<li><p>One of the built-in palettes in <span style="R">R</span> (these are from <span style="R">R</span> 4.5.1):</p><ul><li><p><code>"Accent"</code></p></li>
+<li><p>One of the built-in <span style="R">R</span> palettes (these are from <span style="R">R</span> 4.5.1):</p><ul><li><p><code>"Accent"</code></p></li>
 <li><p><code>"Alphabet"</code></p></li>
 <li><p><code>"Classic Tableau"</code></p></li>
 <li><p><code>"Dark 2"</code></p></li>
@@ -93,7 +84,7 @@
 <li><p><code>"terrain"</code></p></li>
 <li><p><code>"topo"</code></p></li>
 </ul></li>
-<li><p>One of the 657 built-in <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code> in <span style="R">R</span> (even case-insensitive), such as <code>"darkseagreen4"</code>, <code>"lightgoldenrod2"</code>, <code>"snow1"</code>, <code>"springgreen2"</code>, <code>"tan2"</code></p></li>
+<li><p>One of the 657 built-in <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code> in <span style="R">R</span> (even case-insensitive), such as <code>"indianred2"</code>, <code>"ivory1"</code>, <code>"lightsalmon3"</code>, <code>"mediumpurple"</code>, <code>"palevioletred"</code></p></li>
 <li><p>One of the pre-registered colours using <code>register_colour()</code></p></li>
 </ul></dd>
 
@@ -111,7 +102,7 @@
 
 
 <dt id="arg-regex">regex<a class="anchor" aria-label="anchor" href="#arg-regex"></a></dt>
-<dd><p>A <a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::regex</a> to unregister colours.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/regex.html" class="external-link">regular expression</a> to unregister colours.</p></dd>
 
 
 <dt id="arg-white">white<a class="anchor" aria-label="anchor" href="#arg-white"></a></dt>
@@ -124,7 +115,14 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>A palette from <span style="R">R</span> will be expanded where needed, so even <code>get_colour("R4", length = 20)</code> will work, despite "R4" only supporting a maximum of eight colours.</p>
+
+<div class="section">
+<h3 id="limitless-palette-length">Limitless Palette Length<a class="anchor" aria-label="anchor" href="#limitless-palette-length"></a></h3>
+
+
+<p>A palette from <span style="R">R</span> will be expanded where needed, so even <code>get_colour("R4", length = 20)</code> will work, despite "R4" only supporting a maximum of eight colours.</p>
+</div>
+
 <div class="section">
 <h3 id="registering-colours-in-another-package">Registering Colours In Another Package<a class="anchor" aria-label="anchor" href="#registering-colours-in-another-package"></a></h3>
 
@@ -138,13 +136,16 @@
 <span>    my_colour3  <span class="op">=</span> <span class="st">"#5B3FA8"</span>,</span>
 <span>    my_colours  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"my_colour1"</span>, <span class="st">"my_colour2"</span>, <span class="st">"my_colour3"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"my_colours"</span>, plot2.colour_font_secondary <span class="op">=</span> <span class="st">"my_colour1"</span><span class="op">)</span></span>
+<span>  <span class="co"># set as default upon package load</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"my_colours"</span>,</span>
+<span>          plot2.colour_font_secondary <span class="op">=</span> <span class="st">"my_colour1"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co">#' @importFrom plot2 unregister_colour</span></span>
 <span><span class="va">.onUnload</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/colour.html">unregister_colour</a></span><span class="op">(</span><span class="st">"^my_colour"</span><span class="op">)</span> <span class="co"># this is a regular expression</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="cn">NULL</span>, plot2.colour_font_secondary <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>          plot2.colour_font_secondary <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre><p></p></div>
 <p>Do not forget to add <code>plot2</code> to <code>Imports:</code> in the <code>DESCRIPTION</code> file of your package.</p>
 </div>
@@ -252,12 +253,26 @@
 <span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="va">colours</span>, <span class="fl">0.75</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#BFBFBF"<span style="background-color: #B2B2B2;"> </span> "#F7D4DA"<span style="background-color: #FFD7FF;"> </span> "#D7F3D3"<span style="background-color: #FFFFD7;"> </span> "#C7E5F8"<span style="background-color: #D7FFFF;"> </span> "#C9F7F8"<span style="background-color: #D7FFFF;"> </span> "#F2C2EE"<span style="background-color: #FFD7FF;"> </span> </span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">0</span><span class="op">)</span>     <span class="co"># 100% red</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF0000"<span style="background-color: #FF0000;"> </span> </span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">256</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF0101"<span style="background-color: #FF0000;"> </span> </span>
 <span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">128</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF0202"<span style="background-color: #FF0000;"> </span> </span>
 <span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">64</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF0404"<span style="background-color: #FF0000;"> </span> </span>
 <span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">32</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF0808"<span style="background-color: #FF0000;"> </span> </span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">16</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF1010"<span style="background-color: #FF0000;"> </span> </span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">8</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF1F1F"<span style="background-color: #FF0000;"> </span> </span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF3F3F"<span style="background-color: #FF5F5F;"> </span> </span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FF7F7F"<span style="background-color: #FF8787;"> </span> </span>
+<span class="r-in"><span><span class="fu">add_white</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">1</span><span class="op">)</span>     <span class="co"># 100% white</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#FFFFFF"<span style="background-color: #EEEEEE;"> </span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
