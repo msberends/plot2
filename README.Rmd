@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   out.width = "100%",
   dpi = 100
 )
+options(plot2.silent = FALSE)
 ```
 
 # `plot2`: Simplified and Enhanced Data Visualisation in R

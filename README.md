@@ -129,7 +129,6 @@ iris |>
 #> ℹ Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
 #> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
 #> ℹ Using type = "point" since both axes are numeric
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-4.png" width="100%" />
@@ -339,7 +338,6 @@ admitted_patients |>
   plot2(age, type = "hist")
 #> ℹ Assuming smooth = TRUE for type = "histogram"
 #> ℹ Using binwidth = 6.4 based on data
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-20.png" width="100%" />
@@ -450,7 +448,6 @@ mtcars |>
   plot2()
 #> ℹ Assuming type = "tile" since the matrix contains identical row and column names
 #> ! Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
-#> NOTE: Use options(plot2.silent = TRUE) to silence plot2 messages.
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-29.png" width="100%" />

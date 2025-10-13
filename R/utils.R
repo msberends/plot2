@@ -193,7 +193,9 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
     }
   }
   if (isTRUE(has_given_note) && stats::runif(1) < 0.01 && Sys.getenv("IN_PKGDOWN") == "") {
-    message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
+    if (is.null(getOption("plot2.silent"))) {
+      message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
+    }
     has_given_note <- FALSE
   }
 }
