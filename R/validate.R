@@ -1387,8 +1387,8 @@ validate_category_scale <- function(values,
   limits_fn <- function(values, category.limits, category.percent, category.transform, category.date_breaks, waiver) {
     if (category.transform != "identity") {
       # in certain transformations, such as log, 0 is not allowed
-      if (!is.null(category.limits)) {
-        plot2_warning("Ignoring ", font_blue("category.limits"), " since ",
+      if (!is.null(category.limits) && 0 %in% category.limits) {
+        plot2_warning("Ignoring ", font_blue("category.limits"), " since it contains 0, and ",
                       font_blue(paste0("category.transform = \"", category.transform, "\"")))
       }
       c(NA_real_, NA_real_)
