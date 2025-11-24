@@ -1319,5 +1319,6 @@ mtcars |>
         font = "Rock Salt",
         text_factor = 1.25,
         title = "This plot uses a Google Font")
+#> ℹ Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts
 #> ℹ Using type = "point" since both axes are numeric
 ```
