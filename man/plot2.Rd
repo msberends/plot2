@@ -188,7 +188,7 @@ plot2(
 
 The \code{category} can also be a date or date/time (class \code{Date} or \code{POSIXt}).}
 
-\item{type, y_secondary.type}{Type of visualisation to use. This can be:
+\item{type}{Type of visualisation to use. This can be:
 \itemize{
 \item A \code{ggplot2} geom name or their abbreviation such as \code{"col"} and \code{"point"}. All geoms are supported (including \code{\link[ggplot2:geom_blank]{geom_blank()}}).
 
@@ -198,6 +198,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item One of these additional types:
 \itemize{
 \item \code{"barpercent"} (short: \code{"bp"}), which is effectively a shortcut to set \code{type = "col"} and \code{horizontal = TRUE} and \code{x.max_items = 10} and \code{x.sort = "freq-desc"} and \code{datalabels.format = "\%n (\%p)"}.
+\item \code{"back-2-back"} (short: \code{"b2b"}) creates a Back-to-Back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Butterfly plot}, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} for the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
 \item \code{"linedot"} (short: \code{"ld"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
 \item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. It is also possible to provide \code{y}, on which then \code{summarise_function} will be applied.
 \item \code{"dumbbell"} (short: \code{"d"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[ggplot2:geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
@@ -294,6 +295,8 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 \item{y.percent_break}{A value on which the y axis should have breaks.}
 
 \item{y_secondary}{Values to use for plotting along the secondary y axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.}
+
+\item{y_secondary.type}{see \strong{\code{type}}}
 
 \item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 

@@ -1112,7 +1112,10 @@ validate_y_scale <- function(df,
     if (!is.null(y.labels)) {
       y.labels
     } else if (isTRUE(y.scientific)) {
-      format2_scientific
+      function(vals = values, dec = decimal.mark) {
+        format2_scientific(vals, round = 2, decimal.mark = dec)
+      }
+      
     } else if (isTRUE(y.24h)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         paste0(format2(x, decimal.mark = dec, big.mark = big),
@@ -1250,7 +1253,7 @@ validate_y_scale <- function(df,
                                 y.age = y.age,
                                 y.transform = y.transform,
                                 df)
- 
+  
   if (y.transform == "reverse") {
     limits_evaluated <- NULL
   }
@@ -1889,7 +1892,7 @@ validate_size <- function(size, type, type_backup) {
 
 validate_width <- function(width, type) {
   if (is.null(width)) {
-    if (type %in% c("geom_boxplot", "geom_violin", "geom_jitter")) {
+    if (type %in% c("geom_boxplot", "geom_violin", "geom_jitter", "geom_beeswarm")) {
       width <- 0.66
     } else {
       width <- 0.5
@@ -2127,7 +2130,7 @@ validate_theme <- function(theme,
     theme$axis.title.y.right$colour <- col_y_secondary
     theme$axis.title.y.right$face <- "bold"
   }
-
+  
   if (x.lbl_angle != 0) {
     theme$axis.text.x$angle <- x.lbl_angle
   }
@@ -2315,23 +2318,24 @@ validate_facet <- function(df,
 }
 
 #' @importFrom ggplot2 geom_text geom_label geom_sf_label geom_sf_text aes position_fill position_stack position_dodge2
-set_datalabels <- function(p,
-                           df,
-                           type,
-                           width,
-                           stacked,
-                           stacked_fill,
-                           datalabels.colour_fill,
-                           datalabels.colour,
-                           datalabels.size,
-                           datalabels.angle,
-                           datalabels.lineheight,
-                           datalabels.centroid,
-                           font,
-                           reverse,
-                           horizontal,
-                           misses_datalabels,
-                           markdown) {
+generate_datalabels <- function(p,
+                                df,
+                                type,
+                                width,
+                                stacked,
+                                stacked_fill,
+                                datalabels.colour_fill,
+                                datalabels.colour,
+                                datalabels.size,
+                                datalabels.angle,
+                                datalabels.lineheight,
+                                datalabels.centroid,
+                                font,
+                                reverse,
+                                y.transform,
+                                horizontal,
+                                misses_datalabels,
+                                markdown) {
   
   if (isTRUE(misses_datalabels) && nrow(df) > 25) {
     plot2_caution("Omitting printing of ", nrow(df), " datalabels - use ",
@@ -2372,6 +2376,10 @@ set_datalabels <- function(p,
     text_vertical <- 0.5
     label_horizontal <- -0.1
     label_vertical <- 0.5
+    if (y.transform == "reverse") {
+      text_horizontal <- text_horizontal + 1.5
+      label_horizontal <- label_horizontal + 1.2
+    }
   }
   
   # set positioning function
@@ -2557,10 +2565,10 @@ validate_font <- function(font) {
     }
     # still has to be 'registered' with sysfonts, so do it
     font_add(family = fonts$family[1L],
-                       regular = set_if_not_null("regular"),
-                       bold = set_if_not_null("bold"),
-                       italic = set_if_not_null("italic"),
-                       bolditalic = set_if_not_null("bolditalic"))
+             regular = set_if_not_null("regular"),
+             bold = set_if_not_null("bold"),
+             italic = set_if_not_null("italic"),
+             bolditalic = set_if_not_null("bolditalic"))
   }
   
   # return the font if it is available

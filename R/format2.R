@@ -232,18 +232,36 @@ format2_scientific <- function(x,
                                round = 2,
                                decimal.mark = dec_mark(),
                                ...) {
+  bullet <- cli::symbol$bullet
+  out <- vector("list", length(x))
   
-  # turn into character string in scientific notation
-  txt <- format(as.double(x), scientific = TRUE)
-  out <- rep(NA_character_, length(x))
-  
-  out[!is.na(x)] <- paste0(gsub(".", decimal.mark, round(as.double(gsub("^(.*?)e.*", "\\1", txt[!is.na(x)])), digits = round), fixed = TRUE), 
-                           " x 10^", 
-                           as.double(gsub("^.*?e(.*)", "\\1", txt[!is.na(x)])))
-  # remove leading zeroes
-  out[!is.na(x) & out == "0 x 10^0"] <- "0"
-  # and ones
-  out[!is.na(x)] <- gsub("1 x", "", out[!is.na(x)], fixed = TRUE)
+  for (i in seq_along(x)) {
+    v <- x[i]
+    
+    # Handle NA cleanly
+    if (is.na(v)) {
+      out[[i]] <- NA
+      next
+    }
+    
+    # Special case zero
+    if (v == 0) {
+      out[[i]] <- "0"
+      next
+    }
+    
+    # Get scientific components
+    txt <- format(v, scientific = TRUE)
+    mant <- as.double(sub("e.*", "", txt))
+    expn <- as.integer(sub(".*e", "", txt))
+    
+    # Round mantissa to two digits
+    mant <- round(mant, round)
+    mant <- trimws(format(mant, decimal.mark = decimal.mark))
+    
+    # Build expression
+    out[[i]] <- bquote(.(mant) * " " * .(bullet) * " " * 10^.(expn))
+  }
   out
 }
 

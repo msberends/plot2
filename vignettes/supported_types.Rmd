@@ -1,0 +1,190 @@
+---
+title: "Supported Plot Types"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Supported Plot Types}
+  %\VignetteEngine{knitr::rmarkdown}
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 6,
+  fig.width = 7
+)
+library(plot2)
+diamonds <- ggplot2::diamonds
+movies <- ggplot2movies::movies
+options(plot2.colour = "viridis")
+```
+
+The following plot types are supported. Some examples show inferred plot types from the data and have no explicit `type` set to the `plot2()` function.
+
+In fact, any ggplot2 geom is supported, though some advanced plot types might require additional arguments.
+
+# Column / Bar
+
+Used for comparing discrete categories through rectangular bars.
+
+```{r}
+diamonds |> # from the ggplot2 package
+  plot2(x = cut,
+        y = n())
+# in plot2, bar types are horizontal alternatives for column types (just like Excel)
+diamonds |>
+  plot2(x = cut,
+        y = n(),
+        type = "bar")
+```
+
+# Line
+
+Used for visualising trends over ordered intervals.
+
+```{r}
+pressure |> # from base R
+    plot2(x = temperature,
+          y = pressure,
+          type = "line")
+
+pressure |>
+    plot2(x = temperature,
+          y = pressure,
+          type = "line-point")
+```
+
+# Point
+
+Used for displaying individual observations in a two dimensional space.
+
+```{r}
+iris |> # from base R
+  plot2()
+diamonds |>
+  plot2(x = carat,
+        y = price,
+        category = cut,
+        type = "point")
+```
+
+# Area
+
+Used for emphasising cumulative magnitudes across continuous domains.
+
+```{r}
+pressure |>
+    plot2(x = temperature,
+          y = pressure,
+          type = "area")
+
+airquality |>
+  plot2(x = Day, 
+        y = Wind, 
+        category = Month,
+        category.character = TRUE,
+        stacked_fill= TRUE,
+        type = "area")
+```
+
+# Boxplot / Violin
+
+Used for summarising and comparing distributions with focus on spread and density.
+
+```{r}
+iris |>
+  plot2(x = Species,
+        type = "violin")
+iris |>
+  plot2(x = Species,
+        y = where(is.double),
+        type = "boxplot")
+```
+
+# Histogram
+
+Used for visualising the frequency distribution of continuous variables.
+
+```{r}
+diamonds |>
+  plot2(x = price,
+        type = "hist")
+```
+
+# Beeswarm
+
+Used for showing distributions of individual observations without overlap.
+
+```{r}
+iris |>
+  plot2(x = Species,
+        y = Sepal.Length,
+        type = "beeswarm")
+```
+
+# Geo (sf)
+
+Used for mapping spatial data encoded as simple features.
+
+```{r}
+netherlands |> # from this plot2 package
+  plot2()
+```
+
+# Back-to-back
+
+Used for contrasting two mirrored groups across shared categories.
+
+```{r}
+admitted_patients |> # from this plot2 package
+    plot2(x = age_group,
+          y = n(),
+          category = gender,
+          facet = ward,
+          type = "back-to-back")
+```
+
+# Dumbbell
+
+Used for highlighting changes or differences between paired values.
+
+```{r}
+diamonds |>
+  dplyr::filter(cut %in% c("Fair", "Very Good")) |>
+  plot2(x = cut(carat, 6),
+        y = median(price),
+        category = cut,
+        type = "dumbbell")
+```
+
+# Sankey
+
+Used for depicting flows or transitions between connected stages.
+
+```{r}
+Titanic |> # from base R
+  plot2(x = c(Age, Class, Survived),
+        category = Sex,
+        type = "sankey")
+```
+
+# UpSet
+
+Used for analysing intersections among multiple sets with scalable clarity.
+
+```{r}
+movies |> # from the ggplot2movies package
+  plot2(x = c(Action, Animation, Comedy, Drama, Romance),
+        type = "upset")
+movies |>
+  plot2(x = c(Action, Animation, Comedy, Drama, Romance),
+        y = median(rating),
+        y.title = "Median Rating",
+        x.sort = TRUE,
+        type = "upset")
+```
+

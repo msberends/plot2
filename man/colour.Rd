@@ -54,7 +54,7 @@ add_white(x, white)
 \item \code{"terrain"}
 \item \code{"topo"}
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"palevioletred"}, \code{"rosybrown"}, \code{"sienna3"}, \code{"tomato"}, \code{"wheat"}
+\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"blueviolet"}, \code{"cyan"}, \code{"darkolivegreen4"}, \code{"khaki3"}, \code{"mediumpurple2"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 

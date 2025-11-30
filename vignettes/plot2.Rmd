@@ -1,9 +1,9 @@
 ---
-title: "A Gentle Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow"
+title: "An Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{A Gentle Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow}
+  %\VignetteIndexEntry{An Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow}
   %\VignetteEngine{knitr::rmarkdown}
 toc: true
 editor_options: 
