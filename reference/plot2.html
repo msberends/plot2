@@ -11,7 +11,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9014</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +128,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span>  y_secondary.scientific <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y_secondary.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_secondary.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  category_type <span class="op">=</span> <span class="st">"colour"</span>,</span>
+<span>  category.type <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>  category.labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  category.percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  category.breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -179,6 +179,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span>  legend.position <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legend.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legend.reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  legend.nrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legend.barheight <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  legend.barwidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>  legend.nbin <span class="op">=</span> <span class="fl">300</span>,</span>
@@ -416,7 +417,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <dd><p>Colours to set for the secondary y axis, will be evaluated with <code><a href="colour.html">get_colour()</a></code>.</p></dd>
 
 
-<dt id="arg-category-type">category_type<a class="anchor" aria-label="anchor" href="#arg-category-type"></a></dt>
+<dt id="arg-category-type">category.type<a class="anchor" aria-label="anchor" href="#arg-category-type"></a></dt>
 <dd><p>Type of the <code>category</code>, one or more of: <code>"colour"</code> (default), <code>"shape"</code>, <code>"size"</code>, <code>"linetype"</code>, <code>"linewidth"</code>, <code>"alpha"</code>. There is no need to set <code>"fill"</code>, as <code>plot2</code> handles colour-setting internally and determines automatically whether the <code>colour</code> or <code>fill</code> aesthetic must be used.</p></dd>
 
 
@@ -554,7 +555,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <dd><p>Position of the legend, must be <code>"top"</code>, <code>"right"</code>, <code>"bottom"</code>, <code>"left"</code> or <code>"none"</code> (or <code>NA</code> or <code>NULL</code>), can be abbreviated. Defaults to <code>"right"</code> for numeric <code>category</code> values and 'sf' plots, and <code>"top"</code> otherwise.</p></dd>
 
 
-<dt id="arg-legend-reverse-legend-barheight-legend-barwidth-legend-nbin-legend-italic">legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic<a class="anchor" aria-label="anchor" href="#arg-legend-reverse-legend-barheight-legend-barwidth-legend-nbin-legend-italic"></a></dt>
+<dt id="arg-legend-reverse-legend-barheight-legend-barwidth-legend-nbin-legend-italic-legend-nrow">legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic, legend.nrow<a class="anchor" aria-label="anchor" href="#arg-legend-reverse-legend-barheight-legend-barwidth-legend-nbin-legend-italic-legend-nrow"></a></dt>
 <dd><p>Other settings for the legend.</p></dd>
 
 
@@ -635,7 +636,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <li><p>Labels with data values can easily be printed and are automatically determined</p></li>
 </ul></li>
 <li><p>Support for any <code>ggplot2</code> extension based on <code><a href="https://ggplot2.tidyverse.org/reference/fortify.html" class="external-link">ggplot2::fortify()</a></code></p></li>
-</ul><p>The <code>ggplot2</code> package in conjunction with the <code>tidyr</code>, <code>forcats</code> and <code>cleaner</code> packages can provide above functionalities, but the goal of the <code>plot2()</code> function is to generalise this into one function. The generic <code>plot2()</code> function currently has 151 arguments, all with a default value. <strong>Less typing, faster coding.</strong></p>
+</ul><p>The <code>ggplot2</code> package in conjunction with the <code>tidyr</code>, <code>forcats</code> and <code>cleaner</code> packages can provide above functionalities, but the goal of the <code>plot2()</code> function is to generalise this into one function. The generic <code>plot2()</code> function currently has 152 arguments, all with a default value. <strong>Less typing, faster coding.</strong></p>
     </div>
 
     <div class="section level2">
@@ -725,7 +726,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="co"># the category type can be one or more aesthetics</span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>zoom <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>        category_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"shape"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        category.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"shape"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = Species</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
@@ -735,7 +736,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>zoom <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>        category <span class="op">=</span> <span class="va">Petal.Length</span>,</span></span>
-<span class="r-in"><span>        category_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"size"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        category.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"size"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = Sepal.Length</span></span>
@@ -970,7 +971,6 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-in"><span>        font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span></span>
 <span class="r-in"><span>        text_factor <span class="op">=</span> <span class="fl">1.25</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"This plot uses a Google Font"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Rock+Salt</span> from Google Fonts</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
 <span class="r-plt img"><img src="plot2-34.png" alt="" width="700" height="433"></span>
 </code></pre></div>

@@ -105,7 +105,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -156,6 +156,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -576,7 +577,7 @@ plot2(
   Colours to set for the secondary y axis, will be evaluated with
   [`get_colour()`](https://msberends.github.io/plot2/reference/colour.md).
 
-- category_type:
+- category.type:
 
   Type of the `category`, one or more of: `"colour"` (default),
   `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is
@@ -839,7 +840,7 @@ plot2(
   otherwise.
 
 - legend.reverse, legend.barheight, legend.barwidth, legend.nbin,
-  legend.italic:
+  legend.italic, legend.nrow:
 
   Other settings for the legend.
 
@@ -983,7 +984,7 @@ provides:
 The `ggplot2` package in conjunction with the `tidyr`, `forcats` and
 `cleaner` packages can provide above functionalities, but the goal of
 the `plot2()` function is to generalise this into one function. The
-generic `plot2()` function currently has 151 arguments, all with a
+generic `plot2()` function currently has 152 arguments, all with a
 default value. **Less typing, faster coding.**
 
 ## Examples
@@ -1074,7 +1075,7 @@ iris |>
 # the category type can be one or more aesthetics
 iris |>
   plot2(zoom = TRUE,
-        category_type = c("colour", "shape"),
+        category.type = c("colour", "shape"),
         size = 3)
 #> ℹ Using category = Species
 #> ℹ Using type = "point" since both axes are numeric
@@ -1084,7 +1085,7 @@ iris |>
 iris |>
   plot2(zoom = TRUE,
         category = Petal.Length,
-        category_type = c("colour", "size"),
+        category.type = c("colour", "size"),
         colour = "viridis")
 #> ℹ Using type = "point" since both axes are numeric
 #> ℹ Using x = Sepal.Length
@@ -1319,6 +1320,5 @@ mtcars |>
         font = "Rock Salt",
         text_factor = 1.25,
         title = "This plot uses a Google Font")
-#> ℹ Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts
 #> ℹ Using type = "point" since both axes are numeric
 ```

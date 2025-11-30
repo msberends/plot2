@@ -93,7 +93,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -144,6 +144,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -248,7 +249,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -299,6 +300,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -404,7 +406,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -455,6 +457,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -559,7 +562,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -610,6 +613,7 @@ plot2(
   legend.position = "right",
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -720,7 +724,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -771,6 +775,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -875,7 +880,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -926,6 +931,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -1345,7 +1351,7 @@ plot2(
   Colours to set for the secondary y axis, will be evaluated with
   [`get_colour()`](https://msberends.github.io/plot2/reference/colour.md).
 
-- category_type:
+- category.type:
 
   Type of the `category`, one or more of: `"colour"` (default),
   `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is
@@ -1608,7 +1614,7 @@ plot2(
   otherwise.
 
 - legend.reverse, legend.barheight, legend.barwidth, legend.nbin,
-  legend.italic:
+  legend.italic, legend.nrow:
 
   Other settings for the legend.
 
