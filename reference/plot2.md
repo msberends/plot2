@@ -247,7 +247,7 @@ plot2(
   The `category` can also be a date or date/time (class `Date` or
   `POSIXt`).
 
-- type, y_secondary.type:
+- type:
 
   Type of visualisation to use. This can be:
 
@@ -273,6 +273,15 @@ plot2(
     - `"barpercent"` (short: `"bp"`), which is effectively a shortcut to
       set `type = "col"` and `horizontal = TRUE` and `x.max_items = 10`
       and `x.sort = "freq-desc"` and `datalabels.format = "%n (%p)"`.
+
+    - `"back-2-back"` (short: `"b2b"`) creates a Back-to-Back plot,
+      sometimes called a [Tornado
+      diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a
+      [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram),
+      or a [Population
+      Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It
+      uses `facet` for the left and right plots. Therefore, `facet` must
+      be set to (a column containing) two unique values.
 
     - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds
       two point geoms using
@@ -571,6 +580,10 @@ plot2(
   functionality is poorly supported by `ggplot2` and might give
   unexpected results. Setting the secondary y axis will set the colour
   to the axis titles.
+
+- y_secondary.type:
+
+  see **`type`**
 
 - y_secondary.colour, y_secondary.colour_fill:
 

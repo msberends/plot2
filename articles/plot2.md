@@ -1,4 +1,4 @@
-# A Gentle Introduction to \`plot2()\`: Enhancing Your \`ggplot2\` Workflow
+# An Introduction to \`plot2()\`: Enhancing Your \`ggplot2\` Workflow
 
 ## Introduction
 

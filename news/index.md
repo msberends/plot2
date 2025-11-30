@@ -6,6 +6,7 @@
 - Added Shiny app
 - Support `y.transform = "reverse"`
 - Support `legend.nrow`
+- Support back-to-back (= tornado, = butterfly) plots
 
 ## plot2 1.0.0
 
