@@ -118,7 +118,7 @@ create_interactively <- function(data = NULL) {
   y_inputs <- lapply(names(y_args), function(nm) {
     make_input(nm, y_args[[nm]])
   })
-  category_args <- plot2_formals[grep("^(category\\.|category_type)", names(plot2_formals))]
+  category_args <- plot2_formals[grep("^(category\\.|category.type)", names(plot2_formals))]
   category_inputs <- lapply(names(category_args), function(nm) {
     make_input(nm, category_args[[nm]])
   })
@@ -156,7 +156,7 @@ create_interactively <- function(data = NULL) {
     theme = bslib::bs_theme(version = 5, preset = "united"),
     
     shiny::tags$style(paste0("#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }"),
-                      "#logo-container { position: absolute; bottom: 10px; left: 10px; }",
+                      "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
                       "#error_msg { color: red; }",
                       ".container-fluid { overflow-x: hidden; padding-left: 0; }",
                       "#settings_tabs { margin-bottom: 20px; font-size: 14px; }",
@@ -239,11 +239,7 @@ create_interactively <- function(data = NULL) {
                             ),
                           ),
                           shiny::hr(),
-                          main_inputs,
-                          shiny::div(
-                            id = "logo-container",
-                            shiny::img(src = "plot2res/logo.svg", height = "150px")  # adjust height to taste
-                          )
+                          main_inputs
           ),
           
           # --- X settings
@@ -263,6 +259,9 @@ create_interactively <- function(data = NULL) {
           
           # --- Titles
           shiny::tabPanel("Titles", shiny::div(class = "settings", title_inputs)),
+          
+          # --- Datalabels
+          shiny::tabPanel("Legend", shiny::div(class = "settings", legend_inputs)),
           
           # --- Smooth
           shiny::tabPanel("Smooth", shiny::div(class = "settings", smooth_inputs)),
@@ -285,6 +284,10 @@ create_interactively <- function(data = NULL) {
           shiny::verbatimTextOutput("code")),
         shiny::textOutput("error_msg"),
         shiny::br(),
+        shiny::div(
+          id = "logo-container",
+          shiny::img(src = "plot2res/logo.svg", height = "100px")
+        ),
         shiny::actionLink("showdata", "Show data >"),
         shiny::br(),
         shiny::br(),
@@ -344,7 +347,7 @@ create_interactively <- function(data = NULL) {
             out <- paste0(gsub("[\\(\\)]", "", input$y_calc), "(", out, ")")
           }
           return(paste0(nm, " = ", out))
-        } else if (nm == "category_type") {
+        } else if (nm == "category.type") {
           return(paste0(nm, " = c(", paste0('"', val, '"', collapse = ", "), ")"))
         }
         if (nm == "summarise_function") {
@@ -492,13 +495,16 @@ make_input <- function(name, default) {
   } else if (name %like% "(linewidth|size|width|text_factor)$") {
     if (is.null(default) || is.infinite(default)) default <- 1
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 10, step = 0.5, width = "100%"), name, default, slider = TRUE)
+  } else if (name %like% "(nrow)$") {
+    if (is.null(default) || is.infinite(default)) default <- 1
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 1, max = 10, step = 1, width = "100%"), name, default, slider = TRUE)
   } else if (name %like% "alpha$") {
     if (is.null(default) || is.infinite(default)) default <- 0.4
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 1, step = 0.05, width = "100%"), name, default, slider = TRUE)
   } else if (name %like% "[.]level$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0.75, max = 1, step = 0.005, width = "100%"), name, default, slider = TRUE)
-  } else if (name == "category_type") {
+  } else if (name == "category.type") {
     create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), multiple = TRUE, width = "100%"), name, default)
   } else if (name %like% "linetype$") {
     if (is.null(default) || is.infinite(default)) default <- 1

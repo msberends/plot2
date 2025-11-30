@@ -786,7 +786,7 @@ validate_x_scale <- function(df,
       summarise(max = as.double(max(`_var_x`, na.rm = TRUE)))
     if (!any(is.infinite(x_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(x_maxima$max) / mean(x_maxima$max)
-      if (coeff_of_variation < 0.25) {
+      if (isTRUE(coeff_of_variation < 0.25)) {
         plot2_message("Assuming ", font_blue("facet.fixed_x = TRUE"), 
                       " since the ", digit_to_text(nrow(x_maxima)), " ",
                       font_blue("x"), " scales differ by less than 25%")
@@ -1018,7 +1018,7 @@ validate_y_scale <- function(df,
       summarise(max = as.double(max(`_var_y`, na.rm = TRUE)))
     if (!any(is.infinite(y_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(y_maxima$max) / mean(y_maxima$max)
-      if (coeff_of_variation < 0.25) {
+      if (isTRUE(coeff_of_variation < 0.25)) {
         plot2_message("Assuming ", font_blue("facet.fixed_y = TRUE"), 
                       " since the ", digit_to_text(nrow(y_maxima)), " ",
                       font_blue("y"), " scales differ by less than 25%")
@@ -1250,7 +1250,18 @@ validate_y_scale <- function(df,
                                 y.age = y.age,
                                 y.transform = y.transform,
                                 df)
-  
+ 
+  if (y.transform == "reverse") {
+    limits_evaluated <- NULL
+  }
+  expand_evaluated <- expand_fn(values = values,
+                                y.expand = y.expand,
+                                y.age = y.age,
+                                stacked_fill = stacked_fill,
+                                y.limits = limits_evaluated)
+  if (y.transform == "reverse") {
+    expand_evaluated <- c(expand_evaluated[3], expand_evaluated[c(1, 2, 4)])
+  }
   scale_y_continuous(
     breaks = breaks_fn(values = values,
                        waiver = waiver(),
@@ -1276,11 +1287,7 @@ validate_y_scale <- function(df,
                        decimal.mark = decimal.mark,
                        big.mark = big.mark),
     limits = limits_evaluated,
-    expand = expand_fn(values = values,
-                       y.expand = y.expand,
-                       y.age = y.age,
-                       stacked_fill = stacked_fill,
-                       y.limits = limits_evaluated),
+    expand = expand_evaluated,
     transform = y.transform,
     position = y.position,
     sec.axis = sec_y
@@ -1292,7 +1299,7 @@ validate_y_scale <- function(df,
 validate_category_scale <- function(values,
                                     type,
                                     cols,
-                                    category_type,
+                                    category.type,
                                     category.labels,
                                     category.percent,
                                     category.breaks,
@@ -1424,7 +1431,7 @@ validate_category_scale <- function(values,
     category.expand <- expansion(mult = c(0, category.expand))
   }
   
-  is_colour_type <- "colour" %in% category_type
+  is_colour_type <- "colour" %in% category.type
   if ((geom_has_only_colour(type) || identical(cols$colour, cols$colour_fill)) && is_colour_type) {
     aest <- c("colour", "fill")
     cols_category <- cols$colour
@@ -1432,7 +1439,7 @@ validate_category_scale <- function(values,
     aest <- "fill"
     cols_category <- cols$colour_fill
   } else {
-    aest <- category_type
+    aest <- category.type
     cols_category <- cols$colour
   }
   
@@ -1475,10 +1482,10 @@ validate_category_scale <- function(values,
   
   if (isTRUE(original_colours)) {
     # original ggplot2 colours chosen, so just return scale without setting manual colours
-    if ("colour" %in% category_type) {
+    if ("colour" %in% category.type) {
       return(do.call(scale_colour_gradient, args = args))
     } else {
-      fn <- getExportedValue(paste0("scale_", category_type, "_continuous"), ns = asNamespace("ggplot2"))
+      fn <- getExportedValue(paste0("scale_", category.type, "_continuous"), ns = asNamespace("ggplot2"))
       return(do.call(fn, args = args))
     }
   }

@@ -98,12 +98,12 @@ iris |>
 # the category type can be one or more aesthetics
 iris |>
   plot2(zoom = TRUE,
-        category_type = c("colour", "shape"),
+        category.type = c("colour", "shape"),
         size = 3)
 iris |>
   plot2(zoom = TRUE,
         category = Petal.Length,
-        category_type = c("colour", "size"),
+        category.type = c("colour", "size"),
         colour = "viridis")
 
 # easily add a smooth

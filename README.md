@@ -187,7 +187,7 @@ iris |>
 # the category type can be one or more aesthetics
 iris |>
   plot2(zoom = TRUE,
-        category_type = c("colour", "shape"),
+        category.type = c("colour", "shape"),
         size = 3)
 #> ℹ Using category = Species
 #> ℹ Using type = "point" since both axes are numeric
@@ -201,7 +201,7 @@ iris |>
 iris |>
   plot2(zoom = TRUE,
         category = Petal.Length,
-        category_type = c("colour", "size"),
+        category.type = c("colour", "size"),
         colour = "viridis")
 #> ℹ Using type = "point" since both axes are numeric
 #> ℹ Using x = Sepal.Length

@@ -112,7 +112,7 @@
 #' @param x.transform,y.transform,category.transform A transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position Position of the axis.
 #' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis.
-#' @param category_type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
+#' @param category.type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint Settings for the plotting direction `category`.
 #' @param category.limits Limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
 #' @param category.date_breaks Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
@@ -168,7 +168,7 @@
 #' @param jitter_seed Seed (randomisation factor) to be set when using `type = "jitter"`.
 #' @param violin_scale Scale to be set when using `type = "violin"`, can also be set to `"area"`.
 #' @param legend.position Position of the legend, must be `"top"`, `"right"`, `"bottom"`, `"left"` or `"none"` (or `NA` or `NULL`), can be abbreviated. Defaults to `"right"` for numeric `category` values and 'sf' plots, and `"top"` otherwise.
-#' @param legend.reverse,legend.barheight,legend.barwidth,legend.nbin,legend.italic Other settings for the legend.
+#' @param legend.reverse,legend.barheight,legend.barwidth,legend.nbin,legend.italic,legend.nrow Other settings for the legend.
 #' @param sankey.node_width Width of the vertical nodes in a Sankey plot.
 #' @param sankey.node_whitespace Whitespace between the nodes in a Sankey plot.
 #' @param sankey.alpha Alpha of the flows in a Sankey plot.
@@ -245,12 +245,12 @@
 #' # the category type can be one or more aesthetics
 #' iris |>
 #'   plot2(zoom = TRUE,
-#'         category_type = c("colour", "shape"),
+#'         category.type = c("colour", "shape"),
 #'         size = 3)
 #' iris |>
 #'   plot2(zoom = TRUE,
 #'         category = Petal.Length,
-#'         category_type = c("colour", "size"),
+#'         category.type = c("colour", "size"),
 #'         colour = "viridis")
 #' 
 #' # easily add a smooth
@@ -467,7 +467,7 @@ plot2 <- function(.data,
                   y_secondary.scientific = NULL,
                   y_secondary.percent = FALSE,
                   y_secondary.labels = NULL,
-                  category_type = "colour",
+                  category.type = "colour",
                   category.labels = NULL,
                   category.percent = FALSE,
                   category.breaks = NULL,
@@ -518,6 +518,7 @@ plot2 <- function(.data,
                   legend.position = NULL,
                   legend.title = NULL, # will become TRUE in numeric categories if left NULL
                   legend.reverse = FALSE,
+                  legend.nrow = NULL,
                   legend.barheight = 6,
                   legend.barwidth = 1.5,
                   legend.nbin = 300,
@@ -679,7 +680,7 @@ plot2_exec <- function(.data,
                        y_secondary.scientific,
                        y_secondary.percent,
                        y_secondary.labels,
-                       category_type,
+                       category.type,
                        category.labels,
                        category.percent,
                        category.breaks,
@@ -730,6 +731,7 @@ plot2_exec <- function(.data,
                        legend.position,
                        legend.title,
                        legend.reverse,
+                       legend.nrow,
                        legend.barheight,
                        legend.barwidth,
                        legend.nbin,
@@ -865,16 +867,16 @@ plot2_exec <- function(.data,
     big.mark <- " "
   }
   
-  if (!all(category_type %in% c("colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"), na.rm = TRUE)) {
-    stop(('`category_type` must be: "colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"'), call. = FALSE)
+  if (!all(category.type %in% c("colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"), na.rm = TRUE)) {
+    stop(('`category.type` must be: "colour", "color", "fill", "shape", "size", "linetype", "linewidth", "alpha"'), call. = FALSE)
   } else {
-    if ("color" %in% category_type) {
-      category_type[category_type == "color"] <- "colour"
+    if ("color" %in% category.type) {
+      category.type[category.type == "color"] <- "colour"
     }
-    if (any(c("colour", "fill") %in% category_type)) {
-      category_type <- c("colour", "fill", category_type)
+    if (any(c("colour", "fill") %in% category.type)) {
+      category.type <- c("colour", "fill", category.type)
     }
-    category_type <- unique(category_type)
+    category.type <- unique(category.type)
   }
   
   # set environment ----
@@ -1394,8 +1396,8 @@ plot2_exec <- function(.data,
     original_colours <- (is.null(colour) || identical(colour, "ggplot2")) &&
       (identical(colour_fill, "ggplot2") || (is.null(colour_fill) && (is.null(colour) || identical(colour, "ggplot2"))))
   }
-  if (!any(c("colour", "fill") %in% category_type)) {
-    # "colour" and "fill" are not in category_type, so do not set colours regardless of the `colour` argument
+  if (!any(c("colour", "fill") %in% category.type)) {
+    # "colour" and "fill" are not in category.type, so do not set colours regardless of the `colour` argument
     original_colours <- TRUE
   }
   
@@ -1449,7 +1451,7 @@ plot2_exec <- function(.data,
   }
   if (has_category(df)) {
     mapping <- utils::modifyList(mapping, aes(group = `_var_category`))
-    mapping <- utils::modifyList(mapping, rlang::syms(stats::setNames(rep("_var_category", length(category_type)), category_type)))
+    mapping <- utils::modifyList(mapping, rlang::syms(stats::setNames(rep("_var_category", length(category.type)), category.type)))
     
     if (type == "geom_sf") {
       # no colour in sf's
@@ -1528,9 +1530,9 @@ plot2_exec <- function(.data,
                     stacked_fill = stacked_fill,
                     horizontal = horizontal,
                     width = width,
-                    size = if ("size" %in% category_type) NULL else size,
-                    linetype = if ("linetype" %in% category_type) NULL else linetype,
-                    linewidth = if ("linewidth" %in% category_type) NULL else linewidth,
+                    size = if ("size" %in% category.type) NULL else size,
+                    linetype = if ("linetype" %in% category.type) NULL else linetype,
+                    linewidth = if ("linewidth" %in% category.type) NULL else linewidth,
                     reverse = reverse,
                     na.rm = na.rm,
                     violin_scale = violin_scale,
@@ -1616,7 +1618,7 @@ plot2_exec <- function(.data,
   }
   # add axis labels ----
   if (has_category(df)) {
-    labs_set <- as.list(stats::setNames(rep(get_category_name(df), length(category_type)), category_type))
+    labs_set <- as.list(stats::setNames(rep(get_category_name(df), length(category.type)), category.type))
   } else {
     labs_set <- list()
   }
@@ -1645,7 +1647,7 @@ plot2_exec <- function(.data,
       validate_category_scale(values = get_category(df),
                               type = type,
                               cols = cols,
-                              category_type = category_type,
+                              category.type = category.type,
                               category.labels = category.labels,
                               category.percent = category.percent,
                               category.breaks = category.breaks,
@@ -1660,6 +1662,7 @@ plot2_exec <- function(.data,
                               legend.barheight = legend.barheight,
                               legend.barwidth = legend.barwidth,
                               legend.reverse = legend.reverse,
+                              legend.nrow = legend.nrow,
                               legend.position = legend.position,
                               decimal.mark = decimal.mark,
                               big.mark = big.mark,
@@ -1680,7 +1683,7 @@ plot2_exec <- function(.data,
       category.labels <- md_to_expression
     }
     
-    for (cat_type in category_type) {
+    for (cat_type in category.type) {
       if (original_colours == TRUE || !cat_type %in% c("colour", "fill")) {
         # these scale functions do not have 'values' set
         discrete_scale <- getExportedValue(paste0("scale_", cat_type, "_discrete"), ns = asNamespace("ggplot2"))
@@ -1867,7 +1870,7 @@ plot2_exec <- function(.data,
     if (isTRUE(legend.title)) {
       legend.title <- validate_title(get_category_name(df), markdown = isTRUE(markdown), df = df)
     }
-    for (cat in category_type) {
+    for (cat in category.type) {
       if (cat %in% names(mapping)) {
         p <- p + do.call(labs, stats::setNames(list(legend.title), cat))
       }
@@ -1894,17 +1897,30 @@ plot2_exec <- function(.data,
   if (!(has_category(df) && is.numeric(get_category(df)))) {
     # only change this when there is no guide_colourbar(), see validate_category_scale()
     if (!is.null(legend.reverse)) {
-      p <- p +
-        guides(fill = guide_legend(reverse = isTRUE(legend.reverse)),
-               colour = guide_legend(reverse = isTRUE(legend.reverse)))
+      for (cat in category.type) {
+        if (cat %in% names(mapping)) {
+          p <- p +
+            do.call(guides, stats::setNames(list(guide_legend(reverse = isTRUE(legend.reverse), nrow = legend.nrow)), cat))
+        }
+      }
     }
     if (isTRUE(horizontal)) {
       if (legend.position %in% c("top", "bottom") &&
           validate_sorting(category.sort, horizontal = horizontal) %unlike% "freq") {
         # reverse legend items when on top or bottom, but not when sorting is freq, freq-asc or freq-desc
+        for (cat in category.type) {
+          if (cat %in% names(mapping)) {
+            p <- p +
+              do.call(guides, stats::setNames(list(guide_legend(reverse = TRUE, nrow = legend.nrow)), cat))
+          }
+        }
+      }
+    }
+  } else if (has_category(df) && !is.null(legend.nrow)) {
+    for (cat in category.type) {
+      if (cat %in% names(mapping)) {
         p <- p +
-          guides(fill = guide_legend(reverse = TRUE),
-                 colour = guide_legend(reverse = TRUE))
+          do.call(guides, stats::setNames(list(guide_legend(nrow = legend.nrow)), cat))
       }
     }
   }

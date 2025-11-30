@@ -88,7 +88,7 @@ plot2(
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -139,6 +139,7 @@ plot2(
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -296,7 +297,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{category_type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
+\item{category.type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{Settings for the plotting direction \code{category}.}
 
@@ -386,7 +387,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{legend.position}{Position of the legend, must be \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"} or \code{"none"} (or \code{NA} or \code{NULL}), can be abbreviated. Defaults to \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
 
-\item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic}{Other settings for the legend.}
+\item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic, legend.nrow}{Other settings for the legend.}
 
 \item{sankey.node_width}{Width of the vertical nodes in a Sankey plot.}
 
@@ -448,7 +449,7 @@ The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \
 \item Support for any \code{ggplot2} extension based on \code{\link[ggplot2:fortify]{ggplot2::fortify()}}
 }
 
-The \code{ggplot2} package in conjunction with the \code{tidyr}, \code{forcats} and \code{cleaner} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 151 arguments, all with a default value. \strong{Less typing, faster coding.}
+The \code{ggplot2} package in conjunction with the \code{tidyr}, \code{forcats} and \code{cleaner} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 152 arguments, all with a default value. \strong{Less typing, faster coding.}
 }
 \examples{
 options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
@@ -491,12 +492,12 @@ iris |>
 # the category type can be one or more aesthetics
 iris |>
   plot2(zoom = TRUE,
-        category_type = c("colour", "shape"),
+        category.type = c("colour", "shape"),
         size = 3)
 iris |>
   plot2(zoom = TRUE,
         category = Petal.Length,
-        category_type = c("colour", "size"),
+        category.type = c("colour", "size"),
         colour = "viridis")
 
 # easily add a smooth

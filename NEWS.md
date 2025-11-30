@@ -2,6 +2,8 @@
 
 * Support ggplot2 4.0.0
 * Added Shiny app
+* Support `y.transform = "reverse"`
+* Support `legend.nrow`
 
 # plot2 1.0.0
 

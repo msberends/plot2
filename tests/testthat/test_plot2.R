@@ -134,11 +134,11 @@ test_that("general mapping works", {
   skip_on_cran()
   expect_equal(plotdata |> plot2() |> get_mapping() |> names(),
                c("y", "x", "colour", "fill"))
-  expect_equal(plotdata |> plot2(category_type = "color") |> get_mapping() |> names(),
+  expect_equal(plotdata |> plot2(category.type = "color") |> get_mapping() |> names(),
                c("y", "x", "colour", "fill"))
-  expect_equal(plotdata |> plot2(category_type = "fill") |> get_mapping() |> names(),
+  expect_equal(plotdata |> plot2(category.type = "fill") |> get_mapping() |> names(),
                c("y", "x", "colour", "fill"))
-  expect_equal(plotdata |> plot2(category = n, category_type = "size") |> get_mapping() |> names(),
+  expect_equal(plotdata |> plot2(category = n, category.type = "size") |> get_mapping() |> names(),
                c("y", "x", "size"))
   # remove x axis
   expect_s3_class(admitted_patients |> plot2(x = NULL, y = age), "gg")

@@ -94,7 +94,7 @@
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -145,6 +145,7 @@
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -248,7 +249,7 @@
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -299,6 +300,7 @@
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -403,7 +405,7 @@
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -454,6 +456,7 @@
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -557,7 +560,7 @@
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -608,6 +611,7 @@
   legend.position = "right",
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -717,7 +721,7 @@
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -768,6 +772,7 @@
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -871,7 +876,7 @@
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
-  category_type = "colour",
+  category.type = "colour",
   category.labels = NULL,
   category.percent = FALSE,
   category.breaks = NULL,
@@ -922,6 +927,7 @@
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
+  legend.nrow = NULL,
   legend.barheight = 6,
   legend.barwidth = 1.5,
   legend.nbin = 300,
@@ -1078,7 +1084,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{category_type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
+\item{category.type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{Settings for the plotting direction \code{category}.}
 
@@ -1168,7 +1174,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{legend.position}{Position of the legend, must be \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"} or \code{"none"} (or \code{NA} or \code{NULL}), can be abbreviated. Defaults to \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
 
-\item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic}{Other settings for the legend.}
+\item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic, legend.nrow}{Other settings for the legend.}
 
 \item{sankey.node_width}{Width of the vertical nodes in a Sankey plot.}
 
