@@ -23,9 +23,7 @@ movies <- ggplot2movies::movies
 options(plot2.colour = "viridis")
 ```
 
-The following plot types are supported. Some examples show inferred plot types from the data and have no explicit `type` set to the `plot2()` function.
-
-In fact, any ggplot2 geom is supported, though some advanced plot types might require additional arguments.
+The following plot types are supported. Aany ggplot2 geom is supported, but we added supported for some other, more advanced plots.
 
 # Column / Bar
 
@@ -51,7 +49,6 @@ pressure |> # from base R
     plot2(x = temperature,
           y = pressure,
           type = "line")
-
 pressure |>
     plot2(x = temperature,
           y = pressure,
@@ -81,7 +78,6 @@ pressure |>
     plot2(x = temperature,
           y = pressure,
           type = "area")
-
 airquality |>
   plot2(x = Day, 
         y = Wind, 
@@ -115,6 +111,15 @@ diamonds |>
         type = "hist")
 ```
 
+# Geo (sf)
+
+Used for mapping spatial data encoded as simple features.
+
+```{r}
+netherlands |> # from this plot2 package
+  plot2()
+```
+
 # Beeswarm
 
 Used for showing distributions of individual observations without overlap.
@@ -126,15 +131,6 @@ iris |>
         type = "beeswarm")
 ```
 
-# Geo (sf)
-
-Used for mapping spatial data encoded as simple features.
-
-```{r}
-netherlands |> # from this plot2 package
-  plot2()
-```
-
 # Back-to-back
 
 Used for contrasting two mirrored groups across shared categories.
@@ -143,6 +139,12 @@ Used for contrasting two mirrored groups across shared categories.
 admitted_patients |> # from this plot2 package
     plot2(x = age_group,
           y = n(),
+          facet = ward,
+          type = "back-to-back")
+admitted_patients |> # from this plot2 package
+    plot2(x = age_group,
+          y = n(),
+          y.limits = c(0, 60),
           category = gender,
           facet = ward,
           type = "back-to-back")

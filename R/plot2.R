@@ -597,7 +597,7 @@ plot2 <- function(.data,
 }
 
 #' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of all_of desc rowwise c_across left_join
-#' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete
+#' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete theme
 #' @importFrom tidyr pivot_longer pivot_wider
 plot2_exec <- function(.data,
                        x = NULL,
@@ -897,10 +897,12 @@ plot2_exec <- function(.data,
                 y_secondary = dots$`_label.y_secondary`,
                 x_variable_names = tryCatch(suppressWarnings(.data |> select({{ x }}) |> colnames()), error = function(e) NULL))
   
-  on.exit({
-    throw_messages()
-    clear_plot2_env()
-  })
+  if (type_backup != "back-to-back") {
+    on.exit({
+      throw_messages()
+      clear_plot2_env()
+    })
+  }
   
   plot2_env$facet.fixed_y <- facet.fixed_y
   
@@ -1389,7 +1391,7 @@ plot2_exec <- function(.data,
   # check requirements for back-to-back plots
   if (type_backup == "back-to-back") {
     if (isTRUE(misses_facet) || (.data |> select({{ facet }}) |> pull() |> n_distinct()) != 2) {
-      stop("Back-to-back plots require the facet to be set to two uniques values", call. = FALSE)
+      stop("Back-to-back plots require the facet to be set to two unique values", call. = FALSE)
     }
   }
   
@@ -2063,7 +2065,7 @@ plot2_exec <- function(.data,
     }
   }
   legend.position <- validate_legend.position(legend.position)
-  p <- p + ggplot2::theme(legend.position = legend.position)
+  p <- p + theme(legend.position = legend.position)
   
   if (!(has_category(df) && is.numeric(get_category(df)))) {
     # only change this when there is no guide_colourbar(), see validate_category_scale()

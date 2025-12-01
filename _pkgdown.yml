@@ -33,10 +33,13 @@ navbar:
       menu:
       - text: "Introduction to plot2"
         href: "articles/plot2.html"
-      - text: "Supported plot types"
+        icon: "fa-solid fa-square-poll-vertical"
+      - text: "Supported Plot Types"
         href: "articles/supported_types.html"
-      - text: "Adding extra plot2 types"
+        icon: "fa-solid fa-square-poll-vertical"
+      - text: "Adding An Extra plot2 Type"
         href: "reference/add_type.html"
+        icon: "fa-solid fa-square-plus"
   right:
     - text: "Source Code"
       icon: "fab fa-github"

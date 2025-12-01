@@ -2343,6 +2343,11 @@ generate_datalabels <- function(p,
     return(p)
   }
   
+  if (!has_category(df)) {
+    stacked <- FALSE
+    stacked_fill <- FALSE
+  }
+  
   is_sf <- (type == "geom_sf")
   is_tile <- (type %in% c("geom_tile", "geom_raster", "geom_rect"))
   

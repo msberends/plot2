@@ -171,7 +171,7 @@ back2back_plot <- function(df,
                             drop = FALSE,
                             argument = "facet")
   facet_values <- as.character(levels(facet_values))
-
+  
   df_left <- df |> filter(`_var_facet` == facet_values[1])
   df_right <- df |> filter(`_var_facet` == facet_values[2])
   
@@ -183,17 +183,27 @@ back2back_plot <- function(df,
   if (isTRUE(y.title)) {
     y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
   }
-
+  
   if (isTRUE(facet.fixed_x) || isTRUE(facet.fixed_y)) {
     plot2_caution("For fixed scales, set `y.limits` when using back-to-back plots")
   }
+  
+  # legend
+  if (is.null(legend.position)) {
+    if (has_category(df) && data_is_numeric(get_category(df))) {
+      legend.position <- "right"
+    } else {
+      legend.position <- "top"
+    }
+  }
+  legend.position <- validate_legend.position(legend.position)
+  
   suppressMessages(
     left_plot <- df_left |>
       select(-starts_with("_var_")) |>
-      plot2(df,
-            x = !!str2lang(get_x_name(df)),
+      plot2(x = !!str2lang(get_x_name(df)),
             y = !!get_y(df_left),
-            category = if (has_category(df)) !!str2lang(get_category_name(df)) else NULL,
+            category = !!(if (has_category(df)) str2lang(get_category_name(df)) else NULL),
             facet = !!facet_values[1],
             type = "col",
             horizontal = TRUE,
@@ -205,6 +215,7 @@ back2back_plot <- function(df,
             x.position = "top", # move ticks to other side
             print = FALSE,
             facet.sort = NULL,
+            legend.position = legend.position,
             y.title = y.title,
             na.replace = na.replace,
             na.rm = na.rm,
@@ -298,7 +309,6 @@ back2back_plot <- function(df,
             width = width,
             jitter_seed = jitter_seed,
             violin_scale = violin_scale,
-            legend.position = legend.position,
             legend.title = legend.title,
             legend.reverse = legend.reverse,
             legend.nrow = legend.nrow,
@@ -319,17 +329,15 @@ back2back_plot <- function(df,
             markdown = markdown
       ) +
       theme(axis.text.y = element_blank(),
-            plot.margin = margin(5,5,5,5),
-            legend.position = "none")
+            plot.margin = margin(5,5,5,5))
   )
   
   suppressMessages(
     right_plot <- df_right |>
       select(-starts_with("_var_")) |>
-      plot2(df,
-            x = !!str2lang(get_x_name(df)),
+      plot2(x = !!str2lang(get_x_name(df)),
             y = !!get_y(df_right),
-            category = if (has_category(df)) !!str2lang(get_category_name(df)) else NULL,
+            category = !!(if (has_category(df)) str2lang(get_category_name(df)) else NULL),
             facet = !!facet_values[2],
             type = "col",
             horizontal = TRUE,
@@ -340,6 +348,7 @@ back2back_plot <- function(df,
             caption = NULL,
             print = FALSE,
             facet.sort = NULL,
+            legend.position = legend.position,
             y.title = y.title,
             na.replace = na.replace,
             na.rm = na.rm,
@@ -433,7 +442,6 @@ back2back_plot <- function(df,
             width = width,
             jitter_seed = jitter_seed,
             violin_scale = violin_scale,
-            legend.position = legend.position,
             legend.title = legend.title,
             legend.reverse = legend.reverse,
             legend.nrow = legend.nrow,
@@ -455,14 +463,14 @@ back2back_plot <- function(df,
       ) +
       theme(axis.text.y = element_text(hjust = 0.5,
                                        margin = margin(l = 10, r = 10)),
-            plot.margin = margin(5, 5, 5, 0),
-            legend.position = "none")
+            plot.margin = margin(5, 5, 5, 0))
   )
-  
-  p <- patchwork::wrap_plots(left_plot, right_plot, 
-                        nrow = 1,
-                        guides = "keep",
-                        axis_titles = "collect") +
+
+  p <- patchwork::wrap_plots(left_plot,
+                             right_plot,
+                             nrow = 1) +
+    patchwork::plot_layout(guides = "collect",
+                           axis_titles = "collect") +
     patchwork::plot_annotation(title = title,
                                subtitle = subtitle,
                                caption = caption,
@@ -488,7 +496,11 @@ back2back_plot <- function(df,
                                                       has_category = has_category(df),
                                                       col_y_primary = NULL,
                                                       col_y_secondary = NULL,
-                                                      sankey.remove_axes = FALSE))
+                                                      sankey.remove_axes = FALSE)) & 
+    theme(legend.position = legend.position,
+          legend.justification = "center",
+          legend.direction = "horizontal")
+  
   
   on.exit({
     throw_messages()
