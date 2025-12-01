@@ -1,12 +1,7 @@
 # Supported Plot Types
 
-The following plot types are supported. Some examples show inferred plot
-types from the data and have no explicit `type` set to the
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-function.
-
-In fact, any ggplot2 geom is supported, though some advanced plot types
-might require additional arguments.
+The following plot types are supported. Aany ggplot2 geom is supported,
+but we added supported for some other, more advanced plots.
 
 ## Column / Bar
 
@@ -44,7 +39,6 @@ pressure |> # from base R
 ![](supported_types_files/figure-html/unnamed-chunk-3-1.png)
 
 ``` r
-
 pressure |>
     plot2(x = temperature,
           y = pressure,
@@ -92,7 +86,6 @@ pressure |>
 ![](supported_types_files/figure-html/unnamed-chunk-5-1.png)
 
 ``` r
-
 airquality |>
   plot2(x = Day, 
         y = Wind, 
@@ -144,20 +137,6 @@ diamonds |>
 
 ![](supported_types_files/figure-html/unnamed-chunk-7-1.png)
 
-## Beeswarm
-
-Used for showing distributions of individual observations without
-overlap.
-
-``` r
-iris |>
-  plot2(x = Species,
-        y = Sepal.Length,
-        type = "beeswarm")
-```
-
-![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
-
 ## Geo (sf)
 
 Used for mapping spatial data encoded as simple features.
@@ -171,6 +150,20 @@ netherlands |> # from this plot2 package
 #> ℹ Using datalabels = province
 ```
 
+![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
+
+## Beeswarm
+
+Used for showing distributions of individual observations without
+overlap.
+
+``` r
+iris |>
+  plot2(x = Species,
+        y = Sepal.Length,
+        type = "beeswarm")
+```
+
 ![](supported_types_files/figure-html/unnamed-chunk-9-1.png)
 
 ## Back-to-back
@@ -181,12 +174,23 @@ Used for contrasting two mirrored groups across shared categories.
 admitted_patients |> # from this plot2 package
     plot2(x = age_group,
           y = n(),
-          category = gender,
           facet = ward,
           type = "back-to-back")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-10-1.png)
+
+``` r
+admitted_patients |> # from this plot2 package
+    plot2(x = age_group,
+          y = n(),
+          y.limits = c(0, 60),
+          category = gender,
+          facet = ward,
+          type = "back-to-back")
+```
+
+![](supported_types_files/figure-html/unnamed-chunk-10-2.png)
 
 ## Dumbbell
 

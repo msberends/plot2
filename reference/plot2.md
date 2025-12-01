@@ -274,14 +274,11 @@ plot2(
       set `type = "col"` and `horizontal = TRUE` and `x.max_items = 10`
       and `x.sort = "freq-desc"` and `datalabels.format = "%n (%p)"`.
 
-    - `"back-2-back"` (short: `"b2b"`) creates a Back-to-Back plot,
-      sometimes called a [Tornado
-      diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a
-      [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram),
-      or a [Population
-      Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It
-      uses `facet` for the left and right plots. Therefore, `facet` must
-      be set to (a column containing) two unique values.
+    - `"dumbbell"` (short: `"d"`), which sets `type = "point"` and
+      `horizontal = TRUE`, and adds a line between the points (using
+      [`geom_segment()`](https://ggplot2.tidyverse.org/reference/geom_segment.html)).
+      The line colour cannot be changed. This plot type is only possible
+      when the `category` has two distinct values.
 
     - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds
       two point geoms using
@@ -290,17 +287,20 @@ plot2(
       colours set in `colour`. This is essentially equal to base R
       `plot(..., type = "b")` but with closed shapes.
 
+    - `"back-to-back"` (short: `"b2b"`) creates a back-to-back plot,
+      sometimes called a [Tornado
+      diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a
+      [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram),
+      or a [Population
+      Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It
+      uses `facet` to distinquish the left and right plots. Therefore,
+      `facet` must be set to (a column containing) two unique values.
+
     - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet
       plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires
       `x` to contain multiple variables from `.data` that contain
       `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide
       `y`, on which then `summarise_function` will be applied.
-
-    - `"dumbbell"` (short: `"d"`), which sets `type = "point"` and
-      `horizontal = TRUE`, and adds a line between the points (using
-      [`geom_segment()`](https://ggplot2.tidyverse.org/reference/geom_segment.html)).
-      The line colour cannot be changed. This plot type is only possible
-      when the `category` has two distinct values.
 
     - `"sankey"` (short: `"s"`) creates a [Sankey
       plot](https://en.wikipedia.org/wiki/Sankey_diagram) using
