@@ -30,6 +30,7 @@ create_interactively <- function(data = NULL) {
   
   rlang::check_installed("shiny")
   rlang::check_installed("clipr")
+  rlang::check_installed("pillar")
   
   rstudio_viewer <- identical(Sys.getenv("RSTUDIO"), "1") && interactive()
   rstudio_viewer <- FALSE # turn off for now
@@ -45,7 +46,7 @@ create_interactively <- function(data = NULL) {
   shiny::addResourcePath("plot2res", system.file(package = "plot2"))
   
   # Collect datasets
-  plot2_datasets <- paste0("plot2::", data(package = "plot2")$results[, "Item"])
+  plot2_datasets <- as.character(data(package = "plot2")$results[, "Item"])
   
   globalenv_datasets <- ls(envir = globalenv())[vapply(
     ls(envir = globalenv()),
@@ -155,6 +156,13 @@ create_interactively <- function(data = NULL) {
     title = "Generate plot2",
     theme = bslib::bs_theme(version = 5, preset = "united"),
     
+    shiny::tags$style(shiny::HTML("
+      .selectize-dropdown .option, .selectize-input .item {
+        line-height: 1.6em;
+        padding: 4px 8px !important;
+      }
+    ")),
+    
     shiny::tags$style(paste0("#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }"),
                       "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
                       "#error_msg { color: red; }",
@@ -229,12 +237,12 @@ create_interactively <- function(data = NULL) {
                           shiny::hr(),
                           shiny::fluidRow(
                             shiny::column(width = 6,
-                                          shiny::selectizeInput("x", "X axis", choices = NULL, multiple = TRUE, options = list(create = TRUE, persist = FALSE, closeAfterSelect = TRUE), width = "100%"),
-                                          shiny::selectizeInput("category", "Category", choices = NULL, multiple = TRUE, options = list(create = TRUE, persist = FALSE, closeAfterSelect = TRUE), width = "100%"),
-                                          shiny::selectizeInput("facet", "Facet", choices = NULL, multiple = TRUE, options = list(create = TRUE, persist = FALSE, closeAfterSelect = TRUE), width = "100%")
+                                          shiny::selectizeInput("x", "X axis", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::selectizeInput("category", "Category", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::selectizeInput("facet", "Facet", choices = NULL, multiple = TRUE, width = "100%"),
                             ),
                             shiny::column(width = 6,
-                                          shiny::selectizeInput("y", "Y axis", choices = NULL, options = list(create = TRUE, persist = FALSE, closeAfterSelect = TRUE), width = "100%"),
+                                          shiny::selectizeInput("y", "Y axis", choices = NULL, multiple = TRUE, width = "100%"),
                                           shiny::radioButtons("y_calc", "Y axis transformation:", choices = c("None", "n_distinct()", "min()", "max()", "mean()", "median()"))
                             ),
                           ),
@@ -315,16 +323,93 @@ create_interactively <- function(data = NULL) {
 
     shiny::observe({
       d <- eval(parse(text = input$dataset))
+      if (!is.null(d) && !is.data.frame(d)) {
+        d <- tryCatch(fortify_df(d)$new_df, error = function(x) NULL)
+      }
       if (!is.null(d)) {
-        # reset settings
         changed_inputs$names <- character(0)
-        # fill in column names of data set
-        shiny::updateSelectizeInput(session, "x", choices = colnames(d), selected = "")
-        shiny::updateSelectizeInput(session, "y", choices = c("n()", colnames(d)), selected = "")
-        shiny::updateSelectizeInput(session, "category", choices = colnames(d), selected = "")
-        shiny::updateSelectizeInput(session, "facet", choices = colnames(d), selected = "")
+        
+        selectize_style <- "
+          function(type) {
+            var colors = {
+              'dbl':   '#1f77b4',
+              'int':   '#2ca02c',
+              'chr':   '#d62728',
+              'fct':   '#9467bd',
+              'ord':   '#9467bd',
+              'lgl':   '#8c564b',
+              'date':  '#e377c2',
+              'datetime': '#17becf',
+              'hms': '#ff7f0e',
+              'func': 'transparant',
+              'unknown': '#7f7f7f'
+            };
+    
+            var col = colors[type] || colors['unknown'];
+    
+return '<span style=\"' +
+       'background:' + col + ';' +
+       'color:white;' +
+       'padding:2px 7px;' +
+       'border-radius:12px;' +
+       'font-size:11px;' +
+       'display:inline-block;' +
+       'width:40px;' +
+       'text-align:center;' +
+       '\">' +
+       type +
+       '</span>';
+          }"
+        
+        render_dropdown <- sprintf("
+          {
+            option: function(data, escape) {
+              return '<div>&nbsp;&nbsp;&nbsp;' +
+                     (data.type !== 'func' ? %s(data.type) + '&nbsp;&nbsp;' : '') +
+                     escape(data.column) +
+                     '</div>';
+            }
+         }", selectize_style)
+        
+        vars <- names(d)
+        
+        # Determine types
+        types <- vapply(FUN.VALUE = character(1), vars, function(x) pillar::type_sum(d[[x]]))
+        
+        # Pass display items via options$options
+        # items <- mapply(function(v, t) list(column = v, type = t), vars, types, SIMPLIFY = FALSE, USE.NAMES = FALSE)
+        items <- mapply(function(v, t) {
+          list(column = v, type = t, optgroup = "col_names")
+        }, vars, types, SIMPLIFY = FALSE, USE.NAMES = FALSE)
+        
+        functions_item <- list(list(column = "n()", type = "func", optgroup = "fns"))
+        items_y <- c(functions_item, items)
+        
+        opt <- list(
+          create = TRUE,
+          persist = FALSE,
+          closeAfterSelect = TRUE,
+          valueField = "column",
+          labelField = "column",
+          searchField = "column",
+          optgroupField = "optgroup",
+          optgroups = list(
+            list(value = "fns", label = "Functions"),
+            list(value = "col_names", label = "Data Variables")
+          ),
+          options = items,
+          render = I(render_dropdown)
+        )
+        opt_y <- opt
+        opt_y$options <- items_y
+        
+        shiny::updateSelectizeInput(session, "x", choices = NULL, options = opt, selected = "")
+        shiny::updateSelectizeInput(session, "y", choices = NULL, options = opt_y, selected = "")
+        shiny::updateSelectizeInput(session, "category", choices = NULL, options = opt, selected = "")
+        shiny::updateSelectizeInput(session, "facet", choices = NULL, options = opt, selected = "")
       }
     })
+    
     
     call_string <- shiny::reactive({
       plot2_args <- setdiff(names(formals(plot2)), c("...", ".data", "data"))

@@ -767,3 +767,58 @@ msg_not_thrown_before <- function(fn, ..., entire_session = FALSE) {
   }
   not_thrown_before
 }
+
+#' @importFrom ggplot2 fortify
+#' @importFrom broom augment
+#' @importFrom dplyr select mutate
+fortify_df <- function(df, y = NULL) {
+  augment_methods <- suppressMessages(utils::methods(augment))
+  augment_methods <- gsub("augment.", "", as.character(augment_methods), fixed = TRUE)
+  
+  if (is.null(tryCatch(rlang::eval_tidy(y), error = function(e) FALSE))) {
+    y <- NULL
+  }
+  
+  if (inherits(df, augment_methods)) {
+    # broom::augment() supports our data
+    new_df <- tryCatch(augment(df), error = function(e) NULL)
+  } else {
+    # try the ggplot2::fortify()
+    new_df <- tryCatch(fortify(df), error = function(e) NULL)
+  }
+  
+  if (is.data.frame(new_df)) {
+    # broom returns a tibble, so rownames became a column - return to original data
+    new_df <- as.data.frame(new_df, stringsAsFactors = FALSE)
+    if (".rownames" %in% colnames(new_df)) {
+      rownames(new_df) <- new_df[[".rownames"]]
+      new_df <- new_df |> select(-".rownames")
+    }
+    
+  } else if (is.null(new_df)) {
+    # try as.data.frame methods to make a regular data.frame (e.g., as.data.frame.table(), etc.)
+    new_df <- tryCatch(as.data.frame(df, stringsAsFactors = FALSE),
+                       error = function(e) NULL)
+    if (!is.data.frame(new_df)) {
+      stop("Unable to initialise plot2(): input class '", paste(class(df), collapse = "/"), "' is unsupported",
+           call. = FALSE)
+    }
+    plot2_caution("Input class ", paste0("'", class(df), "'", collapse = "/"), " was transformed using `as.data.frame()`")
+    if (inherits(df, "table")) {
+      # if using `as.data.frame()` on a `table`, the resulting count column with be "Freq"
+      if (tryCatch(is.null(y), error = function(e) FALSE)) {
+        colnames(new_df)[colnames(new_df) == "Freq"] <- "count"
+        y <- str2lang("count")
+      } else {
+        # this is when y is set to something - put that to the y axis and adjust the data set
+        `:=` <- rlang::`:=`
+        col_fn <- function(y = NULL) data.frame() |> mutate({{ y }} := 0)
+        y <- colnames(col_fn({{ y }}))
+        colnames(new_df)[colnames(new_df) == "Freq"] <- y
+        y <- str2lang(y)
+      }
+    }
+  }
+  
+  list(new_df = new_df, y = y)
+}

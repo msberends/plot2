@@ -18,8 +18,6 @@
 #' @rdname plot2-methods
 #' @name plot2-methods
 #' @inheritParams plot2
-#' @importFrom ggplot2 fortify
-#' @importFrom broom augment
 #' @importFrom dplyr count filter mutate select
 #' @export
 plot2.default <- function(.data,
@@ -203,51 +201,9 @@ plot2.default <- function(.data,
     }
     
   } else {
-    # not an atomic vector
-    # ggplot2's fortify() or broom's augment() will try to make this a data.frame,
-    # so that plot2.data.frame() can be called
-    augment_methods <- suppressMessages(utils::methods(augment))
-    augment_methods <- gsub("augment.", "", as.character(augment_methods), fixed = TRUE)
-    if (inherits(.data, augment_methods)) {
-      # broom::augment() supports our data
-      new_df <- tryCatch(augment(.data), error = function(e) NULL)
-    } else {
-      # try the ggplot2::fortify()
-      new_df <- tryCatch(fortify(.data), error = function(e) NULL)
-    }
-    
-    if (is.data.frame(new_df)) {
-      # broom returns a tibble, so rownames became a column - return to original data
-      new_df <- as.data.frame(new_df, stringsAsFactors = FALSE)
-      if (".rownames" %in% colnames(new_df)) {
-        rownames(new_df) <- new_df[[".rownames"]]
-        new_df <- new_df |> select(-".rownames")
-      }
-      
-    } else if (is.null(new_df)) {
-      # try as.data.frame methods to make a regular data.frame (e.g., as.data.frame.table(), etc.)
-      new_df <- tryCatch(as.data.frame(.data, stringsAsFactors = FALSE),
-                         error = function(e) NULL)
-      if (!is.data.frame(new_df)) {
-        stop("Unable to initialise plot2(): input class '", paste(class(.data), collapse = "/"), "' is unsupported",
-             call. = FALSE)
-      }
-      plot2_caution("Input class ", paste0("'", class(.data), "'", collapse = "/"), " was transformed using `as.data.frame()`")
-      if (inherits(.data, "table")) {
-        # if using `as.data.frame()` on a `table`, the resulting count column with be "Freq"
-        if (tryCatch(is.null(y), error = function(e) FALSE)) {
-          colnames(new_df)[colnames(new_df) == "Freq"] <- "count"
-          y <- str2lang("count")
-        } else {
-          # this is when y is set to something - put that to the y axis and adjust the data set
-          `:=` <- rlang::`:=`
-          col_fn <- function(y = NULL) data.frame() |> mutate({{ y }} := 0)
-          y <- colnames(col_fn({{ y }}))
-          colnames(new_df)[colnames(new_df) == "Freq"] <- y
-          y <- str2lang(y)
-        }
-      }
-    }
+    fortified <- fortify_df(.data, rlang::enquo(y))
+    new_df <- fortified$new_df
+    y <- fortified$y
   }
   
   plot2_exec(new_df,

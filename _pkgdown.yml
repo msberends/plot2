@@ -25,22 +25,32 @@ navbar:
     - text: "Home"
       icon: "fa-home"
       href: "index.html"
+      
     - text: "Reference"
       icon: "fa-book-open"
       href: "reference/index.html"
+      
     - text: "Vignettes"
-      icon: "fa-magnifying-glass-chart"
+      icon: "fa-solid fa-newspaper"
       menu:
+      
       - text: "Introduction to plot2"
         href: "articles/plot2.html"
-        icon: "fa-solid fa-square-poll-vertical"
+        icon: "fa-magnifying-glass-chart"
+        
       - text: "Supported Plot Types"
         href: "articles/supported_types.html"
         icon: "fa-solid fa-square-poll-vertical"
+        
       - text: "Adding An Extra plot2 Type"
         href: "reference/add_type.html"
         icon: "fa-solid fa-square-plus"
+        
   right:
+    - text: "Changelog"
+      icon: "fa-solid fa-wand-magic-sparkles"
+      href: "news/"
+      
     - text: "Source Code"
       icon: "fab fa-github"
       href: "https://github.com/msberends/plot2"
