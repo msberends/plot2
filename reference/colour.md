@@ -88,8 +88,8 @@ add_white(x, white)
 
   - One of the 657 built-in
     [`colours()`](https://rdrr.io/r/grDevices/colors.html) in R (even
-    case-insensitive), such as `"brown"`, `"cornsilk4"`, `"darkgrey"`,
-    `"pink4"`, `"rosybrown2"`
+    case-insensitive), such as `"greenyellow"`, `"indianred4"`,
+    `"lightcyan4"`, `"lightsteelblue3"`, `"mediumorchid4"`
 
   - One of the pre-registered colours using `register_colour()`
 
