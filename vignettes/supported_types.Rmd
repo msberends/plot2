@@ -23,7 +23,9 @@ movies <- ggplot2movies::movies
 options(plot2.colour = "viridis")
 ```
 
-The following plot types are supported. Aany ggplot2 geom is supported, but we added supported for some other, more advanced plots.
+The following plot types are supported.
+
+Any `ggplot2` geom is supported, but we added support for some other, more advanced plots.
 
 # Column / Bar
 
@@ -33,7 +35,10 @@ Used for comparing discrete categories through rectangular bars.
 diamonds |> # from the ggplot2 package
   plot2(x = cut,
         y = n())
-# in plot2, bar types are horizontal alternatives for column types (just like Excel)
+```
+
+In `plot2`, bar types are horizontal alternatives for column types (just like MS Excel):
+```{r}
 diamonds |>
   plot2(x = cut,
         y = n(),

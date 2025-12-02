@@ -1405,6 +1405,51 @@ plot2_exec <- function(.data,
   size <- validate_size(size = size, type = type, type_backup = type_backup)
   width <- validate_width(width = width, type = type)
   linewidth <- validate_linewidth(linewidth = linewidth, type = type, type_backup = type_backup)
+  
+  # generate colour vectors ----
+  # keep original ggplot2 colours if they have not been set
+  if (type == "geom_sf") {
+    original_colours <- identical(colour_fill, "ggplot2") || is.null(colour_fill)
+  } else {
+    original_colours <- (is.null(colour) || identical(colour, "ggplot2")) &&
+      (identical(colour_fill, "ggplot2") || (is.null(colour_fill) && (is.null(colour) || identical(colour, "ggplot2"))))
+  }
+  if (!any(c("colour", "fill") %in% category.type)) {
+    # "colour" and "fill" are not in category.type, so do not set colours regardless of the `colour` argument
+    original_colours <- TRUE
+  }
+  
+  if (has_category(df) && !is.null(category.focus)) {
+    category.focus <- category.focus[1L]
+    # check if value is actually in category
+    if (!category.focus %in% get_category(df) && !is.numeric(category.focus)) {
+      plot2_warning("Value \"", category.focus, "\" not found in ", font_blue("category"))
+    } else {
+      category_unique <- sort(unique(get_category(df)))
+      if (is.numeric(category.focus)) {
+        # support `category.focus = 3` to choose the third value
+        category.focus <- category_unique[category.focus]
+      }
+      cols <- rep(as.character(get_colour("grey85")), length(category_unique))
+      nms <- as.character(category_unique)
+      cols[which(nms == category.focus)] <- get_colour(colour[1L])
+      colour <- stats::setNames(cols, nms)
+    }
+  }
+  if (has_y_secondary(df)) {
+    y_secondary.colour <- get_colour(y_secondary.colour)[1L]
+    y_secondary.colour_fill <- get_colour(y_secondary.colour_fill)[1L]
+  }
+  # Note that this will be not be used if colour == "ggplot2" or colour_fill == "ggplot2"
+  cols <- validate_colour(df = df,
+                          type = type,
+                          type_backup = type_backup,
+                          colour = colour,
+                          colour_fill = colour_fill,
+                          colour_opacity = colour_opacity,
+                          misses_colour_fill = misses_colour_fill,
+                          horizontal = horizontal)
+  
   # create back-to-back plot ----
   if (type_backup == "back-to-back") {
     x.title <- validate_title(x.title, markdown = markdown)
@@ -1443,8 +1488,8 @@ plot2_exec <- function(.data,
                           x.date_labels = x.date_labels,
                           x.date_remove_years = x.date_remove_years,
                           category.focus = category.focus,
-                          colour = colour,
-                          colour_fill = colour_fill,
+                          colour = cols$colour,
+                          colour_fill = cols$colour_fill,
                           colour_opacity = colour_opacity,
                           x.lbl_angle = x.lbl_angle,
                           x.lbl_align = x.lbl_align,
@@ -1560,50 +1605,6 @@ plot2_exec <- function(.data,
                           markdown = markdown))
       
   }
-  
-  # generate colour vectors ----
-  # keep original ggplot2 colours if they have not been set
-  if (type == "geom_sf") {
-    original_colours <- identical(colour_fill, "ggplot2") || is.null(colour_fill)
-  } else {
-    original_colours <- (is.null(colour) || identical(colour, "ggplot2")) &&
-      (identical(colour_fill, "ggplot2") || (is.null(colour_fill) && (is.null(colour) || identical(colour, "ggplot2"))))
-  }
-  if (!any(c("colour", "fill") %in% category.type)) {
-    # "colour" and "fill" are not in category.type, so do not set colours regardless of the `colour` argument
-    original_colours <- TRUE
-  }
-  
-  if (has_category(df) && !is.null(category.focus)) {
-    category.focus <- category.focus[1L]
-    # check if value is actually in category
-    if (!category.focus %in% get_category(df) && !is.numeric(category.focus)) {
-      plot2_warning("Value \"", category.focus, "\" not found in ", font_blue("category"))
-    } else {
-      category_unique <- sort(unique(get_category(df)))
-      if (is.numeric(category.focus)) {
-        # support `category.focus = 3` to choose the third value
-        category.focus <- category_unique[category.focus]
-      }
-      cols <- rep(as.character(get_colour("grey85")), length(category_unique))
-      nms <- as.character(category_unique)
-      cols[which(nms == category.focus)] <- get_colour(colour[1L])
-      colour <- stats::setNames(cols, nms)
-    }
-  }
-  if (has_y_secondary(df)) {
-    y_secondary.colour <- get_colour(y_secondary.colour)[1L]
-    y_secondary.colour_fill <- get_colour(y_secondary.colour_fill)[1L]
-  }
-  # Note that this will be not be used if colour == "ggplot2" or colour_fill == "ggplot2"
-  cols <- validate_colour(df = df,
-                          type = type,
-                          type_backup = type_backup,
-                          colour = colour,
-                          colour_fill = colour_fill,
-                          colour_opacity = colour_opacity,
-                          misses_colour_fill = misses_colour_fill,
-                          horizontal = horizontal)
   
   # generate mapping / aesthetics ----
   # IMPORTANT: in this part, the mapping will be generated anonymously, e.g. as `_var_x` and `_var_category`;
