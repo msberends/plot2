@@ -781,148 +781,15 @@ options(plot2.colour = "OurOrganisation")
 
 ![](plot2_files/figure-html/unnamed-chunk-37-1.png)
 
-### Advanced Plot Types: Geographies, Dumbbells and Sankey Diagrams
+### Advanced Plot Types
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) shines
-when it comes to more complex plot types. Let’s explore four advanced
-options: geography plots, UpSet plots, dumbbell plots and Sankey
+when it comes to more complex plot types, such as geography plots, UpSet
+plots, back-to-back (butterfly) plots, dumbbell plots and Sankey
 diagrams.
 
-#### Plotting Geometries (`sf` objects)
-
-Objects of class `sf` (*simple feature*) are handled by
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) like
-any other data set;
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-applies spatial functions such as
-[`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html) and
-[`geom_sf_text()`](https://ggplot2.tidyverse.org/reference/ggsf.html)
-automatically wherever needed. The built-in
-[`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md)
-theme makes sure you get a clean map, by removing the unnecessarily
-verbose axes and background colour.
-
-The included `netherlands` data set is such an `sf` object:
-
-``` r
-plot2(netherlands)
-#> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
-#> placing of datalabels.
-#> ℹ Using category = area_km2
-#> ℹ Using datalabels = province
-```
-
-![](plot2_files/figure-html/unnamed-chunk-39-1.png)
-
-`ggplot2` users would typically need to specify
-[`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html) and
-[`geom_sf_label()`](https://ggplot2.tidyverse.org/reference/ggsf.html)
-explicitly and might spend extra time adjusting themes to remove
-unnecessary axes or background elements.
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-simplifies this by integrating these adjustments automatically.
-
-#### UpSet Plots for Complex Set Intersections
-
-[UpSet plots](https://en.wikipedia.org/wiki/UpSet_plot) provide a
-scalable and interpretable alternative to Venn diagrams for visualising
-complex set intersections.
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-allowing the quick creation of UpSet plots to explore overlapping
-elements across multiple groups, revealing patterns not easily captured
-by traditional methods.
-
-``` r
-df <- data.frame(var1 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
-                 var2 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
-                 var3 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
-                 var4 = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
-                 some_group = sample(c("A", "B"), size = 50, replace = TRUE),
-                 some_value = runif(50))
-print(head(df))
-#>    var1  var2  var3  var4 some_group some_value
-#> 1 FALSE  TRUE FALSE FALSE          B 0.88571080
-#> 2  TRUE  TRUE  TRUE  TRUE          B 0.83644625
-#> 3  TRUE FALSE  TRUE FALSE          A 0.60536844
-#> 4 FALSE FALSE  TRUE  TRUE          A 0.90687946
-#> 5  TRUE FALSE  TRUE FALSE          B 0.03590981
-#> 6 FALSE  TRUE  TRUE FALSE          B 0.13141851
-
-df |>
-  plot2(x = var1:var4,
-        type = "upset",
-        title = "An UpSet plot")
-#> ℹ Using summarise_function = sum for UpSet plot
-#> ℹ Using x = c(var1, var2, var3, var4)
-#> ℹ Using y = 1
-```
-
-![](plot2_files/figure-html/unnamed-chunk-40-1.png)
-
-``` r
-
-df |>
-  plot2(x = var1:var4,
-        y = some_value,
-        category = some_group,
-        type = "upset",
-        colour = "OurOrganisation",
-        y.title = "Mean Outcome",
-        title = "Another UpSet plot",
-        caption = "Here a caption",
-        summarise_function = mean,
-        x.sort = TRUE, # sort on dots: 4 first, then 3, then 2, ...
-        category.sort = c("B", "A"))
-#> ℹ Using x = c(var1, var2, var3, var4)
-#> ℹ Using x.character = TRUE since x.sort is set
-```
-
-![](plot2_files/figure-html/unnamed-chunk-40-2.png)
-
-#### Dumbbell Plots for Comparisons
-
-Dumbbell plots are excellent for comparing two categories side by side:
-
-``` r
-admitted_patients |> 
-  plot2(x = hospital,
-        y = n_distinct(patient_id),
-        category = gender,
-        type = "dumbbell")
-```
-
-![](plot2_files/figure-html/unnamed-chunk-41-1.png)
-
-This plot type is particularly useful for showing the difference between
-two related metrics across different groups. In `ggplot2`, creating a
-dumbbell plot often involves using
-[`geom_segment()`](https://ggplot2.tidyverse.org/reference/geom_segment.html)
-and
-[`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
-in combination, with precise manual adjustments for aesthetics.
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) offers
-a straightforward, single-function alternative.
-
-#### Creating Sankey Diagrams
-
-Sankey diagrams are another powerful visualisation, perfect for showing
-flow or movement from one state to another:
-
-``` r
-Titanic |> 
-  plot2(x = c(Class, Age, Survived), category = Sex, type = "sankey")
-#> ℹ Assuming sankey.remove_axes = TRUE
-#> ! Input class 'table' was transformed using `as.data.frame()`
-```
-
-![](plot2_files/figure-html/unnamed-chunk-42-1.png)
-
-Sankey plots are a great way to visualise transitions, such as the
-survival rates of passengers on the Titanic across different classes and
-age groups. In `ggplot2`, Sankey diagrams require additional packages or
-custom code.
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) makes
-this complex plot type accessible directly within the function.
+You can read about them in **our [plot type overview
+here](https://msberends.github.io/plot2/articles/supported_types.html)**.
 
 ### Adding Elements with `add_*()` Functions
 
@@ -949,7 +816,7 @@ p |>
   add_line(y = mean(hp))
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-43-1.png)
+![](plot2_files/figure-html/unnamed-chunk-39-1.png)
 
 ``` r
 
@@ -957,7 +824,7 @@ p |>
   add_line(y = mean(hp), colour = "red", legend.value = "Average HP")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-43-2.png)
+![](plot2_files/figure-html/unnamed-chunk-39-2.png)
 
 This adds a line at the mean horsepower. The `add_*()` functions
 automatically correct for `category`, removing the need for
@@ -979,7 +846,7 @@ p |>
   add_point(x = median(mpg), y = median(hp), shape = 4, size = 10)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-44-1.png)
+![](plot2_files/figure-html/unnamed-chunk-40-1.png)
 
 In this example, we add a point at the median `mpg` and `hp`, using a
 cross shape and a larger size for emphasis. This mirrors
@@ -998,7 +865,7 @@ p |>
   add_col(x = cyl, y = n(), width = 0.5)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-45-1.png)
+![](plot2_files/figure-html/unnamed-chunk-41-1.png)
 
 Here, we add columns based on the number of cylinders, making it easy to
 compare the counts across different groups. This replaces
@@ -1015,7 +882,7 @@ p |>
   add_errorbar(min = hp - 10, max = hp + 10)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-46-1.png)
+![](plot2_files/figure-html/unnamed-chunk-42-1.png)
 
 This adds error bars to the plot, showing a range of ±10 around the `hp`
 values.
@@ -1039,7 +906,7 @@ plot2(netherlands) |>
 #> ℹ Using datalabels = province
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-47-1.png)
+![](plot2_files/figure-html/unnamed-chunk-43-1.png)
 
 This example adds spatial features to a plot of the Netherlands, with an
 extra border around the provinces. `ggplot2` users would typically use
@@ -1083,7 +950,7 @@ mtcars |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-48-1.png)
+![](plot2_files/figure-html/unnamed-chunk-44-1.png)
 
 In this example, the `Rock Salt` font, a playful and hand-drawn style,
 is applied across the plot.
@@ -1110,7 +977,7 @@ mtcars |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-49-1.png)
+![](plot2_files/figure-html/unnamed-chunk-45-1.png)
 
 In this example, all plots will now use the `Lobster` font, ensuring a
 consistent appearance across your visualisations. The `text_factor`

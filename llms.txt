@@ -15,7 +15,7 @@ as `ggplot()`, `aes()`, `geom_col()`, `facet_wrap()`, `theme()`,
 `scale_y_continuous()`, etc.), `plot2` usage only involves filling in
 required *arguments* of a single function.
 
-> For a comprehensive guide to using `plot2`, including advanced
+> For a **comprehensive guide to using `plot2`**, including advanced
 > features and customisation options, please [see the full vignette
 > here](https://msberends.github.io/plot2/articles/plot2.html).
 
@@ -64,15 +64,19 @@ publication, `plot2` helps you get there faster with less code.
 You can install the latest version of `plot2` here:
 
 ``` r
-# Directly from R Universe
 install.packages("plot2",
-                 repos = c("https://cran.r-project.org", "https://msberends.r-universe.dev"))
+                 repos = c("https://cran.r-project.org",
+                           "https://msberends.r-universe.dev"))
 
-# from GitHub using the 'remotes' package
+# OR:
+
 remotes::install_github("msberends/plot2")
 ```
 
 ## Examples
+
+> For **all supported plot types**, please [see our plot type overview
+> here](https://msberends.github.io/plot2/articles/supported_types.html).
 
 Here’s how easy it is to get started with `plot2`:
 

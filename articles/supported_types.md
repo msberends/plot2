@@ -1,7 +1,9 @@
 # Supported Plot Types
 
-The following plot types are supported. Aany ggplot2 geom is supported,
-but we added supported for some other, more advanced plots.
+The following plot types are supported.
+
+Any `ggplot2` geom is supported, but we added support for some other,
+more advanced plots.
 
 ## Column / Bar
 
@@ -15,15 +17,17 @@ diamonds |> # from the ggplot2 package
 
 ![](supported_types_files/figure-html/unnamed-chunk-2-1.png)
 
+In `plot2`, bar types are horizontal alternatives for column types (just
+like MS Excel):
+
 ``` r
-# in plot2, bar types are horizontal alternatives for column types (just like Excel)
 diamonds |>
   plot2(x = cut,
         y = n(),
         type = "bar")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-2-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-3-1.png)
 
 ## Line
 
@@ -36,7 +40,7 @@ pressure |> # from base R
           type = "line")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-3-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-4-1.png)
 
 ``` r
 pressure |>
@@ -45,7 +49,7 @@ pressure |>
           type = "line-point")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-3-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-4-2.png)
 
 ## Point
 
@@ -60,7 +64,7 @@ iris |> # from base R
 #> ℹ Using y = Sepal.Width
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-4-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-5-1.png)
 
 ``` r
 diamonds |>
@@ -70,7 +74,7 @@ diamonds |>
         type = "point")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-4-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-5-2.png)
 
 ## Area
 
@@ -83,7 +87,7 @@ pressure |>
           type = "area")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-5-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
 airquality |>
@@ -95,7 +99,7 @@ airquality |>
         type = "area")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-5-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-6-2.png)
 
 ## Boxplot / Violin
 
@@ -109,7 +113,7 @@ iris |>
 #> ℹ Using y = Sepal.Length
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-6-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-7-1.png)
 
 ``` r
 iris |>
@@ -119,7 +123,7 @@ iris |>
 #> ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-6-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-7-2.png)
 
 ## Histogram
 
@@ -135,7 +139,7 @@ diamonds |>
 #> class integer
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-7-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
 
 ## Geo (sf)
 
@@ -150,7 +154,7 @@ netherlands |> # from this plot2 package
 #> ℹ Using datalabels = province
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-9-1.png)
 
 ## Beeswarm
 
@@ -164,7 +168,7 @@ iris |>
         type = "beeswarm")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-9-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-10-1.png)
 
 ## Back-to-back
 
@@ -178,7 +182,7 @@ admitted_patients |> # from this plot2 package
           type = "back-to-back")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-10-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-11-1.png)
 
 ``` r
 admitted_patients |> # from this plot2 package
@@ -190,7 +194,7 @@ admitted_patients |> # from this plot2 package
           type = "back-to-back")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-10-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-11-2.png)
 
 ## Dumbbell
 
@@ -205,7 +209,7 @@ diamonds |>
         type = "dumbbell")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-11-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
 
 ## Sankey
 
@@ -220,7 +224,7 @@ Titanic |> # from base R
 #> ! Input class 'table' was transformed using `as.data.frame()`
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-13-1.png)
 
 ## UpSet
 
@@ -235,7 +239,7 @@ movies |> # from the ggplot2movies package
 #> ℹ Using y = 1
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-13-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-14-1.png)
 
 ``` r
 movies |>
@@ -247,4 +251,4 @@ movies |>
 #> ℹ Using summarise_function = sum for UpSet plot
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-13-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-14-2.png)

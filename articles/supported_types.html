@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9015</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9016</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,9 +69,9 @@
 
     
     
-<p>The following plot types are supported. Aany ggplot2 geom is
-supported, but we added supported for some other, more advanced
-plots.</p>
+<p>The following plot types are supported.</p>
+<p>Any <code>ggplot2</code> geom is supported, but we added support for
+some other, more advanced plots.</p>
 <div class="section level2">
 <h2 id="column-bar">Column / Bar<a class="anchor" aria-label="anchor" href="#column-bar"></a>
 </h2>
@@ -81,13 +81,14 @@ plots.</p>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" width="672"></p>
+<p>In <code>plot2</code>, bar types are horizontal alternatives for
+column types (just like MS Excel):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># in plot2, bar types are horizontal alternatives for column types (just like Excel)</span></span>
-<span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-2-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="line">Line<a class="anchor" aria-label="anchor" href="#line"></a>
@@ -98,13 +99,13 @@ plots.</p>
 <span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
 <span>          y <span class="op">=</span> <span class="va">pressure</span>,</span>
 <span>          type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
 <span>          y <span class="op">=</span> <span class="va">pressure</span>,</span>
 <span>          type <span class="op">=</span> <span class="st">"line-point"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-3-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="point">Point<a class="anchor" aria-label="anchor" href="#point"></a>
@@ -118,14 +119,14 @@ space.</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">x = Sepal.Length</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = Sepal.Width</span></span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carat</span>,</span>
 <span>        y <span class="op">=</span> <span class="va">price</span>,</span>
 <span>        category <span class="op">=</span> <span class="va">cut</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-5-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="area">Area<a class="anchor" aria-label="anchor" href="#area"></a>
@@ -137,7 +138,7 @@ domains.</p>
 <span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
 <span>          y <span class="op">=</span> <span class="va">pressure</span>,</span>
 <span>          type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airquality</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Day</span>, </span>
@@ -146,7 +147,7 @@ domains.</p>
 <span>        category.character <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        stacked_fill<span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-5-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-6-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="boxplot-violin">Boxplot / Violin<a class="anchor" aria-label="anchor" href="#boxplot-violin"></a>
@@ -158,14 +159,14 @@ and density.</p>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = Sepal.Length</span></span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"boxplot"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-6-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-7-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="histogram">Histogram<a class="anchor" aria-label="anchor" href="#histogram"></a>
@@ -180,7 +181,7 @@ variables.</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">binwidth = 841</span> based on data</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> Values set in <span style="color: #0000BB;">x.limits</span> are of class <span style="color: #0000BB;">numeric</span>, while the values on <span style="color: #0000BB;">x</span> are of</span></span>
 <span><span class="co">#&gt; class <span style="color: #0000BB;">integer</span></span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="geo-sf">Geo (sf)<a class="anchor" aria-label="anchor" href="#geo-sf"></a>
@@ -193,7 +194,7 @@ variables.</p>
 <span><span class="co">#&gt; placing of datalabels.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">category = area_km2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="beeswarm">Beeswarm<a class="anchor" aria-label="anchor" href="#beeswarm"></a>
@@ -205,7 +206,7 @@ overlap.</p>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
 <span>        y <span class="op">=</span> <span class="va">Sepal.Length</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="back-to-back">Back-to-back<a class="anchor" aria-label="anchor" href="#back-to-back"></a>
@@ -218,7 +219,7 @@ categories.</p>
 <span>          y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>          facet <span class="op">=</span> <span class="va">ward</span>,</span>
 <span>          type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="co"># from this plot2 package</span></span>
 <span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
@@ -227,7 +228,7 @@ categories.</p>
 <span>          category <span class="op">=</span> <span class="va">gender</span>,</span>
 <span>          facet <span class="op">=</span> <span class="va">ward</span>,</span>
 <span>          type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-10-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-11-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="dumbbell">Dumbbell<a class="anchor" aria-label="anchor" href="#dumbbell"></a>
@@ -241,7 +242,7 @@ values.</p>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
 <span>        category <span class="op">=</span> <span class="va">cut</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="sankey">Sankey<a class="anchor" aria-label="anchor" href="#sankey"></a>
@@ -254,7 +255,7 @@ values.</p>
 <span>        type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assuming <span style="color: #0000BB;">sankey.remove_axes = TRUE</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="upset">UpSet<a class="anchor" aria-label="anchor" href="#upset"></a>
@@ -267,7 +268,7 @@ clarity.</p>
 <span>        type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">summarise_function = sum</span> for UpSet plot</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = 1</span></span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">movies</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Action</span>, <span class="va">Animation</span>, <span class="va">Comedy</span>, <span class="va">Drama</span>, <span class="va">Romance</span><span class="op">)</span>,</span>
@@ -276,7 +277,7 @@ clarity.</p>
 <span>        x.sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">summarise_function = sum</span> for UpSet plot</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-13-2.png" class="r-plt" width="672"></p>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-14-2.png" class="r-plt" width="672"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
