@@ -960,7 +960,7 @@ plot2(
 
 - x:
 
-  Plotting 'direction' for the x axis. This can be:
+  Plotting 'direction' for the X-axis. This can be:
 
   - A single variable from `.data`, such as `x = column1`
 
@@ -977,7 +977,7 @@ plot2(
 
 - y:
 
-  Values to use for plotting along the y axis. This can be:
+  Values to use for plotting along the Y-axis. This can be:
 
   - A single variable from `.data`, such as `y = column1`
 
@@ -1090,8 +1090,8 @@ plot2(
       plots can also be flipped using `horizontal = TRUE`.
 
   - Left blank. In this case, the type will be determined automatically:
-    `"boxplot"` if there is no x axis or if the length of unique values
-    per x axis item is at least 3, `"point"` if both the y and x axes
+    `"boxplot"` if there is no X-axis or if the length of unique values
+    per X-axis item is at least 3, `"point"` if both the y and x axes
     are numeric, and the [option](https://rdrr.io/r/base/options.html)
     `"plot2.default_type"` otherwise (which defaults to `"col"`). Use
     `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
@@ -1164,13 +1164,13 @@ plot2(
 
 - x.date_breaks:
 
-  Breaks to use when the x axis contains dates, will be determined
+  Breaks to use when the X-axis contains dates, will be determined
   automatically if left blank. This accepts values such as `"1 day"` and
   `"2 years"`.
 
 - x.date_labels:
 
-  Labels to use when the x axis contains dates, will be determined
+  Labels to use when the X-axis contains dates, will be determined
   automatically if left blank. This accepts 'Excel' date-language such
   as `"d mmmm yyyy"`.
 
@@ -1215,13 +1215,13 @@ plot2(
 
 - x.lbl_angle:
 
-  Angle to use for the x axis in a counter-clockwise direction (i.e., a
+  Angle to use for the X-axis in a counter-clockwise direction (i.e., a
   value of `90` will orient the axis labels from bottom to top, a value
   of `270` will orient the axis labels from top to bottom).
 
 - x.lbl_align:
 
-  Alignment for the x axis between `0` (left aligned) and `1` (right
+  Alignment for the X-axis between `0` (left aligned) and `1` (right
   aligned).
 
 - x.lbl_italic:
@@ -1252,7 +1252,7 @@ plot2(
   Number of maximum items to use, defaults to infinite. All other values
   will be grouped and summarised using the `summarise_function`
   function. **Please note:** the sorting will be applied first, allowing
-  to e.g. plot the top *n* most frequent values of the x axis by
+  to e.g. plot the top *n* most frequent values of the X-axis by
   combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
 
 - x.max_txt, category.max_txt, facet.max_txt:
@@ -1299,7 +1299,7 @@ plot2(
 - x.character:
 
   A [logical](https://rdrr.io/r/base/logical.html) to indicate whether
-  the values of the x axis should be forced to
+  the values of the X-axis should be forced to
   [character](https://rdrr.io/r/base/character.html). The default is
   `FALSE`, except for years (values between 2000 and 2050) and months
   (values from 1 to 12).
@@ -1312,7 +1312,7 @@ plot2(
 - x.mic:
 
   [logical](https://rdrr.io/r/base/logical.html) to indicate whether the
-  x axis should be formatted as [MIC
+  X-axis should be formatted as [MIC
   values](https://amr-for-r.org/reference/as.mic.html), by dropping all
   factor levels and adding missing factors of 2.
 
@@ -1320,8 +1320,8 @@ plot2(
 
   A [logical](https://rdrr.io/r/base/logical.html) to indicate if the
   axis should be zoomed on the data, by setting `x.limits = c(NA, NA)`
-  and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and
-  `y.expand = 0` for the y axis.
+  and `x.expand = 0` for the X-axis, or `y.limits = c(NA, NA)` and
+  `y.expand = 0` for the Y-axis.
 
 - y.24h:
 
@@ -1346,13 +1346,13 @@ plot2(
 
 - y.percent_break:
 
-  A value on which the y axis should have breaks.
+  A value on which the Y-axis should have breaks.
 
 - y_secondary:
 
-  Values to use for plotting along the secondary y axis. This
+  Values to use for plotting along the secondary Y-axis. This
   functionality is poorly supported by `ggplot2` and might give
-  unexpected results. Setting the secondary y axis will set the colour
+  unexpected results. Setting the secondary Y-axis will set the colour
   to the axis titles.
 
 - y_secondary.type:
@@ -1361,7 +1361,7 @@ plot2(
 
 - y_secondary.colour, y_secondary.colour_fill:
 
-  Colours to set for the secondary y axis, will be evaluated with
+  Colours to set for the secondary Y-axis, will be evaluated with
   [`get_colour()`](https://msberends.github.io/plot2/reference/colour.md).
 
 - category.type:
@@ -1410,7 +1410,7 @@ plot2(
 - x.sort, category.sort, facet.sort:
 
   Sorting of the plotting direction, defaults to `TRUE`, except for
-  continuous values on the x axis (such as dates and numbers). Applying
+  continuous values on the X-axis (such as dates and numbers). Applying
   one of the sorting methods will transform the values to an ordered
   [factor](https://rdrr.io/r/base/factor.html), which `ggplot2` uses to
   orient the data. Valid values are:
@@ -1519,7 +1519,7 @@ plot2(
   degrees using
   [`coord_flip()`](https://ggplot2.tidyverse.org/reference/coord_flip.html).
   This option also updates some theme options, so that e.g.,
-  `x.lbl_italic` will still apply to the original x axis.
+  `x.lbl_italic` will still apply to the original X-axis.
 
 - reverse:
 

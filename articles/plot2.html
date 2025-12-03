@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9016</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -143,9 +143,9 @@ example:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">y = values</span></span></span></code></pre>
 <p><img src="plot2_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
 <p>In this simple example, <code><a href="../reference/plot2.html">plot2()</a></code> automatically generates
-a column plot because it recognises that the x-axis is categorical and
-the y-axis is numeric. It even adds data labels by default because the
-x-axis is discrete. Also, at the top of the y-axis there is a bit more
+a column plot because it recognises that the X-axis is categorical and
+the Y-axis is numeric. It even adds data labels by default because the
+X-axis is discrete. Also, at the top of the Y-axis there is a bit more
 space to better be able to read the plot, akin to how Microsoft Excel
 plots at default. This is <code><a href="../reference/plot2.html">plot2()</a></code> at its most basic — no
 need to specify a plot type or worry about details like labels and
@@ -399,7 +399,7 @@ different wards, you can do this:</p>
 <p>In a traditional <code>ggplot2</code> approach, you might have to
 create a new variable in your data for the logarithmic transformation
 (<code>mutate(log_age = log(age))</code>) before plotting, and a
-<code>scale_y_continuous(transform = "log2")</code> for the y axis.
+<code>scale_y_continuous(transform = "log2")</code> for the Y-axis.
 <code><a href="../reference/plot2.html">plot2()</a></code> handles this seamlessly within the plotting
 function itself.</p>
 </div>
@@ -417,7 +417,7 @@ variables for the labels:</p>
 <span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Omitting printing of 60 datalabels - use <span style="color: #0000BB;">datalabels = TRUE</span> to force printing</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" width="672"></p>
-<p>This example creates a plot where the x-axis labels combine the text
+<p>This example creates a plot where the X-axis labels combine the text
 “Hospital” with the hospital name, and the categories are based on the
 year extracted from the <code>date</code> variable. This level of
 flexibility allows for highly customised plots without the need for
@@ -428,7 +428,7 @@ extra preprocessing steps.</p>
 </h4>
 <p>Let’s put it all together in a more complex example. Suppose you want
 to examine the distribution of patient ages across hospitals, with each
-bar split by gender, and you want the x-axis to reflect the hospital
+bar split by gender, and you want the X-axis to reflect the hospital
 name and use facets for the year of admission:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>

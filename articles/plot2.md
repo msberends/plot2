@@ -96,9 +96,9 @@ df |>
 In this simple example,
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 automatically generates a column plot because it recognises that the
-x-axis is categorical and the y-axis is numeric. It even adds data
-labels by default because the x-axis is discrete. Also, at the top of
-the y-axis there is a bit more space to better be able to read the plot,
+X-axis is categorical and the Y-axis is numeric. It even adds data
+labels by default because the X-axis is discrete. Also, at the top of
+the Y-axis there is a bit more space to better be able to read the plot,
 akin to how Microsoft Excel plots at default. This is
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) at its
 most basic — no need to specify a plot type or worry about details like
@@ -428,7 +428,7 @@ admitted_patients |>
 In a traditional `ggplot2` approach, you might have to create a new
 variable in your data for the logarithmic transformation
 (`mutate(log_age = log(age))`) before plotting, and a
-`scale_y_continuous(transform = "log2")` for the y axis.
+`scale_y_continuous(transform = "log2")` for the Y-axis.
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 handles this seamlessly within the plotting function itself.
 
@@ -450,7 +450,7 @@ admitted_patients |>
 
 ![](plot2_files/figure-html/unnamed-chunk-17-1.png)
 
-This example creates a plot where the x-axis labels combine the text
+This example creates a plot where the X-axis labels combine the text
 “Hospital” with the hospital name, and the categories are based on the
 year extracted from the `date` variable. This level of flexibility
 allows for highly customised plots without the need for extra
@@ -460,7 +460,7 @@ preprocessing steps.
 
 Let’s put it all together in a more complex example. Suppose you want to
 examine the distribution of patient ages across hospitals, with each bar
-split by gender, and you want the x-axis to reflect the hospital name
+split by gender, and you want the X-axis to reflect the hospital name
 and use facets for the year of admission:
 
 ``` r
