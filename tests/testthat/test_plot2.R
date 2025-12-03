@@ -120,7 +120,7 @@ test_that("S3 implementations work", {
                   "gg")
   # type should become boxplot here
   expect_s3_class(admitted_patients |> plot2(x = hospital, y = (age - mean(age)) / sd(age)), "gg")
-  # this uses the format2_scientific function for the y axis
+  # this uses the format2_scientific function for the Y-axis
   expect_s3_class(admitted_patients |>
                     plot2(format(date, "%Y"),
                           (age - mean(age)) / sd(age),
@@ -140,7 +140,7 @@ test_that("general mapping works", {
                c("y", "x", "colour", "fill"))
   expect_equal(plotdata |> plot2(category = n, category.type = "size") |> get_mapping() |> names(),
                c("y", "x", "size"))
-  # remove x axis
+  # remove X-axis
   expect_s3_class(admitted_patients |> plot2(x = NULL, y = age), "gg")
   expect_s3_class(admitted_patients |> plot2(x = 1:250, y = age), "gg")
   
@@ -297,7 +297,7 @@ test_that("x scale works", {
   expect_identical(plotdata2 |> plot2(facet = z, facet.fixed_x = FALSE) |> get_range_x(),
                    plotdata2 |> plot2(facet = z, x.drop = TRUE) |> get_range_x())
   
-  # removed years on x axis
+  # removed years on X-axis
   expect_s3_class(
     data.frame(date = seq(as.Date("2021-01-01"), as.Date("2023-12-31"), "1 day"),
                value = c(rep(1, 365), rep(2, 365), rep(3, 365))) |>
@@ -562,7 +562,7 @@ test_that("md to expression works", {
   expect_error(md_to_expression("test $**$"))
 })
 
-test_that("secondary y axis works", {
+test_that("secondary Y-axis works", {
   skip_on_cran()
   expect_s3_class(mtcars |> plot2(mpg, hp, y_secondary = disp), "gg")
   expect_s3_class(mtcars |> plot2(mpg, hp, y_secondary = disp ^ 2), "gg")

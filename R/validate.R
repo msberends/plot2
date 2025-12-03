@@ -21,7 +21,7 @@ validate_type <- function(type, df = NULL) {
       # only numeric values, make it a boxplot
       type <- "geom_boxplot"
       plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", type), "\"", collapse = NULL),
-                    font_black(" since there is no x axis"))
+                    font_black(" since there is no X-axis"))
     } else if (has_x(df) && is.numeric(get_x(df))) {
       if (identical(get_x(df), get_y(df))) {
         # both x and y are numeric - if they are equal then use histogram
@@ -138,7 +138,7 @@ validate_data <- function(df,
   non_numeric_cols <- non_numeric_cols[non_numeric_cols %unlike% "^_var_"]
   
   if (!has_y(df) && "n" %in% numeric_cols && mode(df$n) == "numeric") {
-    # give preference to "n" for the y axis
+    # give preference to "n" for the Y-axis
     plot2_message("Using ", font_blue("y = n"))
     df <- df |> 
       mutate(`_var_y` = df |> pull(n))
@@ -151,7 +151,7 @@ validate_data <- function(df,
       stop("no numeric column found to use for y", call. = FALSE)
     }
     if (length(numeric_cols) > 1) {
-      # first check if there is also no x axis
+      # first check if there is also no X-axis
       if (!has_x(df)) {
         # make x first numeric column and y second numeric column
         plot2_message("Using ", font_blue("x = ", numeric_cols[1L], collapse = NULL))
@@ -297,7 +297,7 @@ validate_data <- function(df,
     df <- df |> select(-`_var_datalabels`)
   }
   
-  # if the secondary y axis is not within the limits of the primary y axis, the primary axis will be transformed
+  # if the secondary Y-axis is not within the limits of the primary Y-axis, the primarY-axis will be transformed
   # so store the factor in which they change, and transform the data accordingly
   if (has_y_secondary(df)) {
     max_primary <- max(get_y(df), na.rm = TRUE)
@@ -1217,12 +1217,12 @@ validate_y_scale <- function(df,
   
   if (isTRUE(add_y_secondary)) {
     # ggplot2::sec_axis() only supports a simple transformation function to determine the scale
-    # so determine it, based on the primary y axis
+    # so determine it, based on the primary Y-axis
     secondary_values <- get_y_secondary(df)
     fun <- function(x) x
     br <- y_secondary.breaks
     if (!is.null(plot2_env$y_secondary_factor)) {
-      # we previously transformed this variable to stay within the range of the primary y axis,
+      # we previously transformed this variable to stay within the range of the primary Y-axis,
       # so now transform back for the labels and the breaks
       secondary_values <- secondary_values * plot2_env$y_secondary_factor
       fctr <- eval(plot2_env$y_secondary_factor)
@@ -2185,7 +2185,7 @@ validate_theme <- function(theme,
       el$family <- font
       if (text_factor != 1 && !is.null(el$size) && is.numeric(el$size)) {
         if (inherits(el$size, "rel")) {
-          # in theme_minimal2, these are the x and y axis labels, not their titles
+          # in theme_minimal2, these are the x and Y-axis labels, not their titles
           # in thme_bw, a lot of element have class 'rel'
           el$size <- base_size * text_factor * as.double(el$size)
         } else {

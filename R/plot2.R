@@ -20,14 +20,14 @@
 #' 
 #' See [plot2-methods] for all implemented methods for different object classes.
 #' @param .data Data to plot.
-#' @param x Plotting 'direction' for the x axis. This can be:
+#' @param x Plotting 'direction' for the X-axis. This can be:
 #' 
 #' - A single variable from `.data`, such as `x = column1`
 #' 
 #' - A [function] to calculate over one or more variables from `.data`, such as `x = format(column1, "%Y")`, or `x = ifelse(column1 == "A", "Group A", "Other")`
 #' 
 #' - Multiple variables from `.data`, such as `x = c(column1, column2, column2)`, or using [selection helpers][tidyselect::language] such as `x = where(is.character)` or `x = starts_with("var_")` *(only allowed and required for Sankey plots using `type = "sankey"`)*
-#' @param y Values to use for plotting along the y axis. This can be:
+#' @param y Values to use for plotting along the Y-axis. This can be:
 #' 
 #' - A single variable from `.data`, such as `y = column1`
 #' 
@@ -48,8 +48,8 @@
 #' 
 #'  The `category` can also be a date or date/time (class `Date` or `POSIXt`).
 #' 
-#' @param y_secondary Values to use for plotting along the secondary y axis. This functionality is poorly supported by `ggplot2` and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.
-#' @param y_secondary.colour,y_secondary.colour_fill Colours to set for the secondary y axis, will be evaluated with [get_colour()].
+#' @param y_secondary Values to use for plotting along the secondary Y-axis. This functionality is poorly supported by `ggplot2` and might give unexpected results. Setting the secondary Y-axis will set the colour to the axis titles.
+#' @param y_secondary.colour,y_secondary.colour_fill Colours to set for the secondary Y-axis, will be evaluated with [get_colour()].
 #' @param type Type of visualisation to use. This can be:
 #' 
 #' - A `ggplot2` geom name or their abbreviation such as `"col"` and `"point"`. All geoms are supported (including [`geom_blank()`][ggplot2::geom_blank()]).
@@ -67,7 +67,7 @@
 #'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
 #' 
-#' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no x axis or if the length of unique values per x axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
+#' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param y_secondary.type see **`type`**
 #' @param title,subtitle,caption,tag,x.title,y.title,category.title,legend.title,y_secondary.title A title to use. This can be:
 #' 
@@ -85,27 +85,27 @@
 #' @param facet.fixed_y A [logical] to indicate whether all y scales should have the same limits. Defaults to `TRUE` only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25%.
 #' @param facet.fixed_x A [logical] to indicate whether all x scales should have the same breaks. This acts like the inverse of `x.drop`.
 #' @param facet.position,facet.fill,facet.bold,facet.italic,facet.size,facet.margin,facet.repeat_lbls_x,facet.repeat_lbls_y,facet.drop,facet.nrow,facet.relative Additional settings for the plotting direction `facet`.
-#' @param x.date_breaks Breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as `"1 day"` and `"2 years"`.
-#' @param x.date_labels Labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
+#' @param x.date_breaks Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as `"1 day"` and `"2 years"`.
+#' @param x.date_labels Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
 #' @param x.date_remove_years A [logical] to indicate whether the years of all `x` values must be unified. This will set the years of all `x` values [to 1970](https://en.wikipedia.org/wiki/Unix_time) if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the `category` while maintaining a date range on `x`. The default is `FALSE`, unless `category` contains all years present in `x`.
 #' @param category.focus A value of `category` that should be highlighted, meaning that all other values in `category` will be greyed out. This can also be a numeric value between 1 and the length of unique values of `category`, e.g. `category.focus = 2` to focus on the second legend item.
 #' @param colour Get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can be a named vector to match values of `category`, see *Examples*. Using a named vector can be used to manually sort the values of `category`.
 #' @param colour_fill Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()].
 #' @param colour_opacity Amount of opacity for `colour`/`colour_fill` (0 = solid, 1 = transparent).
-#' @param x.lbl_angle Angle to use for the x axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom).
-#' @param x.lbl_align Alignment for the x axis between `0` (left aligned) and `1` (right aligned).
+#' @param x.lbl_angle Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom).
+#' @param x.lbl_align Alignment for the X-axis between `0` (left aligned) and `1` (right aligned).
 #' @param x.lbl_italic [logical] to indicate whether the x labels should in in *italics*.
 #' @param x.lbl_taxonomy A [logical] to transform all words of the `x` labels into italics that are in the [microorganisms][AMR::microorganisms] data set of the `AMR` package. This uses [md_to_expression()] internally and will set `x.labels` to parse expressions.
-#' @param x.character A [logical] to indicate whether the values of the x axis should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
+#' @param x.character A [logical] to indicate whether the values of the X-axis should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
 #' @param x.drop [logical] to indicate whether factor levels should be dropped.
 #' @param x.complete,category.complete,facet.complete A value to complete the data. This makes use of [tidyr::full_seq()] and [tidyr::complete()]. For example, using `x.complete = 0` will apply `data |> complete(full_seq(x, ...), fill = list(x = 0))`. Using value `TRUE` (e.g., `x.complete = TRUE`) is identical to using value `0`.
-#' @param x.mic [logical] to indicate whether the x axis should be formatted as [MIC values][AMR::as.mic()], by dropping all factor levels and adding missing factors of 2.
+#' @param x.mic [logical] to indicate whether the X-axis should be formatted as [MIC values][AMR::as.mic()], by dropping all factor levels and adding missing factors of 2.
 #' @param x.remove,y.remove A [logical] to indicate whether the axis labels and title should be removed.
 #' @param y.24h a [logical] to indicate whether the y labels and breaks should be formatted as 24-hour sequences
 #' @param y.age A [logical] to indicate whether the y labels and breaks should be formatted as ages in years.
 #' @param y.scientific,y_secondary.scientific A [logical] to indicate whether the y labels should be formatted in scientific notation. Defaults to `TRUE` only if the range of the y values spans more than `10e5`.
 #' @param y.percent,y_secondary.percent A [logical] to indicate whether the y labels should be formatted as percentages.
-#' @param y.percent_break A value on which the y axis should have breaks.
+#' @param y.percent_break A value on which the Y-axis should have breaks.
 #' @param x.breaks,y.breaks A breaks function or numeric vector to use for the axis.
 #' @param x.n_breaks,y.n_breaks Number of breaks, only useful if `x.breaks` cq. `y.breaks` is `NULL`.
 #' @param x.limits,y.limits Limits to use for the axis, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `y.limits = c(0, NA)` to have the y scale start at zero.
@@ -113,16 +113,16 @@
 #' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. `x.expand` defaults to 0.5 and `y.expand` defaults to `0.25`, except for sf objects (then both default to 0).
 #' @param x.transform,y.transform,category.transform A transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position Position of the axis.
-#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the x axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the y axis.
+#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the X-axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the Y-axis.
 #' @param category.type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint Settings for the plotting direction `category`.
 #' @param category.limits Limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
 #' @param category.date_breaks Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
 #' @param category.date_labels Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
 #' @param category.character A [logical] to indicate whether the values of the category should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
-#' @param x.max_items,category.max_items,facet.max_items Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, allowing to e.g. plot the top *n* most frequent values of the x axis by combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
+#' @param x.max_items,category.max_items,facet.max_items Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, allowing to e.g. plot the top *n* most frequent values of the X-axis by combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
 #' @param x.max_txt,category.max_txt,facet.max_txt The text to use of values not included number of `*.max_items`. The placeholder `%n` will be replaced with the outcome of the `summarise_function` function, the placeholder `%p` will be replaced with the percentage.
-#' @param x.sort,category.sort,facet.sort Sorting of the plotting direction, defaults to `TRUE`, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
+#' @param x.sort,category.sort,facet.sort Sorting of the plotting direction, defaults to `TRUE`, except for continuous values on the X-axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
 #' 
 #' - A manual vector of values
 #' - `TRUE`: sort [factor]s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (*numeric* sort)
@@ -146,7 +146,7 @@
 #' @param summarise_function A [function] to use if the data has to be summarised, see *Examples*. This can also be `NULL`, which will be converted to `function(x) x`.
 #' @param stacked A [logical] to indicate that values must be [stacked][ggplot2::position_stack()].
 #' @param stacked_fill A [logical] to indicate that values must be [filled][ggplot2::position_fill()] (i.e., stacked to 100%).
-#' @param horizontal A [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original x axis.
+#' @param horizontal A [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original X-axis.
 #' @param reverse A [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth A [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
 #' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour Settings for `smooth`.
@@ -187,7 +187,7 @@
 #' @param ... Any argument to give to the geom. This will override automatically-set settings for the geom.
 #' @details The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions such as [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], [`geom_col()`][ggplot2::geom_col()], [`facet_wrap()`][ggplot2::facet_wrap()], [`labs()`][ggplot2::labs()], etc., and provides:
 #'   - Writing as few lines of codes as possible
-#'   - Easy plotting in three 'directions': `x` (the regular x axis), `category` (replaces 'fill' and 'colour') and `facet`
+#'   - Easy plotting in three 'directions': `x` (the regular X-axis), `category` (replaces 'fill' and 'colour') and `facet`
 #'   - Automatic setting of these 'directions' based on the input data
 #'   - Setting in-place calculations for all plotting directions and even `y`
 #'   - Easy way for sorting data in many ways (such as on alphabet, numeric value, frequency, original data order), by setting a single argument for the 'direction': `x.sort`, `category.sort` and `facet.sort`
@@ -196,7 +196,7 @@
 #'   - Integrated support for any Google Font and any installed system font
 #'   - An extra clean, minimalistic theme with a lot of whitespace (but without unnecessary margins) that is ideal for printing: `theme_minimal2()`
 #'   - Some conveniences from Microsoft Excel:
-#'     - The y axis starts at 0 if possible
+#'     - The Y-axis starts at 0 if possible
 #'     - The y scale expands at the top to be better able to interpret all data points
 #'     - Date breaks can be written in a human-readable format (such as "d mmm yyyy")
 #'     - Labels with data values can easily be printed and are automatically determined
@@ -264,13 +264,13 @@
 #'         smooth = TRUE,
 #'         smooth.method = "lm")
 #' 
-#' # support for secondary y axis
+#' # support for secondary Y-axis
 #' mtcars |>
 #'   plot2(x = mpg,
 #'         y = hp,
 #'         y_secondary = disp ^ 2, 
 #'         y_secondary.scientific = TRUE,
-#'         title = "Secondary y axis sets colour to the axis titles")
+#'         title = "Secondary Y-axis sets colour to the axis titles")
 #' 
 #' 
 #' admitted_patients
@@ -1379,7 +1379,7 @@ plot2_exec <- function(.data,
   # check requirements for Sankey plots
   if (type_backup == "sankey") {
     if (isTRUE(misses_x) || (.data |> select({{ x }}) |> NCOL()) < 2 ) {
-      stop("Sankey plots require an x axis of at least two variables", call. = FALSE)
+      stop("Sankey plots require an X-axis of at least two variables", call. = FALSE)
     }
     if (!has_y(df)) {
       stop("Sankey plots require `y`", call. = FALSE)
@@ -1716,7 +1716,7 @@ plot2_exec <- function(.data,
                     original_colours = original_colours,
                     dots_geom = dots_geom)
     
-    # add secondary y axis if available
+    # add secondary Y-axis if available
     if (has_y_secondary(df)) {
       if (y_secondary.type == "geom_boxplot") {
         # first add the whiskers
@@ -1948,7 +1948,7 @@ plot2_exec <- function(.data,
                          add_y_secondary = FALSE)
     }
     if (has_y_secondary(df)) {
-      # add a secondary y axis
+      # add a secondary Y-axis
       if (isTRUE(y_secondary.title)) {
         y_secondary.title <- validate_title(get_y_secondary_name(df), markdown = isTRUE(markdown), df = df)
       }
@@ -1975,16 +1975,16 @@ plot2_exec <- function(.data,
                          decimal.mark = decimal.mark,
                          big.mark = big.mark,
                          add_y_secondary = TRUE,
-                         # this get the breaks from the primary y axis (requires ggplot version >= 3.3.0):
+                         # this get the breaks from the primary Y-axis (requires ggplot version >= 3.3.0):
                          y_secondary.breaks = ggplot_build(p_added_y)$layout$panel_params[[1]]$y$breaks,
-                         # additional properties for secondary y axis:
+                         # additional properties for secondary Y-axis:
                          y_secondary.title = y_secondary.title,
                          y_secondary.scientific = y_secondary.scientific,
                          y_secondary.percent = y_secondary.percent,
                          y_secondary.labels = y_secondary.labels,
                          markdown = markdown)
     } else {
-      # add the y axis without secondary axis
+      # add the Y-axis without secondarY-axis
       p <- p_added_y
     }
   }
@@ -2139,7 +2139,7 @@ plot2_exec <- function(.data,
   
   # turn plot horizontal if required ----
   # up until this point, a lot has been done already for `horizontal`.
-  # such as switching some x and y axis properties of the theme
+  # such as switching some x and Y-axis properties of the theme
   if (type != "geom_sf" && (isTRUE(horizontal) || has_datalabels(df))) {
     x.limits <- x.limits %or% plot2_env$x_lim
     y.limits <- y.limits %or% plot2_env$y_lim

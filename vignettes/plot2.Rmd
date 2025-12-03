@@ -79,7 +79,7 @@ p2 <- ggplot(df) +
 p1 + p2
 ```
 
-In this simple example, `plot2()` automatically generates a column plot because it recognises that the x-axis is categorical and the y-axis is numeric. It even adds data labels by default because the x-axis is discrete. Also, at the top of the y-axis there is a bit more space to better be able to read the plot, akin to how Microsoft Excel plots at default. This is `plot2()` at its most basic — no need to specify a plot type or worry about details like labels and scales.
+In this simple example, `plot2()` automatically generates a column plot because it recognises that the X-axis is categorical and the Y-axis is numeric. It even adds data labels by default because the X-axis is discrete. Also, at the top of the Y-axis there is a bit more space to better be able to read the plot, akin to how Microsoft Excel plots at default. This is `plot2()` at its most basic — no need to specify a plot type or worry about details like labels and scales.
 
 You'll also notice the clean, uncluttered appearance of the plot, especially when compared to a default `ggplot2` plot, thanks to `theme_minimal2()`, which is applied by default in `plot2()`. Unlike `ggplot2`’s default `theme_grey()` that features a grey background, `theme_minimal2()` provides an even more spacious, white background that reduces visual clutter and is optimised for printing directly to production formats like PDFs. This makes `plot2()` plots ideal for reports, publications, and presentations where a clean, professional look is essential.
 
@@ -241,7 +241,7 @@ admitted_patients |>
   plot2(x = log(age), y = n(), y.transform = "log2", category = ward)
 ```
 
-In a traditional `ggplot2` approach, you might have to create a new variable in your data for the logarithmic transformation (`mutate(log_age = log(age))`) before plotting, and a `scale_y_continuous(transform = "log2")` for the y axis. `plot2()` handles this seamlessly within the plotting function itself.
+In a traditional `ggplot2` approach, you might have to create a new variable in your data for the logarithmic transformation (`mutate(log_age = log(age))`) before plotting, and a `scale_y_continuous(transform = "log2")` for the Y-axis. `plot2()` handles this seamlessly within the plotting function itself.
 
 ### Advanced Formatting on the Fly
 
@@ -254,11 +254,11 @@ admitted_patients |>
         category = format(date, "%Y"))
 ```
 
-This example creates a plot where the x-axis labels combine the text "Hospital" with the hospital name, and the categories are based on the year extracted from the `date` variable. This level of flexibility allows for highly customised plots without the need for extra preprocessing steps.
+This example creates a plot where the X-axis labels combine the text "Hospital" with the hospital name, and the categories are based on the year extracted from the `date` variable. This level of flexibility allows for highly customised plots without the need for extra preprocessing steps.
 
 ### Combining Everything Together
 
-Let’s put it all together in a more complex example. Suppose you want to examine the distribution of patient ages across hospitals, with each bar split by gender, and you want the x-axis to reflect the hospital name and use facets for the year of admission:
+Let’s put it all together in a more complex example. Suppose you want to examine the distribution of patient ages across hospitals, with each bar split by gender, and you want the X-axis to reflect the hospital name and use facets for the year of admission:
 
 ```{r}
 admitted_patients |> 

@@ -56,6 +56,9 @@ create_interactively <- function(data = NULL) {
   
   ggplot2_datasets <- paste0("ggplot2::", data(package = "ggplot2")$results[, "Item"])
   
+  dplyr_datasets <- paste0("dplyr::", data(package = "dplyr")$results[, "Item"])
+  dplyr_datasets <- dplyr_datasets[dplyr_datasets %unlike% "band_"]
+  
   # If a dataset is provided as argument, add it
   if (!is.null(data)) {
     data_name <- deparse(substitute(data))
@@ -73,7 +76,7 @@ create_interactively <- function(data = NULL) {
   label_with_dims <- function(x) {
     dims <- tryCatch(dim(eval(parse(text = x))), error = function(e) NULL)
     if (is.null(dims)) return(x)
-    paste0(gsub("g?g?plot2::", "", x), " (", dims[1], " x ", dims[2], ")")
+    paste0(gsub("(g?g?plot2|dplyr)::", "", x), " (", dims[1], " x ", dims[2], ")")
   }
   
   globalenv_labels <- stats::setNames(globalenv_datasets,
@@ -92,13 +95,18 @@ create_interactively <- function(data = NULL) {
                                     vapply(FUN.VALUE = character(1),
                                            ggplot2_datasets,
                                            label_with_dims))
+  dplyr_labels <- stats::setNames(dplyr_datasets,
+                                  vapply(FUN.VALUE = character(1),
+                                         dplyr_datasets,
+                                         label_with_dims))
   
   # Grouped list
   data_sets <- list(
     "Global environment" = globalenv_labels,
     "Base R"             = base_labels,
     "plot2 package"      = plot2_labels,
-    "ggplot2 package"    = ggplot2_labels
+    "ggplot2 package"    = ggplot2_labels,
+    "dplyr package"      = dplyr_labels
   )
   
   plot2_formals <- formals(plot2::plot2)
@@ -156,30 +164,31 @@ create_interactively <- function(data = NULL) {
     title = "Generate plot2",
     theme = bslib::bs_theme(version = 5, preset = "united"),
     
-    shiny::tags$style(shiny::HTML("
-      .selectize-dropdown .option, .selectize-input .item {
-        line-height: 1.6em;
-        padding: 4px 8px !important;
-      }
-    ")),
-    
-    shiny::tags$style(paste0("#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }"),
-                      "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
-                      "#error_msg { color: red; }",
-                      ".container-fluid { overflow-x: hidden; padding-left: 0; }",
-                      "#settings_tabs { margin-bottom: 20px; font-size: 14px; }",
-                      "#settings_tabs a { padding-left: 10px; padding-right: 10px; }",
-                      "#y_calc, #y_calc * { margin-left: 5px; }",
-                      " #plot2_msgs * { font-size: 0.9rem; }",
-                      ".selectize-dropdown-content { max-height: 400px; }",
-                      ".short .selectize-dropdown-content { max-height: 275px; }",
-                      "#colour .selectize-dropdown-content, #colour_fill .selectize-dropdown-content { max-height: 200px; }",
-                      ".copy-container { position: relative; }",
-                      "#copy_btn { position: absolute; top: 5px; right: 5px; background-color: var(--bs-primary); border-color: var(--bs-primary); }",
-                      ".settings * { margin-bottom: 2px; }",
-                      ".bslib-input-switch input { width: 3.5em !important; height: 30px !important; }",
-                      ".bslib-input-switch, .bslib-input-switch input { cursor: pointer; }",
-                      "code, .code, pre, .pre { font-family: FiraCode, \"Fira Code\", SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; }"),
+    shiny::tags$style(paste0(
+      "html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }",
+      ".container-fluid { height: 100%; display: flex; flex-direction: column; }",
+      ".row { flex: 1; }",
+      ".sidebarLayout { height: 100%; display: flex; }",
+      ".sidebarPanel { height: 100%; overflow-y: auto; }",
+      ".mainPanel, .well { height: 100%; overflow-y: auto; }",
+      "#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }"),
+      "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
+      "#error_msg { color: red; }",
+      ".container-fluid { overflow-x: hidden; padding-left: 0; }",
+      "#settings_tabs { margin-bottom: 20px; font-size: 14px; }",
+      "#settings_tabs a { padding-left: 10px; padding-right: 10px; }",
+      "#y_calc, #y_calc * { margin-left: 5px; }",
+      " #plot2_msgs * { font-size: 0.9rem; }",
+      ".selectize-dropdown-content { max-height: 400px; }",
+      ".short .selectize-dropdown-content { max-height: 275px; }",
+      ".optgroup-header { color: var(--bs-primary) !important; }",
+      "#colour .selectize-dropdown-content, #colour_fill .selectize-dropdown-content { max-height: 200px; }",
+      ".copy-container { position: relative; }",
+      "#copy_btn { position: absolute; top: 5px; right: 5px; background-color: var(--bs-primary); border-color: var(--bs-primary); }",
+      ".settings * { margin-bottom: 2px; }",
+      ".bslib-input-switch input { width: 3.5em !important; height: 30px !important; }",
+      ".bslib-input-switch, .bslib-input-switch input { cursor: pointer; }",
+      "code, .code, pre, .pre { font-family: FiraCode, \"Fira Code\", SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; }"),
     
     shiny::sidebarLayout(
       shiny::sidebarPanel(
@@ -222,12 +231,12 @@ create_interactively <- function(data = NULL) {
                                                                  "Jitter"    = "jitter"
                                                                ),
                                                                "Advanced types" = c(
-                                                                 "Line-dot"  = "linedot",
-                                                                 "Dumbbell"  = "dumbbell",
-                                                                 "Sankey"    = "sankey",
-                                                                 "UpSet"     = "upset",
-                                                                 "Bar percent" = "barpercent",
-                                                                 "Simple feature (sf)" = "sf"
+                                                                 "Line-dot"     = "linedot",
+                                                                 "Dumbbell"     = "dumbbell",
+                                                                 "Back-to-back" = "back-to-back",
+                                                                 "Sankey"       = "sankey",
+                                                                 "UpSet"        = "upset",
+                                                                 "Bar percent"  = "barpercent"
                                                                ),
                                                                "Blank" = c("Blank (no geom)" = "blank")
                                                              ),
@@ -237,13 +246,33 @@ create_interactively <- function(data = NULL) {
                           shiny::hr(),
                           shiny::fluidRow(
                             shiny::column(width = 6,
-                                          shiny::selectizeInput("x", "X axis", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::selectizeInput("x", "X-axis", choices = NULL, multiple = TRUE, width = "100%"),
                                           shiny::selectizeInput("category", "Category", choices = NULL, multiple = TRUE, width = "100%"),
                                           shiny::selectizeInput("facet", "Facet", choices = NULL, multiple = TRUE, width = "100%"),
                             ),
                             shiny::column(width = 6,
-                                          shiny::selectizeInput("y", "Y axis", choices = NULL, multiple = TRUE, width = "100%"),
-                                          shiny::radioButtons("y_calc", "Y axis transformation:", choices = c("None", "n_distinct()", "min()", "max()", "mean()", "median()"))
+                                          shiny::selectizeInput("y", "Y-axis", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::radioButtons(
+                                            inputId = "y_calc",
+                                            label = "Y-axis transformation:",
+                                            choiceNames = list(
+                                              "None",
+                                              HTML("<code>n_distinct()</code>"),
+                                              HTML("<code>min()</code>"),
+                                              HTML("<code>max()</code>"),
+                                              HTML("<code>mean()</code>"),
+                                              HTML("<code>median()</code>")
+                                            ),
+                                            choiceValues = c(
+                                              "None",
+                                              "n_distinct()",
+                                              "min()",
+                                              "max()",
+                                              "mean()",
+                                              "median()"
+                                            ),
+                                            selected = "None"
+                                          )
                             ),
                           ),
                           shiny::hr(),
@@ -327,39 +356,54 @@ create_interactively <- function(data = NULL) {
         d <- tryCatch(fortify_df(d)$new_df, error = function(x) NULL)
       }
       if (!is.null(d)) {
+        
+        if (inherits(d, "sf")) {
+          shinyjs::disable("x")
+          shinyjs::disable("y")
+        } else {
+          shinyjs::enable("x")
+          shinyjs::enable("y")
+        }
+        
         changed_inputs$names <- character(0)
         
         selectize_style <- "
           function(type) {
             var colors = {
-              'dbl':   '#1f77b4',
-              'int':   '#2ca02c',
-              'chr':   '#d62728',
-              'fct':   '#9467bd',
-              'ord':   '#9467bd',
-              'lgl':   '#8c564b',
-              'date':  '#e377c2',
-              'datetime': '#17becf',
-              'hms': '#ff7f0e',
-              'func': 'transparant',
-              'unknown': '#7f7f7f'
+              'dbl': 'var(--bs-blue)',
+              ',oc': 'var(--bs-blue)',
+              'int': 'var(--bs-cyan)',
+              'chr': 'var(--bs-red)',
+              'ab': 'var(--bs-red)',
+              'mo': 'var(--bs-red)',
+              'fct': 'var(--bs-green)',
+              'ord': 'var(--bs-teal)',
+              'sir': 'var(--bs-teal)',
+              'lgl': 'var(--bs-yellow)',
+              'date': 'var(--bs-indigo)',
+              'datetime': 'var(--bs-purple)',
+              'hms': 'var(--bs-purple)',
+              'list': 'var(--bs-dark)',
+              'unknown': 'var(--bs-default)',
+              'func': 'transparant'
             };
     
             var col = colors[type] || colors['unknown'];
-    
-return '<span style=\"' +
-       'background:' + col + ';' +
-       'color:white;' +
-       'padding:2px 7px;' +
-       'border-radius:12px;' +
-       'font-size:11px;' +
-       'display:inline-block;' +
-       'width:40px;' +
-       'text-align:center;' +
-       '\">' +
-       type +
-       '</span>';
-          }"
+      
+            return '<span style=\"' +
+             'background:' + col + ';' +
+             'color:white;' +
+             'padding:2px 7px;' +
+             'margin-bottom:3px;' +
+             'border-radius:12px;' +
+             'font-size:11px;' +
+             'display:inline-block;' +
+             'width:40px;' +
+             'text-align:center;' +
+             '\">' +
+             type +
+             '</span>';
+                }"
         
         render_dropdown <- sprintf("
           {
@@ -375,6 +419,9 @@ return '<span style=\"' +
         
         # Determine types
         types <- vapply(FUN.VALUE = character(1), vars, function(x) pillar::type_sum(d[[x]]))
+
+        vars <- vars[types %unlike% "polygon"]
+        types <- types[types %unlike% "polygon"]
         
         # Pass display items via options$options
         # items <- mapply(function(v, t) list(column = v, type = t), vars, types, SIMPLIFY = FALSE, USE.NAMES = FALSE)
@@ -395,8 +442,9 @@ return '<span style=\"' +
           optgroupField = "optgroup",
           optgroups = list(
             list(value = "fns", label = "Functions"),
-            list(value = "col_names", label = "Data Variables")
+            list(value = "col_names", label = "Data variables")
           ),
+          delimiter = ';',
           options = items,
           render = I(render_dropdown)
         )
@@ -535,7 +583,7 @@ return '<span style=\"' +
       shiny::runGadget(
         app = ui,
         server = server,
-        viewer = shiny::dialogViewer("Create plot2", width = 1600, height = max_height),
+        viewer = shiny::dialogViewer("Generate plot2", width = 1600, height = max_height),
         stopOnCancel = FALSE)
     )
   } else {

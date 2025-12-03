@@ -245,13 +245,13 @@ iris |>
 
 ``` r
 
-# support for secondary y axis
+# support for secondary Y-axis
 mtcars |>
   plot2(x = mpg,
         y = hp,
         y_secondary = disp ^ 2, 
         y_secondary.scientific = TRUE,
-        title = "Secondary y axis sets colour to the axis titles")
+        title = "Secondary Y-axis sets colour to the axis titles")
 #> ℹ Using type = "point" since both axes are numeric
 ```
 

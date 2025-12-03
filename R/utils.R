@@ -810,7 +810,7 @@ fortify_df <- function(df, y = NULL) {
         colnames(new_df)[colnames(new_df) == "Freq"] <- "count"
         y <- str2lang("count")
       } else {
-        # this is when y is set to something - put that to the y axis and adjust the data set
+        # this is when y is set to something - put that to the Y-axis and adjust the data set
         `:=` <- rlang::`:=`
         col_fn <- function(y = NULL) data.frame() |> mutate({{ y }} := 0)
         y <- colnames(col_fn({{ y }}))

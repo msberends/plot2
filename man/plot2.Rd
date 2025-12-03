@@ -163,14 +163,14 @@ plot2(
 \arguments{
 \item{.data}{Data to plot.}
 
-\item{x}{Plotting 'direction' for the x axis. This can be:
+\item{x}{Plotting 'direction' for the X-axis. This can be:
 \itemize{
 \item A single variable from \code{.data}, such as \code{x = column1}
 \item A \link{function} to calculate over one or more variables from \code{.data}, such as \code{x = format(column1, "\%Y")}, or \code{x = ifelse(column1 == "A", "Group A", "Other")}
 \item Multiple variables from \code{.data}, such as \code{x = c(column1, column2, column2)}, or using \link[tidyselect:language]{selection helpers} such as \code{x = where(is.character)} or \code{x = starts_with("var_")} \emph{(only allowed and required for Sankey plots using \code{type = "sankey"})}
 }}
 
-\item{y}{Values to use for plotting along the y axis. This can be:
+\item{y}{Values to use for plotting along the Y-axis. This can be:
 \itemize{
 \item A single variable from \code{.data}, such as \code{y = column1}
 \item Multiple variables from \code{.data}, such as \code{y = c(column1, column2)} or \code{y = c(name1 = column1, "name 2" = column2)}, or using \link[tidyselect:language]{selection helpers} such as \code{y = where(is.double)} or \code{y = starts_with("var_")} \emph{(multiple variables only allowed if \code{category} is not set)}
@@ -204,7 +204,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. It is also possible to provide \code{y}, on which then \code{summarise_function} will be applied.
 \item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}.
 }
-\item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no x axis or if the length of unique values per x axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
+\item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
 }}
 
 \item{title, subtitle, caption, tag, x.title, y.title, category.title, legend.title, y_secondary.title}{A title to use. This can be:
@@ -234,9 +234,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
 
-\item{x.date_breaks}{Breaks to use when the x axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
+\item{x.date_breaks}{Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
 
-\item{x.date_labels}{Labels to use when the x axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
+\item{x.date_labels}{Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
 
 \item{x.date_remove_years}{A \link{logical} to indicate whether the years of all \code{x} values must be unified. This will set the years of all \code{x} values \href{https://en.wikipedia.org/wiki/Unix_time}{to 1970} if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the \code{category} while maintaining a date range on \code{x}. The default is \code{FALSE}, unless \code{category} contains all years present in \code{x}.}
 
@@ -248,9 +248,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{colour_opacity}{Amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent).}
 
-\item{x.lbl_angle}{Angle to use for the x axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
+\item{x.lbl_angle}{Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
 
-\item{x.lbl_align}{Alignment for the x axis between \code{0} (left aligned) and \code{1} (right aligned).}
+\item{x.lbl_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned).}
 
 \item{x.lbl_italic}{\link{logical} to indicate whether the x labels should in in \emph{italics}.}
 
@@ -260,7 +260,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.position, y.position}{Position of the axis.}
 
-\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the x axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
+\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the X-axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
 
 \item{x.max_txt, category.max_txt, facet.max_txt}{The text to use of values not included number of \verb{*.max_items}. The placeholder \verb{\%n} will be replaced with the outcome of the \code{summarise_function} function, the placeholder \verb{\%p} will be replaced with the percentage.}
 
@@ -276,13 +276,13 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.labels, y.labels, y_secondary.labels}{A labels function or character vector to use for the axis.}
 
-\item{x.character}{A \link{logical} to indicate whether the values of the x axis should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
 
 \item{x.drop}{\link{logical} to indicate whether factor levels should be dropped.}
 
-\item{x.mic}{\link{logical} to indicate whether the x axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
+\item{x.mic}{\link{logical} to indicate whether the X-axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
 
-\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the x axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the y axis.}
+\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the X-axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the Y-axis.}
 
 \item{y.24h}{a \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences}
 
@@ -292,13 +292,13 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages.}
 
-\item{y.percent_break}{A value on which the y axis should have breaks.}
+\item{y.percent_break}{A value on which the Y-axis should have breaks.}
 
-\item{y_secondary}{Values to use for plotting along the secondary y axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary y axis will set the colour to the axis titles.}
+\item{y_secondary}{Values to use for plotting along the secondary Y-axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary Y-axis will set the colour to the axis titles.}
 
 \item{y_secondary.type}{see \strong{\code{type}}}
 
-\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary y axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
+\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary Y-axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
 \item{category.type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
@@ -312,7 +312,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
 
-\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the x axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
+\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the X-axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
 \itemize{
 \item A manual vector of values
 \item \code{TRUE}: sort \link{factor}s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
@@ -350,7 +350,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%).}
 
-\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original x axis.}
+\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original X-axis.}
 
 \item{reverse}{A \link{logical} to reverse the \emph{values} of \code{category}. Use \code{legend.reverse} to reverse the \emph{legend} of \code{category}.}
 
@@ -434,7 +434,7 @@ See \link{plot2-methods} for all implemented methods for different object classe
 The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \code{\link[ggplot2:ggplot]{ggplot2}} functions such as \code{\link[ggplot2:ggplot]{ggplot()}}, \code{\link[ggplot2:aes]{aes()}}, \code{\link[ggplot2:geom_bar]{geom_col()}}, \code{\link[ggplot2:facet_wrap]{facet_wrap()}}, \code{\link[ggplot2:labs]{labs()}}, etc., and provides:
 \itemize{
 \item Writing as few lines of codes as possible
-\item Easy plotting in three 'directions': \code{x} (the regular x axis), \code{category} (replaces 'fill' and 'colour') and \code{facet}
+\item Easy plotting in three 'directions': \code{x} (the regular X-axis), \code{category} (replaces 'fill' and 'colour') and \code{facet}
 \item Automatic setting of these 'directions' based on the input data
 \item Setting in-place calculations for all plotting directions and even \code{y}
 \item Easy way for sorting data in many ways (such as on alphabet, numeric value, frequency, original data order), by setting a single argument for the 'direction': \code{x.sort}, \code{category.sort} and \code{facet.sort}
@@ -444,7 +444,7 @@ The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \
 \item An extra clean, minimalistic theme with a lot of whitespace (but without unnecessary margins) that is ideal for printing: \code{theme_minimal2()}
 \item Some conveniences from Microsoft Excel:
 \itemize{
-\item The y axis starts at 0 if possible
+\item The Y-axis starts at 0 if possible
 \item The y scale expands at the top to be better able to interpret all data points
 \item Date breaks can be written in a human-readable format (such as "d mmm yyyy")
 \item Labels with data values can easily be printed and are automatically determined
@@ -512,13 +512,13 @@ iris |>
         smooth = TRUE,
         smooth.method = "lm")
 
-# support for secondary y axis
+# support for secondary Y-axis
 mtcars |>
   plot2(x = mpg,
         y = hp,
         y_secondary = disp ^ 2, 
         y_secondary.scientific = TRUE,
-        title = "Secondary y axis sets colour to the axis titles")
+        title = "Secondary Y-axis sets colour to the axis titles")
 
 
 admitted_patients
