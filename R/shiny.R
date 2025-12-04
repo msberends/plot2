@@ -31,6 +31,7 @@ create_interactively <- function(data = NULL) {
   rlang::check_installed("shiny")
   rlang::check_installed("clipr")
   rlang::check_installed("pillar")
+  rlang::check_installed("rio")
   
   rstudio_viewer <- identical(Sys.getenv("RSTUDIO"), "1") && interactive()
   rstudio_viewer <- FALSE # turn off for now
@@ -71,14 +72,7 @@ create_interactively <- function(data = NULL) {
   
   # Ensure some defaults are always there
   base_datasets <- c("iris", "mtcars", "Titanic")
-  
-  # Add dimensions to labels
-  label_with_dims <- function(x) {
-    dims <- tryCatch(dim(eval(parse(text = x))), error = function(e) NULL)
-    if (is.null(dims)) return(x)
-    paste0(gsub("(g?g?plot2|dplyr)::", "", x), " (", dims[1], " x ", dims[2], ")")
-  }
-  
+
   globalenv_labels <- stats::setNames(globalenv_datasets,
                                       vapply(FUN.VALUE = character(1),
                                              globalenv_datasets,
@@ -103,6 +97,7 @@ create_interactively <- function(data = NULL) {
   # Grouped list
   data_sets <- list(
     "Global environment" = globalenv_labels,
+    "Import data"        = c("Import data set..." = "import"),
     "Base R"             = base_labels,
     "plot2 package"      = plot2_labels,
     "ggplot2 package"    = ggplot2_labels,
@@ -336,6 +331,8 @@ create_interactively <- function(data = NULL) {
   server <- function(input, output, session) {
     shinyjs::hide("datatable")
     
+    imported_data <- shiny::reactiveVal(NULL)
+    
     changed_inputs <- shiny::reactiveValues(names = character())
     shiny::observe({
       # keep track of changed elements
@@ -349,14 +346,64 @@ create_interactively <- function(data = NULL) {
         }, ignoreInit = TRUE)
       })
     })
+    
+    shiny::observe({
+      if (input$dataset == "import") {
+        shiny::showModal(
+          shiny::modalDialog(
+            title = "Import a Data File",
+            shiny::fileInput("file_upload", "Choose file:",
+                             accept = c(".csv", ".tsv", ".txt", ".xls", ".xlsx", ".rds", ".sav", ".dta", ".sas7bdat"),
+                             width = "100%",
+                             multiple = FALSE),
+            footer = shiny::tagList(
+              shiny::actionButton("import_confirm", "Import", class = "btn-success"),
+              shiny::actionButton("import_cancel", "Cancel", class = "btn-danger")
+            )
+          )
+        )
+      }
+    })
+    shiny::observeEvent(input$import_cancel, {
+      shiny::removeModal()
+    })
+    shiny::observeEvent(input$import_confirm, {
+      shiny::req(input$file_upload)
+      
+      file_path <- input$file_upload$datapath
+      file_name <- input$file_upload$name
+      
+      # Try to read with `rio::import`
+      data <- tryCatch(
+        rio::import(file_path),
+        error = function(e) {
+          shiny::updateSelectizeInput(session, "dataset", selected = "iris") # reset to something that always works
+          shiny::showNotification("Failed to import file.", type = "error")
+          return(NULL)
+        }
+      )
+      
+      if (!is.null(data)) {
+        imported_data(data)
+        choices <- data_sets
+        choices$`Import data` <- c(stats::setNames("import", "Import another data set..."),
+                                   stats::setNames("imported", paste0("Imported data (", paste(dim(data), collapse = " x "), ")")))
+        shiny::updateSelectizeInput(session, "dataset", selected = "imported", choices = choices)
+      }
+      
+      shiny::removeModal()
+    })
 
     shiny::observe({
-      d <- eval(parse(text = input$dataset))
+      d <- switch(input$dataset,
+                  "imported" = imported_data(),
+                  import = NULL, # when clicking Import item that opens the modal
+                  eval(parse(text = input$dataset)))
+      
       if (!is.null(d) && !is.data.frame(d)) {
         d <- tryCatch(fortify_df(d)$new_df, error = function(x) NULL)
       }
       if (!is.null(d)) {
-        
         if (inherits(d, "sf")) {
           shinyjs::disable("x")
           shinyjs::disable("y")
@@ -416,15 +463,11 @@ create_interactively <- function(data = NULL) {
          }", selectize_style)
         
         vars <- names(d)
-        
-        # Determine types
         types <- vapply(FUN.VALUE = character(1), vars, function(x) pillar::type_sum(d[[x]]))
-
         vars <- vars[types %unlike% "polygon"]
         types <- types[types %unlike% "polygon"]
         
         # Pass display items via options$options
-        # items <- mapply(function(v, t) list(column = v, type = t), vars, types, SIMPLIFY = FALSE, USE.NAMES = FALSE)
         items <- mapply(function(v, t) {
           list(column = v, type = t, optgroup = "col_names")
         }, vars, types, SIMPLIFY = FALSE, USE.NAMES = FALSE)
@@ -514,8 +557,8 @@ create_interactively <- function(data = NULL) {
       
       # dataset
       df_name <- input$dataset
-      if (df_name == "Provided") {
-        df_name <- "your_df |>  # replace this with your provided data set"
+      if (df_name %in% c("Provided", "imported")) {
+        df_name <- "your_df |>  # replace this with your data set"
       } else {
         df_name <- paste0(df_name, " |>")
       }
@@ -536,11 +579,13 @@ create_interactively <- function(data = NULL) {
       output$error_msg <- shiny::renderText("")
       
       code <- strsplit(call_string(), "\n")[[1]]
-      if (code[1] == "your_df |>  # replace this with your provided data set") {
+      if (code[1] == "your_df |>  # replace this with your data set") {
         code[1] <- "Provided |>"
       }
       code <- paste(code, collapse = "\n")
-      
+      if (input$dataset == "imported") {
+        Provided <- imported_data()
+      }
       p <- withCallingHandlers(
         tryCatch(eval(parse(text = code)),
                  error = function(e) {
@@ -574,7 +619,9 @@ create_interactively <- function(data = NULL) {
       shinyjs::toggle("datatable")
     })
     output$datatable <- DT::renderDataTable({
-      eval(parse(text = input$dataset))
+      switch(input$dataset,
+             "imported" = imported_data(),
+             eval(parse(text = input$dataset)))
     })
   }
   
@@ -676,4 +723,10 @@ create_field <- function(inputTag, name, default, slider = FALSE, class = NULL) 
                                      "flex: 0 0 50%; margin: 0; padding-right: 4px;")),
     shiny::div(style = "flex: 1;", inputTag)
   )
+}
+
+label_with_dims <- function(x) {
+  dims <- tryCatch(dim(eval(parse(text = x))), error = function(e) NULL)
+  if (is.null(dims)) return(x)
+  paste0(gsub("(g?g?plot2|dplyr)::", "", x), " (", dims[1], " x ", dims[2], ")")
 }

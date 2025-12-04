@@ -1,7 +1,7 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
 Date: 2025-12-04
-Version: 1.99.0.9020
+Version: 1.99.0.9021
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
@@ -53,6 +53,7 @@ Suggests:
   patchwork,
   pillar,
   plotly (>= 4.8.0),
+  rio,
   rlang,
   rstudioapi (>= 0.10.0),
   scales,
