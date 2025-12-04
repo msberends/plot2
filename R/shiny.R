@@ -625,7 +625,9 @@ create_interactively <- function(data = NULL) {
     })
   }
   
-  if (rstudio_viewer) {
+  if (!interactive()) {
+    shiny::shinyApp(ui, server)
+  } else if (rstudio_viewer) {
     suppressMessages(
       shiny::runGadget(
         app = ui,
