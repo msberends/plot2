@@ -257,11 +257,11 @@ create_interactively <- function(data = NULL) {
                                             label = "Y-axis transformation:",
                                             choiceNames = list(
                                               "None",
-                                              HTML("<code>n_distinct()</code>"),
-                                              HTML("<code>min()</code>"),
-                                              HTML("<code>max()</code>"),
-                                              HTML("<code>mean()</code>"),
-                                              HTML("<code>median()</code>")
+                                              shiny::HTML("<code>n_distinct()</code>"),
+                                              shiny::HTML("<code>min()</code>"),
+                                              shiny::HTML("<code>max()</code>"),
+                                              shiny::HTML("<code>mean()</code>"),
+                                              shiny::HTML("<code>median()</code>")
                                             ),
                                             choiceValues = c(
                                               "None",
@@ -556,8 +556,8 @@ create_interactively <- function(data = NULL) {
       output$plot2_msgs <- shiny::renderUI({
         if (length(msgs) > 0) {
           shiny::tagList(lapply(msgs, function(m) {
-            html <- fansi::sgr_to_html(m, warn = FALSE)
-            shiny::div(shiny::HTML(html))   # render as HTML
+            html <- fansi::sgr_to_shiny::HTML(m, warn = FALSE)
+            shiny::div(shiny::HTML(html)) # render as HTML
           }))
         }
       })
