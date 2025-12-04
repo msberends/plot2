@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9020</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9021</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,15 +97,15 @@ column types (just like MS Excel):</p>
 <p>Used for visualising trends over ordered intervals.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span> <span class="co"># from base R</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
-<span>          y <span class="op">=</span> <span class="va">pressure</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
+<span>        y <span class="op">=</span> <span class="va">pressure</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
-<span>          y <span class="op">=</span> <span class="va">pressure</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"line-point"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
+<span>        y <span class="op">=</span> <span class="va">pressure</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"line-point"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
@@ -136,9 +136,9 @@ space.</p>
 domains.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
-<span>          y <span class="op">=</span> <span class="va">pressure</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
+<span>        y <span class="op">=</span> <span class="va">pressure</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airquality</span> <span class="op">|&gt;</span></span>
@@ -216,19 +216,19 @@ overlap.</p>
 categories.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="co"># from this plot2 package</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
-<span>          y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>          facet <span class="op">=</span> <span class="va">ward</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        facet <span class="op">=</span> <span class="va">ward</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="co"># from this plot2 package</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
-<span>          y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>          y.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>,</span>
-<span>          category <span class="op">=</span> <span class="va">gender</span>,</span>
-<span>          facet <span class="op">=</span> <span class="va">ward</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        y.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
+<span>        facet <span class="op">=</span> <span class="va">ward</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-11-2.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">

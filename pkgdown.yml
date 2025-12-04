@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   plot2: plot2.html
   supported_types: supported_types.html
-last_built: 2025-12-04T08:22Z
+last_built: 2025-12-04T17:28Z
 urls:
   reference: https://msberends.github.io/plot2/reference
   article: https://msberends.github.io/plot2/articles

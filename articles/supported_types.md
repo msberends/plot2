@@ -35,18 +35,18 @@ Used for visualising trends over ordered intervals.
 
 ``` r
 pressure |> # from base R
-    plot2(x = temperature,
-          y = pressure,
-          type = "line")
+  plot2(x = temperature,
+        y = pressure,
+        type = "line")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-4-1.png)
 
 ``` r
 pressure |>
-    plot2(x = temperature,
-          y = pressure,
-          type = "line-point")
+  plot2(x = temperature,
+        y = pressure,
+        type = "line-point")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-4-2.png)
@@ -82,9 +82,9 @@ Used for emphasising cumulative magnitudes across continuous domains.
 
 ``` r
 pressure |>
-    plot2(x = temperature,
-          y = pressure,
-          type = "area")
+  plot2(x = temperature,
+        y = pressure,
+        type = "area")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-6-1.png)
@@ -176,22 +176,22 @@ Used for contrasting two mirrored groups across shared categories.
 
 ``` r
 admitted_patients |> # from this plot2 package
-    plot2(x = age_group,
-          y = n(),
-          facet = ward,
-          type = "back-to-back")
+  plot2(x = age_group,
+        y = n(),
+        facet = ward,
+        type = "back-to-back")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-11-1.png)
 
 ``` r
 admitted_patients |> # from this plot2 package
-    plot2(x = age_group,
-          y = n(),
-          y.limits = c(0, 60),
-          category = gender,
-          facet = ward,
-          type = "back-to-back")
+  plot2(x = age_group,
+        y = n(),
+        y.limits = c(0, 60),
+        category = gender,
+        facet = ward,
+        type = "back-to-back")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-11-2.png)

@@ -4,6 +4,8 @@
 
 - Support ggplot2 4.0.0
 - Added Shiny app
+  ([`plot2::create_interactively()`](https://msberends.github.io/plot2/reference/create_interactively.md)),
+  with file upload
 - Support `y.transform = "reverse"`
 - Support `legend.nrow`
 - Support back-to-back (= tornado, = butterfly) plots

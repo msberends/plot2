@@ -88,8 +88,8 @@ add_white(x, white)
 
   - One of the 657 built-in
     [`colours()`](https://rdrr.io/r/grDevices/colors.html) in R (even
-    case-insensitive), such as `"palevioletred1"`, `"palevioletred2"`,
-    `"seagreen3"`, `"thistle4"`, `"violetred4"`
+    case-insensitive), such as `"chartreuse1"`, `"darkred"`, `"gold3"`,
+    `"ivory3"`, `"peachpuff3"`
 
   - One of the pre-registered colours using `register_colour()`
 
