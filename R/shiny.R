@@ -556,7 +556,7 @@ create_interactively <- function(data = NULL) {
       output$plot2_msgs <- shiny::renderUI({
         if (length(msgs) > 0) {
           shiny::tagList(lapply(msgs, function(m) {
-            html <- fansi::sgr_to_shiny_html(m, warn = FALSE)
+            html <- fansi::sgr_to_html(m, warn = FALSE)
             shiny::div(shiny::HTML(html)) # render as HTML
           }))
         }
