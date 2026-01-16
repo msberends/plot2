@@ -65,7 +65,7 @@
 #'   - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds two point geoms using [add_point()]; one with large white dots and one with smaller dots using the colours set in `colour`. This is essentially equal to base \R `plot(..., type = "b")` but with closed shapes.
 #'   - `"back-to-back"` (short: `"b2b"`) creates a back-to-back plot, sometimes called a [Tornado diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram), or a [Population Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It uses `facet` to distinquish the left and right plots. Therefore, `facet` must be set to (a column containing) two unique values.
 #'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
-#'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`.
+#'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`, and the label angles can be set with `datalabels.angle`.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param y_secondary.type see **`type`**
@@ -1690,7 +1690,7 @@ plot2_exec <- function(.data,
                                          size = datalabels.size,
                                          # whitespace between labels in nodes
                                          sep = sankey.node_whitespace,
-                                         angle = ifelse(isTRUE(horizontal), 0, -90))
+                                         angle = datalabels.angle)
     if (is.null(sankey.remove_axes)) {
       # make the default TRUE, but give message so users will know which argument to set
       sankey.remove_axes <- TRUE
