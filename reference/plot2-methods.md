@@ -1087,7 +1087,8 @@ plot2(
       `datalabels.colour`, and `datalabels.colour_fill`. The
       transparency of the flows can be set using `sankey.alpha`, and the
       width of the nodes can be set using `sankey.node_width`. Sankey
-      plots can also be flipped using `horizontal = TRUE`.
+      plots can also be flipped using `horizontal = TRUE`, and the label
+      angles can be set with `datalabels.angle`.
 
   - Left blank. In this case, the type will be determined automatically:
     `"boxplot"` if there is no X-axis or if the length of unique values
