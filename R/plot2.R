@@ -544,6 +544,10 @@ plot2 <- function(.data,
   if (NROW(.data) == 0) {
     # check if markdown is required
     markdown <- validate_markdown(markdown, x.title, y.title, c(category.title, legend.title), title, subtitle, tag, caption)
+    on.exit({
+      throw_messages()
+      clear_plot2_env()
+    })
     plot2_warning("No observations, returning an empty plot")
     p <- ggplot() +
       validate_theme(theme = theme,
@@ -1212,7 +1216,6 @@ plot2_exec <- function(.data,
       )  +
       theme(axis.ticks.x = element_blank(),
             axis.line = element_blank())
-    
     
     layers <- tryCatch(upper_right@layers, error = function(e) upper_right$layers)
     colour_layers <- vapply(FUN.VALUE = character(1),

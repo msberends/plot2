@@ -796,6 +796,9 @@ validate_x_scale <- function(df,
   }
   
   if (!is.null(x.limits)) {
+    if (is.integer(values) && is.numeric(x.limits) && !is.integer(x.limits)) {
+      x.limits <- as.integer(x.limits)
+    }
     if (!any(class(x.limits) %in% class(values))) {
       plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
     }

@@ -95,7 +95,7 @@
 #' # use move to move the new layer down
 #' p |> 
 #'   add_point(size = 5,
-#'             colour = "lightpink",
+#'             colour = "lightgrey",
 #'             move = -1)
 #' 
 #' # providing x and y will just plot the points as new data,
@@ -157,6 +157,9 @@
 add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move = 0) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
+  }
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
   }
   type <- validate_type(type[1L])
   if (type == "") {
@@ -334,6 +337,9 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
+  }
   if (missing(linetype)) {
     linetype <- NA_missing_
   }
@@ -395,6 +401,9 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
+  }
   if (missing(size)) {
     size <- NA_missing_
   }
@@ -436,6 +445,9 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
 add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), colour_fill, width, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
+  }
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
   }
   if (missing(colour_fill)) {
     fill <- colour
@@ -485,7 +497,9 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
-  
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
+  }
   if (!is.null(plot$mapping$colour) && missing(colour)) {
     category_name <- rlang::as_label(plot$mapping$colour)
     colour_unique <- unique(plot$data[[category_name]])
@@ -544,6 +558,9 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
 add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, formula, method, se, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is.ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
+  }
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
   }
   if (missing(linetype)) {
     linetype <- NA_missing_
@@ -618,6 +635,10 @@ add_sf <- function(plot,
                    datalabels.nudge_y = 2500,
                    ...,
                    inherit.aes = FALSE) {
+  
+  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
+    return(plot)
+  }
   
   rlang::check_installed("sf")
   loadNamespace("sf")
