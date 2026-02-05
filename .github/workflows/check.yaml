@@ -13,9 +13,15 @@
 # ===================================================================== #
 
 on:
+  pull_request:
+    # run in each PR in this repo
+    branches: '**'
   push:
-    # only run when pushed to the 'main' branch
-    branches: 'main' 
+    branches: '**'
+  schedule:
+    # also run a schedule everyday at 1 AM.
+    # this is to check that all dependencies are still available (see R/zzz.R)
+    - cron:  '0 1 * * *'
 
 name: check
 
