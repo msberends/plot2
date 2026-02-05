@@ -88,8 +88,8 @@ add_white(x, white)
 
   - One of the 657 built-in
     [`colours()`](https://rdrr.io/r/grDevices/colors.html) in R (even
-    case-insensitive), such as `"burlywood"`, `"deeppink3"`,
-    `"lightblue3"`, `"lightpink4"`, `"snow2"`
+    case-insensitive), such as `"dodgerblue2"`, `"lightskyblue2"`,
+    `"lightyellow1"`, `"maroon2"`, `"slateblue1"`
 
   - One of the pre-registered colours using `register_colour()`
 
