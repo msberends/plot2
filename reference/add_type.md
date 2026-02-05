@@ -335,7 +335,7 @@ p |>
 # use move to move the new layer down
 p |> 
   add_point(size = 5,
-            colour = "lightpink",
+            colour = "lightgrey",
             move = -1)
 
 

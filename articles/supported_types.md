@@ -135,8 +135,6 @@ diamonds |>
         type = "hist")
 #> ℹ Assuming smooth = TRUE for type = "histogram"
 #> ℹ Using binwidth = 841 based on data
-#> ✖ Values set in x.limits are of class numeric, while the values on x are of
-#> class integer
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
