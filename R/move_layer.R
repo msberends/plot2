@@ -18,11 +18,11 @@
 #' @param plot A `ggplot` object.
 #' @param move Number of layers to move `layer` up or down.
 #' @param layer The layer to affect, defaults to top layer.
-#' @importFrom ggplot2 is.ggplot
+#' @importFrom ggplot2 is_ggplot
 #' @export
 move_layer <- function(plot, move = -1, layer = length(plot$layers)) {
   
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   

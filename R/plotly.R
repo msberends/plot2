@@ -20,7 +20,7 @@
 #' In case of [as_plotly()]: arguments to pass on to [`layout()`][plotly::layout()] to change the Plotly layout object
 #' 
 #' In case of [plotly_style()]: arguments to pass on to [`style()`][plotly::style()] to change the Plotly style object
-#' @importFrom ggplot2 is.ggplot
+#' @importFrom ggplot2 is_ggplot
 #' @rdname plotly
 #' @export
 #' @examples 
@@ -34,7 +34,7 @@
 #'   plotly_style(marker.line.color = "red",
 #'                hoverinfo = "y")
 as_plotly <- function(plot, ...) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (!"plotly" %in% rownames(utils::installed.packages())) {
@@ -45,11 +45,11 @@ as_plotly <- function(plot, ...) {
     plotly::layout(...)
 }
 
-#' @importFrom ggplot2 is.ggplot
+#' @importFrom ggplot2 is_ggplot
 #' @rdname plotly
 #' @export
 plotly_style <- function(plot, ...) {
-  if (is.ggplot(plot)) {
+  if (is_ggplot(plot)) {
     plot <- as_plotly(plot)
   }
   plot |> 

@@ -1,0 +1,62 @@
+# ===================================================================== #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
+#                                                                       #
+#  This R package is free software; you can freely use and distribute   #
+#  it for both personal and commercial purposes under the terms of the  #
+#  GNU General Public License version 2.0 (GNU GPL-2), as published by  #
+#  the Free Software Foundation.                                        #
+#                                                                       #
+#  We created this package for both routine data analysis and academic  #
+#  research and it was publicly released in the hope that it will be    #
+#  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
+# ===================================================================== #
+
+on:
+  push:
+    # only run when pushed to the 'main' branch
+    branches: 'main' 
+
+name: check
+
+jobs:
+  check:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (R-${{ matrix.config.r }})
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-latest,  r: 'release'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: false
+          extra-repositories: >
+            https://tidyverse.r-universe.dev
+            https://thomasp85.r-universe.dev
+            https://beta.amr-for-r.org
+            https://r-lib.r-universe.dev
+            https://yihui.r-universe.dev
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+          upgrade: 'TRUE'
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'

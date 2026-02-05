@@ -18,7 +18,7 @@
 #' @param plot A `ggplot2` plot.
 #' @param valid_filename A [logical] to indicate whether the returned value should be a valid filename, defaults to `TRUE`.
 #' @param default The default value, if a plot title is absent.
-#' @importFrom ggplot2 is.ggplot
+#' @importFrom ggplot2 is_ggplot
 #' @export
 #' @examples
 #' without_title <- plot2(mtcars)
@@ -37,7 +37,7 @@ get_plot_title <- function(plot,
                            valid_filename = TRUE,
                            default = NULL) {
   
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   

@@ -989,7 +989,7 @@ plot2_exec <- function(.data,
           tryCatch(y_precalc <- .data |>
                      # no tibbles, data.tables, sf, etc. objects:
                      as.data.frame(stringsAsFactors = FALSE) |> 
-                     summarise(val = {{ y }}),
+                     reframe(val = {{ y }}),
                    error = function(e) stop(format_error(e), call. = FALSE))
         )
         y_precalc <- y_precalc$val # will be NULL if y is missing
@@ -1031,7 +1031,7 @@ plot2_exec <- function(.data,
             tryCatch(.data |> 
                        group_by(across(c(get_x_name(.data), get_facet_name(.data),
                                          matches("_var_(x|facet)")))) |> 
-                       summarise(`_var_y` = {{ y }},
+                       reframe(`_var_y` = {{ y }},
                                  `_var_category` = paste0(y_call, " (", seq_len(length(y_precalc)), ")"),
                                  .groups = "drop"),
                      error = function(e) stop(format_error(e, replace = "_var_y", by = "y"), call. = FALSE))

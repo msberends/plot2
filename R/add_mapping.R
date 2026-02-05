@@ -17,7 +17,7 @@
 #' This function can be used to adjust the mapping of a plot.
 #' @param plot A `ggplot2` plot.
 #' @param ... Arguments passed on to [ggplot2::aes()].
-#' @importFrom ggplot2 is.ggplot aes
+#' @importFrom ggplot2 is_ggplot aes
 #' @export
 #' @examples 
 #' p <- iris |> plot2(Sepal.Length, Sepal.Width, Species, zoom = TRUE)
@@ -25,7 +25,7 @@
 #' 
 #' p |> add_mapping(shape = Species)
 add_mapping <- function(plot, ...) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   plot$mapping <- utils::modifyList(plot$mapping, aes(...))

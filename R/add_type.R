@@ -23,7 +23,7 @@
 #' @param move Number of layers to move the newly added geom down, e.g., `move = 1` will place the newly added geom down 1 layer, thus directly under the highest layer.
 #' @param inherit.aes A [logical] to indicate whether the default aesthetics should be inherited, rather than combining with them.
 #' @param legend.value Text to show in an additional legend that will be created. Since `ggplot2` does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".
-#' @importFrom ggplot2 is.ggplot aes
+#' @importFrom ggplot2 is_ggplot aes
 #' @rdname add_type
 #' @return a `ggplot` object
 #' @export
@@ -155,7 +155,7 @@
 #'          linetype = 2,
 #'          linewidth = 0.5)
 add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move = 0) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
@@ -334,7 +334,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 #' * [`geom_line()`][ggplot2::geom_line()] in all other cases.
 #' @export
 add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
@@ -398,7 +398,7 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
 #' @importFrom ggplot2 geom_point aes scale_shape_manual
 #' @export
 add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), size, shape, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
@@ -443,7 +443,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
 #' @importFrom ggplot2 geom_line aes geom_col scale_linewidth_manual
 #' @export
 add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), colour_fill, width, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
@@ -494,7 +494,7 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 #' The function [add_errorbar()] only adds error bars to the `y` values, see *Examples*.
 #' @export
 add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggplot2"), width = 0.5, ..., inherit.aes = NULL, move = 0) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
@@ -553,10 +553,10 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
 
 #' @rdname add_type
 #' @inheritParams ggplot2::geom_smooth
-#' @importFrom ggplot2 is.ggplot geom_line scale_linetype_manual
+#' @importFrom ggplot2 is_ggplot geom_line scale_linetype_manual
 #' @export
 add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, formula, method, se, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
@@ -619,7 +619,7 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param datalabels.colour,datalabels.size,datalabels.angle,datalabels.font properties of `datalabels`
 #' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
 #' @importFrom dplyr mutate
-#' @importFrom ggplot2 geom_sf geom_sf_text aes is.ggplot
+#' @importFrom ggplot2 geom_sf geom_sf_text aes is_ggplot
 #' @export
 add_sf <- function(plot,
                    sf_data,
@@ -643,7 +643,7 @@ add_sf <- function(plot,
   rlang::check_installed("sf")
   loadNamespace("sf")
   
-  if (!is.ggplot(plot)) {
+  if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   if (!"geometry" %in% colnames(plot$data)) {
