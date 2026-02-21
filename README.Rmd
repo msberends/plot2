@@ -15,35 +15,37 @@ knitr::opts_chunk$set(
   out.width = "100%",
   dpi = 100
 )
-options(plot2.silent = FALSE)
+options(plot2.silent = FALSE,
+        plot2.colour = NULL,
+        plot2.colour_font_secondary = NULL)
 ```
 
 # `plot2`: Simplified and Enhanced Data Visualisation in R
 
-`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by taking away most of the work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require a lot of typing when plotting with `ggplot2`. It even renders pre-processing steps in, e.g., `dplyr`, `tidyr` and `forcats` largely superfluous. This package allows you to focus on the insights and stories your data can tell, rather than on the intricate details of plot construction.
+`plot2` is a simple yet powerful extension of `ggplot2`, designed to streamline the process of creating high-quality data visualisations in R by removing most of the manual work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require substantial code when plotting with `ggplot2`. It even renders pre-processing steps in, for example, `dplyr`, `tidyr`, and `forcats` largely superfluous. This package allows you to focus on the insights and stories your data can tell, rather than the intricate details of plot construction.
 
-Where `ggplot2` usage involves writing many different _functions_ (such as `ggplot()`, `aes()`, `geom_col()`, `facet_wrap()`, `theme()`, `scale_y_continuous()`, etc.), `plot2` usage only involves filling in required _arguments_ of a single function.
+Where `ggplot2` involves calling many different _functions_ such as `ggplot()`, `aes()`, `geom_col()`, `facet_wrap()`, `theme()`, and `scale_y_continuous()`, `plot2` only requires filling in the necessary _arguments_ of a single function.
 
-> For a **comprehensive guide to using `plot2`**, including advanced features and customisation options, please [see the full vignette here](https://msberends.github.io/plot2/articles/plot2.html).
+> For a **comprehensive guide to using `plot2`**, including advanced features and customisation options, please see [the full vignette here](https://msberends.github.io/plot2/articles/plot2.html).
 
 ## Key Features
 
-- **Plotting With As Few Lines As Possible:** no need to type `ggplot()`, `aes()`, `geom_col()`, `facet_wrap()`, `theme()`, or `scale_y_continuous()` anymore, just one `plot2()` call will suffice.
-- **Automatic Plot Selection:** `plot2` automatically chooses the best plot type based on your data, saving you time and effort.
-- **In-line Data Transformations:** Eliminate the need for manual pre-processing steps e.g. in `dplyr` and `tidyr`, by performing data transformations directly within the plotting function, even for axis and plot titles.
+- **Plotting with as Few Lines as Possible:** No need to type `ggplot()`, `aes()`, `geom_col()`, `facet_wrap()`, `theme()`, or `scale_y_continuous()`. A single `plot2()` call is sufficient.
+- **Automatic Plot Selection:** `plot2` automatically chooses the most appropriate plot type based on your data, saving time and effort.
+- **In-line Data Transformations:** Eliminate manual pre-processing steps, for example in `dplyr` and `tidyr`, by performing data transformations directly within the plotting function, including axis and plot titles.
 - **Enhanced Sorting and Faceting:** Easily sort and facet your data with simple arguments, streamlining the creation of complex multi-panel plots.
-- **New Clean Theme:** Includes `theme_minimal2()`, a new minimalist theme based on `theme_minimal()` that is further optimised for clear and professional outputs, therefore perfect for PDF publications, scientific manuscripts, and presentations.
-- **Seamless Integration with ggplot2:** Retain all the power and flexibility of `ggplot2` while benefiting from `plot2`’s streamlined interface.
+- **New Clean Theme:** Includes `theme_minimal2()`, a minimalist theme based on `theme_minimal()`, further optimised for clear and professional output, making it well suited to PDF publications, scientific manuscripts, and presentations.
+- **Seamless Integration with ggplot2:** Retain the full power and flexibility of `ggplot2` while benefiting from `plot2`’s streamlined interface.
 
 ## Philosophy
 
-`ggplot2` is a versatile tool that has become a cornerstone of data visualisation in R, giving users unparalleled control over their plots. However, with this flexibility often comes the need for repetitive and verbose code, especially for routine tasks such as setting axis labels, choosing plot types, or transforming data.
+`ggplot2` is a versatile tool that has become a cornerstone of data visualisation in R, providing users with substantial control over their plots. However, this flexibility often results in repetitive and verbose code, particularly for routine tasks such as setting axis labels, choosing plot types, or transforming data.
 
-`plot2` is designed to complement `ggplot2` by offering a more streamlined and intuitive interface. It simplifies the process of creating plots by automatically handling many of the details, without sacrificing the flexibility and power that `ggplot2` provides. Whether you're quickly exploring data or preparing a polished visualisation for publication, `plot2` helps you get there faster with less code.
+`plot2` complements `ggplot2` by offering a more streamlined and intuitive interface. It simplifies plot creation by automatically handling many implementation details, without sacrificing flexibility or expressive power. Whether you are exploring data or preparing a publication-ready visualisation, `plot2` enables you to work more efficiently with less code.
 
 ## Installation
 
-You can install the latest version of `plot2` here:
+Install the latest version of `plot2` as follows:
 
 ```{r, eval = FALSE}
 install.packages("plot2",
@@ -57,48 +59,46 @@ remotes::install_github("msberends/plot2")
 
 ## Examples
 
-> For **all supported plot types**, please [see our plot type overview here](https://msberends.github.io/plot2/articles/supported_types.html).
+> For **all supported plot types**, see the overview: https://msberends.github.io/plot2/articles/supported_types.html.
 
-Here’s how easy it is to get started with `plot2`:
+Here is a minimal example to get started with `plot2`:
 
 ```{r}
 library(plot2)
 
 head(iris)
 
-# no variables determined, so plot2() will try for itself -
-# the type will be points since the first two variables are numeric
+# No variables specified, so plot2() determines them automatically.
+# The default type will be points because the first two variables are numeric.
 iris |>
   plot2()
 
-# if x and y are set, no additional mapping will be set:
+# If x and y are specified, no additional mapping is set:
 iris |> 
   plot2(Sepal.Width, Sepal.Length)
 iris |> 
   plot2(Species, Sepal.Length)
 
-# the arguments are in this order: x, y, category, facet
+# Arguments are in the order: x, y, category, facet
 iris |> 
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species)
 
 iris |> 
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-        colour = "viridis") # set the viridis colours
-# set your own colours
+        colour = "viridis")
 iris |> 
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
         colour = c("white", "red", "black"))
 
-# y can also be multiple (named) columns
+# y can contain multiple named columns
 iris |> 
   plot2(x = Sepal.Length,
         y = c(Length = Petal.Length, Width = Petal.Width),
         category.title = "Petal property")
 iris |>
-  # with included selection helpers such as where(), starts_with(), etc.:
   plot2(x = Species, y = where(is.double))
   
-# the category type can be one or more aesthetics
+# The category type can consist of one or more aesthetics
 iris |>
   plot2(zoom = TRUE,
         category.type = c("colour", "shape"),
@@ -109,7 +109,7 @@ iris |>
         category.type = c("colour", "size"),
         colour = "viridis")
 
-# easily add a smooth
+# Easily add smoothing
 iris |>
   plot2(zoom = TRUE,
         smooth = TRUE)
@@ -118,18 +118,17 @@ iris |>
         smooth = TRUE,
         smooth.method = "lm")
 
-# support for secondary Y-axis
+# Support for a secondary y-axis
 mtcars |>
   plot2(x = mpg,
         y = hp,
         y_secondary = disp ^ 2, 
         y_secondary.scientific = TRUE,
-        title = "Secondary Y-axis sets colour to the axis titles")
-
+        title = "Secondary y-axis sets colour to the axis titles")
 
 admitted_patients
 
-# the arguments are in this order: x, y, category, facet
+# Arguments are in the order: x, y, category, facet
 admitted_patients |>
   plot2(hospital, age)
 
@@ -139,7 +138,7 @@ admitted_patients |>
 admitted_patients |>
   plot2(hospital, age, gender, ward)
   
-# or use any function for y
+# Use any function for y
 admitted_patients |>
   plot2(hospital, median(age), gender, ward)
 admitted_patients |>
@@ -156,7 +155,7 @@ admitted_patients |>
 admitted_patients |>
   plot2(age, type = "hist")
 
-# even titles support calculations, including support for {glue}
+# Titles can include calculations and support {glue}
 admitted_patients |>
   plot2(age, type = "hist",
         title = paste("Based on n =", n_distinct(patient_id), "patients"),
@@ -164,8 +163,8 @@ admitted_patients |>
         caption = glue::glue("From {n_distinct(hospital)} hospitals"),
         x.title = paste("Age ranging from", paste(range(age), collapse = " to ")))
  
-# the default type is column, datalabels are automatically
-# set in non-continuous types:
+# The default type is column; data labels are automatically
+# set for non-continuous types:
 admitted_patients |> 
   plot2(hospital, n(), gender)
   
@@ -177,11 +176,11 @@ admitted_patients |>
   plot2(hospital, n(), gender,
         stacked_fill = TRUE)
 
-# two categories might benefit from a dumbbell plot:
+# Two categories may benefit from a dumbbell plot:
 admitted_patients |> 
   plot2(hospital, median(age), gender, type = "dumbbell")
  
-# sort on any direction:
+# Sort in any direction:
 admitted_patients |> 
   plot2(hospital, n(), gender,
         x.sort = "freq-asc",
@@ -189,16 +188,17 @@ admitted_patients |>
 
 admitted_patients |> 
   plot2(hospital, n(), gender,
-        x.sort = c("B", "D", "A"), # missing values ("C") will be added
+        x.sort = c("B", "D", "A"),
         category.sort = "alpha-desc",
         stacked = TRUE)
         
-# support for Sankey plots
-Titanic |> # a table from base R
+# Support for Sankey plots
+Titanic |>
   plot2(x = c(Age, Class, Survived),
         category = Sex,
         type = "sankey")
-# matrix support, such as for cor()
+
+# Matrix support, for example cor()
 correlation_matrix <- cor(mtcars)
 class(correlation_matrix)
 head(correlation_matrix)
@@ -213,7 +213,6 @@ mtcars |>
         category.title = "*r*-value",
         title =  "Correlation matrix")
 
-
 # plot2() supports all S3 extensions available through
 # ggplot2::fortify() and broom::augment(), such as regression models:
 lm(mpg ~ hp, data = mtcars) |> 
@@ -222,10 +221,10 @@ lm(mpg ~ hp, data = mtcars) |>
         smooth = TRUE,
         smooth.method = "lm",
         smooth.formula = "y ~ log(x)",
-        title = "Titles/captions *support* **markdown**",
-        subtitle = "Axis titles contain the square notation: x^2")
+        title = "Titles and captions support markdown",
+        subtitle = "Axis titles contain square notation: x^2")
 
-# sf objects (geographic plots, 'simple features') are also supported
+# sf objects, geographic plots using simple features, are also supported
 netherlands |> 
   plot2()
 netherlands |> 
@@ -234,14 +233,16 @@ netherlands |>
 ```
 
 ```{r, fig.showtext = TRUE}
-# support for any system or Google font
+# Support for any system or Google font
 mtcars |>
   plot2(mpg, hp,
         font = "Rock Salt",
         title = "This plot uses a Google Font")
 ```
 
-Like `plot()`, just pass `x`, `y` in the way you prefer:
+## Ways to input arguments
+
+Like `plot()`, pass `x` and `y` in your preferred style:
 
 ```{r, eval = FALSE}
 plot2(mtcars, mpg, hp)
@@ -250,12 +251,12 @@ mtcars %>% plot2(mpg, hp)
 
 plot2(hp ~ mpg, data = mtcars)
 
-mtcars |> plot2(mpg, hp) # preferred method
+mtcars |> plot2(mpg, hp)
 ```
 
 ## Shiny app
 
-You can your plots interactively as well with the built-in Shiny app. All `plot2` arguments are available in it. In RStudio, there is an addin menu item too.
+You can create plots interactively using the built-in Shiny app. All `plot2` arguments are available within it. In RStudio, an add-in menu item is also provided.
 
 ```{r, eval = FALSE}
 iris |>
@@ -266,13 +267,12 @@ iris |>
 
 ## Getting Involved
 
-We welcome contributions to `plot2`, whether it's through reporting issues, suggesting features, or submitting pull requests. If you're familiar with `ggplot2` and the tidyverse, your insights will be especially valuable as we continue to develop and refine the package.
+Contributions to `plot2` are welcome, including reporting issues, suggesting features, or submitting pull requests. Familiarity with `ggplot2` and the tidyverse is particularly valuable as the package continues to evolve.
 
 ## Previous Iteration
 
-Though only released here in August 2024, this package has had years of development with hundreds of Git commits in an earlier iteration [here](https://github.com/certe-medical-epidemiology/certeplot2).
+Although first released here in August 2024, this package builds on years of development and hundreds of Git commits in an earlier iteration available at https://github.com/certe-medical-epidemiology/certeplot2.
 
 ## License
 
-This project is licensed under the GNU GPL v2.0 License - see the [LICENSE](LICENSE.md) file for details.
-
+This project is licensed under the GNU GPL v2.0 License. See the LICENSE file for details.

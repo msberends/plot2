@@ -16,6 +16,11 @@
 #' 
 #' This Shiny app allows for interactive creation of a `plot2`.
 #' @param data A data set to load. Not strictly required, since all data sets in the global environment will be shown.
+#' @param css_code Additional CSS code to load in the app.
+#' @param logo_path Path to the logo shown in the app. Default to the `plot2` logo. Use `NULL` to not use a logo.
+#' @param pretty_labels A logical to switch to pretty, readable labels, instead of argument names in code style.
+#' @param hide_generated_code A logical to hide generated code.
+#' @param hide_export_buttons A logical to hide export buttons and functionality.
 #' @details
 #' ![Shiny app example](create_interactively.jpg)
 #' @export
@@ -26,7 +31,21 @@
 #' 
 #' iris |> create_interactively()
 #' }
-create_interactively <- function(data = NULL) {
+create_interactively <- function(data = NULL,
+                                 css_code = NULL,
+                                 logo_path = system.file("logo.svg", package = "plot2"),
+                                 pretty_labels = FALSE,
+                                 hide_generated_code = FALSE,
+                                 hide_export_buttons = TRUE) {
+  
+  logo_path <- tryCatch({
+    # might return an error:
+    is.null(logo_path) || (file.exists(logo_path) && grepl("[.](svg|jpg|png|gif)$", logo_path, ignore.case = TRUE))
+    logo_path
+  }, error = function(e) NULL)
+  if (!is.null(logo_path) && !file.exists(logo_path)) {
+    stop("Logo file does not exist or is not of type SVG, JPG, PNG, GIF: ", logo_path, ". Use `logo_path = NULL` to remove the logo.")
+  }
   
   rlang::check_installed("shiny")
   rlang::check_installed("clipr")
@@ -44,7 +63,9 @@ create_interactively <- function(data = NULL) {
   }
   
   # in server or before shiny::runGadget()
-  shiny::addResourcePath("plot2res", system.file(package = "plot2"))
+  if (!is.null(logo_path)) {
+    shiny::addResourcePath("plot2res", dirname(logo_path))
+  }
   
   # Collect datasets
   plot2_datasets <- as.character(data(package = "plot2")$results[, "Item"])
@@ -72,7 +93,7 @@ create_interactively <- function(data = NULL) {
   
   # Ensure some defaults are always there
   base_datasets <- c("iris", "mtcars", "Titanic")
-
+  
   globalenv_labels <- stats::setNames(globalenv_datasets,
                                       vapply(FUN.VALUE = character(1),
                                              globalenv_datasets,
@@ -112,47 +133,47 @@ create_interactively <- function(data = NULL) {
   # grab formals from plot2
   main_args <- plot2_formals[names(plot2_formals) %in% c("colour", "colour_fill", "stacked", "stacked_fill")]
   main_inputs <- lapply(names(main_args), function(nm) {
-    make_input(nm, main_args[[nm]])
+    make_input(nm, main_args[[nm]], pretty_labels)
   })
   x_args <- plot2_formals[grep("^x\\.", names(plot2_formals))]
   x_inputs <- lapply(names(x_args), function(nm) {
-    make_input(nm, x_args[[nm]])
+    make_input(nm, x_args[[nm]], pretty_labels)
   })
   y_args <- plot2_formals[grep("^y\\.", names(plot2_formals))]
   y_inputs <- lapply(names(y_args), function(nm) {
-    make_input(nm, y_args[[nm]])
+    make_input(nm, y_args[[nm]], pretty_labels)
   })
   category_args <- plot2_formals[grep("^(category\\.|category.type)", names(plot2_formals))]
   category_inputs <- lapply(names(category_args), function(nm) {
-    make_input(nm, category_args[[nm]])
+    make_input(nm, category_args[[nm]], pretty_labels)
   })
   facet_args <- plot2_formals[grep("^facet\\.", names(plot2_formals))]
   facet_inputs <- lapply(names(facet_args), function(nm) {
-    make_input(nm, facet_args[[nm]])
+    make_input(nm, facet_args[[nm]], pretty_labels)
   })
   datalabels_args <- plot2_formals[grep("^datalabels", names(plot2_formals))]
   datalabels_inputs <- lapply(names(datalabels_args), function(nm) {
-    make_input(nm, datalabels_args[[nm]])
+    make_input(nm, datalabels_args[[nm]], pretty_labels)
   })
   legend_args <- plot2_formals[grep("^legend\\.", names(plot2_formals))]
   legend_args <- legend_args[names(legend_args) != "legend.title"]
   legend_inputs <- lapply(names(legend_args), function(nm) {
-    make_input(nm, legend_args[[nm]])
+    make_input(nm, legend_args[[nm]], pretty_labels)
   })
   title_args <- plot2_formals[grep("(title|subtitle|tag|caption)", names(plot2_formals))]
   title_args <- title_args[!names(title_args) %in% c(names(x_args), names(y_args), names(category_args), names(facet_args))]
   title_args <- title_args[!names(title_args) %like% "legend|y_secondary"]
   title_inputs <- lapply(names(title_args), function(nm) {
-    make_input(nm, title_args[[nm]])
+    make_input(nm, title_args[[nm]], pretty_labels)
   })
   smooth_args <- plot2_formals[grep("^smooth", names(plot2_formals))]
   smooth_inputs <- lapply(names(smooth_args), function(nm) {
-    make_input(nm, smooth_args[[nm]])
+    make_input(nm, smooth_args[[nm]], pretty_labels)
   })
   other_args <- plot2_formals[!names(plot2_formals) %in% c(".data", "x", "y", "category", "facet", "type", "data", "...", "print", names(main_args), names(x_args), names(y_args), names(category_args), names(facet_args), names(datalabels_args), names(legend_args), names(title_args), names(smooth_args))]
   other_args <- other_args[!names(other_args) %like% "y_secondary|legend[.]title"]
   other_inputs <- lapply(names(other_args), function(nm) {
-    make_input(nm, other_args[[nm]])
+    make_input(nm, other_args[[nm]], pretty_labels)
   })
   
   ui <- shiny::fluidPage(
@@ -166,7 +187,7 @@ create_interactively <- function(data = NULL) {
       ".sidebarLayout { height: 100%; display: flex; }",
       ".sidebarPanel { height: 100%; overflow-y: auto; }",
       ".mainPanel, .well { height: 100%; overflow-y: auto; }",
-      "#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }"),
+      "#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }",
       "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
       "#error_msg { color: red; }",
       ".container-fluid { overflow-x: hidden; padding-left: 0; }",
@@ -180,16 +201,43 @@ create_interactively <- function(data = NULL) {
       "#colour .selectize-dropdown-content, #colour_fill .selectize-dropdown-content { max-height: 200px; }",
       ".copy-container { position: relative; }",
       "#copy_btn { position: absolute; top: 5px; right: 5px; background-color: var(--bs-primary); border-color: var(--bs-primary); }",
-      ".settings * { margin-bottom: 2px; }",
+      ifelse(pretty_labels, "", ".settings * { margin-bottom: 2px; }"),
       ".bslib-input-switch input { width: 3.5em !important; height: 30px !important; }",
       ".bslib-input-switch, .bslib-input-switch input { cursor: pointer; }",
-      "code, .code, pre, .pre { font-family: FiraCode, \"Fira Code\", SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; }"),
+      "hr { border-top: 0.5px solid; margin-left: 25%; margin-right: 25%; }",
+      "code, .code, pre, .pre { font-family: FiraCode, \"Fira Code\", SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; }",
+      ".link-copyright { position: absolute; left: 0px; bottom: 0px; margin-left: 5px; margin-bottom: 5px; font-size: 10px; }",
+      ".export-right { border-left: 1px solid var(--bs-primary); }",
+      "#export_pdf, #export_svg, #export_png, #export_jpg { width: 49% ; }",
+      # "#export button { margin-left: 10px; }",
+      ifelse(!is.null(css_code), paste0(css_code, collapse = "\n"), ""),
+      ifelse(hide_generated_code, ".generated-code { display: none; }", ""),
+      ifelse(hide_export_buttons, "#export, .show-export { display: none; }", ""))),
     
     shiny::sidebarLayout(
       shiny::sidebarPanel(
         width = 5,
         id = "sidebar",
         shinyjs::useShinyjs(),
+        
+        shiny::p(
+          class = "link-copyright",
+          shiny::HTML(paste0(
+            "From ",
+            shiny::a(
+              href = "https://msberends.github.io/plot2",
+              target = "_blank",
+              shiny::HTML(paste0("<code>plot2</code> v", utils::packageVersion("plot2")))
+            ),
+            ". Open source, ",
+            shiny::a(
+              href = "https://msberends.github.io/plot2/LICENSE",
+              target = "_blank",
+              "licenced"
+            ),
+            " under GNU GPL v2.0."
+          ))
+        ),
         
         shiny::tabsetPanel(
           type = "tabs",
@@ -252,11 +300,11 @@ create_interactively <- function(data = NULL) {
                                             label = "Y-axis transformation:",
                                             choiceNames = list(
                                               "None",
-                                              shiny::HTML("<code>n_distinct()</code>"),
-                                              shiny::HTML("<code>min()</code>"),
-                                              shiny::HTML("<code>max()</code>"),
-                                              shiny::HTML("<code>mean()</code>"),
-                                              shiny::HTML("<code>median()</code>")
+                                              shiny::HTML(ifelse(pretty_labels, "Unique count", "<code>n_distinct()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Minimum", "<code>min()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Maximum", "<code>max()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Mean", "<code>mean()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Median", "<code>median()</code>"))
                                             ),
                                             choiceValues = c(
                                               "None",
@@ -307,19 +355,65 @@ create_interactively <- function(data = NULL) {
         width = 7,
         shiny::br(),
         shiny::fluidRow(shiny::plotOutput("plot")),
-        shiny::uiOutput("plot2_msgs"),
-        shiny::br(),
-        shiny::p("Generated code:"),
         shiny::tags$div(
-          class = "copy-container",
-          shiny::actionButton("copy_btn", "Copy", class = "copy-button"),
-          shiny::verbatimTextOutput("code")),
-        shiny::textOutput("error_msg"),
-        shiny::br(),
-        shiny::div(
-          id = "logo-container",
-          shiny::img(src = "plot2res/logo.svg", height = "100px")
+          class = "generated-code",
+          shiny::hr(),
+          shiny::p("Generated code:"),
+          shiny::tags$div(
+            class = "copy-container",
+            shiny::actionButton("copy_btn", "Copy", class = "copy-button"),
+            shiny::verbatimTextOutput("code"),
+            shiny::uiOutput("plot2_msgs")
+          ),
         ),
+        shiny::textOutput("error_msg"),
+        shiny::br(class = "show-export"),
+        shiny::actionLink("showexport", "Export plot >", class = "show-export"),
+        shiny::tags$div(
+          id = "export",
+          shiny::br(),
+          # shiny::p("Export as:"),
+          shiny::fluidRow(
+            # fields
+            shiny::column(width = 5,
+                          class = "export-left",
+                          shiny::p(shiny::strong("Vector graphic (scalable)")),
+                          shiny::fluidRow(
+                            shiny::column(width = 6, shiny::numericInput("export_height_cm", "Height (cm)", value = 10, min = 1, width = "100%")),
+                            shiny::column(width = 6, shiny::numericInput("export_width_cm", "Width (cm)", value = 15, min = 1, width = "100%")),
+                          ),
+            ),
+            shiny::column(width = 7,
+                          class = "export-right",
+                          shiny::p(shiny::strong("Raster graphic")),
+                          shiny::fluidRow(
+                            shiny::column(width = 4, shiny::numericInput("export_height_px", "Height (px)", value = 500, min = 1, width = "100%")),
+                            shiny::column(width = 4, shiny::numericInput("export_width_px", "Width (px)", value = 750, min = 1, width = "100%")),
+                            shiny::column(width = 4, shiny::numericInput("export_dpi", "DPI", value = 100, min = 1, width = "100%")),
+                          ),
+            ),
+          ),
+          shiny::fluidRow(
+            # buttons
+            shiny::column(width = 5,
+                          class = "export-left",
+                          shiny::downloadButton("export_pdf", "Export as PDF", class = "btn-primary", icon = NULL, width = "49.5%"),
+                          shiny::downloadButton("export_svg", "Export as SVG", class = "btn-primary", icon = NULL, width = "49.5%"),
+            ),
+            shiny::column(width = 7,
+                          class = "export-right",
+                          shiny::downloadButton("export_png", "Export as PNG", class = "btn-primary", icon = NULL, width = "49.5%"),
+                          shiny::downloadButton("export_jpg", "Export as JPG", class = "btn-primary", icon = NULL, width = "49.5%"),
+            ),
+          ),
+        ),
+        if (!is.null(logo_path)) { 
+          shiny::div(
+            id = "logo-container",
+            shiny::img(src = file.path("plot2res", basename(logo_path)), height = "100px")
+          )
+        },
+        shiny::br(),
         shiny::actionLink("showdata", "Show data >"),
         shiny::br(),
         shiny::br(),
@@ -330,6 +424,7 @@ create_interactively <- function(data = NULL) {
   
   server <- function(input, output, session) {
     shinyjs::hide("datatable")
+    shinyjs::hide("export")
     
     imported_data <- shiny::reactiveVal(NULL)
     
@@ -393,7 +488,7 @@ create_interactively <- function(data = NULL) {
       
       shiny::removeModal()
     })
-
+    
     shiny::observe({
       d <- switch(input$dataset,
                   "imported" = imported_data(),
@@ -418,7 +513,6 @@ create_interactively <- function(data = NULL) {
           function(type) {
             var colors = {
               'dbl': 'var(--bs-blue)',
-              ',oc': 'var(--bs-blue)',
               'int': 'var(--bs-cyan)',
               'chr': 'var(--bs-red)',
               'ab': 'var(--bs-red)',
@@ -501,7 +595,6 @@ create_interactively <- function(data = NULL) {
       }
     })
     
-    
     call_string <- shiny::reactive({
       plot2_args <- setdiff(names(formals(plot2)), c("...", ".data", "data"))
       arg_names  <- intersect(changed_inputs$names, plot2_args)
@@ -572,7 +665,9 @@ create_interactively <- function(data = NULL) {
       }
     })
     
-    output$code <- shiny::renderText(call_string())
+    output$code <- shiny::renderText({
+      call_string()
+    })
     
     output$plot <- shiny::renderPlot({
       msgs <- character()
@@ -598,6 +693,8 @@ create_interactively <- function(data = NULL) {
         }
       )
       
+      plot2_env$last_shiny_plot <- p
+      
       output$plot2_msgs <- shiny::renderUI({
         if (length(msgs) > 0) {
           shiny::tagList(lapply(msgs, function(m) {
@@ -615,6 +712,61 @@ create_interactively <- function(data = NULL) {
       shiny::showNotification("Code copied to clipboard.", duration = 2, closeButton = FALSE, type = "message")
     })
     
+    output$export_pdf <- shiny::downloadHandler(
+      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".pdf"),
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = plot2_env$last_shiny_plot,
+                        device = "pdf",
+                        units = "cm",
+                        width = input$export_width_cm,
+                        height = input$export_height_cm)
+                        
+      }
+    )
+    output$export_svg <- shiny::downloadHandler(
+      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".svg"),
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = plot2_env$last_shiny_plot,
+                        device = "svg",
+                        units = "cm",
+                        width = input$export_width_cm,
+                        height = input$export_height_cm)
+        
+      }
+    )
+    output$export_png <- shiny::downloadHandler(
+      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".png"),
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = plot2_env$last_shiny_plot,
+                        device = "png",
+                        units = "px",
+                        dpi = input$export_dpi,
+                        width = input$export_width_px,
+                        height = input$export_height_px)
+        
+      }
+    )
+    output$export_jpg <- shiny::downloadHandler(
+      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".jpg"),
+      content = function(file) {
+        ggplot2::ggsave(file,
+                        plot = plot2_env$last_shiny_plot,
+                        device = "jpg",
+                        units = "px",
+                        dpi = input$export_dpi,
+                        width = input$export_width_px,
+                        height = input$export_height_px)
+        
+      }
+    )
+    
+    
+    shiny::observeEvent(input$showexport, {
+      shinyjs::toggle("export")
+    })
     shiny::observeEvent(input$showdata, {
       shinyjs::toggle("datatable")
     })
@@ -643,7 +795,7 @@ create_interactively <- function(data = NULL) {
 }
 
 # This function creates all the elements and makes sure they have sensible (default) values
-make_input <- function(name, default) {
+make_input <- function(name, default, pretty_labels) {
   if (is.call(default)) {
     deparsed <- deparse(default)
     default <- tryCatch(eval(default), error = function(e) NULL)
@@ -651,15 +803,16 @@ make_input <- function(name, default) {
       default <- deparsed
     }
   }
+  
   if (name %like% "^colour" && identical(default, "ggplot2")) {
     default <- NULL
   }
   
   if ((is.logical(default) && !is.na(default) && name %unlike% "title$") || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)" || name == "smooth") {
     if (is.null(default)) default <- FALSE
-    create_field(bslib::input_switch(name, NULL, value = default), name, default)
+    create_field(bslib::input_switch(name, NULL, value = default), name, default, pretty_labels)
   } else if (is.numeric(default) && is.null(default)) {
-    create_field(shiny::numericInput(name, NULL, value = default, width = "100%"), name, default)
+    create_field(shiny::numericInput(name, NULL, value = default, width = "100%"), name, default, pretty_labels)
   } else if (name %in% c("colour", "colour_fill")) {
     if (is.null(default)) default <- "ggplot2"
     registered <- names(Filter(function(x) length(x) > 1, plot2_env$reg_cols))
@@ -670,56 +823,73 @@ make_input <- function(name, default) {
                                        choices = list("plot2 (registered colour sets)" = registered,
                                                       "viridis" = viridisLite_colours,
                                                       "Base R" = grDevices::palette.pals()),
-                                       width = "100%", options = list(create = TRUE)), name, default, class = "short")
+                                       width = "100%", options = list(create = TRUE)), name, default, pretty_labels, class = "short")
   } else if (name %like% "angle$") {
     if (is.null(default) || is.infinite(default)) default <- 0
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 360, step = 45, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 360, step = 45, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else if (name %like% "(linewidth|size|width|text_factor)$") {
     if (is.null(default) || is.infinite(default)) default <- 1
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 10, step = 0.5, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 10, step = 0.5, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else if (name %like% "(nrow)$") {
     if (is.null(default) || is.infinite(default)) default <- 1
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 1, max = 10, step = 1, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 1, max = 10, step = 1, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else if (name %like% "alpha$") {
     if (is.null(default) || is.infinite(default)) default <- 0.4
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 1, step = 0.05, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 1, step = 0.05, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else if (name %like% "[.]level$") {
     if (is.null(default) || is.infinite(default)) default <- 0
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 0.75, max = 1, step = 0.005, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 0.75, max = 1, step = 0.005, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else if (name == "category.type") {
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), multiple = TRUE, width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), multiple = TRUE, width = "100%"), name, default, pretty_labels)
   } else if (name %like% "linetype$") {
     if (is.null(default) || is.infinite(default)) default <- 1
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("1 (solid)" = 1, "2 (dashed)" = 2, "3 (dotted)" = 3, "4 (dotdash)" = 4, "5 (longdash)" = 5, "6 (twodash)" = 6), width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("1 (solid)" = 1, "2 (dashed)" = 2, "3 (dotted)" = 3, "4 (dotdash)" = 4, "5 (longdash)" = 5, "6 (twodash)" = 6), width = "100%"), name, default, pretty_labels)
   } else if (name %like% "(max_items|n_breaks)$") {
     if (is.null(default) || is.infinite(default)) default <- 0
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 25, step = 1, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = 25, step = 1, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else if (name %like% "[.]transform$") {
     options_transform <- sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))]))
     names(options_transform) <- options_transform
     names(options_transform)[options_transform == "identity"] <- "None (identity)"
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = options_transform, width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = options_transform, width = "100%"), name, default, pretty_labels)
   } else if (name %like% "[.]position$") {
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("Top" = "top", "Right" = "right", "Bottom" = "bottom", "Left" = "left", "None" = "none"), width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("Top" = "top", "Right" = "right", "Bottom" = "bottom", "Left" = "left", "None" = "none"), width = "100%"), name, default, pretty_labels)
   } else if (name %like% "[.]sort$") {
-    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("Ascending A-Z" = "asc", "Descending A-Z" = "desc", "Ascending count" = "freq-asc", "Descending count" = "freq-desc", "Order of data" = "inorder"), width = "100%"), name, default)
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("Ascending A-Z" = "asc", "Descending A-Z" = "desc", "Ascending count" = "freq-asc", "Descending count" = "freq-desc", "Order of data" = "inorder"), width = "100%"), name, default, pretty_labels)
   } else if (is.numeric(default) && length(default) == 1) {
-    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = default * 3, width = "100%"), name, default, slider = TRUE)
+    create_field(shiny::sliderInput(name, NULL, value = default, min = 0, max = default * 3, width = "100%"), name, default, pretty_labels, slider = TRUE)
   } else {
-    create_field(shiny::textInput(name, NULL, value = if (!is.symbol(default)) as.character(default) else "", width = "100%"), name, default)
+    create_field(shiny::textInput(name, NULL, value = if (!is.symbol(default)) as.character(default) else "", width = "100%"), name, default, pretty_labels, pretty_labels)
   }
 }
 
-create_field <- function(inputTag, name, default, slider = FALSE, class = NULL) {
+create_field <- function(inputTag, name, default, pretty_labels, slider = FALSE, class = NULL) {
   # store to list
   plot2_env$shiny_defaults[[name]] <- default
+  
+  if (pretty_labels == TRUE) {
+    name <- gsub("_", " ", name)
+    name <- gsub("^(x|y|category|facet|legend|y_secondary|datalabels|smooth|title|subtitle)[.]", "", name)
+    name <- gsub("(lbl|txt)", "text", name)
+    name <- gsub("^n([^aeiou][a-z]+)", "number of \\1s", name)
+    name <- gsub("na.rm", "Remove missing", name, fixed = TRUE)
+    name <- gsub("na.replace", "Replace missing", name, fixed = TRUE)
+    name <- gsub(" breakss", "breaks", name)
+    name <- gsub("^se$", "Standard Error", name)
+    name <- gsub("^mic$", "MIC", name)
+    name <- gsub("^sep$", "Separator character", name)
+    name <- gsub("sankey", "Sankey:", name)
+    name <- gsub(".", " ", name, fixed = TRUE)
+    substr(name, 1, 1) <- toupper(substr(name, 1, 1))
+  }
+  
   # create element
   shiny::div(
     class = class,
     style = ifelse(slider, 
                    "display: flex; align-items: center; margin-bottom: -10px;",
                    "display: flex; align-items: center; margin-bottom: 4px;"),
-    shiny::tags$label(shiny::code(name),
+    shiny::tags$label(if (pretty_labels) name else shiny::code(name),
                       style = ifelse(slider,
                                      "flex: 0 0 50%; margin: 0; padding-right: 4px; margin-bottom: 10px;",
                                      "flex: 0 0 50%; margin: 0; padding-right: 4px;")),
