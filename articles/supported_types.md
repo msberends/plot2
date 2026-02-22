@@ -194,21 +194,6 @@ admitted_patients |> # from this plot2 package
 
 ![](supported_types_files/figure-html/unnamed-chunk-11-2.png)
 
-## Dumbbell
-
-Used for highlighting changes or differences between paired values.
-
-``` r
-diamonds |>
-  dplyr::filter(cut %in% c("Fair", "Very Good")) |>
-  plot2(x = cut(carat, 6),
-        y = median(price),
-        category = cut,
-        type = "dumbbell")
-```
-
-![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
-
 ## Sankey
 
 Used for depicting flows or transitions between connected stages.
@@ -222,7 +207,40 @@ Titanic |> # from base R
 #> ! Input class 'table' was transformed using `as.data.frame()`
 ```
 
+![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
+
+## Spider
+
+Used for comparing multivariate values across categorical axes arranged
+radially, enabling pattern recognition and relative magnitude assessment
+between groups.
+
+``` r
+admitted_patients |>
+  plot2(x = hospital, 
+        y = n_distinct(patient_id),
+        category = gender,
+        type = "spider",
+        y.limits = c(0, 50))
+#> ℹ Assuming y.expand = 0 since y.limits is set
+#> ℹ Using alpha = 0 for type = "spider"
+```
+
 ![](supported_types_files/figure-html/unnamed-chunk-13-1.png)
+
+``` r
+diamonds |>
+  plot2(x = cut,
+        y = mean(price),
+        category = color,
+        type = "spider",
+        category.title = "Colour",
+        legend.position = "right",
+        y.labels = function(x) paste0("$", x))
+#> ℹ Using alpha = 0 for type = "spider"
+```
+
+![](supported_types_files/figure-html/unnamed-chunk-13-2.png)
 
 ## UpSet
 
@@ -250,3 +268,18 @@ movies |>
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-14-2.png)
+
+## Dumbbell
+
+Used for highlighting changes or differences between paired values.
+
+``` r
+diamonds |>
+  dplyr::filter(cut %in% c("Fair", "Very Good")) |>
+  plot2(x = cut(carat, 6),
+        y = median(price),
+        category = cut,
+        type = "dumbbell")
+```
+
+![](supported_types_files/figure-html/unnamed-chunk-15-1.png)

@@ -316,6 +316,11 @@ plot2(
       plots can also be flipped using `horizontal = TRUE`, and the label
       angles can be set with `datalabels.angle`.
 
+    - `"spider"` (short: `"sp"`) creates a [Spider
+      plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel
+      [`CoordSpider`](https://msberends.github.io/plot2/reference/coord_spider.md)
+      coordinate system.
+
   - Left blank. In this case, the type will be determined automatically:
     `"boxplot"` if there is no X-axis or if the length of unique values
     per X-axis item is at least 3, `"point"` if both the y and x axes
@@ -1331,11 +1336,24 @@ netherlands |>
 #> ℹ Using datalabels = province
 
 
+# spider plots
+ggplot2::diamonds |>
+  plot2(x = cut,
+        y = mean(price),
+        category = color,
+        type = "spider",
+        category.title = "Colour",
+        legend.position = "right",
+        y.labels = function(x) paste0("$", x))
+#> ℹ Using alpha = 0 for type = "spider"
+
+
 # support for any system or Google font
 mtcars |>
   plot2(mpg, hp,
         font = "Rock Salt",
         text_factor = 1.25,
         title = "This plot uses a Google Font")
+#> ℹ Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts
 #> ℹ Using type = "point" since both axes are numeric
 ```

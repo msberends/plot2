@@ -170,9 +170,9 @@ ggplot(df, aes(metric, value, group = 1)) +
 ggplot(df, aes(metric, value, group = 1)) +
     geom_polygon(colour = "red", fill = NA, linewidth = 1) +
     coord_spider(inner.radius = 0.25,
-                 outer.radius = 0.75,
                  r_label_pad_mm = 2) +
-    scale_y_continuous(limits = c(0, 80),
+    scale_y_continuous(limits = c(0, 100),
                        breaks = c(0, 25, 50, 75, 100)) +
-    theme(panel.grid.major.y = element_line(colour = "blue"))
+    theme(panel.grid.major.y = element_line(colour = "blue")) +
+    geom_point(colour = "red", size = 3)
 ```

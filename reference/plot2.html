@@ -11,7 +11,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 
     <a class="navbar-brand me-2" href="../index.html">plot2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.99.0.9027</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -247,6 +247,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <li><p><code>"back-to-back"</code> (short: <code>"b2b"</code>) creates a back-to-back plot, sometimes called a <a href="https://en.wikipedia.org/wiki/Tornado_diagram" class="external-link">Tornado diagram</a>, a <a href="https://en.wikipedia.org/wiki/Tornado_diagram" class="external-link">Butterfly plot</a>, or a <a href="https://en.wikipedia.org/wiki/Population_pyramid" class="external-link">Population Pyramid</a>. It uses <code>facet</code> to distinquish the left and right plots. Therefore, <code>facet</code> must be set to (a column containing) two unique values.</p></li>
 <li><p><code>"upset"</code> or <code>"UpSet"</code> (short: <code>"u"</code>) creates an <a href="https://en.wikipedia.org/wiki/UpSet_plot" class="external-link">UpSet plot</a>, which requires <code>x</code> to contain multiple variables from <code>.data</code> that contain <code>0</code>/<code>1</code> or <code>FALSE</code>/<code>TRUE</code> values. It is also possible to provide <code>y</code>, on which then <code>summarise_function</code> will be applied.</p></li>
 <li><p><code>"sankey"</code> (short: <code>"s"</code>) creates a <a href="https://en.wikipedia.org/wiki/Sankey_diagram" class="external-link">Sankey plot</a> using <code>category</code> for the flows and requires <code>x</code> to contain multiple variables from <code>.data</code>. At default, it also sets <code>x.expand = c(0.05, 0.05)</code> and <code>y.limits = c(NA, NA)</code> and <code>y.expand = c(0.01, 0.01)</code>. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using <code>datalabels.size</code>, <code>datalabels.colour</code>, and <code>datalabels.colour_fill</code>. The transparency of the flows can be set using <code>sankey.alpha</code>, and the width of the nodes can be set using <code>sankey.node_width</code>. Sankey plots can also be flipped using <code>horizontal = TRUE</code>, and the label angles can be set with <code>datalabels.angle</code>.</p></li>
+<li><p><code>"spider"</code> (short: <code>"sp"</code>) creates a <a href="https://en.wikipedia.org/wiki/Spider_chart" class="external-link">Spider plot</a> using our novel <code><a href="coord_spider.html">CoordSpider</a></code> coordinate system.</p></li>
 </ul></li>
 <li><p>Left blank. In this case, the type will be determined automatically: <code>"boxplot"</code> if there is no X-axis or if the length of unique values per X-axis item is at least 3, <code>"point"</code> if both the y and x axes are numeric, and the <a href="https://rdrr.io/r/base/options.html" class="external-link">option</a> <code>"plot2.default_type"</code> otherwise (which defaults to <code>"col"</code>). Use <code>type = "blank"</code> or <code>type = "geom_blank"</code> to <em>not</em> add a geom.</p></li>
 </ul></dd>
@@ -975,14 +976,27 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
 <span class="r-plt img"><img src="plot2-33.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># spider plots</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span></span>
+<span class="r-in"><span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        category <span class="op">=</span> <span class="va">color</span>,</span></span>
+<span class="r-in"><span>        type <span class="op">=</span> <span class="st">"spider"</span>,</span></span>
+<span class="r-in"><span>        category.title <span class="op">=</span> <span class="st">"Colour"</span>,</span></span>
+<span class="r-in"><span>        legend.position <span class="op">=</span> <span class="st">"right"</span>,</span></span>
+<span class="r-in"><span>        y.labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"$"</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">alpha = 0</span> for <span style="color: #0000BB;">type = "spider"</span></span>
+<span class="r-plt img"><img src="plot2-34.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># support for any system or Google font</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>,</span></span>
 <span class="r-in"><span>        font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span></span>
 <span class="r-in"><span>        text_factor <span class="op">=</span> <span class="fl">1.25</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"This plot uses a Google Font"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Rock+Salt</span> from Google Fonts</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
-<span class="r-plt img"><img src="plot2-34.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-35.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
