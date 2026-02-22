@@ -66,6 +66,7 @@
 #'   - `"back-to-back"` (short: `"b2b"`) creates a back-to-back plot, sometimes called a [Tornado diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram), or a [Population Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It uses `facet` to distinquish the left and right plots. Therefore, `facet` must be set to (a column containing) two unique values.
 #'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`, and the label angles can be set with `datalabels.angle`.
+#'   - `"spider"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param y_secondary.type see **`type`**
@@ -379,6 +380,16 @@
 #' netherlands |> 
 #'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
 #'   add_sf(netherlands, colour = "black", colour_fill = NA)
+#' 
+#' # spider plots
+#' ggplot2::diamonds |>
+#'   plot2(x = cut,
+#'         y = mean(price),
+#'         category = color,
+#'         type = "spider",
+#'         category.title = "Colour",
+#'         legend.position = "right",
+#'         y.labels = function(x) paste0("$", x))
 #' 
 #' # support for any system or Google font
 #' mtcars |>
@@ -758,6 +769,7 @@ plot2_exec <- function(.data,
                        ...) {
   dots <- list(...)
   dots_geom <- dots[names(dots) %unlike% "^_(label[.]|misses[.]|sf.column|summarise_fn_name|datalabels.centroid)"]
+  dots_geom <- dots_geom[!names(dots_geom) %in% names(formals(coord_spider))]
   if (length(dots_geom) > 0) {
     plot2_message(ifelse(length(dots_geom) == 1,
                          "This additional argument was given to the geom: ",
@@ -869,9 +881,9 @@ plot2_exec <- function(.data,
       }
       x.title = ""
     }
-    if (type %like% "^(spider|radar)$") {
+    if (type %like% "^(spider|radar|sp)$") {
       type_backup <- "spider"
-      type        <- "line"
+      type <- "polygon"
     }
     if (type %like% "bar") {
       type <- "col"
@@ -1701,80 +1713,10 @@ plot2_exec <- function(.data,
       sankey.remove_axes <- TRUE
       plot2_message("Assuming ", font_blue("sankey.remove_axes = TRUE"))
     }
-  } else if (type_backup == "spider") {
-    axes <- unique(as.character(get_x(df)))
-    n_axes  <- length(axes)
-    if (n_axes < 3L) {
-      stop("`x` must have at least 3 unique values for `type = \"spider\"`", call. = FALSE)
-    }
-    
-    y_min  <- min(0, get_y(df), na.rm = TRUE)
-    y_max  <- max(get_y(df), na.rm = TRUE)
-    if (!is.null(y.limits)) {
-      if (!is.na(y.limits[1])) y_min <- y.limits[1]
-      if (length(y.limits) > 1 && !is.na(y.limits[2])) y_max <- y.limits[2]
-    }
-    y_range <- y_max - y_min
-    
-    # angles: start at top (pi/2), go clockwise
-    angles    <- (pi / 2) - (2 * pi / n_axes) * (seq_len(n_axes) - 1L)
-    angle_map <- stats::setNames(angles, as.character(axes))
-    
-    if (has_category(df)) {
-      cat_vals <- as.character(get_category(df))
-      cat_lvls <- levels(factor(cat_vals))  # respects factor ordering from validate_data()
-    } else {
-      cat_vals <- rep(".value", nrow(df))
-      cat_lvls <- ".value"
-    }
-    
-    poly_df <- do.call(rbind, lapply(cat_lvls, function(cat) {
-      rows  <- df[cat_vals == cat, , drop = FALSE]
-      row_x <- as.character(get_x(rows))
-      row_y <- get_y(rows)
-      r     <- (row_y[match(as.character(axes), row_x)] - y_min) / y_range
-      r[is.na(r)] <- 0
-      ang   <- c(angles, angles[1L])
-      r     <- c(r, r[1L])
-      data.frame(px = r * cos(ang), py = r * sin(ang), .cat = cat,
-                 stringsAsFactors = FALSE)
-    }))
-    
-    # web gridlines (4 rings)
-    grid_r    <- seq(0.25, 1, by = 0.25)
-    grid_df   <- do.call(rbind, lapply(grid_r, function(r) {
-      ang <- c(angles, angles[1L])
-      data.frame(gx = r * cos(ang), gy = r * sin(ang), gr = r,
-                 stringsAsFactors = FALSE)
-    }))
-    
-    
-    # spokes
-    spoke_df <- data.frame(x1 = cos(angles), y1 = sin(angles),
-                           stringsAsFactors = FALSE)
-    
-    # axis labels (slightly outside unit circle)
-    lbl_r  <- 1.15
-    lbl_df <- data.frame(lx = lbl_r * cos(angles), ly = lbl_r * sin(angles),
-                         label = as.character(axes), stringsAsFactors = FALSE)
-    
-    # tick labels on first spoke
-    tick_df <- data.frame(
-      tx    = grid_r * cos(angles[1L]) * 1.04,
-      ty    = grid_r * sin(angles[1L]) * 1.04,
-      label = format(round(y_min + grid_r * y_range, digits = 1),
-                     big.mark = big.mark, decimal.mark = decimal.mark,
-                     scientific = FALSE),
-      stringsAsFactors = FALSE
-    )
-    
-    
-    
-    
-    return(df)
   } else {
     p <- p +
       generate_geom(type = type,
+                    type_backup = type_backup,
                     df = df,
                     stacked = stacked,
                     stacked_fill = stacked_fill,
@@ -1806,6 +1748,7 @@ plot2_exec <- function(.data,
       }
       p <- p +
         generate_geom(type = y_secondary.type,
+                      type_backup = "",
                       df = df,
                       stacked = stacked,
                       stacked_fill = stacked_fill,
@@ -1825,6 +1768,28 @@ plot2_exec <- function(.data,
                       dots_geom = dots_geom,
                       mapping = utils::modifyList(mapping, aes(y = `_var_y_secondary`)))
     }
+  }
+  # check for spider plots
+  if (type_backup == "spider") {
+    if (!has_x(df) || n_distinct(get_x(df)) < 3) {
+      stop("Spider plots require an x-axis with as least 3 unique values.", call. = FALSE)
+    }
+    if (has_facet(df)) {
+      stop("Spider plots do not support facets.", call. = FALSE)
+    }
+    # find suitable arguments
+    allowed <- names(formals(coord_spider))
+    args_given <- dots[names(dots) %in% allowed]
+    if (length(args_given) > 0) {
+      plot2_message(ifelse(length(args_given) == 1,
+                           "This additional argument was given to `coord_spider()`: ",
+                           "These additional arguments were given to `coord_spider()`: "),
+                    paste0(font_blue(names(args_given), collapse = NULL), collapse = font_black(", ")))
+    }
+    if (isFALSE(datalabels)) {
+      args_given$r_labels <- datalabels
+    }
+    p <- p + do.call(coord_spider, args_given)
   }
   
   if (is.null(smooth) && type == "geom_histogram") {
@@ -2278,6 +2243,9 @@ plot2_exec <- function(.data,
     # move the segment one layer down, so geom_point will be on top
     p <- p |> 
       move_layer(layer = length(p$layers), move = -1)
+  }
+  if (type_backup == "spider") {
+    p <- p + theme(axis.title = element_blank())
   }
   
   # restore mapping to original names ----

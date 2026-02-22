@@ -520,13 +520,13 @@ is_empty <- function(x) {
 }
 
 geom_is_continuous <- function(geom) {
-  geom %in% c("geom_boxplot", "geom_violin", "geom_point", "geom_jitter", "geom_beeswarm", "geom_histogram", "geom_density", "geom_sf", "geom_line", "geom_area", "geom_ribbon", "geom_tile", "geom_raster", "geom_rect", "geom_upset", "geom_spider")
+  geom %in% c("geom_boxplot", "geom_violin", "geom_point", "geom_jitter", "geom_beeswarm", "geom_histogram", "geom_density", "geom_sf", "geom_line", "geom_area", "geom_ribbon", "geom_polygon", "geom_tile", "geom_raster", "geom_rect", "geom_upset", "geom_spider")
 }
 geom_is_continuous_x <- function(geom) {
   geom %in% c("geom_histogram", "geom_density")
 }
 geom_is_line_or_area <- function(geom) {
-  geom %in% c("geom_line", "geom_hline", "geom_vline", "geom_path", "geom_qq_line", "geom_linerange", "geom_area", "geom_ribbon", "geom_tile", "geom_raster", "geom_rect")
+  geom %in% c("geom_line", "geom_hline", "geom_vline", "geom_path", "geom_qq_line", "geom_linerange", "geom_area", "geom_ribbon", "geom_tile", "geom_raster", "geom_rect", "geom_polygon")
 }
 geom_has_only_colour <- function(geom) {
   geom %in% c("geom_point", "geom_jitter", "geom_line", "geom_hline", "geom_vline",

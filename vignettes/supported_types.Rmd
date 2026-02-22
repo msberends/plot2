@@ -155,19 +155,6 @@ admitted_patients |> # from this plot2 package
         type = "back-to-back")
 ```
 
-# Dumbbell
-
-Used for highlighting changes or differences between paired values.
-
-```{r}
-diamonds |>
-  dplyr::filter(cut %in% c("Fair", "Very Good")) |>
-  plot2(x = cut(carat, 6),
-        y = median(price),
-        category = cut,
-        type = "dumbbell")
-```
-
 # Sankey
 
 Used for depicting flows or transitions between connected stages.
@@ -177,6 +164,27 @@ Titanic |> # from base R
   plot2(x = c(Age, Class, Survived),
         category = Sex,
         type = "sankey")
+```
+
+# Spider
+
+Used for comparing multivariate values across categorical axes arranged radially, enabling pattern recognition and relative magnitude assessment between groups.
+
+```{r}
+admitted_patients |>
+  plot2(x = hospital, 
+        y = n_distinct(patient_id),
+        category = gender,
+        type = "spider",
+        y.limits = c(0, 50))
+diamonds |>
+  plot2(x = cut,
+        y = mean(price),
+        category = color,
+        type = "spider",
+        category.title = "Colour",
+        legend.position = "right",
+        y.labels = function(x) paste0("$", x))
 ```
 
 # UpSet
@@ -195,3 +203,15 @@ movies |>
         type = "upset")
 ```
 
+# Dumbbell
+
+Used for highlighting changes or differences between paired values.
+
+```{r}
+diamonds |>
+  dplyr::filter(cut %in% c("Fair", "Very Good")) |>
+  plot2(x = cut(carat, 6),
+        y = median(price),
+        category = cut,
+        type = "dumbbell")
+```

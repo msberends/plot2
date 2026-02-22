@@ -1555,8 +1555,9 @@ validate_category_scale <- function(values,
   }
 }
 
-#' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter
+#' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter geom_polygon
 generate_geom <- function(type,
+                          type_backup,
                           df,
                           stacked,
                           stacked_fill,
@@ -1599,6 +1600,7 @@ generate_geom <- function(type,
     arguments <- c(...)
     arguments <- c(arguments[!names(arguments) %in% names(dots)], dots)
     arguments <- Filter(Negate(is.null), arguments)
+    arguments <- arguments[!names(arguments) %in% names(formals(coord_spider))]
     arguments
   }
   
@@ -1711,7 +1713,20 @@ generate_geom <- function(type,
                                  list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
                                  list(mapping = mapping)[!is.null(mapping)]))
     
-  } else if (type == "geom_density") {
+  } else if (type_backup == "spider") {
+    if (!"alpha" %in% names(dots_geom)) {
+      plot2_message("Using ", font_blue("alpha = 0"), " for ", font_blue("type = \"spider\""))
+    }
+    do.call(geom_polygon,
+            args = set_arguments(list(linetype = linetype,
+                                      linewidth = linewidth,
+                                      na.rm = na.rm),
+                                 if (!"alpha" %in% names(dots_geom)) list(alpha = 0),
+                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
+                                 list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
+                                 list(mapping = mapping)[!is.null(mapping)]))
+    
+  } else if (type %in% c("geom_density", "geom_polygon")) {
     do.call(geom_fn,
             args = set_arguments(list(linetype = linetype,
                                       linewidth = linewidth,
@@ -1913,7 +1928,7 @@ validate_linewidth <- function(linewidth, type, type_backup) {
       linewidth <- 0.1
     } else if (type %in% c("geom_boxplot", "geom_violin")) {
       linewidth <- 0.5
-    } else if (type_backup %in% c("dumbbell", "upset")) {
+    } else if (type_backup %in% c("dumbbell", "upset", "spider")) {
       linewidth <- 1
     } else if (geom_is_continuous(type) && !geom_has_only_colour(type)) {
       linewidth <- 0.25
