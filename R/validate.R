@@ -90,7 +90,7 @@ validate_type <- function(type, df = NULL) {
   }
   
   valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
-  valid_geoms <- c(valid_geoms, "geom_upset")
+  valid_geoms <- c(valid_geoms, "geom_upset", "geom_spider")
   if ("ggbeeswarm" %in% rownames(utils::installed.packages())) {
     valid_geoms <- c(valid_geoms, 
                      ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))

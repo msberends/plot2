@@ -869,6 +869,10 @@ plot2_exec <- function(.data,
       }
       x.title = ""
     }
+    if (type %like% "^(spider|radar)$") {
+      type_backup <- "spider"
+      type        <- "line"
+    }
     if (type %like% "bar") {
       type <- "col"
       horizontal <- TRUE
@@ -1086,7 +1090,6 @@ plot2_exec <- function(.data,
                   ...)
   
   # create UpSet plot ----
-
   if (identical(type, "upset")) {
     
     size <- validate_size(size = size, type = "upset", type_backup = "upset")
@@ -1308,7 +1311,6 @@ plot2_exec <- function(.data,
       return(out)
     }
   }
-  
   
   
   # apply taxonomic italics ----
@@ -1699,6 +1701,77 @@ plot2_exec <- function(.data,
       sankey.remove_axes <- TRUE
       plot2_message("Assuming ", font_blue("sankey.remove_axes = TRUE"))
     }
+  } else if (type_backup == "spider") {
+    axes <- unique(as.character(get_x(df)))
+    n_axes  <- length(axes)
+    if (n_axes < 3L) {
+      stop("`x` must have at least 3 unique values for `type = \"spider\"`", call. = FALSE)
+    }
+    
+    y_min  <- min(0, get_y(df), na.rm = TRUE)
+    y_max  <- max(get_y(df), na.rm = TRUE)
+    if (!is.null(y.limits)) {
+      if (!is.na(y.limits[1])) y_min <- y.limits[1]
+      if (length(y.limits) > 1 && !is.na(y.limits[2])) y_max <- y.limits[2]
+    }
+    y_range <- y_max - y_min
+    
+    # angles: start at top (pi/2), go clockwise
+    angles    <- (pi / 2) - (2 * pi / n_axes) * (seq_len(n_axes) - 1L)
+    angle_map <- stats::setNames(angles, as.character(axes))
+    
+    if (has_category(df)) {
+      cat_vals <- as.character(get_category(df))
+      cat_lvls <- levels(factor(cat_vals))  # respects factor ordering from validate_data()
+    } else {
+      cat_vals <- rep(".value", nrow(df))
+      cat_lvls <- ".value"
+    }
+    
+    poly_df <- do.call(rbind, lapply(cat_lvls, function(cat) {
+      rows  <- df[cat_vals == cat, , drop = FALSE]
+      row_x <- as.character(get_x(rows))
+      row_y <- get_y(rows)
+      r     <- (row_y[match(as.character(axes), row_x)] - y_min) / y_range
+      r[is.na(r)] <- 0
+      ang   <- c(angles, angles[1L])
+      r     <- c(r, r[1L])
+      data.frame(px = r * cos(ang), py = r * sin(ang), .cat = cat,
+                 stringsAsFactors = FALSE)
+    }))
+    
+    # web gridlines (4 rings)
+    grid_r    <- seq(0.25, 1, by = 0.25)
+    grid_df   <- do.call(rbind, lapply(grid_r, function(r) {
+      ang <- c(angles, angles[1L])
+      data.frame(gx = r * cos(ang), gy = r * sin(ang), gr = r,
+                 stringsAsFactors = FALSE)
+    }))
+    
+    
+    # spokes
+    spoke_df <- data.frame(x1 = cos(angles), y1 = sin(angles),
+                           stringsAsFactors = FALSE)
+    
+    # axis labels (slightly outside unit circle)
+    lbl_r  <- 1.15
+    lbl_df <- data.frame(lx = lbl_r * cos(angles), ly = lbl_r * sin(angles),
+                         label = as.character(axes), stringsAsFactors = FALSE)
+    
+    # tick labels on first spoke
+    tick_df <- data.frame(
+      tx    = grid_r * cos(angles[1L]) * 1.04,
+      ty    = grid_r * sin(angles[1L]) * 1.04,
+      label = format(round(y_min + grid_r * y_range, digits = 1),
+                     big.mark = big.mark, decimal.mark = decimal.mark,
+                     scientific = FALSE),
+      stringsAsFactors = FALSE
+    )
+    
+    
+    
+    
+    return(df)
   } else {
     p <- p +
       generate_geom(type = type,

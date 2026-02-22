@@ -1,7 +1,7 @@
 Package: plot2
 Title: A Plotting Assistant for Fast 'ggplot2' Visualisations
-Date: 2026-02-03
-Version: 1.99.0.9025
+Date: 2026-02-22
+Version: 1.99.0.9026
 Authors@R: c(
   person(given = c("Matthijs", "S."), 
          family = "Berends",
