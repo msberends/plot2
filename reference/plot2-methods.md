@@ -1682,9 +1682,12 @@ plot2(
 
   A valid `ggplot2`
   [theme](https://ggplot2.tidyverse.org/reference/theme.html) to apply,
-  or `NULL` to use the default `theme_grey()`. This argument accepts
-  themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and
-  characters themes (e.g., `"theme_bw"`). The default is
+  or `NULL` to use the default
+  [`theme_grey()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
+  This argument accepts themes (e.g.,
+  [`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)),
+  functions (e.g., `theme_bw`) and characters themes (e.g.,
+  `"theme_bw"`). The default is
   [`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md),
   but can be set with `options(plot2.theme = "...")`.
 

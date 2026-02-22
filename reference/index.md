@@ -25,6 +25,10 @@
 
   Get (and Register) Colours from R, Viridis and More
 
+- [`coord_spider()`](https://msberends.github.io/plot2/reference/coord_spider.md)
+  [`CoordSpider`](https://msberends.github.io/plot2/reference/coord_spider.md)
+  : Spider (Radar) Coordinate System for ggplot2
+
 - [`create_interactively()`](https://msberends.github.io/plot2/reference/create_interactively.md)
   :
 

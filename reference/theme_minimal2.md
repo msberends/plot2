@@ -1,7 +1,7 @@
 # An Even More Minimal Theme
 
 This `ggplot2` theme provides even more white area and less clutter than
-`theme_minimal()`.
+[`theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 ## Usage
 
