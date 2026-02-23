@@ -203,7 +203,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item \code{"back-to-back"} (short: \code{"b2b"}) creates a back-to-back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Butterfly plot}, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} to distinquish the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
 \item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. It is also possible to provide \code{y}, on which then \code{summarise_function} will be applied.
 \item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
-\item \code{"spider"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system.
+\item \code{"spider"} or \code{"radar"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system.
 }
 \item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
 }}
@@ -594,6 +594,14 @@ Titanic |> # a table from base R
   plot2(x = c(Age, Class, Survived),
         category = Sex,
         type = "sankey")
+        
+# support for spider plots
+diamonds |>
+   plot2(x = cut,
+         y = mean(price),
+         category = color,
+         type = "spider",
+         y.labels = dollars)
 
 # matrix support, such as for cor()
 correlation_matrix <- cor(mtcars)

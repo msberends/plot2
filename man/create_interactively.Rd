@@ -10,7 +10,7 @@ create_interactively(
   logo_path = system.file("logo.svg", package = "plot2"),
   pretty_labels = FALSE,
   hide_generated_code = FALSE,
-  hide_export_buttons = TRUE
+  hide_export_buttons = NULL
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ create_interactively(
 
 \item{hide_generated_code}{A logical to hide generated code.}
 
-\item{hide_export_buttons}{A logical to hide export buttons and functionality.}
+\item{hide_export_buttons}{A logical to hide export buttons and functionality. \code{TRUE} will hide the elements completely, \code{NULL} will show a clickable text to expand buttons (default), \code{FALSE} will show the expanded buttons.}
 }
 \description{
 This Shiny app allows for interactive creation of a \code{plot2}.

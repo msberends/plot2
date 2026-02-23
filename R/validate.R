@@ -1557,7 +1557,6 @@ validate_category_scale <- function(values,
 
 #' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter geom_polygon
 generate_geom <- function(type,
-                          type_backup,
                           df,
                           stacked,
                           stacked_fill,
@@ -1712,21 +1711,9 @@ generate_geom <- function(type,
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
                                  list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
                                  list(mapping = mapping)[!is.null(mapping)]))
-    
-  } else if (type_backup == "spider") {
-    if (!"alpha" %in% names(dots_geom)) {
-      plot2_message("Using ", font_blue("alpha = 0"), " for ", font_blue("type = \"spider\""))
-    }
-    do.call(geom_polygon,
-            args = set_arguments(list(linetype = linetype,
-                                      linewidth = linewidth,
-                                      na.rm = na.rm),
-                                 if (!"alpha" %in% names(dots_geom)) list(alpha = 0),
-                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
-                                 list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
-                                 list(mapping = mapping)[!is.null(mapping)]))
-    
+  
   } else if (type %in% c("geom_density", "geom_polygon")) {
+    # this also plots spider plots
     do.call(geom_fn,
             args = set_arguments(list(linetype = linetype,
                                       linewidth = linewidth,
@@ -1778,7 +1765,7 @@ validate_colour <- function(df,
                             colour_opacity,
                             misses_colour_fill,
                             horizontal) {
-  
+
   if (is.numeric(get_category(df)) || is_date(get_category(df))) {
     colour.bak <- colour
     # this is for validate_category_scale()
@@ -1840,6 +1827,10 @@ validate_colour <- function(df,
     colour <- get_colour(colour,
                          length = ifelse(length(colour) == 1, n_unique, 1),
                          opacity = colour_opacity)
+    
+    if (isTRUE(colour_fill)) {
+      colour_fill <- colour
+    }
     if (geom_is_continuous(type) && is.null(colour_fill) && type_backup != "sankey") {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
       # but not for Sankey plots - they have sankey.alpha
@@ -1891,7 +1882,7 @@ validate_colour <- function(df,
   if (type == "geom_sf" && !has_category(df)) {
     colour_fill <- colour_fill[1]
   }
-  
+ 
   list(colour = get_colour(colour),
        colour_fill = get_colour(colour_fill))
 }

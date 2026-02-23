@@ -37,7 +37,7 @@ euros <- function(x,
                   big.mark = big_mark(),
                   decimal.mark = dec_mark(),
                   ...) {
-  if (identical(x, as.integer(x))) {
+  if (all(is.finite(x) & (x == round(x)), na.rm = TRUE)) {
     # no cents
     trimws(paste0("\u20ac ", trimws(format(round(x, 0), decimal.mark = decimal.mark, big.mark = big.mark))))
   } else {
@@ -51,7 +51,7 @@ dollars <- function(x,
                     big.mark = big_mark(),
                     decimal.mark = dec_mark(),
                     ...) {
-  if (identical(x, as.integer(x))) {
+  if (all(is.finite(x) & (x == round(x)), na.rm = TRUE)) {
     # no cents
     trimws(paste0("$", trimws(format(round(x, 0), decimal.mark = decimal.mark, big.mark = big.mark))))
   } else {

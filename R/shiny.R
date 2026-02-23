@@ -20,7 +20,7 @@
 #' @param logo_path Path to the logo shown in the app. Default to the `plot2` logo. Use `NULL` to not use a logo.
 #' @param pretty_labels A logical to switch to pretty, readable labels, instead of argument names in code style.
 #' @param hide_generated_code A logical to hide generated code.
-#' @param hide_export_buttons A logical to hide export buttons and functionality.
+#' @param hide_export_buttons A logical to hide export buttons and functionality. `TRUE` will hide the elements completely, `NULL` will show a clickable text to expand buttons (default), `FALSE` will show the expanded buttons.
 #' @details
 #' ![Shiny app example](create_interactively.jpg)
 #' @export
@@ -36,7 +36,7 @@ create_interactively <- function(data = NULL,
                                  logo_path = system.file("logo.svg", package = "plot2"),
                                  pretty_labels = FALSE,
                                  hide_generated_code = FALSE,
-                                 hide_export_buttons = TRUE) {
+                                 hide_export_buttons = NULL) {
   
   logo_path <- tryCatch({
     # might return an error:
@@ -212,7 +212,8 @@ create_interactively <- function(data = NULL,
       # "#export button { margin-left: 10px; }",
       ifelse(!is.null(css_code), paste0(css_code, collapse = "\n"), ""),
       ifelse(hide_generated_code, ".generated-code { display: none; }", ""),
-      ifelse(hide_export_buttons, "#export, .show-export { display: none; }", ""))),
+      ifelse(isTRUE(hide_export_buttons), "#export, .show-export { display: none; }", ""),
+      ifelse(isFALSE(hide_export_buttons), "#show-export, .show-export { display: none; }", ""))),
     
     shiny::sidebarLayout(
       shiny::sidebarPanel(
@@ -278,6 +279,7 @@ create_interactively <- function(data = NULL,
                                                                  "Dumbbell"     = "dumbbell",
                                                                  "Back-to-back" = "back-to-back",
                                                                  "Sankey"       = "sankey",
+                                                                 "Spider/radar" = "spider",
                                                                  "UpSet"        = "upset",
                                                                  "Bar percent"  = "barpercent"
                                                                ),
@@ -424,7 +426,9 @@ create_interactively <- function(data = NULL,
   
   server <- function(input, output, session) {
     shinyjs::hide("datatable")
-    shinyjs::hide("export")
+    if (is.null(hide_export_buttons)) {
+      shinyjs::hide("export")
+    }
     
     imported_data <- shiny::reactiveVal(NULL)
     

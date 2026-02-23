@@ -66,7 +66,7 @@
 #'   - `"back-to-back"` (short: `"b2b"`) creates a back-to-back plot, sometimes called a [Tornado diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram), or a [Population Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It uses `facet` to distinquish the left and right plots. Therefore, `facet` must be set to (a column containing) two unique values.
 #'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`, and the label angles can be set with `datalabels.angle`.
-#'   - `"spider"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system.
+#'   - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param y_secondary.type see **`type`**
@@ -346,6 +346,14 @@
 #'   plot2(x = c(Age, Class, Survived),
 #'         category = Sex,
 #'         type = "sankey")
+#'         
+#' # support for spider plots
+#' diamonds |>
+#'    plot2(x = cut,
+#'          y = mean(price),
+#'          category = color,
+#'          type = "spider",
+#'          y.labels = dollars)
 #'
 #' # matrix support, such as for cor()
 #' correlation_matrix <- cor(mtcars)
@@ -1435,6 +1443,12 @@ plot2_exec <- function(.data,
     # "colour" and "fill" are not in category.type, so do not set colours regardless of the `colour` argument
     original_colours <- TRUE
   }
+  if (type_backup == "spider" && misses_colour_fill) {
+    # spider plots should have no fill at default
+    colour_fill <- NA
+    misses_colour_fill <- FALSE
+    original_colours <- FALSE
+  }
   
   if (has_category(df) && !is.null(category.focus)) {
     category.focus <- category.focus[1L]
@@ -1457,7 +1471,6 @@ plot2_exec <- function(.data,
     y_secondary.colour <- get_colour(y_secondary.colour)[1L]
     y_secondary.colour_fill <- get_colour(y_secondary.colour_fill)[1L]
   }
-  # Note that this will be not be used if colour == "ggplot2" or colour_fill == "ggplot2"
   cols <- validate_colour(df = df,
                           type = type,
                           type_backup = type_backup,
@@ -1466,7 +1479,7 @@ plot2_exec <- function(.data,
                           colour_opacity = colour_opacity,
                           misses_colour_fill = misses_colour_fill,
                           horizontal = horizontal)
-  
+
   # create back-to-back plot ----
   if (type_backup == "back-to-back") {
     x.title <- validate_title(x.title, markdown = markdown)
@@ -1620,7 +1633,6 @@ plot2_exec <- function(.data,
                           theme = theme,
                           background = background,
                           markdown = markdown))
-      
   }
   
   # generate mapping / aesthetics ----
@@ -1716,7 +1728,6 @@ plot2_exec <- function(.data,
   } else {
     p <- p +
       generate_geom(type = type,
-                    type_backup = type_backup,
                     df = df,
                     stacked = stacked,
                     stacked_fill = stacked_fill,
@@ -1748,7 +1759,6 @@ plot2_exec <- function(.data,
       }
       p <- p +
         generate_geom(type = y_secondary.type,
-                      type_backup = "",
                       df = df,
                       stacked = stacked,
                       stacked_fill = stacked_fill,
@@ -1932,6 +1942,7 @@ plot2_exec <- function(.data,
       }
     }
   }
+  
   if (!type %in% c("geom_sf", "geom_tile", "geom_raster", "geom_rect")) {
     if (has_x(df)) {
       if (isTRUE(x.mic)) {
@@ -2076,7 +2087,6 @@ plot2_exec <- function(.data,
     }
   }
   p <- p + labs(y = y.title)
-  
   if (has_category(df)) {
     # legend
     if (is.null(legend.title) && data_is_numeric(get_category(df))) {

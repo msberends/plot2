@@ -171,20 +171,20 @@ Titanic |> # from base R
 Used for comparing multivariate values across categorical axes arranged radially, enabling pattern recognition and relative magnitude assessment between groups.
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, 
-        y = n_distinct(patient_id),
-        category = gender,
-        type = "spider",
-        y.limits = c(0, 50))
 diamonds |>
-  plot2(x = cut,
-        y = mean(price),
-        category = color,
-        type = "spider",
-        category.title = "Colour",
-        legend.position = "right",
-        y.labels = function(x) paste0("$", x))
+    plot2(x = cut,
+          y = mean(price),
+          category = color,
+          type = "spider",
+          y.labels = dollars)
+# spider plots can have a filling colour, but it's hardly ever useful
+diamonds |>
+    plot2(x = cut,
+          y = mean(price),
+          category = color,
+          type = "spider",
+          y.labels = dollars,
+          colour_fill = "viridis")
 ```
 
 # UpSet

@@ -11,7 +11,7 @@ coord_spider(
   start = 0,
   clip = "off",
   inner.radius = 0,
-  outer.radius = 0.85,
+  outer.radius = 0.8,
   axis_labels = TRUE,
   axis_label_size = 9,
   axis_label_pad_mm = 1,
@@ -50,14 +50,14 @@ A \code{ggproto} object that inherits from \link[ggplot2:Coord]{ggplot2::Coord}.
 }
 \description{
 \code{coord_spider()} implements a new spider / radar coordinate system using a linear (non-munched) polar-like transform. It is intended for spider charts where connected paths are drawn as \emph{straight chords} between axes (not circular arcs), and where background grid rings are polygons (not circles).
-Compared to \code{ggplot2::coord_polar()}, this coordinate system:
+Compared to \code{ggplot2::coord_radial()}, this coordinate system:
 \itemize{
 \item uses \code{is_linear() = TRUE} to prevent path "munching" into arcs;
 \item supports a polygonal background grid (rings + spokes);
 \item optionally draws axis labels (theta) and radial (r) labels using \code{grid} grobs in the panel background.
 }
 
-Typical usage is to map a discrete variable (categories) to \code{x} (theta) and a continuous variable (scores) to \code{y} (radius), then draw a closed polygon with \code{geom_polygon()} and/or \code{geom_path()}.
+Typical usage is to map a discrete variable (categories) to \code{x} (theta) and a continuous variable (scores) to \code{y} (radius), then draw a polygon with \code{geom_polygon()}.
 
 \code{\link[=plot2]{plot2()}} uses this novel coordinate system to plot spider plots, created using \code{plot2(..., type = "spider")}.
 }
@@ -82,11 +82,14 @@ ggplot(df, aes(metric, value, group = 1)) +
     
 ggplot(df, aes(metric, value, group = 1)) +
     geom_polygon(colour = "red", fill = NA, linewidth = 1) +
+    geom_point(colour = "red", size = 3) +
     coord_spider(inner.radius = 0.25,
                  r_label_pad_mm = 2) +
     scale_y_continuous(limits = c(0, 100),
                        breaks = c(0, 25, 50, 75, 100)) +
-    theme(panel.grid.major.y = element_line(colour = "blue")) +
-    geom_point(colour = "red", size = 3)
+    theme(panel.grid.major.y = element_line(colour = "blue"))
+    
+df |>
+  plot2(type = "spider")
 }
 \keyword{datasets}

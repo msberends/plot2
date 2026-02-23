@@ -477,7 +477,7 @@ options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
 
 ## Advanced Plot Types
 
-`plot2()` shines when it comes to more complex plot types, such as geography plots, UpSet plots, back-to-back (butterfly) plots, dumbbell plots and Sankey diagrams.
+`plot2()` shines when it comes to more complex plot types, such as geography plots, spider plots, UpSet plots, back-to-back (butterfly) plots, dumbbell plots and Sankey diagrams.
 
 You can read about them in **our [plot type overview here](https://msberends.github.io/plot2/articles/supported_types.html)**.
 
