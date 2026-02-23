@@ -11,7 +11,7 @@ create_interactively(
   logo_path = system.file("logo.svg", package = "plot2"),
   pretty_labels = FALSE,
   hide_generated_code = FALSE,
-  hide_export_buttons = TRUE
+  hide_export_buttons = NULL
 )
 ```
 
@@ -42,7 +42,9 @@ create_interactively(
 
 - hide_export_buttons:
 
-  A logical to hide export buttons and functionality.
+  A logical to hide export buttons and functionality. `TRUE` will hide
+  the elements completely, `NULL` will show a clickable text to expand
+  buttons (default), `FALSE` will show the expanded buttons.
 
 ## Details
 

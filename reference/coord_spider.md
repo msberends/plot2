@@ -5,7 +5,7 @@ a linear (non-munched) polar-like transform. It is intended for spider
 charts where connected paths are drawn as *straight chords* between axes
 (not circular arcs), and where background grid rings are polygons (not
 circles). Compared to
-[`ggplot2::coord_polar()`](https://ggplot2.tidyverse.org/reference/coord_radial.html),
+[`ggplot2::coord_radial()`](https://ggplot2.tidyverse.org/reference/coord_radial.html),
 this coordinate system:
 
 - uses `is_linear() = TRUE` to prevent path "munching" into arcs;
@@ -16,8 +16,8 @@ this coordinate system:
   `grid` grobs in the panel background.
 
 Typical usage is to map a discrete variable (categories) to `x` (theta)
-and a continuous variable (scores) to `y` (radius), then draw a closed
-polygon with `geom_polygon()` and/or `geom_path()`.
+and a continuous variable (scores) to `y` (radius), then draw a polygon
+with `geom_polygon()`.
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) uses
 this novel coordinate system to plot spider plots, created using
@@ -31,7 +31,7 @@ coord_spider(
   start = 0,
   clip = "off",
   inner.radius = 0,
-  outer.radius = 0.85,
+  outer.radius = 0.8,
   axis_labels = TRUE,
   axis_label_size = 9,
   axis_label_pad_mm = 1,
@@ -169,10 +169,16 @@ ggplot(df, aes(metric, value, group = 1)) +
     
 ggplot(df, aes(metric, value, group = 1)) +
     geom_polygon(colour = "red", fill = NA, linewidth = 1) +
+    geom_point(colour = "red", size = 3) +
     coord_spider(inner.radius = 0.25,
                  r_label_pad_mm = 2) +
     scale_y_continuous(limits = c(0, 100),
                        breaks = c(0, 25, 50, 75, 100)) +
-    theme(panel.grid.major.y = element_line(colour = "blue")) +
-    geom_point(colour = "red", size = 3)
+    theme(panel.grid.major.y = element_line(colour = "blue"))
+
+    
+df |>
+  plot2(type = "spider")
+#> ℹ Using x = metric
+#> ℹ Using y = value
 ```

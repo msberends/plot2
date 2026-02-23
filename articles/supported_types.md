@@ -216,28 +216,25 @@ radially, enabling pattern recognition and relative magnitude assessment
 between groups.
 
 ``` r
-admitted_patients |>
-  plot2(x = hospital, 
-        y = n_distinct(patient_id),
-        category = gender,
-        type = "spider",
-        y.limits = c(0, 50))
-#> ℹ Assuming y.expand = 0 since y.limits is set
-#> ℹ Using alpha = 0 for type = "spider"
+diamonds |>
+    plot2(x = cut,
+          y = mean(price),
+          category = color,
+          type = "spider",
+          y.labels = dollars)
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-13-1.png)
 
 ``` r
+# spider plots can have a filling colour, but it's hardly ever useful
 diamonds |>
-  plot2(x = cut,
-        y = mean(price),
-        category = color,
-        type = "spider",
-        category.title = "Colour",
-        legend.position = "right",
-        y.labels = function(x) paste0("$", x))
-#> ℹ Using alpha = 0 for type = "spider"
+    plot2(x = cut,
+          y = mean(price),
+          category = color,
+          type = "spider",
+          y.labels = dollars,
+          colour_fill = "viridis")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-13-2.png)

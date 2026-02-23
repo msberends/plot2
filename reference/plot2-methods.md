@@ -1090,7 +1090,7 @@ plot2(
       plots can also be flipped using `horizontal = TRUE`, and the label
       angles can be set with `datalabels.angle`.
 
-    - `"spider"` (short: `"sp"`) creates a [Spider
+    - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider
       plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel
       [`CoordSpider`](https://msberends.github.io/plot2/reference/coord_spider.md)
       coordinate system.

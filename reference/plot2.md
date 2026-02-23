@@ -316,7 +316,7 @@ plot2(
       plots can also be flipped using `horizontal = TRUE`, and the label
       angles can be set with `datalabels.angle`.
 
-    - `"spider"` (short: `"sp"`) creates a [Spider
+    - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider
       plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel
       [`CoordSpider`](https://msberends.github.io/plot2/reference/coord_spider.md)
       coordinate system.
@@ -1266,6 +1266,15 @@ Titanic |> # a table from base R
 #> ℹ Assuming sankey.remove_axes = TRUE
 #> ! Input class 'table' was transformed using `as.data.frame()`
 
+        
+# support for spider plots
+diamonds |>
+   plot2(x = cut,
+         y = mean(price),
+         category = color,
+         type = "spider",
+         y.labels = dollars)
+
 
 # matrix support, such as for cor()
 correlation_matrix <- cor(mtcars)
@@ -1345,7 +1354,6 @@ ggplot2::diamonds |>
         category.title = "Colour",
         legend.position = "right",
         y.labels = function(x) paste0("$", x))
-#> ℹ Using alpha = 0 for type = "spider"
 
 
 # support for any system or Google font

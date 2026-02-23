@@ -784,9 +784,9 @@ options(plot2.colour = "OurOrganisation")
 ### Advanced Plot Types
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) shines
-when it comes to more complex plot types, such as geography plots, UpSet
-plots, back-to-back (butterfly) plots, dumbbell plots and Sankey
-diagrams.
+when it comes to more complex plot types, such as geography plots,
+spider plots, UpSet plots, back-to-back (butterfly) plots, dumbbell
+plots and Sankey diagrams.
 
 You can read about them in **our [plot type overview
 here](https://msberends.github.io/plot2/articles/supported_types.html)**.
