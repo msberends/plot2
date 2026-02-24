@@ -908,7 +908,7 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-plt img"><img src="plot2-28.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span>        </span></span>
 <span class="r-in"><span><span class="co"># support for spider plots</span></span></span>
-<span class="r-in"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>   <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span></span>
 <span class="r-in"><span>         y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>         category <span class="op">=</span> <span class="va">color</span>,</span></span>
@@ -985,26 +985,14 @@ See plot2-methods for all implemented methods for different object classes."><me
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">datalabels = province</span></span>
 <span class="r-plt img"><img src="plot2-34.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># spider plots</span></span></span>
-<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span></span>
-<span class="r-in"><span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        category <span class="op">=</span> <span class="va">color</span>,</span></span>
-<span class="r-in"><span>        type <span class="op">=</span> <span class="st">"spider"</span>,</span></span>
-<span class="r-in"><span>        category.title <span class="op">=</span> <span class="st">"Colour"</span>,</span></span>
-<span class="r-in"><span>        legend.position <span class="op">=</span> <span class="st">"right"</span>,</span></span>
-<span class="r-in"><span>        y.labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"$"</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot2-35.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># support for any system or Google font</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>,</span></span>
 <span class="r-in"><span>        font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span></span>
 <span class="r-in"><span>        text_factor <span class="op">=</span> <span class="fl">1.25</span>,</span></span>
 <span class="r-in"><span>        title <span class="op">=</span> <span class="st">"This plot uses a Google Font"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Downloaded font <span style="color: #0000BB;">https://fonts.google.com/specimen/Rock+Salt</span> from Google Fonts</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using <span style="color: #0000BB;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span>
-<span class="r-plt img"><img src="plot2-36.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot2-35.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

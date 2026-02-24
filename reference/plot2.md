@@ -1268,7 +1268,7 @@ Titanic |> # a table from base R
 
         
 # support for spider plots
-diamonds |>
+ggplot2::diamonds |>
    plot2(x = cut,
          y = mean(price),
          category = color,
@@ -1345,23 +1345,11 @@ netherlands |>
 #> ℹ Using datalabels = province
 
 
-# spider plots
-ggplot2::diamonds |>
-  plot2(x = cut,
-        y = mean(price),
-        category = color,
-        type = "spider",
-        category.title = "Colour",
-        legend.position = "right",
-        y.labels = function(x) paste0("$", x))
-
-
 # support for any system or Google font
 mtcars |>
   plot2(mpg, hp,
         font = "Rock Salt",
         text_factor = 1.25,
         title = "This plot uses a Google Font")
-#> ℹ Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts
 #> ℹ Using type = "point" since both axes are numeric
 ```
