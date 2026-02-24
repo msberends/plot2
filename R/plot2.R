@@ -348,7 +348,7 @@
 #'         type = "sankey")
 #'         
 #' # support for spider plots
-#' diamonds |>
+#' ggplot2::diamonds |>
 #'    plot2(x = cut,
 #'          y = mean(price),
 #'          category = color,
@@ -388,16 +388,6 @@
 #' netherlands |> 
 #'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
 #'   add_sf(netherlands, colour = "black", colour_fill = NA)
-#' 
-#' # spider plots
-#' ggplot2::diamonds |>
-#'   plot2(x = cut,
-#'         y = mean(price),
-#'         category = color,
-#'         type = "spider",
-#'         category.title = "Colour",
-#'         legend.position = "right",
-#'         y.labels = function(x) paste0("$", x))
 #' 
 #' # support for any system or Google font
 #' mtcars |>
