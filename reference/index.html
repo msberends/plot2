@@ -36,9 +36,39 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="creating-plots">Creating Plots<a class="anchor" aria-label="anchor" href="#creating-plots"></a></h2>
+
+      <div class="section-desc"><p>Everything starts here. The <code><a href="../reference/plot2.html">plot2()</a></code> function is the heart of this package – just pass in your data and it will figure out the best way to visualise it. Whether you have a data frame, a matrix, a statistical model, or even geographic data, <code><a href="../reference/plot2.html">plot2()</a></code> knows what to do. Want to layer extra elements on top? Use <code><a href="../reference/add_type.html">add_type()</a></code> and its convenient shortcuts to build up your plot step by step.</p></div>
+
+      <dl></dl></div><div class="section level2">
 
 
+
+
+      <dl><dt>
+
+          <code><a href="plot2.html">plot2()</a></code>
+
+        </dt>
+        <dd>Conveniently Create a New <code>ggplot</code></dd>
+
+        <dt>
+
+          <code><a href="plot2-methods.html">plot2(<i>&lt;default&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;formula&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;freq&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;sf&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;data.frame&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;matrix&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Methods for <code><a href="../reference/plot2.html">plot2()</a></code></dd>
+
+        <dt>
+
+          <code><a href="add_type.html">add_type()</a></code> <code><a href="add_type.html">add_line()</a></code> <code><a href="add_type.html">add_point()</a></code> <code><a href="add_type.html">add_col()</a></code> <code><a href="add_type.html">add_errorbar()</a></code> <code><a href="add_type.html">add_smooth()</a></code> <code><a href="add_type.html">add_sf()</a></code>
+
+        </dt>
+        <dd>Add Plot Element</dd>
+      </dl></div><div class="section level2">
+      <h2 id="customising-your-plot">Customising Your Plot<a class="anchor" aria-label="anchor" href="#customising-your-plot"></a></h2>
+
+      <div class="section-desc"><p>Already have a plot but want to fine-tune it? These functions let you change which variables are mapped to visual properties like colour or size, reorder the layers that make up your plot, or switch to a spider (radar) chart layout. Small adjustments can make a big difference in how clearly your data tells its story.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -54,24 +84,10 @@
 
         <dt>
 
-          <code><a href="add_type.html">add_type()</a></code> <code><a href="add_type.html">add_line()</a></code> <code><a href="add_type.html">add_point()</a></code> <code><a href="add_type.html">add_col()</a></code> <code><a href="add_type.html">add_errorbar()</a></code> <code><a href="add_type.html">add_smooth()</a></code> <code><a href="add_type.html">add_sf()</a></code>
+          <code><a href="move_layer.html">move_layer()</a></code>
 
         </dt>
-        <dd>Add Plot Element</dd>
-
-        <dt>
-
-          <code><a href="admitted_patients.html">admitted_patients</a></code>
-
-        </dt>
-        <dd>Example Data Set with Admitted Patients</dd>
-
-        <dt>
-
-          <code><a href="colour.html">get_colour()</a></code> <code><a href="colour.html">register_colour()</a></code> <code><a href="colour.html">unregister_colour()</a></code> <code><a href="colour.html">add_white()</a></code>
-
-        </dt>
-        <dd>Get (and Register) Colours from <span style="R">R</span>, Viridis and More</dd>
+        <dd>Move a <code>ggplot</code> Layer</dd>
 
         <dt>
 
@@ -79,20 +95,45 @@
 
         </dt>
         <dd>Spider (Radar) Coordinate System for ggplot2</dd>
+      </dl></div><div class="section level2">
+      <h2 id="working-with-colours">Working with Colours<a class="anchor" aria-label="anchor" href="#working-with-colours"></a></h2>
+
+      <div class="section-desc"><p>Colour is one of the most powerful tools in data visualisation. These functions give you access to a wide range of colour palettes – including colourblind-friendly options – and let you define and save your own custom colours for consistent use across all your plots and projects.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="colour.html">get_colour()</a></code> <code><a href="colour.html">register_colour()</a></code> <code><a href="colour.html">unregister_colour()</a></code> <code><a href="colour.html">add_white()</a></code>
+
+        </dt>
+        <dd>Get (and Register) Colours from <span style="R">R</span>, Viridis and More</dd>
+      </dl></div><div class="section level2">
+      <h2 id="themes-and-labels">Themes and Labels<a class="anchor" aria-label="anchor" href="#themes-and-labels"></a></h2>
+
+      <div class="section-desc"><p>Great plots deserve a clean, professional look. <code><a href="../reference/theme_minimal2.html">theme_minimal2()</a></code> gives your plots a modern, print-ready appearance with sensible defaults. The other functions in this section help you use <strong>bold</strong>, <em>italic</em>, and other rich formatting in your plot titles and axis labels, and make it easy to extract or customise the title of any plot.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="theme_minimal2.html">theme_minimal2()</a></code>
+
+        </dt>
+        <dd>An Even More Minimal Theme</dd>
 
         <dt>
 
-          <code><a href="create_interactively.html">create_interactively()</a></code>
+          <code><a href="md_to_expression.html">md_to_expression()</a></code>
 
         </dt>
-        <dd>Interactively Create a <code>plot2</code></dd>
-
-        <dt>
-
-          <code><a href="dec_mark.html">dec_mark()</a></code> <code><a href="dec_mark.html">big_mark()</a></code>
-
-        </dt>
-        <dd>Use Decimal Comma?</dd>
+        <dd>Convert Markdown to Plotmath Expression</dd>
 
         <dt>
 
@@ -107,50 +148,33 @@
 
         </dt>
         <dd>Label Euro currencies</dd>
+      </dl></div><div class="section level2">
+      <h2 id="number-formatting">Number Formatting<a class="anchor" aria-label="anchor" href="#number-formatting"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Numbers on axes and in labels should be easy to read, regardless of where in the world your audience is. These helpers automatically format numbers with the right decimal separator and thousands grouping for your locale, and can display values as euros or dollars.</p></div>
 
-          <code><a href="md_to_expression.html">md_to_expression()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Convert Markdown to Plotmath Expression</dd>
 
-        <dt>
 
-          <code><a href="move_layer.html">move_layer()</a></code>
 
-        </dt>
-        <dd>Move a <code>ggplot</code> Layer</dd>
+      <dl><dt>
 
-        <dt>
-
-          <code><a href="netherlands.html">netherlands</a></code>
+          <code><a href="dec_mark.html">dec_mark()</a></code> <code><a href="dec_mark.html">big_mark()</a></code>
 
         </dt>
-        <dd>Example Geography Data Set: the Netherlands</dd>
+        <dd>Use Decimal Comma?</dd>
+      </dl></div><div class="section level2">
+      <h2 id="interactive-plots">Interactive Plots<a class="anchor" aria-label="anchor" href="#interactive-plots"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Want your audience to hover, zoom, and click on your plots? Turn any plot into an interactive widget with <code><a href="../reference/plotly.html">as_plotly()</a></code>, or use <code><a href="../reference/create_interactively.html">create_interactively()</a></code> to build a plot from scratch using a point-and-click interface – no code required.</p></div>
 
-          <code><a href="plot2-methods.html">plot2(<i>&lt;default&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;formula&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;freq&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;sf&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;data.frame&gt;</i>)</a></code> <code><a href="plot2-methods.html">plot2(<i>&lt;matrix&gt;</i>)</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Methods for <code><a href="../reference/plot2.html">plot2()</a></code></dd>
 
-        <dt>
 
-          <code><a href="plot2-options.html">plot2-options</a></code>
 
-        </dt>
-        <dd><code><a href="../reference/plot2.html">plot2()</a></code> Options</dd>
-
-        <dt>
-
-          <code><a href="plot2.html">plot2()</a></code>
-
-        </dt>
-        <dd>Conveniently Create a New <code>ggplot</code></dd>
-
-        <dt>
+      <dl><dt>
 
           <code><a href="plotly.html">as_plotly()</a></code> <code><a href="plotly.html">plotly_style()</a></code>
 
@@ -159,12 +183,68 @@
 
         <dt>
 
-          <code><a href="theme_minimal2.html">theme_minimal2()</a></code>
+          <code><a href="create_interactively.html">create_interactively()</a></code>
 
         </dt>
-        <dd>An Even More Minimal Theme</dd>
+        <dd>Interactively Create a <code>plot2</code></dd>
+      </dl></div><div class="section level2">
+      <h2 id="default-settings">Default Settings<a class="anchor" aria-label="anchor" href="#default-settings"></a></h2>
+
+      <div class="section-desc"><p>Tired of setting the same options every time? Configure your preferred defaults – such as your go-to colour scheme, font, or decimal format – once, and every plot you create will automatically use them.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="plot2-options.html">plot2-options</a></code>
+
+        </dt>
+        <dd><code><a href="../reference/plot2.html">plot2()</a></code> Options</dd>
+      </dl></div><div class="section level2">
+      <h2 id="example-datasets">Example Datasets<a class="anchor" aria-label="anchor" href="#example-datasets"></a></h2>
+
+      <div class="section-desc"><p>These built-in datasets are ready to use for exploring <code><a href="../reference/plot2.html">plot2()</a></code> and trying out different plot types. No need to load external files – just type the dataset name and start plotting.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="admitted_patients.html">admitted_patients</a></code>
+
+        </dt>
+        <dd>Example Data Set with Admitted Patients</dd>
+
+        <dt>
+
+          <code><a href="netherlands.html">netherlands</a></code>
+
+        </dt>
+        <dd>Example Geography Data Set: the Netherlands</dd>
+      </dl></div><div class="section level2">
+      <h2 id="convenience-functions">Convenience Functions<a class="anchor" aria-label="anchor" href="#convenience-functions"></a></h2>
+
+      <div class="section-desc"><p>A handful of commonly used helper functions from other packages, made available directly through <code>plot2</code> so you do not need to load additional packages for everyday tasks like counting rows or selecting columns.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="reexports.html">reexports</a></code> <code><a href="reexports.html">%&gt;%</a></code> <code><a href="reexports.html">n</a></code> <code><a href="reexports.html">n_distinct</a></code> <code><a href="reexports.html">everything</a></code> <code><a href="reexports.html">starts_with</a></code> <code><a href="reexports.html">ends_with</a></code> <code><a href="reexports.html">matches</a></code> <code><a href="reexports.html">where</a></code> <code><a href="reexports.html">first</a></code> <code><a href="reexports.html">last</a></code> <code><a href="reexports.html">all_of</a></code> <code><a href="reexports.html">any_of</a></code>
+
+        </dt>
+        <dd>Objects exported from other packages</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
