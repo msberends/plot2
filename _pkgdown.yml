@@ -89,7 +89,7 @@ reference:
       save your own custom colours for consistent use across all your
       plots and projects.
     contents:
-      - colour
+      - get_colour
 
   - title: Themes and Labels
     desc: >
@@ -122,7 +122,7 @@ reference:
       `create_interactively()` to build a plot from scratch using a
       point-and-click interface -- no code required.
     contents:
-      - plotly
+      - as_plotly
       - create_interactively
 
   - title: Default Settings
