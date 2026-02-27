@@ -54,3 +54,72 @@ navbar:
     - text: "Source Code"
       icon: "fab fa-github"
       href: "https://github.com/msberends/plot2"
+
+reference:
+  - title: Core Plotting
+    desc: >
+      The main entry point for creating plots and the S3 methods that
+      power automatic dispatch for different data types.
+    contents:
+      - plot2
+      - plot2-methods
+      - add_type
+
+  - title: Plot Customisation
+    desc: >
+      Functions for tweaking aesthetics, reordering layers, and adding
+      coordinate systems after a plot has been created.
+    contents:
+      - add_mapping
+      - move_layer
+      - coord_spider
+
+  - title: Colours
+    desc: >
+      Retrieve, create, and manage colour palettes, including
+      colourblind-safe options and custom project colours.
+    contents:
+      - colour
+
+  - title: Theming and Labels
+    desc: >
+      Control the overall look of plots and convert markdown to
+      plotmath expressions for rich-text titles and labels.
+    contents:
+      - theme_minimal2
+      - md_to_expression
+      - get_plot_title
+      - labellers
+
+  - title: Formatting
+    desc: >
+      Locale-aware number and currency formatting helpers.
+    contents:
+      - dec_mark
+
+  - title: Interactive Use
+    desc: >
+      Convert plots to interactive Plotly widgets or build them
+      interactively with a Shiny app.
+    contents:
+      - plotly
+      - create_interactively
+
+  - title: Options
+    desc: >
+      Package-level options that control default behaviour.
+    contents:
+      - plot2-options
+
+  - title: Datasets
+    desc: >
+      Bundled example datasets for demonstrations and testing.
+    contents:
+      - admitted_patients
+      - netherlands
+
+  - title: Re-exports
+    desc: >
+      Functions re-exported from dplyr and tidyselect for convenience.
+    contents:
+      - reexports
