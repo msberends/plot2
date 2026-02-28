@@ -49,7 +49,8 @@
 <span>  logo_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"logo.svg"</span>, package <span class="op">=</span> <span class="st">"plot2"</span><span class="op">)</span>,</span>
 <span>  pretty_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  hide_generated_code <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  hide_export_buttons <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  hide_export_buttons <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  upload_tab <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -80,6 +81,10 @@
 <dt id="arg-hide-export-buttons">hide_export_buttons<a class="anchor" aria-label="anchor" href="#arg-hide-export-buttons"></a></dt>
 <dd><p>A logical to hide export buttons and functionality. <code>TRUE</code> will hide the elements completely, <code>NULL</code> will show a clickable text to expand buttons (default), <code>FALSE</code> will show the expanded buttons.</p></dd>
 
+
+<dt id="arg-upload-tab">upload_tab<a class="anchor" aria-label="anchor" href="#arg-upload-tab"></a></dt>
+<dd><p>A logical to show a dedicated <strong>Upload</strong> tab in the sidebar. When <code>TRUE</code>, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the <code>readxl</code> package in addition to the packages checked for <code>upload_tab = FALSE</code>. Administrators can ensure all dependencies are present by running <code>plot2:::install_shiny_deps()</code> before launching the app.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -93,6 +98,9 @@
 <span class="r-in"><span><span class="fu">create_interactively</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu">create_interactively</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># With the upload tab for importing external data files:</span></span></span>
+<span class="r-in"><span><span class="fu">create_interactively</span><span class="op">(</span>upload_tab <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

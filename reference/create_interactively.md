@@ -11,7 +11,8 @@ create_interactively(
   logo_path = system.file("logo.svg", package = "plot2"),
   pretty_labels = FALSE,
   hide_generated_code = FALSE,
-  hide_export_buttons = NULL
+  hide_export_buttons = NULL,
+  upload_tab = FALSE
 )
 ```
 
@@ -46,6 +47,18 @@ create_interactively(
   the elements completely, `NULL` will show a clickable text to expand
   buttons (default), `FALSE` will show the expanded buttons.
 
+- upload_tab:
+
+  A logical to show a dedicated **Upload** tab in the sidebar. When
+  `TRUE`, a full-featured data-import tab is added with format-specific
+  options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS,
+  JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..."
+  dropdown item will redirect to this tab instead of opening a modal.
+  Requires the `readxl` package in addition to the packages checked for
+  `upload_tab = FALSE`. Administrators can ensure all dependencies are
+  present by running `plot2:::install_shiny_deps()` before launching the
+  app.
+
 ## Details
 
 ![](figures/create_interactively.jpg)
@@ -58,5 +71,8 @@ if (FALSE) { # \dontrun{
 create_interactively()
 
 iris |> create_interactively()
+
+# With the upload tab for importing external data files:
+create_interactively(upload_tab = TRUE)
 } # }
 ```
