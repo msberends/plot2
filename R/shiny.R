@@ -297,90 +297,15 @@ create_interactively <- function(data = NULL,
         shiny::tabsetPanel(
           type = "tabs",
           id = "settings_tabs",
-          
-          # --- Main tab
-          shiny::tabPanel("Main",
-                          shiny::fluidRow(
-                            shiny::column(width = 6,
-                                          shiny::selectizeInput(
-                                            "dataset", "Data set",
-                                            choices = data_sets,
-                                            selected = ifelse(is.null(data), "iris", names(globalenv_labels)[1]),
-                                            options = list(create = FALSE),
-                                            width = "100%"
-                                          )
-                            ),
-                            shiny::column(width = 6,
-                                          shiny::selectInput("type", "Plot type", 
-                                                             choices = list(
-                                                               "Automatic detection" = c("Automatic" = "auto"),
-                                                               "Common types" = c(
-                                                                 "Column"    = "col",
-                                                                 "Bar (horizontal)" = "bar",
-                                                                 "Line"      = "line",
-                                                                 "Point"     = "point",
-                                                                 "Area"      = "area",
-                                                                 "Histogram" = "histogram"
-                                                               ),
-                                                               "Categorical types" = c(
-                                                                 "Boxplot"   = "boxplot",
-                                                                 "Violin"    = "violin",
-                                                                 "Beeswarm"  = "beeswarm",
-                                                                 "Jitter"    = "jitter"
-                                                               ),
-                                                               "Advanced types" = c(
-                                                                 "Line-dot"     = "linedot",
-                                                                 "Dumbbell"     = "dumbbell",
-                                                                 "Back-to-back" = "back-to-back",
-                                                                 "Sankey"       = "sankey",
-                                                                 "Spider/radar" = "spider",
-                                                                 "UpSet"        = "upset",
-                                                                 "Bar percent"  = "barpercent"
-                                                               ),
-                                                               "Blank" = c("Blank (no geom)" = "blank")
-                                                             ),
-                                                             width = "100%")
-                            ),
-                          ),
-                          shiny::hr(),
-                          shiny::fluidRow(
-                            shiny::column(width = 6,
-                                          shiny::selectizeInput("x", "X-axis", choices = NULL, multiple = TRUE, width = "100%"),
-                                          shiny::selectizeInput("category", "Category", choices = NULL, multiple = TRUE, width = "100%"),
-                                          shiny::selectizeInput("facet", "Facet", choices = NULL, multiple = TRUE, width = "100%"),
-                            ),
-                            shiny::column(width = 6,
-                                          shiny::selectizeInput("y", "Y-axis", choices = NULL, multiple = TRUE, width = "100%"),
-                                          shiny::radioButtons(
-                                            inputId = "y_calc",
-                                            label = "Y-axis transformation:",
-                                            choiceNames = list(
-                                              "None",
-                                              shiny::HTML(ifelse(pretty_labels, "Unique count", "<code>n_distinct()</code>")),
-                                              shiny::HTML(ifelse(pretty_labels, "Minimum", "<code>min()</code>")),
-                                              shiny::HTML(ifelse(pretty_labels, "Maximum", "<code>max()</code>")),
-                                              shiny::HTML(ifelse(pretty_labels, "Mean", "<code>mean()</code>")),
-                                              shiny::HTML(ifelse(pretty_labels, "Median", "<code>median()</code>"))
-                                            ),
-                                            choiceValues = c(
-                                              "None",
-                                              "n_distinct()",
-                                              "min()",
-                                              "max()",
-                                              "mean()",
-                                              "median()"
-                                            ),
-                                            selected = "None"
-                                          )
-                            ),
-                          ),
-                          shiny::hr(),
-                          main_inputs
-          ),
-          
-          # --- Upload tab (optional, only when upload_tab = TRUE)
+
+          # --- Upload tab (optional, only when upload_tab = TRUE) — always first
           if (isTRUE(upload_tab)) shiny::tabPanel("Upload",
             shiny::br(),
+            shiny::p(
+              "Upload your data file to get started, or visit the",
+              shiny::strong("Main"), "tab to explore built-in example data sets.",
+              style = "color: var(--bs-secondary); font-size: 0.9rem; margin-bottom: 12px;"
+            ),
             shiny::fileInput(
               "upload_file", "Choose file:",
               accept = upload_accept,
@@ -389,7 +314,7 @@ create_interactively <- function(data = NULL,
             ),
             shiny::selectInput(
               "upload_format", "File format:",
-              choices = c("Auto-detect from extension" = "", upload_formats),
+              choices = c("Auto-detect from extension" = "auto", upload_formats),
               width = "100%"
             ),
 
@@ -489,6 +414,86 @@ create_interactively <- function(data = NULL,
             shiny::br(), shiny::br(),
             shiny::uiOutput("upload_status"),
             DT::dataTableOutput("upload_preview")
+          ),
+
+          # --- Main tab
+          shiny::tabPanel("Main",
+                          shiny::fluidRow(
+                            shiny::column(width = 6,
+                                          shiny::selectizeInput(
+                                            "dataset", "Data set",
+                                            choices = data_sets,
+                                            selected = ifelse(is.null(data), "iris", names(globalenv_labels)[1]),
+                                            options = list(create = FALSE),
+                                            width = "100%"
+                                          )
+                            ),
+                            shiny::column(width = 6,
+                                          shiny::selectInput("type", "Plot type",
+                                                             choices = list(
+                                                               "Automatic detection" = c("Automatic" = "auto"),
+                                                               "Common types" = c(
+                                                                 "Column"    = "col",
+                                                                 "Bar (horizontal)" = "bar",
+                                                                 "Line"      = "line",
+                                                                 "Point"     = "point",
+                                                                 "Area"      = "area",
+                                                                 "Histogram" = "histogram"
+                                                               ),
+                                                               "Categorical types" = c(
+                                                                 "Boxplot"   = "boxplot",
+                                                                 "Violin"    = "violin",
+                                                                 "Beeswarm"  = "beeswarm",
+                                                                 "Jitter"    = "jitter"
+                                                               ),
+                                                               "Advanced types" = c(
+                                                                 "Line-dot"     = "linedot",
+                                                                 "Dumbbell"     = "dumbbell",
+                                                                 "Back-to-back" = "back-to-back",
+                                                                 "Sankey"       = "sankey",
+                                                                 "Spider/radar" = "spider",
+                                                                 "UpSet"        = "upset",
+                                                                 "Bar percent"  = "barpercent"
+                                                               ),
+                                                               "Blank" = c("Blank (no geom)" = "blank")
+                                                             ),
+                                                             width = "100%")
+                            ),
+                          ),
+                          shiny::hr(),
+                          shiny::fluidRow(
+                            shiny::column(width = 6,
+                                          shiny::selectizeInput("x", "X-axis", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::selectizeInput("category", "Category", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::selectizeInput("facet", "Facet", choices = NULL, multiple = TRUE, width = "100%"),
+                            ),
+                            shiny::column(width = 6,
+                                          shiny::selectizeInput("y", "Y-axis", choices = NULL, multiple = TRUE, width = "100%"),
+                                          shiny::radioButtons(
+                                            inputId = "y_calc",
+                                            label = "Y-axis transformation:",
+                                            choiceNames = list(
+                                              "None",
+                                              shiny::HTML(ifelse(pretty_labels, "Unique count", "<code>n_distinct()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Minimum", "<code>min()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Maximum", "<code>max()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Mean", "<code>mean()</code>")),
+                                              shiny::HTML(ifelse(pretty_labels, "Median", "<code>median()</code>"))
+                                            ),
+                                            choiceValues = c(
+                                              "None",
+                                              "n_distinct()",
+                                              "min()",
+                                              "max()",
+                                              "mean()",
+                                              "median()"
+                                            ),
+                                            selected = "None"
+                                          )
+                            ),
+                          ),
+                          shiny::hr(),
+                          main_inputs
           ),
 
           # --- X settings
@@ -704,13 +709,15 @@ create_interactively <- function(data = NULL,
       }
     })
 
-    # --- Upload tab: import button -------------------------------------------
-    shiny::observeEvent(input$upload_import_btn, {
-      shiny::req(input$upload_file)
+    # --- Upload tab: import logic --------------------------------------------
+    # Extracted into a closure so it can be triggered both reactively and
+    # manually via the button.
+    do_import <- function() {
+      if (is.null(input$upload_file)) return(invisible(NULL))
 
       file_path  <- input$upload_file$datapath
       file_label <- input$upload_file$name
-      fmt        <- input$upload_format  # may be "" (auto-detect)
+      fmt        <- input$upload_format
 
       # Check that the format-specific backend package is installed
       pkg_required <- switch(fmt,
@@ -729,7 +736,7 @@ create_interactively <- function(data = NULL,
 
       # Build the argument list for rio::import()
       import_args <- list(file = file_path)
-      if (nzchar(fmt)) {
+      if (fmt != "auto") {
         import_args$format <- fmt
       }
 
@@ -803,6 +810,34 @@ create_interactively <- function(data = NULL,
           )
         }
       }
+    }
+
+    # Debounced reactive: tracks all upload inputs so that changing any
+    # option (delimiter, sheet, encoding, …) re-fires the import after
+    # a short pause without requiring the button.
+    upload_trigger <- shiny::reactive({
+      shiny::req(input$upload_file)
+      list(
+        input$upload_format,
+        input$upload_delim,     input$upload_quote,
+        input$upload_header,    input$upload_skip,
+        input$upload_encoding,  input$upload_comment,  input$upload_na_strings,
+        input$upload_sheet,
+        input$upload_xl_header, input$upload_xl_skip,  input$upload_xl_range,
+        input$upload_stat_encoding, input$upload_user_na, input$upload_dta_labels,
+        input$upload_json_simplify
+      )
+    })
+    upload_trigger_d <- shiny::debounce(upload_trigger, 600)
+
+    # Auto-import whenever the debounced trigger changes
+    shiny::observeEvent(upload_trigger_d(), {
+      do_import()
+    })
+
+    # Button forces an immediate (non-debounced) import
+    shiny::observeEvent(input$upload_import_btn, {
+      do_import()
     })
 
     # --- Upload tab: status label and preview --------------------------------
@@ -1099,8 +1134,12 @@ create_interactively <- function(data = NULL,
     shiny::observeEvent(input$showexport, {
       shinyjs::toggle("export")
     })
+    data_visible <- shiny::reactiveVal(FALSE)
     shiny::observeEvent(input$showdata, {
+      data_visible(!data_visible())
       shinyjs::toggle("datatable")
+      shinyjs::html("showdata",
+        if (data_visible()) "Hide data \u003c" else "Show data \u003e")
     })
     output$datatable <- DT::renderDataTable({
       switch(input$dataset,
