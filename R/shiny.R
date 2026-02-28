@@ -817,7 +817,7 @@ create_interactively <- function(data = NULL,
     })
     output$upload_preview <- DT::renderDataTable({
       shiny::req(imported_data())
-      head(imported_data(), 5)
+      utils::head(imported_data(), 5)
     }, options = list(dom = "t", scrollX = TRUE, pageLength = 5),
        rownames = FALSE)
     
