@@ -603,6 +603,7 @@ create_interactively <- function(data = NULL,
     }
     
     imported_data <- shiny::reactiveVal(NULL)
+    preview_data  <- shiny::reactiveVal(NULL)  # Upload tab staging area
     
     changed_inputs <- shiny::reactiveValues(names = character())
     shiny::observe({
@@ -709,15 +710,14 @@ create_interactively <- function(data = NULL,
       }
     })
 
-    # --- Upload tab: import logic --------------------------------------------
-    # Extracted into a closure so it can be triggered both reactively and
-    # manually via the button.
-    do_import <- function() {
+    # --- Upload tab: two-phase logic -----------------------------------------
+    # Phase 1 — do_preview(): reads the file with current options and stores
+    # the result in preview_data only. Nothing in the wider app changes yet.
+    do_preview <- function() {
       if (is.null(input$upload_file)) return(invisible(NULL))
 
-      file_path  <- input$upload_file$datapath
-      file_label <- input$upload_file$name
-      fmt        <- input$upload_format
+      file_path <- input$upload_file$datapath
+      fmt       <- input$upload_format
 
       # Check that the format-specific backend package is installed
       pkg_required <- switch(fmt,
@@ -734,11 +734,9 @@ create_interactively <- function(data = NULL,
         rlang::check_installed(pkg_required)
       }
 
-      # Build the argument list for rio::import()
+      # Build argument list for rio::import()
       import_args <- list(file = file_path)
-      if (fmt != "auto") {
-        import_args$format <- fmt
-      }
+      if (fmt != "auto") import_args$format <- fmt
 
       if (fmt %in% c("csv", "tsv", "txt")) {
         import_args$sep      <- input$upload_delim
@@ -747,20 +745,14 @@ create_interactively <- function(data = NULL,
         import_args$skip     <- as.integer(input$upload_skip)
         na_str               <- trimws(strsplit(input$upload_na_strings, ",")[[1]])
         import_args$na.strings <- na_str[nzchar(na_str)]
-        if (nzchar(input$upload_comment)) {
-          import_args$comment.char <- input$upload_comment
-        }
+        if (nzchar(input$upload_comment)) import_args$comment.char <- input$upload_comment
         import_args$quote <- input$upload_quote
 
       } else if (fmt %in% c("xlsx", "xls", "ods", "xlsb")) {
-        if (!is.null(input$upload_sheet)) {
-          import_args$which <- as.integer(input$upload_sheet)
-        }
+        if (!is.null(input$upload_sheet)) import_args$which <- as.integer(input$upload_sheet)
         import_args$col_names <- isTRUE(input$upload_xl_header)
         import_args$skip      <- as.integer(input$upload_xl_skip)
-        if (nzchar(input$upload_xl_range)) {
-          import_args$range <- input$upload_xl_range
-        }
+        if (nzchar(input$upload_xl_range)) import_args$range <- input$upload_xl_range
 
       } else if (fmt %in% c("sav", "zsav")) {
         import_args$encoding <- input$upload_stat_encoding
@@ -781,40 +773,21 @@ create_interactively <- function(data = NULL,
         do.call(rio::import, import_args),
         error = function(e) {
           shiny::showNotification(
-            paste0("Import failed: ", conditionMessage(e)),
+            paste0("Read failed: ", conditionMessage(e)),
             type = "error", duration = 10
           )
           NULL
         }
       )
 
-      if (!is.null(data)) {
-        if (!is.data.frame(data)) {
-          data <- tryCatch(as.data.frame(data), error = function(e) NULL)
-        }
-        if (!is.null(data)) {
-          imported_data(data)
-          choices <- data_sets
-          choices$`Import data` <- c(
-            stats::setNames("import", "Import another data set..."),
-            stats::setNames("imported",
-                            paste0(file_label, " (",
-                                   paste(dim(data), collapse = " \u00d7 "), ")"))
-          )
-          shiny::updateSelectizeInput(session, "dataset",
-            selected = "imported", choices = choices)
-          shiny::updateTabsetPanel(session, "settings_tabs", selected = "Main")
-          shiny::showNotification(
-            paste0("Imported ", nrow(data), " rows \u00d7 ", ncol(data), " columns."),
-            type = "message", duration = 4
-          )
-        }
+      if (!is.null(data) && !is.data.frame(data)) {
+        data <- tryCatch(as.data.frame(data), error = function(e) NULL)
       }
+      preview_data(data)  # NULL on failure — clears the preview table
     }
 
-    # Debounced reactive: tracks all upload inputs so that changing any
-    # option (delimiter, sheet, encoding, …) re-fires the import after
-    # a short pause without requiring the button.
+    # Debounced reactive over all upload inputs: fires do_preview() only,
+    # so the wider app is untouched until the user presses the button.
     upload_trigger <- shiny::reactive({
       shiny::req(input$upload_file)
       list(
@@ -830,29 +803,57 @@ create_interactively <- function(data = NULL,
     })
     upload_trigger_d <- shiny::debounce(upload_trigger, 600)
 
-    # Auto-import whenever the debounced trigger changes
     shiny::observeEvent(upload_trigger_d(), {
-      do_import()
+      do_preview()
     })
 
-    # Button forces an immediate (non-debounced) import
+    # Phase 2 — "Import data" button: commits preview_data to the app.
     shiny::observeEvent(input$upload_import_btn, {
-      do_import()
+      # If the preview is stale (e.g. user changed options and debounce
+      # hasn't fired yet), re-read immediately before committing.
+      do_preview()
+      shiny::req(preview_data())
+
+      data       <- preview_data()
+      file_label <- input$upload_file$name
+
+      imported_data(data)
+      choices <- data_sets
+      choices$`Import data` <- c(
+        stats::setNames("import", "Import another data set..."),
+        stats::setNames("imported",
+                        paste0(file_label, " (",
+                               paste(dim(data), collapse = " \u00d7 "), ")"))
+      )
+      shiny::updateSelectizeInput(session, "dataset",
+        selected = "imported", choices = choices)
+      shiny::updateTabsetPanel(session, "settings_tabs", selected = "Main")
+      shiny::showNotification(
+        paste0("Imported \u201c", file_label, "\u201d \u2014 ",
+               nrow(data), " rows \u00d7 ", ncol(data), " columns."),
+        type = "message", duration = 4
+      )
     })
 
-    # --- Upload tab: status label and preview --------------------------------
+    # --- Upload tab: status label and preview table --------------------------
+    # These use preview_data, not imported_data, so nothing commits to the
+    # wider app until the button is pressed.
     output$upload_status <- shiny::renderUI({
-      d <- imported_data()
+      d <- preview_data()
       if (!is.null(d)) {
-        shiny::p(
-          shiny::strong(paste0("Preview (first 5 of ", nrow(d), " rows):")),
-          style = "margin-bottom: 4px; font-size: 0.85rem;"
+        shiny::tagList(
+          shiny::p(
+            shiny::strong(paste0(nrow(d), " rows \u00d7 ", ncol(d), " columns")),
+            " \u2014 adjust options above if needed, then press",
+            shiny::strong("Import data"), "to use this data set.",
+            style = "font-size: 0.85rem; margin-bottom: 4px;"
+          )
         )
       }
     })
     output$upload_preview <- DT::renderDataTable({
-      shiny::req(imported_data())
-      utils::head(imported_data(), 5)
+      shiny::req(preview_data())
+      utils::head(preview_data(), 5)
     }, options = list(dom = "t", scrollX = TRUE, pageLength = 5),
        rownames = FALSE)
     
