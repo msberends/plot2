@@ -5,15 +5,69 @@
 
 # `plot2`: Simplified and Enhanced Data Visualisation in R
 
-`plot2` is a simple yet powerful extension of `ggplot2`, designed to
-streamline the process of creating high-quality data visualisations in R
-by removing most of the manual work. Built with the philosophy of **Less
-Typing, More Plotting**, `plot2` automates many of the routine tasks
-that typically require substantial code when plotting with `ggplot2`. It
-even renders pre-processing steps in, for example, `dplyr`, `tidyr`, and
-`forcats` largely superfluous. This package allows you to focus on the
-insights and stories your data can tell, rather than the intricate
-details of plot construction.
+**plot2** is a high-level R wrapper around `ggplot2` designed to
+minimise typing while producing complex, publication-ready plots. The
+central idea: one call to `plot2()` replaces many separate `ggplot2` +
+`dplyr`/`tidyr` steps, including automatic plot-type selection, in-line
+data transformations, axis handling, and custom theming.
+
+``` r
+library(ggplot2)
+library(dplyr)
+iris |>
+  group_by(Species) |>
+  summarise(
+    mean_sepal_length = mean(Sepal.Length),
+    .groups = "drop"
+  ) |>
+  mutate(
+    Species = factor(Species, levels = c("setosa", "versicolor", "virginica"))
+  ) |>
+  ggplot(
+    mapping = aes(
+      x    = Species,
+      y    = mean_sepal_length,
+    )
+  ) + # switch from '|>' to '+' for ggplot elements
+  geom_bar(
+    stat          = "identity",
+    colour        = "white",
+    width         = 0.6,
+    show.legend   = FALSE
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.25)),
+    limits = c(0, NA),
+  ) +
+  scale_x_discrete(
+    name = "Species"
+  ) +
+  labs(
+    caption = "Source: Anderson/Fisher iris dataset"
+  )
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+``` r
+library(plot2)
+iris |>
+  plot2(x = Species,
+        y = mean(Sepal.Length),
+        legend.position = "none",
+        caption = "Source: Anderson/Fisher iris dataset")
+```
+
+<img src="man/figures/README-unnamed-chunk-2-2.png" width="100%" />
+
+`plot2` is designed to streamline the process of creating high-quality
+data visualisations in R by removing most of the manual work. Built with
+the philosophy of **Less Typing, More Plotting**, `plot2` automates many
+of the routine tasks that typically require substantial code when
+plotting with `ggplot2`. It even renders pre-processing steps in, for
+example, `dplyr`, `tidyr`, and `forcats` largely superfluous. This
+package allows you to focus on the insights and stories your data can
+tell, rather than the intricate details of plot construction.
 
 Where `ggplot2` involves calling many different *functions* such as
 `ggplot()`, `aes()`, `geom_col()`, `facet_wrap()`, `theme()`, and
@@ -104,7 +158,7 @@ iris |>
 #> ℹ Using y = Sepal.Width
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 ``` r
 
@@ -114,7 +168,7 @@ iris |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-2.png" width="100%" />
 
 ``` r
 iris |> 
@@ -122,7 +176,7 @@ iris |>
 #> ℹ Using type = "boxplot" since all groups in Species contain at least three values
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-3.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-3.png" width="100%" />
 
 ``` r
 
@@ -135,7 +189,7 @@ iris |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-4.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-4.png" width="100%" />
 
 ``` r
 
@@ -148,7 +202,7 @@ iris |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-5.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-5.png" width="100%" />
 
 ``` r
 iris |> 
@@ -161,7 +215,7 @@ iris |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-6.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-6.png" width="100%" />
 
 ``` r
 
@@ -173,7 +227,7 @@ iris |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-7.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-7.png" width="100%" />
 
 ``` r
 iris |>
@@ -182,7 +236,7 @@ iris |>
 #> ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-8.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-8.png" width="100%" />
 
 ``` r
   
@@ -197,7 +251,7 @@ iris |>
 #> ℹ Using y = Sepal.Width
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-9.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-9.png" width="100%" />
 
 ``` r
 iris |>
@@ -210,7 +264,7 @@ iris |>
 #> ℹ Using y = Sepal.Width
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-10.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-10.png" width="100%" />
 
 ``` r
 
@@ -225,7 +279,7 @@ iris |>
 #> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-11.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-11.png" width="100%" />
 
 ``` r
 iris |>
@@ -239,7 +293,7 @@ iris |>
 #> `geom_smooth()` using formula = 'y ~ x'
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-12.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-12.png" width="100%" />
 
 ``` r
 
@@ -253,7 +307,7 @@ mtcars |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-13.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-13.png" width="100%" />
 
 ``` r
 
@@ -279,7 +333,7 @@ admitted_patients |>
 #> ℹ Using type = "boxplot" since all groups in hospital contain at least three values
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-14.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-14.png" width="100%" />
 
 ``` r
 
@@ -288,7 +342,7 @@ admitted_patients |>
 #> ℹ Using type = "boxplot" since all groups in hospital and gender contain at least three values
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-15.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-15.png" width="100%" />
 
 ``` r
   
@@ -299,7 +353,7 @@ admitted_patients |>
 #> ℹ Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-16.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-16.png" width="100%" />
 
 ``` r
   
@@ -310,14 +364,14 @@ admitted_patients |>
 #> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-17.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-17.png" width="100%" />
 
 ``` r
 admitted_patients |>
   plot2(hospital, n(), gender, ward)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-18.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-18.png" width="100%" />
 
 ``` r
 admitted_patients |>
@@ -331,7 +385,7 @@ admitted_patients |>
 #> ℹ Using type = "boxplot" since all groups in hospital and gender contain at least three values
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-19.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-19.png" width="100%" />
 
 ``` r
 
@@ -341,7 +395,7 @@ admitted_patients |>
 #> ℹ Using binwidth = 6.4 based on data
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-20.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-20.png" width="100%" />
 
 ``` r
 
@@ -356,7 +410,7 @@ admitted_patients |>
 #> ℹ Using binwidth = 6.4 based on data
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-21.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-21.png" width="100%" />
 
 ``` r
  
@@ -366,7 +420,7 @@ admitted_patients |>
   plot2(hospital, n(), gender)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-22.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-22.png" width="100%" />
 
 ``` r
   
@@ -375,7 +429,7 @@ admitted_patients |>
         stacked = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-23.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-23.png" width="100%" />
 
 ``` r
         
@@ -384,7 +438,7 @@ admitted_patients |>
         stacked_fill = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-24.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-24.png" width="100%" />
 
 ``` r
 
@@ -393,7 +447,7 @@ admitted_patients |>
   plot2(hospital, median(age), gender, type = "dumbbell")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-25.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-25.png" width="100%" />
 
 ``` r
  
@@ -405,7 +459,7 @@ admitted_patients |>
 #> ℹ Applying x.sort = "freq-asc" using summarise_function = sum
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-26.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-26.png" width="100%" />
 
 ``` r
 
@@ -416,7 +470,7 @@ admitted_patients |>
         stacked = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-27.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-27.png" width="100%" />
 
 ``` r
         
@@ -429,7 +483,7 @@ Titanic |>
 #> ! Input class 'table' was transformed using `as.data.frame()`
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-28.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-28.png" width="100%" />
 
 ``` r
 
@@ -452,7 +506,7 @@ mtcars |>
 #> ! Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-29.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-29.png" width="100%" />
 
 ``` r
 
@@ -466,7 +520,7 @@ mtcars |>
 #> ℹ Using category.midpoint = 0 (the current category scale centre)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-30.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-30.png" width="100%" />
 
 ``` r
 
@@ -483,7 +537,7 @@ lm(mpg ~ hp, data = mtcars) |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-31.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-31.png" width="100%" />
 
 ``` r
 
@@ -495,7 +549,7 @@ netherlands |>
 #> ℹ Using datalabels = province
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-32.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-32.png" width="100%" />
 
 ``` r
 netherlands |> 
@@ -506,7 +560,7 @@ netherlands |>
 #> ℹ Using datalabels = province
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-33.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-33.png" width="100%" />
 
 ``` r
 # Support for any system or Google font
@@ -517,7 +571,7 @@ mtcars |>
 #> ℹ Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 ## Ways to input arguments
 
