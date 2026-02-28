@@ -712,6 +712,21 @@ create_interactively <- function(data = NULL,
       file_label <- input$upload_file$name
       fmt        <- input$upload_format  # may be "" (auto-detect)
 
+      # Check that the format-specific backend package is installed
+      pkg_required <- switch(fmt,
+        sav = , zsav = , dta = , sas7bdat = , xpt = "haven",
+        feather = "arrow",
+        parquet = "nanoparquet",
+        json = , ndjson = "jsonlite",
+        yaml = "yaml",
+        xml = , html = "xml2",
+        ods = "readODS",
+        NULL
+      )
+      if (!is.null(pkg_required)) {
+        rlang::check_installed(pkg_required)
+      }
+
       # Build the argument list for rio::import()
       import_args <- list(file = file_path)
       if (nzchar(fmt)) {
@@ -1233,14 +1248,26 @@ label_with_dims <- function(x) {
 #' @keywords internal
 install_shiny_deps <- function() {
   rlang::check_installed(c(
+    # Core Shiny app
     "bslib",
     "clipr",
     "DT",
     "fansi",
     "pillar",
-    "readxl",
     "rio",
     "shiny",
-    "shinyjs"
+    "shinyjs",
+    # Upload tab: spreadsheet backends
+    "readxl",   # XLS, XLSX (also used for sheet detection)
+    "readODS",  # ODS
+    # Upload tab: statistical software backends
+    "haven",    # SPSS (.sav, .zsav), Stata (.dta), SAS (.sas7bdat, .xpt)
+    # Upload tab: columnar / big-data backends
+    "arrow",       # Feather / Arrow
+    "nanoparquet", # Parquet
+    # Upload tab: text-structured backends
+    "jsonlite", # JSON, NDJSON
+    "yaml",     # YAML
+    "xml2"      # XML, HTML tables
   ))
 }
