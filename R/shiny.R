@@ -21,22 +21,27 @@
 #' @param pretty_labels A logical to switch to pretty, readable labels, instead of argument names in code style.
 #' @param hide_generated_code A logical to hide generated code.
 #' @param hide_export_buttons A logical to hide export buttons and functionality. `TRUE` will hide the elements completely, `NULL` will show a clickable text to expand buttons (default), `FALSE` will show the expanded buttons.
+#' @param upload_tab A logical to show a dedicated **Upload** tab in the sidebar. When `TRUE`, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Import data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the `readxl` package in addition to the packages checked for `upload_tab = FALSE`. Administrators can ensure all dependencies are present by running `plot2:::install_shiny_deps()` before launching the app.
 #' @details
 #' ![Shiny app example](create_interactively.jpg)
 #' @export
 #' @examples
 #' \dontrun{
-#' 
+#'
 #' create_interactively()
-#' 
+#'
 #' iris |> create_interactively()
+#'
+#' # With the upload tab for importing external data files:
+#' create_interactively(upload_tab = TRUE)
 #' }
 create_interactively <- function(data = NULL,
                                  css_code = NULL,
                                  logo_path = system.file("logo.svg", package = "plot2"),
                                  pretty_labels = FALSE,
                                  hide_generated_code = FALSE,
-                                 hide_export_buttons = NULL) {
+                                 hide_export_buttons = NULL,
+                                 upload_tab = FALSE) {
   
   logo_path <- tryCatch({
     # might return an error:
@@ -51,6 +56,9 @@ create_interactively <- function(data = NULL,
   rlang::check_installed("clipr")
   rlang::check_installed("pillar")
   rlang::check_installed("rio")
+  if (isTRUE(upload_tab)) {
+    rlang::check_installed("readxl")
+  }
   
   rstudio_viewer <- identical(Sys.getenv("RSTUDIO"), "1") && interactive()
   rstudio_viewer <- FALSE # turn off for now
@@ -176,6 +184,47 @@ create_interactively <- function(data = NULL,
     make_input(nm, other_args[[nm]], pretty_labels)
   })
   
+  # ---- Upload tab: supported formats ----------------------------------------
+  upload_formats <- c(
+    # Text
+    "CSV (.csv)"                       = "csv",
+    "TSV (.tsv)"                       = "tsv",
+    "Plain text (.txt)"                = "txt",
+    # Spreadsheet
+    "Excel (.xlsx)"                    = "xlsx",
+    "Excel legacy (.xls)"              = "xls",
+    "OpenDocument Spreadsheet (.ods)"  = "ods",
+    "Excel binary (.xlsb)"             = "xlsb",
+    # Statistical software
+    "SPSS (.sav)"                      = "sav",
+    "SPSS compressed (.zsav)"          = "zsav",
+    "Stata (.dta)"                     = "dta",
+    "SAS (.sas7bdat)"                  = "sas7bdat",
+    "SAS transport (.xpt)"             = "xpt",
+    "Minitab (.mtp)"                   = "mtp",
+    # R formats
+    "R serialised object (.rds)"       = "rds",
+    "R data file (.rda / .rdata)"      = "rda",
+    # Modern column-oriented
+    "Parquet (.parquet)"               = "parquet",
+    "Feather / Arrow (.feather)"       = "feather",
+    # Text-based structured
+    "JSON (.json)"                     = "json",
+    "Newline-delimited JSON (.ndjson)" = "ndjson",
+    "YAML (.yaml / .yml)"              = "yaml",
+    "XML (.xml)"                       = "xml",
+    "HTML table (.html)"               = "html"
+  )
+  upload_accept <- paste(
+    c(".csv", ".tsv", ".txt",
+      ".xls", ".xlsx", ".ods", ".xlsb",
+      ".sav", ".zsav", ".dta", ".sas7bdat", ".xpt", ".mtp",
+      ".rds", ".rda", ".rdata",
+      ".parquet", ".feather", ".arrow",
+      ".json", ".ndjson", ".yaml", ".yml", ".xml", ".html"),
+    collapse = ","
+  )
+
   ui <- shiny::fluidPage(
     title = "Generate plot2",
     theme = bslib::bs_theme(version = 5, preset = "united"),
@@ -213,7 +262,12 @@ create_interactively <- function(data = NULL,
       ifelse(!is.null(css_code), paste0(css_code, collapse = "\n"), ""),
       ifelse(hide_generated_code, ".generated-code { display: none; }", ""),
       ifelse(isTRUE(hide_export_buttons), "#export, .show-export { display: none; }", ""),
-      ifelse(isFALSE(hide_export_buttons), "#show-export, .show-export { display: none; }", ""))),
+      ifelse(isFALSE(hide_export_buttons), "#show-export, .show-export { display: none; }", ""),
+      "#upload_preview { font-size: 0.8rem; }",
+      "#upload_preview table { font-size: 0.8rem; }",
+      "#upload_preview .dataTables_wrapper { overflow-x: auto; max-height: 220px; overflow-y: auto; }",
+      ".upload-section-title { font-weight: 600; font-size: 0.85rem; color: var(--bs-primary); margin: 6px 0 4px; }",
+      ".upload-options { background: #f9f4f2; border-radius: 4px; padding: 8px; margin-bottom: 6px; }")),
     
     shiny::sidebarLayout(
       shiny::sidebarPanel(
@@ -243,7 +297,125 @@ create_interactively <- function(data = NULL,
         shiny::tabsetPanel(
           type = "tabs",
           id = "settings_tabs",
-          
+
+          # --- Upload tab (optional, only when upload_tab = TRUE) — always first
+          if (isTRUE(upload_tab)) shiny::tabPanel("Upload",
+            shiny::br(),
+            shiny::p(
+              "Upload your data file to get started, or visit the",
+              shiny::strong("Main"), "tab to explore built-in example data sets.",
+              style = "color: var(--bs-secondary); font-size: 0.9rem; margin-bottom: 12px;"
+            ),
+            shiny::fileInput(
+              "upload_file", "Choose file:",
+              accept = upload_accept,
+              width = "100%",
+              multiple = FALSE
+            ),
+            shiny::selectInput(
+              "upload_format", "File format:",
+              choices = c("Auto-detect from extension" = "auto", upload_formats),
+              width = "100%"
+            ),
+
+            # --- Text format options (CSV / TSV / TXT)
+            shiny::conditionalPanel(
+              condition = "['csv', 'tsv', 'txt'].includes(input.upload_format)",
+              shiny::div(class = "upload-options",
+                shiny::p(class = "upload-section-title", "Text file options"),
+                shiny::fluidRow(
+                  shiny::column(6,
+                    shiny::selectInput("upload_delim", "Delimiter:",
+                      choices = c("Comma (,)" = ",", "Semicolon (;)" = ";",
+                                  "Tab" = "\t", "Pipe (|)" = "|",
+                                  "Space" = " ", "Colon (:)" = ":"),
+                      width = "100%")
+                  ),
+                  shiny::column(6,
+                    shiny::selectInput("upload_quote", "Quote character:",
+                      choices = c('Double quote (")' = '"', "Single quote (')" = "'",
+                                  "None" = ""),
+                      width = "100%")
+                  )
+                ),
+                shiny::fluidRow(
+                  shiny::column(6,
+                    shiny::checkboxInput("upload_header", "First row is header", value = TRUE)
+                  ),
+                  shiny::column(6,
+                    shiny::numericInput("upload_skip", "Skip rows:", value = 0, min = 0, width = "100%")
+                  )
+                ),
+                shiny::fluidRow(
+                  shiny::column(6,
+                    shiny::textInput("upload_encoding", "Encoding:", value = "UTF-8", width = "100%")
+                  ),
+                  shiny::column(6,
+                    shiny::textInput("upload_comment", "Comment character:", value = "", width = "100%")
+                  )
+                ),
+                shiny::textInput("upload_na_strings", "NA strings (comma-separated):",
+                  value = "NA", width = "100%")
+              )
+            ),
+
+            # --- Excel / ODS options
+            shiny::conditionalPanel(
+              condition = "['xlsx', 'xls', 'ods', 'xlsb'].includes(input.upload_format)",
+              shiny::div(class = "upload-options",
+                shiny::p(class = "upload-section-title", "Spreadsheet options"),
+                shiny::uiOutput("upload_sheet_ui"),
+                shiny::fluidRow(
+                  shiny::column(6,
+                    shiny::checkboxInput("upload_xl_header", "First row is header", value = TRUE)
+                  ),
+                  shiny::column(6,
+                    shiny::numericInput("upload_xl_skip", "Skip rows:", value = 0, min = 0, width = "100%")
+                  )
+                ),
+                shiny::textInput("upload_xl_range", "Cell range (optional, e.g. A1:D20):",
+                  value = "", width = "100%")
+              )
+            ),
+
+            # --- Statistical software options (SPSS / Stata / SAS)
+            shiny::conditionalPanel(
+              condition = "['sav', 'zsav', 'dta', 'sas7bdat', 'xpt', 'mtp'].includes(input.upload_format)",
+              shiny::div(class = "upload-options",
+                shiny::p(class = "upload-section-title", "Statistical software options"),
+                shiny::textInput("upload_stat_encoding", "Encoding:", value = "UTF-8", width = "100%"),
+                shiny::conditionalPanel(
+                  condition = "['sav', 'zsav'].includes(input.upload_format)",
+                  shiny::checkboxInput("upload_user_na",
+                    "Preserve user-defined NA values (SPSS)", value = FALSE)
+                ),
+                shiny::conditionalPanel(
+                  condition = "input.upload_format === 'dta'",
+                  shiny::checkboxInput("upload_dta_labels",
+                    "Convert value labels to factors (Stata)", value = TRUE)
+                )
+              )
+            ),
+
+            # --- JSON options
+            shiny::conditionalPanel(
+              condition = "['json', 'ndjson'].includes(input.upload_format)",
+              shiny::div(class = "upload-options",
+                shiny::p(class = "upload-section-title", "JSON options"),
+                shiny::checkboxInput("upload_json_simplify",
+                  "Simplify to data frame", value = TRUE)
+              )
+            ),
+
+            shiny::br(),
+            shiny::actionButton("upload_import_btn", "Import data",
+              class = "btn-primary", width = "100%"
+            ),
+            shiny::br(), shiny::br(),
+            shiny::uiOutput("upload_status"),
+            DT::dataTableOutput("upload_preview")
+          ),
+
           # --- Main tab
           shiny::tabPanel("Main",
                           shiny::fluidRow(
@@ -257,7 +429,7 @@ create_interactively <- function(data = NULL,
                                           )
                             ),
                             shiny::column(width = 6,
-                                          shiny::selectInput("type", "Plot type", 
+                                          shiny::selectInput("type", "Plot type",
                                                              choices = list(
                                                                "Automatic detection" = c("Automatic" = "auto"),
                                                                "Common types" = c(
@@ -323,7 +495,7 @@ create_interactively <- function(data = NULL,
                           shiny::hr(),
                           main_inputs
           ),
-          
+
           # --- X settings
           shiny::tabPanel("X-axis", shiny::div(class = "settings", x_inputs)),
           
@@ -431,6 +603,7 @@ create_interactively <- function(data = NULL,
     }
     
     imported_data <- shiny::reactiveVal(NULL)
+    preview_data  <- shiny::reactiveVal(NULL)  # Upload tab staging area
     
     changed_inputs <- shiny::reactiveValues(names = character())
     shiny::observe({
@@ -448,19 +621,27 @@ create_interactively <- function(data = NULL,
     
     shiny::observe({
       if (input$dataset == "import") {
-        shiny::showModal(
-          shiny::modalDialog(
-            title = "Import a Data File",
-            shiny::fileInput("file_upload", "Choose file:",
-                             accept = c(".csv", ".tsv", ".txt", ".xls", ".xlsx", ".rds", ".sav", ".dta", ".sas7bdat"),
-                             width = "100%",
-                             multiple = FALSE),
-            footer = shiny::tagList(
-              shiny::actionButton("import_confirm", "Import", class = "btn-success"),
-              shiny::actionButton("import_cancel", "Cancel", class = "btn-danger")
+        if (isTRUE(upload_tab)) {
+          # Reset the dropdown so it doesn't stay on "import"
+          shiny::updateSelectizeInput(session, "dataset",
+            selected = if (!is.null(imported_data())) "imported" else "iris")
+          # Navigate to the Upload tab
+          shiny::updateTabsetPanel(session, "settings_tabs", selected = "Upload")
+        } else {
+          shiny::showModal(
+            shiny::modalDialog(
+              title = "Import a Data File",
+              shiny::fileInput("file_upload", "Choose file:",
+                               accept = c(".csv", ".tsv", ".txt", ".xls", ".xlsx", ".rds", ".sav", ".dta", ".sas7bdat"),
+                               width = "100%",
+                               multiple = FALSE),
+              footer = shiny::tagList(
+                shiny::actionButton("import_confirm", "Import", class = "btn-success"),
+                shiny::actionButton("import_cancel", "Cancel", class = "btn-danger")
+              )
             )
           )
-        )
+        }
       }
     })
     shiny::observeEvent(input$import_cancel, {
@@ -468,10 +649,10 @@ create_interactively <- function(data = NULL,
     })
     shiny::observeEvent(input$import_confirm, {
       shiny::req(input$file_upload)
-      
+
       file_path <- input$file_upload$datapath
       file_name <- input$file_upload$name
-      
+
       # Try to read with `rio::import`
       data <- tryCatch(
         rio::import(file_path),
@@ -481,7 +662,7 @@ create_interactively <- function(data = NULL,
           return(NULL)
         }
       )
-      
+
       if (!is.null(data)) {
         imported_data(data)
         choices <- data_sets
@@ -489,9 +670,192 @@ create_interactively <- function(data = NULL,
                                    stats::setNames("imported", paste0("Imported data (", paste(dim(data), collapse = " x "), ")")))
         shiny::updateSelectizeInput(session, "dataset", selected = "imported", choices = choices)
       }
-      
+
       shiny::removeModal()
     })
+
+    # --- Upload tab: auto-detect format when a file is chosen ----------------
+    shiny::observeEvent(input$upload_file, {
+      ext <- tolower(tools::file_ext(input$upload_file$name))
+      # Normalise aliases
+      ext <- switch(ext,
+        rdata = "rda",
+        yml   = "yaml",
+        arrow = "feather",
+        zsav  = "zsav",
+        ext
+      )
+      if (ext %in% upload_formats) {
+        shiny::updateSelectInput(session, "upload_format", selected = ext)
+      }
+    })
+
+    # --- Upload tab: dynamic sheet selector for Excel / ODS ------------------
+    output$upload_sheet_ui <- shiny::renderUI({
+      shiny::req(input$upload_file)
+      ext <- tolower(tools::file_ext(input$upload_file$name))
+      if (ext %in% c("xlsx", "xls", "ods", "xlsb")) {
+        sheets <- tryCatch(
+          readxl::excel_sheets(input$upload_file$datapath),
+          error = function(e) NULL
+        )
+        if (!is.null(sheets) && length(sheets) > 0) {
+          shiny::selectInput("upload_sheet", "Sheet:",
+            choices = stats::setNames(seq_along(sheets), sheets),
+            width = "100%")
+        } else {
+          shiny::numericInput("upload_sheet", "Sheet (number):",
+            value = 1, min = 1, width = "100%")
+        }
+      }
+    })
+
+    # --- Upload tab: two-phase logic -----------------------------------------
+    # Phase 1 — do_preview(): reads the file with current options and stores
+    # the result in preview_data only. Nothing in the wider app changes yet.
+    do_preview <- function() {
+      if (is.null(input$upload_file)) return(invisible(NULL))
+
+      file_path <- input$upload_file$datapath
+      fmt       <- input$upload_format
+
+      # Check that the format-specific backend package is installed
+      pkg_required <- switch(fmt,
+        sav = , zsav = , dta = , sas7bdat = , xpt = "haven",
+        feather = "arrow",
+        parquet = "nanoparquet",
+        json = , ndjson = "jsonlite",
+        yaml = "yaml",
+        xml = , html = "xml2",
+        ods = "readODS",
+        NULL
+      )
+      if (!is.null(pkg_required)) {
+        rlang::check_installed(pkg_required)
+      }
+
+      # Build argument list for rio::import()
+      import_args <- list(file = file_path)
+      if (fmt != "auto") import_args$format <- fmt
+
+      if (fmt %in% c("csv", "tsv", "txt")) {
+        import_args$sep      <- input$upload_delim
+        import_args$header   <- isTRUE(input$upload_header)
+        import_args$encoding <- input$upload_encoding
+        import_args$skip     <- as.integer(input$upload_skip)
+        na_str               <- trimws(strsplit(input$upload_na_strings, ",")[[1]])
+        import_args$na.strings <- na_str[nzchar(na_str)]
+        if (nzchar(input$upload_comment)) import_args$comment.char <- input$upload_comment
+        import_args$quote <- input$upload_quote
+
+      } else if (fmt %in% c("xlsx", "xls", "ods", "xlsb")) {
+        if (!is.null(input$upload_sheet)) import_args$which <- as.integer(input$upload_sheet)
+        import_args$col_names <- isTRUE(input$upload_xl_header)
+        import_args$skip      <- as.integer(input$upload_xl_skip)
+        if (nzchar(input$upload_xl_range)) import_args$range <- input$upload_xl_range
+
+      } else if (fmt %in% c("sav", "zsav")) {
+        import_args$encoding <- input$upload_stat_encoding
+        import_args$user_na  <- isTRUE(input$upload_user_na)
+
+      } else if (fmt == "dta") {
+        import_args$encoding <- input$upload_stat_encoding
+        import_args$labels   <- isTRUE(input$upload_dta_labels)
+
+      } else if (fmt %in% c("sas7bdat", "xpt", "mtp")) {
+        import_args$encoding <- input$upload_stat_encoding
+
+      } else if (fmt %in% c("json", "ndjson")) {
+        import_args$simplifyVector <- isTRUE(input$upload_json_simplify)
+      }
+
+      data <- tryCatch(
+        do.call(rio::import, import_args),
+        error = function(e) {
+          shiny::showNotification(
+            paste0("Read failed: ", conditionMessage(e)),
+            type = "error", duration = 10
+          )
+          NULL
+        }
+      )
+
+      if (!is.null(data) && !is.data.frame(data)) {
+        data <- tryCatch(as.data.frame(data), error = function(e) NULL)
+      }
+      preview_data(data)  # NULL on failure — clears the preview table
+    }
+
+    # Debounced reactive over all upload inputs: fires do_preview() only,
+    # so the wider app is untouched until the user presses the button.
+    upload_trigger <- shiny::reactive({
+      shiny::req(input$upload_file)
+      list(
+        input$upload_format,
+        input$upload_delim,     input$upload_quote,
+        input$upload_header,    input$upload_skip,
+        input$upload_encoding,  input$upload_comment,  input$upload_na_strings,
+        input$upload_sheet,
+        input$upload_xl_header, input$upload_xl_skip,  input$upload_xl_range,
+        input$upload_stat_encoding, input$upload_user_na, input$upload_dta_labels,
+        input$upload_json_simplify
+      )
+    })
+    upload_trigger_d <- shiny::debounce(upload_trigger, 600)
+
+    shiny::observeEvent(upload_trigger_d(), {
+      do_preview()
+    })
+
+    # Phase 2 — "Import data" button: commits preview_data to the app.
+    shiny::observeEvent(input$upload_import_btn, {
+      # If the preview is stale (e.g. user changed options and debounce
+      # hasn't fired yet), re-read immediately before committing.
+      do_preview()
+      shiny::req(preview_data())
+
+      data       <- preview_data()
+      file_label <- input$upload_file$name
+
+      imported_data(data)
+      choices <- data_sets
+      choices$`Import data` <- c(
+        stats::setNames("import", "Import another data set..."),
+        stats::setNames("imported",
+                        paste0(file_label, " (",
+                               paste(dim(data), collapse = " \u00d7 "), ")"))
+      )
+      shiny::updateSelectizeInput(session, "dataset",
+        selected = "imported", choices = choices)
+      shiny::updateTabsetPanel(session, "settings_tabs", selected = "Main")
+      shiny::showNotification(
+        paste0("Imported \u201c", file_label, "\u201d \u2014 ",
+               nrow(data), " rows \u00d7 ", ncol(data), " columns."),
+        type = "message", duration = 4
+      )
+    })
+
+    # --- Upload tab: status label and preview table --------------------------
+    # These use preview_data, not imported_data, so nothing commits to the
+    # wider app until the button is pressed.
+    output$upload_status <- shiny::renderUI({
+      d <- preview_data()
+      if (!is.null(d)) {
+        shiny::tagList(
+          shiny::p(
+            shiny::strong(paste0(nrow(d), " rows \u00d7 ", ncol(d), " columns")),
+            " \u2014 adjust options above if needed, then press",
+            shiny::strong("Import data"), "to use this data set.",
+            style = "font-size: 0.85rem; margin-bottom: 4px;"
+          )
+        )
+      }
+    })
+    output$upload_preview <- DT::renderDataTable({
+      shiny::req(preview_data())
+      utils::head(preview_data(), 5)
+    }, options = list(dom = "t", scrollX = TRUE, pageLength = 5),
+       rownames = FALSE)
     
     shiny::observe({
       d <- switch(input$dataset,
@@ -771,8 +1135,12 @@ create_interactively <- function(data = NULL,
     shiny::observeEvent(input$showexport, {
       shinyjs::toggle("export")
     })
+    data_visible <- shiny::reactiveVal(FALSE)
     shiny::observeEvent(input$showdata, {
+      data_visible(!data_visible())
       shinyjs::toggle("datatable")
+      shinyjs::html("showdata",
+        if (data_visible()) "Hide data \u003c" else "Show data \u003e")
     })
     output$datatable <- DT::renderDataTable({
       switch(input$dataset,
@@ -905,4 +1273,41 @@ label_with_dims <- function(x) {
   dims <- tryCatch(dim(eval(parse(text = x))), error = function(e) NULL)
   if (is.null(dims)) return(x)
   paste0(gsub("(g?g?plot2|dplyr)::", "", x), " (", dims[1], " x ", dims[2], ")")
+}
+
+#' Install All Shiny App Dependencies
+#'
+#' A convenience function for administrators to check and install all packages
+#' required by [create_interactively()], including those needed for the upload
+#' tab (`upload_tab = TRUE`). This function is not intended for end users; run
+#' it once in an admin session to prepare the environment:
+#'
+#' ```r
+#' plot2:::install_shiny_deps()
+#' ```
+#' @keywords internal
+install_shiny_deps <- function() {
+  rlang::check_installed(c(
+    # Core Shiny app
+    "bslib",
+    "clipr",
+    "DT",
+    "fansi",
+    "pillar",
+    "rio",
+    "shiny",
+    "shinyjs",
+    # Upload tab: spreadsheet backends
+    "readxl",   # XLS, XLSX (also used for sheet detection)
+    "readODS",  # ODS
+    # Upload tab: statistical software backends
+    "haven",    # SPSS (.sav, .zsav), Stata (.dta), SAS (.sas7bdat, .xpt)
+    # Upload tab: columnar / big-data backends
+    "arrow",       # Feather / Arrow
+    "nanoparquet", # Parquet
+    # Upload tab: text-structured backends
+    "jsonlite", # JSON, NDJSON
+    "yaml",     # YAML
+    "xml2"      # XML, HTML tables
+  ))
 }
