@@ -299,9 +299,10 @@ create_interactively <- function(data = NULL,
           type = "tabs",
           id = "settings_tabs",
 
-          # --- Upload tab (optional, only when upload_tab = TRUE) — always first
-          if (isTRUE(upload_tab)) shiny::tabPanel("Upload",
-            shiny::p(
+          # --- Upload tab — always rendered; hidden via hideTab() when upload_tab = FALSE
+          shiny::tabPanel("Upload",
+            shiny::br(),
+            if (isTRUE(upload_tab)) shiny::p(
               "Upload your data file to get started, or visit the",
               shiny::strong("Main"), "tab to explore built-in example data sets.",
               style = "color: var(--bs-secondary); font-size: 0.9rem; margin-bottom: 12px;"
@@ -601,6 +602,11 @@ create_interactively <- function(data = NULL,
     if (is.null(hide_export_buttons)) {
       shinyjs::hide("export")
     }
+    # Hide the Upload tab at startup unless it was permanently enabled.
+    # showTab() reveals it on demand when the user picks "Import data set...".
+    if (!isTRUE(upload_tab)) {
+      shiny::hideTab(inputId = "settings_tabs", target = "Upload")
+    }
     
     imported_data <- shiny::reactiveVal(NULL)
     preview_data  <- shiny::reactiveVal(NULL)  # Upload tab staging area
@@ -621,57 +627,16 @@ create_interactively <- function(data = NULL,
     
     shiny::observe({
       if (input$dataset == "import") {
-        if (isTRUE(upload_tab)) {
-          # Reset the dropdown so it doesn't stay on "import"
-          shiny::updateSelectizeInput(session, "dataset",
-            selected = if (!is.null(imported_data())) "imported" else "iris")
-          # Navigate to the Upload tab
-          shiny::updateTabsetPanel(session, "settings_tabs", selected = "Upload")
-        } else {
-          shiny::showModal(
-            shiny::modalDialog(
-              title = "Import a Data File",
-              shiny::fileInput("file_upload", "Choose file:",
-                               accept = c(".csv", ".tsv", ".txt", ".xls", ".xlsx", ".rds", ".sav", ".dta", ".sas7bdat"),
-                               width = "100%",
-                               multiple = FALSE),
-              footer = shiny::tagList(
-                shiny::actionButton("import_confirm", "Import", class = "btn-success"),
-                shiny::actionButton("import_cancel", "Cancel", class = "btn-danger")
-              )
-            )
-          )
+        # Always redirect to the Upload tab (revealing it first if it was
+        # hidden because upload_tab = FALSE).
+        if (!isTRUE(upload_tab)) {
+          shiny::showTab(inputId = "settings_tabs", target = "Upload")
         }
+        # Reset the dropdown so it doesn't stay on "import"
+        shiny::updateSelectizeInput(session, "dataset",
+          selected = if (!is.null(imported_data())) "imported" else "iris")
+        shiny::updateTabsetPanel(session, "settings_tabs", selected = "Upload")
       }
-    })
-    shiny::observeEvent(input$import_cancel, {
-      shiny::removeModal()
-    })
-    shiny::observeEvent(input$import_confirm, {
-      shiny::req(input$file_upload)
-
-      file_path <- input$file_upload$datapath
-      file_name <- input$file_upload$name
-
-      # Try to read with `rio::import`
-      data <- tryCatch(
-        rio::import(file_path),
-        error = function(e) {
-          shiny::updateSelectizeInput(session, "dataset", selected = "iris") # reset to something that always works
-          shiny::showNotification("Failed to import file.", type = "error")
-          return(NULL)
-        }
-      )
-
-      if (!is.null(data)) {
-        imported_data(data)
-        choices <- data_sets
-        choices$`Import data` <- c(stats::setNames("import", "Import another data set..."),
-                                   stats::setNames("imported", paste0("Imported data (", paste(dim(data), collapse = " x "), ")")))
-        shiny::updateSelectizeInput(session, "dataset", selected = "imported", choices = choices)
-      }
-
-      shiny::removeModal()
     })
 
     # --- Upload tab: auto-detect format when a file is chosen ----------------
