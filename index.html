@@ -65,8 +65,52 @@
 <code>plot2</code>: Simplified and Enhanced Data Visualisation in R<a class="anchor" aria-label="anchor" href="#plot2-simplified-and-enhanced-data-visualisation-in-r"></a>
 </h1>
 </div>
-<p><code>plot2</code> is a simple yet powerful extension of <code>ggplot2</code>, designed to streamline the process of creating high-quality data visualisations in R by removing most of the manual work. Built with the philosophy of <strong>Less Typing, More Plotting</strong>, <code>plot2</code> automates many of the routine tasks that typically require substantial code when plotting with <code>ggplot2</code>. It even renders pre-processing steps in, for example, <code>dplyr</code>, <code>tidyr</code>, and <code>forcats</code> largely superfluous. This package allows you to focus on the insights and stories your data can tell, rather than the intricate details of plot construction.</p>
-<p>Where <code>ggplot2</code> involves calling many different <em>functions</em> such as <code>ggplot()</code>, <code>aes()</code>, <code>geom_col()</code>, <code>facet_wrap()</code>, <code>theme()</code>, and <code>scale_y_continuous()</code>, <code>plot2</code> only requires filling in the necessary <em>arguments</em> of a single function.</p>
+<p><strong>plot2</strong> is a high-level R wrapper around <code>ggplot2</code> designed to minimise typing while producing complex, publication-ready plots. The central idea: one call to <code><a href="reference/plot2.html">plot2()</a></code> replaces many separate <code>ggplot2</code> + <code>dplyr</code>/<code>tidyr</code> steps, including automatic plot-type selection, in-line data transformations, axis handling, and custom theming.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>    mean_sepal_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>,</span>
+<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Species</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa"</span>, <span class="st">"versicolor"</span>, <span class="st">"virginica"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
+<span>    mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x    <span class="op">=</span> <span class="va">Species</span>,</span>
+<span>      y    <span class="op">=</span> <span class="va">mean_sepal_length</span>,</span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span> <span class="co"># switch from '|&gt;' to '+' for ggplot elements</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span></span>
+<span>    stat          <span class="op">=</span> <span class="st">"identity"</span>,</span>
+<span>    colour        <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    width         <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>    show.legend   <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"Species"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    caption <span class="op">=</span> <span class="st">"Source: Anderson/Fisher iris dataset"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2">plot2</a></span><span class="op">)</span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>,</span>
+<span>        legend.position <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>        caption <span class="op">=</span> <span class="st">"Source: Anderson/Fisher iris dataset"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-2-2.png" width="100%"></p>
+<p><code>plot2</code> is designed to streamline the process of creating high-quality data visualisations in R by removing most of the manual work. Built with the philosophy of <strong>Less Typing, More Plotting</strong>, <code>plot2</code> automates many of the routine tasks that typically require substantial code when plotting with <code>ggplot2</code>. It even renders pre-processing steps in, for example, <code>dplyr</code>, <code>tidyr</code>, and <code>forcats</code> largely superfluous. This package allows you to focus on the insights and stories your data can tell, rather than the intricate details of plot construction.</p>
+<p>Where <code>ggplot2</code> involves calling many different <em>functions</em> such as <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>, and <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous()</a></code>, <code>plot2</code> only requires filling in the necessary <em>arguments</em> of a single function.</p>
 <blockquote>
 <p>For a <strong>comprehensive guide to using <code>plot2</code></strong>, including advanced features and customisation options, please see <a href="https://msberends.github.io/plot2/articles/plot2.html">the full vignette here</a>.</p>
 </blockquote>
@@ -75,7 +119,7 @@
 </h2>
 <ul>
 <li>
-<strong>Plotting with as Few Lines as Possible:</strong> No need to type <code>ggplot()</code>, <code>aes()</code>, <code>geom_col()</code>, <code>facet_wrap()</code>, <code>theme()</code>, or <code>scale_y_continuous()</code>. A single <code><a href="reference/plot2.html">plot2()</a></code> call is sufficient.</li>
+<strong>Plotting with as Few Lines as Possible:</strong> No need to type <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>, or <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous()</a></code>. A single <code><a href="reference/plot2.html">plot2()</a></code> call is sufficient.</li>
 <li>
 <strong>Automatic Plot Selection:</strong> <code>plot2</code> automatically chooses the most appropriate plot type based on your data, saving time and effort.</li>
 <li>
@@ -83,7 +127,7 @@
 <li>
 <strong>Enhanced Sorting and Faceting:</strong> Easily sort and facet your data with simple arguments, streamlining the creation of complex multi-panel plots.</li>
 <li>
-<strong>New Clean Theme:</strong> Includes <code><a href="reference/theme_minimal2.html">theme_minimal2()</a></code>, a minimalist theme based on <code>theme_minimal()</code>, further optimised for clear and professional output, making it well suited to PDF publications, scientific manuscripts, and presentations.</li>
+<strong>New Clean Theme:</strong> Includes <code><a href="reference/theme_minimal2.html">theme_minimal2()</a></code>, a minimalist theme based on <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal()</a></code>, further optimised for clear and professional output, making it well suited to PDF publications, scientific manuscripts, and presentations.</li>
 <li>
 <strong>Seamless Integration with ggplot2:</strong> Retain the full power and flexibility of <code>ggplot2</code> while benefiting from <code>plot2</code>’s streamlined interface.</li>
 </ul>
@@ -98,7 +142,7 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Install the latest version of <code>plot2</code> as follows:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"plot2"</span>,</span>
 <span>                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://cran.r-project.org"</span>,</span>
 <span>                           <span class="st">"https://msberends.r-universe.dev"</span><span class="op">)</span><span class="op">)</span></span>
@@ -114,7 +158,7 @@
 <p>For <strong>all supported plot types</strong>, see the overview: <a href="https://msberends.github.io/plot2/articles/supported_types.html" class="uri">https://msberends.github.io/plot2/articles/supported_types.html</a>.</p>
 </blockquote>
 <p>Here is a minimal example to get started with <code>plot2</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2">plot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
@@ -134,20 +178,20 @@
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span>
 <span><span class="co">#&gt; ℹ Using x = Sepal.Length</span></span>
 <span><span class="co">#&gt; ℹ Using y = Sepal.Width</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># If x and y are specified, no additional mapping is set:</span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Sepal.Width</span>, <span class="va">Sepal.Length</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-2.png" width="100%"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-2.png" width="100%"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Species</span>, <span class="va">Sepal.Length</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "boxplot" since all groups in Species contain at least three values</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-3.png" width="100%"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-3.png" width="100%"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Arguments are in the order: x, y, category, facet</span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
@@ -156,8 +200,8 @@
 <span><span class="co">#&gt; ℹ Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%</span></span>
 <span><span class="co">#&gt; ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-4.png" width="100%"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-4.png" width="100%"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="va">Sepal.Width</span>, <span class="va">Petal.Length</span>, <span class="va">Species</span>,</span>
@@ -166,8 +210,8 @@
 <span><span class="co">#&gt; ℹ Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%</span></span>
 <span><span class="co">#&gt; ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-5.png" width="100%"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-5.png" width="100%"></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="va">Sepal.Width</span>, <span class="va">Petal.Length</span>, <span class="va">Species</span>,</span>
 <span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"red"</span>, <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span>
@@ -176,8 +220,8 @@
 <span><span class="co">#&gt; ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales</span></span>
 <span><span class="co">#&gt; ℹ Using category.midpoint = 3.45 (the current category scale centre)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-6.png" width="100%"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-6.png" width="100%"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># y can contain multiple named columns</span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
@@ -185,14 +229,14 @@
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Length <span class="op">=</span> <span class="va">Petal.Length</span>, Width <span class="op">=</span> <span class="va">Petal.Width</span><span class="op">)</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Petal property"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-7.png" width="100%"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-7.png" width="100%"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "boxplot" since all groups in Species and category contain at least three values</span></span>
 <span><span class="co">#&gt; ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-8.png" width="100%"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-8.png" width="100%"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  </span>
 <span><span class="co"># The category type can consist of one or more aesthetics</span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span></span>
@@ -203,8 +247,8 @@
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span>
 <span><span class="co">#&gt; ℹ Using x = Sepal.Length</span></span>
 <span><span class="co">#&gt; ℹ Using y = Sepal.Width</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-9.png" width="100%"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-9.png" width="100%"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>zoom <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        category <span class="op">=</span> <span class="va">Petal.Length</span>,</span>
@@ -213,8 +257,8 @@
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span>
 <span><span class="co">#&gt; ℹ Using x = Sepal.Length</span></span>
 <span><span class="co">#&gt; ℹ Using y = Sepal.Width</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-10.png" width="100%"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-10.png" width="100%"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Easily add smoothing</span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span></span>
@@ -225,8 +269,8 @@
 <span><span class="co">#&gt; ℹ Using x = Sepal.Length</span></span>
 <span><span class="co">#&gt; ℹ Using y = Sepal.Width</span></span>
 <span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-11.png" width="100%"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-11.png" width="100%"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>zoom <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -236,8 +280,8 @@
 <span><span class="co">#&gt; ℹ Using x = Sepal.Length</span></span>
 <span><span class="co">#&gt; ℹ Using y = Sepal.Width</span></span>
 <span><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-12.png" width="100%"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-12.png" width="100%"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Support for a secondary y-axis</span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
@@ -247,8 +291,8 @@
 <span>        y_secondary.scientific <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"Secondary y-axis sets colour to the axis titles"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-13.png" width="100%"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-13.png" width="100%"></p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">admitted_patients</span></span>
 <span><span class="co">#&gt; # A tibble: 250 × 7</span></span>
@@ -270,34 +314,34 @@
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "boxplot" since all groups in hospital contain at least three values</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-14.png" width="100%"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-14.png" width="100%"></p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span>, <span class="va">gender</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "boxplot" since all groups in hospital and gender contain at least three values</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-15.png" width="100%"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-15.png" width="100%"></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  </span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%</span></span>
 <span><span class="co">#&gt; ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales</span></span>
 <span><span class="co">#&gt; ℹ Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-16.png" width="100%"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-16.png" width="100%"></p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  </span>
 <span><span class="co"># Use any function for y</span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%</span></span>
 <span><span class="co">#&gt; ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-17.png" width="100%"></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-17.png" width="100%"></p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-18.png" width="100%"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-18.png" width="100%"></p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span>
 <span>        y <span class="op">=</span> <span class="va">age</span>,</span>
@@ -307,15 +351,15 @@
 <span>        linewidth <span class="op">=</span> <span class="fl">1.25</span>,</span>
 <span>        y.age <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "boxplot" since all groups in hospital and gender contain at least three values</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-19.png" width="100%"></p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-19.png" width="100%"></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">age</span>, type <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming smooth = TRUE for type = "histogram"</span></span>
 <span><span class="co">#&gt; ℹ Using binwidth = 6.4 based on data</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-20.png" width="100%"></p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-20.png" width="100%"></p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Titles can include calculations and support {glue}</span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
@@ -326,33 +370,33 @@
 <span>        x.title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Age ranging from"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">" to "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming smooth = TRUE for type = "histogram"</span></span>
 <span><span class="co">#&gt; ℹ Using binwidth = 6.4 based on data</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-21.png" width="100%"></p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-21.png" width="100%"></p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> </span>
 <span><span class="co"># The default type is column; data labels are automatically</span></span>
 <span><span class="co"># set for non-continuous types:</span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-22.png" width="100%"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-22.png" width="100%"></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  </span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span>
 <span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-23.png" width="100%"></p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-23.png" width="100%"></p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>        </span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span>
 <span>        stacked_fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-24.png" width="100%"></p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-24.png" width="100%"></p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Two categories may benefit from a dumbbell plot:</span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-25.png" width="100%"></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-25.png" width="100%"></p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> </span>
 <span><span class="co"># Sort in any direction:</span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
@@ -360,16 +404,16 @@
 <span>        x.sort <span class="op">=</span> <span class="st">"freq-asc"</span>,</span>
 <span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Applying x.sort = "freq-asc" using summarise_function = sum</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-26.png" width="100%"></p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-26.png" width="100%"></p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span>
 <span>        x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"D"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
 <span>        category.sort <span class="op">=</span> <span class="st">"alpha-desc"</span>,</span>
 <span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-27.png" width="100%"></p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-27.png" width="100%"></p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>        </span>
 <span><span class="co"># Support for Sankey plots</span></span>
 <span><span class="va">Titanic</span> <span class="op">|&gt;</span></span>
@@ -378,8 +422,8 @@
 <span>        type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming sankey.remove_axes = TRUE</span></span>
 <span><span class="co">#&gt; ! Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-28.png" width="100%"></p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-28.png" width="100%"></p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Matrix support, for example cor()</span></span>
 <span><span class="va">correlation_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
@@ -398,8 +442,8 @@
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming type = "tile" since the matrix contains identical row and column names</span></span>
 <span><span class="co">#&gt; ! Omitting printing of 121 datalabels - use datalabels = TRUE to force printing</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-29.png" width="100%"></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-29.png" width="100%"></p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -409,8 +453,8 @@
 <span>        title <span class="op">=</span>  <span class="st">"Correlation matrix"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming type = "tile" since the matrix contains identical row and column names</span></span>
 <span><span class="co">#&gt; ℹ Using category.midpoint = 0 (the current category scale centre)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-30.png" width="100%"></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-30.png" width="100%"></p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># plot2() supports all S3 extensions available through</span></span>
 <span><span class="co"># ggplot2::fortify() and broom::augment(), such as regression models:</span></span>
@@ -423,8 +467,8 @@
 <span>        title <span class="op">=</span> <span class="st">"Titles and captions support markdown"</span>,</span>
 <span>        subtitle <span class="op">=</span> <span class="st">"Axis titles contain square notation: x^2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-31.png" width="100%"></p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-31.png" width="100%"></p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># sf objects, geographic plots using simple features, are also supported</span></span>
 <span><span class="va">netherlands</span> <span class="op">|&gt;</span> </span>
@@ -432,29 +476,29 @@
 <span><span class="co">#&gt; ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.</span></span>
 <span><span class="co">#&gt; ℹ Using category = area_km2</span></span>
 <span><span class="co">#&gt; ℹ Using datalabels = province</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-32.png" width="100%"></p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-32.png" width="100%"></p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">netherlands</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>colour_fill <span class="op">=</span> <span class="st">"viridis"</span>, colour_opacity <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/add_type.html">add_sf</a></span><span class="op">(</span><span class="va">netherlands</span>, colour <span class="op">=</span> <span class="st">"black"</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.</span></span>
 <span><span class="co">#&gt; ℹ Using category = area_km2</span></span>
 <span><span class="co">#&gt; ℹ Using datalabels = province</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-33.png" width="100%"></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-4-33.png" width="100%"></p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Support for any system or Google font</span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>,</span>
 <span>        font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"This plot uses a Google Font"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="ways-to-input-arguments">Ways to input arguments<a class="anchor" aria-label="anchor" href="#ways-to-input-arguments"></a>
 </h2>
 <p>Like <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, pass <code>x</code> and <code>y</code> in your preferred style:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span></span>
@@ -467,7 +511,7 @@
 <h2 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
 </h2>
 <p>You can create plots interactively using the built-in Shiny app. All <code>plot2</code> arguments are available within it. In RStudio, an add-in menu item is also provided.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/create_interactively.html">create_interactively</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <figure><img src="reference/figures/create_interactively.jpg" alt="Shiny app example"><figcaption aria-hidden="true">
