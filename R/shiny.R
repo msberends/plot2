@@ -268,7 +268,10 @@ create_interactively <- function(data = NULL,
       "#upload_preview table { font-size: 0.8rem; }",
       "#upload_preview .dataTables_wrapper { overflow-x: auto; max-height: 220px; overflow-y: auto; }",
       ".upload-section-title { font-weight: 600; font-size: 0.85rem; color: var(--bs-primary); margin: 6px 0 4px; }",
-      ".upload-options { background: #f9f4f2; border-radius: 4px; padding: 8px; margin-bottom: 6px; }")),
+      ".upload-options { background: #f9f4f2; border-radius: 4px; padding: 8px; margin-bottom: 6px; }",
+      # When upload_tab = FALSE, hide the Upload nav item immediately via CSS
+      # (no server round-trip → no flash). shinyjs::removeClass() reveals it on demand.
+      ".upload-tab-hidden #settings_tabs li:has(a[data-value='Upload']) { display: none !important; }")),
     
     shiny::sidebarLayout(
       shiny::sidebarPanel(
@@ -295,11 +298,15 @@ create_interactively <- function(data = NULL,
           ))
         ),
         
+        shiny::div(
+          id = "settings_tabs_container",
+          class = if (!isTRUE(upload_tab)) "upload-tab-hidden" else NULL,
         shiny::tabsetPanel(
           type = "tabs",
           id = "settings_tabs",
+          selected = "Main",
 
-          # --- Upload tab — always rendered; hidden via hideTab() when upload_tab = FALSE
+          # --- Upload tab — always rendered; hidden via CSS when upload_tab = FALSE
           shiny::tabPanel("Upload",
             shiny::br(),
             if (isTRUE(upload_tab)) shiny::p(
@@ -523,9 +530,10 @@ create_interactively <- function(data = NULL,
           
           # --- Other
           shiny::tabPanel("Other", shiny::div(class = "settings", other_inputs))
-        )
+        ) # end tabsetPanel
+        ) # end settings_tabs_container div
       ),
-      
+
       shiny::mainPanel(
         width = 7,
         shiny::br(),
@@ -602,12 +610,7 @@ create_interactively <- function(data = NULL,
     if (is.null(hide_export_buttons)) {
       shinyjs::hide("export")
     }
-    # Hide the Upload tab at startup unless it was permanently enabled.
-    # showTab() reveals it on demand when the user picks "Import data set...".
-    if (!isTRUE(upload_tab)) {
-      shiny::hideTab(inputId = "settings_tabs", target = "Upload")
-    }
-    
+
     imported_data <- shiny::reactiveVal(NULL)
     preview_data  <- shiny::reactiveVal(NULL)  # Upload tab staging area
     
@@ -628,9 +631,9 @@ create_interactively <- function(data = NULL,
     shiny::observe({
       if (input$dataset == "import") {
         # Always redirect to the Upload tab (revealing it first if it was
-        # hidden because upload_tab = FALSE).
+        # hidden because upload_tab = FALSE — CSS class approach, no flash).
         if (!isTRUE(upload_tab)) {
-          shiny::showTab(inputId = "settings_tabs", target = "Upload")
+          shinyjs::removeClass("settings_tabs_container", "upload-tab-hidden")
         }
         # Reset the dropdown so it doesn't stay on "import"
         shiny::updateSelectizeInput(session, "dataset",
