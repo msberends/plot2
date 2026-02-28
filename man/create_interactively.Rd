@@ -27,7 +27,7 @@ create_interactively(
 
 \item{hide_export_buttons}{A logical to hide export buttons and functionality. \code{TRUE} will hide the elements completely, \code{NULL} will show a clickable text to expand buttons (default), \code{FALSE} will show the expanded buttons.}
 
-\item{upload_tab}{A logical to show a dedicated \strong{Upload} tab in the sidebar. When \code{TRUE}, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Import data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the \code{readxl} package in addition to the packages checked for \code{upload_tab = FALSE}. Administrators can ensure all dependencies are present by running \code{plot2:::install_shiny_deps()} before launching the app.}
+\item{upload_tab}{A logical to show a dedicated \strong{Upload} tab in the sidebar. When \code{TRUE}, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the \code{readxl} package in addition to the packages checked for \code{upload_tab = FALSE}. Administrators can ensure all dependencies are present by running \code{plot2:::install_shiny_deps()} before launching the app.}
 }
 \description{
 This Shiny app allows for interactive creation of a \code{plot2}.

@@ -21,7 +21,7 @@
 #' @param pretty_labels A logical to switch to pretty, readable labels, instead of argument names in code style.
 #' @param hide_generated_code A logical to hide generated code.
 #' @param hide_export_buttons A logical to hide export buttons and functionality. `TRUE` will hide the elements completely, `NULL` will show a clickable text to expand buttons (default), `FALSE` will show the expanded buttons.
-#' @param upload_tab A logical to show a dedicated **Upload** tab in the sidebar. When `TRUE`, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Import data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the `readxl` package in addition to the packages checked for `upload_tab = FALSE`. Administrators can ensure all dependencies are present by running `plot2:::install_shiny_deps()` before launching the app.
+#' @param upload_tab A logical to show a dedicated **Upload** tab in the sidebar. When `TRUE`, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the `readxl` package in addition to the packages checked for `upload_tab = FALSE`. Administrators can ensure all dependencies are present by running `plot2:::install_shiny_deps()` before launching the app.
 #' @details
 #' ![Shiny app example](create_interactively.jpg)
 #' @export
@@ -100,7 +100,7 @@ create_interactively <- function(data = NULL,
   }
   
   # Ensure some defaults are always there
-  base_datasets <- c("iris", "mtcars", "Titanic")
+  base_datasets <- c("airquality", "iris", "mtcars", "pressure", "Titanic")
   
   globalenv_labels <- stats::setNames(globalenv_datasets,
                                       vapply(FUN.VALUE = character(1),
@@ -126,7 +126,7 @@ create_interactively <- function(data = NULL,
   # Grouped list
   data_sets <- list(
     "Global environment" = globalenv_labels,
-    "Import data"        = c("Import data set..." = "import"),
+    "Upload data"        = c("Upload data set..." = "import"),
     "Base R"             = base_labels,
     "plot2 package"      = plot2_labels,
     "ggplot2 package"    = ggplot2_labels,
@@ -304,11 +304,10 @@ create_interactively <- function(data = NULL,
         shiny::tabsetPanel(
           type = "tabs",
           id = "settings_tabs",
-          selected = "Main",
+          selected = ifelse(isTRUE(upload_tab), "Upload", "Main"),
 
           # --- Upload tab — always rendered; hidden via CSS when upload_tab = FALSE
           shiny::tabPanel("Upload",
-            shiny::br(),
             if (isTRUE(upload_tab)) shiny::p(
               "Upload your data file to get started, or visit the",
               shiny::strong("Main"), "tab to explore built-in example data sets.",
@@ -416,7 +415,7 @@ create_interactively <- function(data = NULL,
             ),
 
             shiny::br(),
-            shiny::actionButton("upload_import_btn", "Import data",
+            shiny::actionButton("upload_import_btn", "Upload data",
               class = "btn-primary", width = "100%"
             ),
             shiny::br(), shiny::br(),
@@ -537,58 +536,66 @@ create_interactively <- function(data = NULL,
       shiny::mainPanel(
         width = 7,
         shiny::br(),
-        shiny::fluidRow(shiny::plotOutput("plot")),
-        shiny::tags$div(
-          class = "generated-code",
-          shiny::hr(),
-          shiny::p("Generated code:"),
-          shiny::tags$div(
-            class = "copy-container",
-            shiny::actionButton("copy_btn", "Copy", class = "copy-button"),
-            shiny::verbatimTextOutput("code"),
-            shiny::uiOutput("plot2_msgs")
-          ),
-        ),
-        shiny::textOutput("error_msg"),
-        shiny::br(class = "show-export"),
-        shiny::actionLink("showexport", "Export plot >", class = "show-export"),
-        shiny::tags$div(
-          id = "export",
-          shiny::br(),
-          # shiny::p("Export as:"),
-          shiny::fluidRow(
-            # fields
-            shiny::column(width = 5,
-                          class = "export-left",
-                          shiny::p(shiny::strong("Vector graphic (scalable)")),
-                          shiny::fluidRow(
-                            shiny::column(width = 6, shiny::numericInput("export_height_cm", "Height (cm)", value = 10, min = 1, width = "100%")),
-                            shiny::column(width = 6, shiny::numericInput("export_width_cm", "Width (cm)", value = 15, min = 1, width = "100%")),
+        shiny::tabsetPanel(
+          shiny::tabPanel("Plot",
+                          shiny::br(),
+                          shiny::fluidRow(shiny::plotOutput("plot")),
+                          shiny::tags$div(
+                            class = "generated-code",
+                            shiny::p("Generated code:"),
+                            shiny::tags$div(
+                              class = "copy-container",
+                              shiny::actionButton("copy_btn", "Copy", class = "copy-button"),
+                              shiny::verbatimTextOutput("code"),
+                              shiny::uiOutput("plot2_msgs")
+                            ),
                           ),
-            ),
-            shiny::column(width = 7,
-                          class = "export-right",
-                          shiny::p(shiny::strong("Raster graphic")),
-                          shiny::fluidRow(
-                            shiny::column(width = 4, shiny::numericInput("export_height_px", "Height (px)", value = 500, min = 1, width = "100%")),
-                            shiny::column(width = 4, shiny::numericInput("export_width_px", "Width (px)", value = 750, min = 1, width = "100%")),
-                            shiny::column(width = 4, shiny::numericInput("export_dpi", "DPI", value = 100, min = 1, width = "100%")),
+                          shiny::textOutput("error_msg"),
+                          shiny::br(class = "show-export"),
+                          shiny::actionLink("showexport", "Export plot >", class = "show-export"),
+                          shiny::tags$div(
+                            id = "export",
+                            shiny::br(),
+                            # shiny::p("Export as:"),
+                            shiny::fluidRow(
+                              # fields
+                              shiny::column(width = 5,
+                                            class = "export-left",
+                                            shiny::p(shiny::strong("Vector graphic (scalable)")),
+                                            shiny::fluidRow(
+                                              shiny::column(width = 6, shiny::numericInput("export_height_cm", "Height (cm)", value = 10, min = 1, width = "100%")),
+                                              shiny::column(width = 6, shiny::numericInput("export_width_cm", "Width (cm)", value = 15, min = 1, width = "100%")),
+                                            ),
+                              ),
+                              shiny::column(width = 7,
+                                            class = "export-right",
+                                            shiny::p(shiny::strong("Raster graphic")),
+                                            shiny::fluidRow(
+                                              shiny::column(width = 4, shiny::numericInput("export_height_px", "Height (px)", value = 500, min = 1, width = "100%")),
+                                              shiny::column(width = 4, shiny::numericInput("export_width_px", "Width (px)", value = 750, min = 1, width = "100%")),
+                                              shiny::column(width = 4, shiny::numericInput("export_dpi", "DPI", value = 100, min = 1, width = "100%")),
+                                            ),
+                              ),
+                            ),
+                            shiny::fluidRow(
+                              # buttons
+                              shiny::column(width = 5,
+                                            class = "export-left",
+                                            shiny::downloadButton("export_pdf", "Export as PDF", class = "btn-primary", icon = NULL, width = "49.5%"),
+                                            shiny::downloadButton("export_svg", "Export as SVG", class = "btn-primary", icon = NULL, width = "49.5%"),
+                              ),
+                              shiny::column(width = 7,
+                                            class = "export-right",
+                                            shiny::downloadButton("export_png", "Export as PNG", class = "btn-primary", icon = NULL, width = "49.5%"),
+                                            shiny::downloadButton("export_jpg", "Export as JPG", class = "btn-primary", icon = NULL, width = "49.5%"),
+                              ),
+                            ),
                           ),
-            ),
           ),
-          shiny::fluidRow(
-            # buttons
-            shiny::column(width = 5,
-                          class = "export-left",
-                          shiny::downloadButton("export_pdf", "Export as PDF", class = "btn-primary", icon = NULL, width = "49.5%"),
-                          shiny::downloadButton("export_svg", "Export as SVG", class = "btn-primary", icon = NULL, width = "49.5%"),
-            ),
-            shiny::column(width = 7,
-                          class = "export-right",
-                          shiny::downloadButton("export_png", "Export as PNG", class = "btn-primary", icon = NULL, width = "49.5%"),
-                          shiny::downloadButton("export_jpg", "Export as JPG", class = "btn-primary", icon = NULL, width = "49.5%"),
-            ),
-          ),
+          shiny::tabPanel("Data",
+                          shiny::br(),
+                          DT::dataTableOutput("datatable")
+          )
         ),
         if (!is.null(logo_path)) { 
           shiny::div(
@@ -596,17 +603,11 @@ create_interactively <- function(data = NULL,
             shiny::img(src = file.path("plot2res", basename(logo_path)), height = "100px")
           )
         },
-        shiny::br(),
-        shiny::actionLink("showdata", "Show data >"),
-        shiny::br(),
-        shiny::br(),
-        DT::dataTableOutput("datatable")
       )
     )
   )
   
   server <- function(input, output, session) {
-    shinyjs::hide("datatable")
     if (is.null(hide_export_buttons)) {
       shinyjs::hide("export")
     }
@@ -775,7 +776,7 @@ create_interactively <- function(data = NULL,
       do_preview()
     })
 
-    # Phase 2 — "Import data" button: commits preview_data to the app.
+    # Phase 2 — "Upload data" button: commits preview_data to the app.
     shiny::observeEvent(input$upload_import_btn, {
       # If the preview is stale (e.g. user changed options and debounce
       # hasn't fired yet), re-read immediately before committing.
@@ -787,8 +788,8 @@ create_interactively <- function(data = NULL,
 
       imported_data(data)
       choices <- data_sets
-      choices$`Import data` <- c(
-        stats::setNames("import", "Import another data set..."),
+      choices$`Upload data` <- c(
+        stats::setNames("import", "Upload another data set..."),
         stats::setNames("imported",
                         paste0(file_label, " (",
                                paste(dim(data), collapse = " \u00d7 "), ")"))
@@ -797,7 +798,7 @@ create_interactively <- function(data = NULL,
         selected = "imported", choices = choices)
       shiny::updateTabsetPanel(session, "settings_tabs", selected = "Main")
       shiny::showNotification(
-        paste0("Imported \u201c", file_label, "\u201d \u2014 ",
+        paste0("Uploaded \u201c", file_label, "\u201d \u2014 ",
                nrow(data), " rows \u00d7 ", ncol(data), " columns."),
         type = "message", duration = 4
       )
@@ -813,7 +814,7 @@ create_interactively <- function(data = NULL,
           shiny::p(
             shiny::strong(paste0(nrow(d), " rows \u00d7 ", ncol(d), " columns")),
             " \u2014 adjust options above if needed, then press",
-            shiny::strong("Import data"), "to use this data set.",
+            shiny::strong("Upload data"), "to use this data set.",
             style = "font-size: 0.85rem; margin-bottom: 4px;"
           )
         )
@@ -828,7 +829,7 @@ create_interactively <- function(data = NULL,
     shiny::observe({
       d <- switch(input$dataset,
                   "imported" = imported_data(),
-                  import = NULL, # when clicking Import item that opens the modal
+                  import = NULL, # when clicking Upload item that opens the modal
                   eval(parse(text = input$dataset)))
       
       if (!is.null(d) && !is.data.frame(d)) {
@@ -1104,12 +1105,6 @@ create_interactively <- function(data = NULL,
       shinyjs::toggle("export")
     })
     data_visible <- shiny::reactiveVal(FALSE)
-    shiny::observeEvent(input$showdata, {
-      data_visible(!data_visible())
-      shinyjs::toggle("datatable")
-      shinyjs::html("showdata",
-        if (data_visible()) "Hide data \u003c" else "Show data \u003e")
-    })
     output$datatable <- DT::renderDataTable({
       switch(input$dataset,
              "imported" = imported_data(),
