@@ -236,6 +236,7 @@ create_interactively <- function(data = NULL,
       ".sidebarLayout { height: 100%; display: flex; }",
       ".sidebarPanel { height: 100%; overflow-y: auto; }",
       ".mainPanel, .well { height: 100%; overflow-y: auto; }",
+      "#settings_tabs a { padding-left: 5px !important; padding-right: 5px !important; }",
       "#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }",
       "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
       "#error_msg { color: red; }",
@@ -300,7 +301,6 @@ create_interactively <- function(data = NULL,
 
           # --- Upload tab (optional, only when upload_tab = TRUE) — always first
           if (isTRUE(upload_tab)) shiny::tabPanel("Upload",
-            shiny::br(),
             shiny::p(
               "Upload your data file to get started, or visit the",
               shiny::strong("Main"), "tab to explore built-in example data sets.",
