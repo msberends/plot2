@@ -46,3 +46,5 @@ Thumbs.db
 .Renviron
 .Rproj.user
 inst/doc
+
+.claude
