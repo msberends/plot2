@@ -229,6 +229,13 @@ create_interactively <- function(data = NULL,
     title = "Generate plot2",
     theme = bslib::bs_theme(version = 5, preset = "united"),
     
+    if (!is.null(logo_path)) { 
+      shiny::div(
+        id = "logo-container",
+        shiny::img(src = file.path("plot2res", basename(logo_path)), height = "100px")
+      )
+    },
+    
     shiny::tags$style(paste0(
       "html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }",
       ".container-fluid { height: 100%; display: flex; flex-direction: column; }",
@@ -238,7 +245,7 @@ create_interactively <- function(data = NULL,
       ".mainPanel, .well { height: 100%; overflow-y: auto; }",
       "#settings_tabs a { padding-left: 5px !important; padding-right: 5px !important; }",
       "#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }",
-      "#logo-container { position: absolute; bottom: 10px; right: 10px; }",
+      "#logo-container { position: absolute; bottom: 10px; right: 10px; z-index: -1; }",
       "#error_msg { color: red; }",
       ".container-fluid { overflow-x: hidden; padding-left: 0; }",
       "#settings_tabs { margin-bottom: 20px; font-size: 14px; }",
@@ -258,8 +265,7 @@ create_interactively <- function(data = NULL,
       "code, .code, pre, .pre { font-family: FiraCode, \"Fira Code\", SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; }",
       ".link-copyright { position: absolute; left: 0px; bottom: 0px; margin-left: 5px; margin-bottom: 5px; font-size: 10px; }",
       ".export-right { border-left: 1px solid var(--bs-primary); }",
-      "#export_pdf, #export_svg, #export_png, #export_jpg { width: 49% ; }",
-      # "#export button { margin-left: 10px; }",
+      "#export_pdf, #export_svg, #export_png, #export_jpg { width: 100%; margin-top: 32px; }",
       ifelse(!is.null(css_code), paste0(css_code, collapse = "\n"), ""),
       ifelse(hide_generated_code, ".generated-code { display: none; }", ""),
       ifelse(isTRUE(hide_export_buttons), "#export, .show-export { display: none; }", ""),
@@ -556,39 +562,17 @@ create_interactively <- function(data = NULL,
                           shiny::tags$div(
                             id = "export",
                             shiny::br(),
-                            # shiny::p("Export as:"),
                             shiny::fluidRow(
-                              # fields
-                              shiny::column(width = 5,
-                                            class = "export-left",
-                                            shiny::p(shiny::strong("Vector graphic (scalable)")),
-                                            shiny::fluidRow(
-                                              shiny::column(width = 6, shiny::numericInput("export_height_cm", "Height (cm)", value = 10, min = 1, width = "100%")),
-                                              shiny::column(width = 6, shiny::numericInput("export_width_cm", "Width (cm)", value = 15, min = 1, width = "100%")),
-                                            ),
-                              ),
-                              shiny::column(width = 7,
-                                            class = "export-right",
-                                            shiny::p(shiny::strong("Raster graphic")),
-                                            shiny::fluidRow(
-                                              shiny::column(width = 4, shiny::numericInput("export_height_px", "Height (px)", value = 500, min = 1, width = "100%")),
-                                              shiny::column(width = 4, shiny::numericInput("export_width_px", "Width (px)", value = 750, min = 1, width = "100%")),
-                                              shiny::column(width = 4, shiny::numericInput("export_dpi", "DPI", value = 100, min = 1, width = "100%")),
-                                            ),
-                              ),
+                              shiny::column(width = 3, shiny::numericInput("export_width_cm",  "Width (cm)",  value = 15, min = 1, max = 100, step = 0.5, width = "100%")),
+                              shiny::column(width = 3, shiny::numericInput("export_height_cm", "Height (cm)", value = 10, min = 1, max = 100, step = 0.5, width = "100%")),
+                              shiny::column(width = 3, shiny::downloadButton("export_pdf", "PDF", class = "btn-primary", icon = NULL, width = "100%")),
+                              shiny::column(width = 3, shiny::downloadButton("export_svg", "SVG", class = "btn-primary", icon = NULL)),
                             ),
                             shiny::fluidRow(
-                              # buttons
-                              shiny::column(width = 5,
-                                            class = "export-left",
-                                            shiny::downloadButton("export_pdf", "Export as PDF", class = "btn-primary", icon = NULL, width = "49.5%"),
-                                            shiny::downloadButton("export_svg", "Export as SVG", class = "btn-primary", icon = NULL, width = "49.5%"),
-                              ),
-                              shiny::column(width = 7,
-                                            class = "export-right",
-                                            shiny::downloadButton("export_png", "Export as PNG", class = "btn-primary", icon = NULL, width = "49.5%"),
-                                            shiny::downloadButton("export_jpg", "Export as JPG", class = "btn-primary", icon = NULL, width = "49.5%"),
-                              ),
+                              shiny::column(width = 3, shiny::numericInput("export_dpi",  "DPI", value = 300, min = 1, max = 1200, width = "100%")),
+                              shiny::column(width = 3, uiOutput("export_px_preview")),
+                              shiny::column(width = 3, shiny::downloadButton("export_png", "PNG", class = "btn-primary", icon = NULL)),
+                              shiny::column(width = 3, shiny::downloadButton("export_jpg", "JPG", class = "btn-primary", icon = NULL)),
                             ),
                           ),
           ),
@@ -596,15 +580,9 @@ create_interactively <- function(data = NULL,
                           shiny::br(),
                           DT::dataTableOutput("datatable")
           )
-        ),
-        if (!is.null(logo_path)) { 
-          shiny::div(
-            id = "logo-container",
-            shiny::img(src = file.path("plot2res", basename(logo_path)), height = "100px")
-          )
-        },
+        )
       )
-    )
+    ),
   )
   
   server <- function(input, output, session) {
@@ -1050,53 +1028,52 @@ create_interactively <- function(data = NULL,
     })
     
     output$export_pdf <- shiny::downloadHandler(
-      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".pdf"),
+      filename = function() paste0("plot_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".pdf"),
       content = function(file) {
         ggplot2::ggsave(file,
-                        plot = plot2_env$last_shiny_plot,
+                        plot   = plot2_env$last_shiny_plot,
                         device = "pdf",
-                        units = "cm",
-                        width = input$export_width_cm,
+                        units  = "cm",
+                        width  = input$export_width_cm,
                         height = input$export_height_cm)
-                        
       }
     )
     output$export_svg <- shiny::downloadHandler(
-      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".svg"),
+      filename = function() paste0("plot_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".svg"),
       content = function(file) {
         ggplot2::ggsave(file,
-                        plot = plot2_env$last_shiny_plot,
+                        plot   = plot2_env$last_shiny_plot,
                         device = "svg",
-                        units = "cm",
-                        width = input$export_width_cm,
+                        units  = "cm",
+                        width  = input$export_width_cm,
                         height = input$export_height_cm)
-        
       }
     )
     output$export_png <- shiny::downloadHandler(
-      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".png"),
+      filename = function() paste0("plot_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".png"),
       content = function(file) {
+        # Using units = "cm" keeps text/point sizes physically constant;
+        # DPI only controls pixel density.  Never use units = "px" with a
+        # high DPI — that shrinks the physical canvas and makes text huge.
         ggplot2::ggsave(file,
-                        plot = plot2_env$last_shiny_plot,
+                        plot   = plot2_env$last_shiny_plot,
                         device = "png",
-                        units = "px",
-                        dpi = input$export_dpi,
-                        width = input$export_width_px,
-                        height = input$export_height_px)
-        
+                        units  = "cm",
+                        dpi    = as.integer(input$export_dpi),
+                        width  = input$export_width_cm,
+                        height = input$export_height_cm)
       }
     )
     output$export_jpg <- shiny::downloadHandler(
-      filename = function() paste0("plot_", gsub("[^0-9_]", "", gsub(" ", "_", format(Sys.time()))), ".jpg"),
+      filename = function() paste0("plot_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".jpg"),
       content = function(file) {
         ggplot2::ggsave(file,
-                        plot = plot2_env$last_shiny_plot,
-                        device = "jpg",
-                        units = "px",
-                        dpi = input$export_dpi,
-                        width = input$export_width_px,
-                        height = input$export_height_px)
-        
+                        plot   = plot2_env$last_shiny_plot,
+                        device = "jpeg",
+                        units  = "cm",
+                        dpi    = as.integer(input$export_dpi),
+                        width  = input$export_width_cm,
+                        height = input$export_height_cm)
       }
     )
     
@@ -1104,6 +1081,23 @@ create_interactively <- function(data = NULL,
     shiny::observeEvent(input$showexport, {
       shinyjs::toggle("export")
     })
+
+    # Show the output pixel dimensions below the DPI selector so the user
+    # always knows exactly how large the raster file will be.
+    output$export_px_preview <- shiny::renderUI({
+      shiny::req(input$export_width_cm, input$export_height_cm, input$export_dpi)
+      dpi  <- as.numeric(input$export_dpi)
+      w_px <- floor(input$export_width_cm  / 2.54 * dpi)
+      h_px <- floor(input$export_height_cm / 2.54 * dpi)
+      shiny::p(
+        shiny::HTML(paste0(
+          "PDF and SVG are lossless formats. For JPG and PNG, the image size will be ",
+          format(w_px, big.mark = ","), " \u00d7 ", format(h_px, big.mark = ","), " px."
+        )),
+        style = "color: var(--bs-secondary); font-size: 0.82rem; margin-top: -6px; margin-bottom: 6px; width: 100%;"
+      )
+    })
+
     data_visible <- shiny::reactiveVal(FALSE)
     output$datatable <- DT::renderDataTable({
       switch(input$dataset,
