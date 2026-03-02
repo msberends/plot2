@@ -25,45 +25,21 @@ options(plot2.silent = FALSE,
 **plot2** is a high-level R wrapper around `ggplot2` designed to minimise typing while producing complex, publication-ready plots. The central idea: one call to `plot2()` replaces many separate `ggplot2` + `dplyr`/`tidyr` steps, including automatic plot-type selection, in-line data transformations, axis handling, and custom theming.
 
 ```{r}
+head(iris)
+
 library(ggplot2)
-library(dplyr)
-iris |>
-  group_by(Species) |>
-  summarise(
-    mean_sepal_length = mean(Sepal.Length),
-    .groups = "drop"
-  ) |>
-  mutate(
-    Species = factor(Species, levels = c("setosa", "versicolor", "virginica"))
-  ) |>
-  ggplot(
-    mapping = aes(
-      x    = Species,
-      y    = mean_sepal_length,
-    )
-  ) + # switch from '|>' to '+' for ggplot elements
-  geom_bar(
-    stat          = "identity",
-    colour        = "white",
-    width         = 0.6,
-    show.legend   = FALSE
-  ) +
-  scale_y_continuous(
-    expand = expansion(mult = c(0, 0.25)),
-    limits = c(0, NA),
-  ) +
-  scale_x_discrete(
-    name = "Species"
-  ) +
-  labs(
-    caption = "Source: Anderson/Fisher iris dataset"
-  )
+ggplot(
+  data = iris,
+  mapping = aes(
+    x = Species,
+    # transformation in ggplot do not account for other aesthetics:
+    y = mean(Sepal.Length))) +
+  geom_col(width = 0.5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.25)))
 library(plot2)
 iris |>
   plot2(x = Species,
-        y = mean(Sepal.Length),
-        legend.position = "none",
-        caption = "Source: Anderson/Fisher iris dataset")
+        y = mean(Sepal.Length))
 ```
 
 `plot2` is designed to streamline the process of creating high-quality data visualisations in R by removing most of the manual work. Built with the philosophy of **Less Typing, More Plotting**, `plot2` automates many of the routine tasks that typically require substantial code when plotting with `ggplot2`. It even renders pre-processing steps in, for example, `dplyr`, `tidyr`, and `forcats` largely superfluous. This package allows you to focus on the insights and stories your data can tell, rather than the intricate details of plot construction.

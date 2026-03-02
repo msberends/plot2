@@ -12,39 +12,24 @@ central idea: one call to `plot2()` replaces many separate `ggplot2` +
 data transformations, axis handling, and custom theming.
 
 ``` r
+head(iris)
+#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#> 1          5.1         3.5          1.4         0.2  setosa
+#> 2          4.9         3.0          1.4         0.2  setosa
+#> 3          4.7         3.2          1.3         0.2  setosa
+#> 4          4.6         3.1          1.5         0.2  setosa
+#> 5          5.0         3.6          1.4         0.2  setosa
+#> 6          5.4         3.9          1.7         0.4  setosa
+
 library(ggplot2)
-library(dplyr)
-iris |>
-  group_by(Species) |>
-  summarise(
-    mean_sepal_length = mean(Sepal.Length),
-    .groups = "drop"
-  ) |>
-  mutate(
-    Species = factor(Species, levels = c("setosa", "versicolor", "virginica"))
-  ) |>
-  ggplot(
-    mapping = aes(
-      x    = Species,
-      y    = mean_sepal_length,
-    )
-  ) + # switch from '|>' to '+' for ggplot elements
-  geom_bar(
-    stat          = "identity",
-    colour        = "white",
-    width         = 0.6,
-    show.legend   = FALSE
-  ) +
-  scale_y_continuous(
-    expand = expansion(mult = c(0, 0.25)),
-    limits = c(0, NA),
-  ) +
-  scale_x_discrete(
-    name = "Species"
-  ) +
-  labs(
-    caption = "Source: Anderson/Fisher iris dataset"
-  )
+ggplot(
+  data = iris,
+  mapping = aes(
+    x = Species,
+    # transformation in ggplot do not account for other aesthetics:
+    y = mean(Sepal.Length))) +
+  geom_col(width = 0.5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.25)))
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
@@ -53,9 +38,7 @@ iris |>
 library(plot2)
 iris |>
   plot2(x = Species,
-        y = mean(Sepal.Length),
-        legend.position = "none",
-        caption = "Source: Anderson/Fisher iris dataset")
+        y = mean(Sepal.Length))
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-2.png" width="100%" />
