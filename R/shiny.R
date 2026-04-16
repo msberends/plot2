@@ -570,7 +570,7 @@ create_interactively <- function(data = NULL,
                             ),
                             shiny::fluidRow(
                               shiny::column(width = 3, shiny::numericInput("export_dpi",  "DPI", value = 300, min = 1, max = 1200, width = "100%")),
-                              shiny::column(width = 3, uiOutput("export_px_preview")),
+                              shiny::column(width = 3, shiny::uiOutput("export_px_preview")),
                               shiny::column(width = 3, shiny::downloadButton("export_png", "PNG", class = "btn-primary", icon = NULL)),
                               shiny::column(width = 3, shiny::downloadButton("export_jpg", "JPG", class = "btn-primary", icon = NULL)),
                             ),
