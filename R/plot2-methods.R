@@ -176,6 +176,15 @@ plot2.default <- function(.data,
     stop("`plot2()` does not yet support functions to be plotted", call. = FALSE)
   }
   
+  # first see if an object was mentioned, also needed for ellmer::tool()
+  from_envir <- NULL
+  if (is.character(.data) && length(.data) == 1) {
+    from_envir <- tryCatch(get(as.character(.data)), error = function(x) NULL)
+    if (!is.null(from_envir) && is.data.frame(from_envir)) {
+      .data <- from_envir
+    }
+  }
+  
   if (tryCatch(suppressWarnings(is.atomic(.data) && !is.table(.data) && !is.matrix(.data)), error = function(e) FALSE)) {
     # an atomic vector, such as numeric, character, factor
     y_deparse <- paste0(trimws(deparse(substitute(.data))), collapse = " ")

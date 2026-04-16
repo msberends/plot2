@@ -803,7 +803,9 @@ fortify_df <- function(df, y = NULL) {
       stop("Unable to initialise plot2(): input class '", paste(class(df), collapse = "/"), "' is unsupported",
            call. = FALSE)
     }
-    plot2_caution("Input class ", paste0("'", class(df), "'", collapse = "/"), " was transformed using `as.data.frame()`")
+    if (!inherits(df, "data.frame")) {
+      plot2_caution("Input class ", paste0("'", class(df), "'", collapse = "/"), " was transformed using `as.data.frame()`")
+    }
     if (inherits(df, "table")) {
       # if using `as.data.frame()` on a `table`, the resulting count column with be "Freq"
       if (tryCatch(is.null(y), error = function(e) FALSE)) {
