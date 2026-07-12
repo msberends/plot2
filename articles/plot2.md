@@ -79,6 +79,7 @@ To get started, you can pass your data directly into
 without specifying any additional arguments. For example:
 
 ``` r
+
 # Load the package
 library(plot2)
 
@@ -127,6 +128,7 @@ chart? No problem. You can easily specify the `type` argument to get
 exactly what you want.
 
 ``` r
+
 df |> 
   plot2(type = "l")
 #> ℹ Using x = group
@@ -165,6 +167,7 @@ To create a simple scatter plot, you might pass a single variable to the
 `x` and `y` arguments:
 
 ``` r
+
 mtcars |>
   plot2(mpg, hp)
 ```
@@ -189,6 +192,7 @@ Now, what if you want to compare multiple variables on the same plot?
 this easy by allowing you to pass a vector of variables:
 
 ``` r
+
 mtcars |> 
   plot2(x = mpg, y = c(hp, disp))
 #> ℹ Using type = "point" since both axes are numeric
@@ -218,6 +222,7 @@ further.
 A basic use of the `category` argument might look something like this:
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, category = cyl)
 #> ℹ Using type = "point" since both axes are numeric
@@ -246,6 +251,7 @@ displayed. For instance, you might want to control the colours used for
 each category:
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, category = cyl,
         colour = c("4" = "red", "6" = "blue", "8" = "green"))
@@ -277,6 +283,7 @@ different groups.
 A simple example of faceting might look like this:
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, facet = gear)
 #> ℹ Assuming facet.fixed_x = TRUE since the three x scales differ by less than
@@ -304,6 +311,7 @@ number of rows in the facet grid, control whether scales are fixed or
 free, and more.
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, facet = starts_with("g"), facet.nrow = 2, facet.fixed_y = TRUE)
 #> ℹ Assuming facet.fixed_x = TRUE since the three x scales differ by less than
@@ -342,6 +350,7 @@ there’s no need to pre-calculate these counts; you can simply use
 to get the unique numbers of patients directly within the function:
 
 ``` r
+
 admitted_patients |> 
   plot2(x = hospital,
         y = n_distinct(patient_id))
@@ -362,6 +371,7 @@ another dimension, like the number of unique age groups within each
 hospital? You can do that just as easily:
 
 ``` r
+
 admitted_patients |> 
     plot2(x = hospital,
           y = n_distinct(patient_id),
@@ -403,6 +413,7 @@ these tidyverse functions are available without loading other packages:
 [`where()`](https://tidyselect.r-lib.org/reference/where.html).
 
 ``` r
+
 admitted_patients |> 
   plot2(x = hospital, y = median(age), category = gender)
 ```
@@ -418,6 +429,7 @@ plot the logarithm of patient ages across different wards, you can do
 this:
 
 ``` r
+
 admitted_patients |> 
   plot2(x = log(age), y = n(), y.transform = "log2", category = ward)
 #> ℹ Using type = "point" since both axes are numeric
@@ -441,6 +453,7 @@ function. For instance, you might want to format the date or combine
 different variables for the labels:
 
 ``` r
+
 admitted_patients |> 
   plot2(x = paste("Hospital", hospital),
         y = n(),
@@ -464,6 +477,7 @@ split by gender, and you want the X-axis to reflect the hospital name
 and use facets for the year of admission:
 
 ``` r
+
 admitted_patients |> 
   plot2(x = ifelse(gender == "F", "Females", "Males"),
         y = median(age),
@@ -505,6 +519,7 @@ display the top few items, `x.max_items` and `category.max_items`, and
 Let’s start with a simple sort based on frequency:
 
 ``` r
+
 mtcars |> 
   plot2(carb, y = n(), x.sort = "freq-desc")
 #> ℹ Using x.character = TRUE since x.sort is set
@@ -530,6 +545,7 @@ it straightforward. You can use `"asc"` or `"alpha"` to sort your data
 in ascending alphabetical order:
 
 ``` r
+
 mtcars |> 
   plot2(carb, y = n(), x.sort = "asc")
 #> ℹ Using x.character = TRUE since x.sort is set
@@ -553,6 +569,7 @@ doesn’t follow a standard sorting method. You can define a custom order
 by providing a manual vector of values:
 
 ``` r
+
 mtcars |> 
   plot2(carb, y = n(), x.sort = c(4, 1, 6, 8))
 #> ℹ Using x.character = TRUE since x.sort is set
@@ -579,6 +596,7 @@ example, if you’re dealing with a lot of categories, you can limit the
 display to just the most frequent ones:
 
 ``` r
+
 mtcars |> 
   plot2(carb, y = n(), x.max_items = 5, type = "col")
 #> ℹ Using x.character = TRUE for discrete plot type (geom_col) since carb is
@@ -606,6 +624,7 @@ create more sophisticated plots. For example, you might want to sort by
 frequency and also limit the number of items displayed:
 
 ``` r
+
 mtcars |> 
   plot2(carb, y = n(), x.sort = "freq-desc", x.max_items = 5, type = "col")
 #> ℹ Using x.character = TRUE for discrete plot type (geom_col) since carb is
@@ -632,6 +651,7 @@ plot that uses a custom sort order and highlights the flexibility of
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md):
 
 ``` r
+
 admitted_patients |> 
   plot2(x = age_group, y = n(), x.sort = c("55-74", "75+", "25-54"), category = hospital, stacked = TRUE)
 ```
@@ -663,6 +683,7 @@ For a quick and visually appealing colour scheme, you might use a
 `viridis` palette:
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, category = cyl, colour = "viridis")
 #> ℹ Using type = "point" since both axes are numeric
@@ -686,6 +707,7 @@ If you want more control, you can define specific colours for each
 category:
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, category = cyl, colour = c("4" = "red", "6" = "blue", "8" = "green"))
 #> ℹ Using category.midpoint = 7 (the current category scale centre)
@@ -699,6 +721,7 @@ You can use any colour that the implemented
 function can understand, such as colour names and HTML codes:
 
 ``` r
+
 get_colour("red")
 #> [1] "#FF0000" 
 get_colour("#FF0000")
@@ -714,6 +737,7 @@ package. Let’s assume these six colours are from the style of your
 university/company/etc.:
 
 ``` r
+
 register_colour(navy_blue = "#1F3A93",
                 burnt_orange = "#D35400",
                 forest_green = "#2C6F47",
@@ -732,6 +756,7 @@ register_colour(OurOrganisation = c("navy_blue", "burnt_orange",
 You can now use these colours in your plots!
 
 ``` r
+
 iris |>
   plot2(x = Species, y = where(is.double), colour = "OurOrganisation")
 #> ℹ Using type = "boxplot" since all groups in Species and category contain at
@@ -763,18 +788,21 @@ Using any [viridis colour
 palette](https://sjmgarnier.github.io/viridis/articles/intro-to-viridis.html):
 
 ``` r
+
 options(plot2.colour = "viridis")
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-33-1.png)
 
 ``` r
+
 options(plot2.colour = "magma")
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-35-1.png)
 
 ``` r
+
 # our previously set manual colour set:
 options(plot2.colour = "OurOrganisation")
 ```
@@ -806,6 +834,7 @@ Adding a line to an existing plot is as easy as calling
 [`add_line()`](https://msberends.github.io/plot2/reference/add_type.md):
 
 ``` r
+
 p <- mtcars |> 
   plot2(mpg, hp, as.character(cyl),
         category.title = "Cylinders")
@@ -819,6 +848,7 @@ p |>
 ![](plot2_files/figure-html/unnamed-chunk-39-1.png)
 
 ``` r
+
 
 p |> 
   add_line(y = mean(hp), colour = "red", legend.value = "Average HP")
@@ -842,6 +872,7 @@ simplifies this to a single function call.
 Points can be added to highlight specific values or observations:
 
 ``` r
+
 p |> 
   add_point(x = median(mpg), y = median(hp), shape = 4, size = 10)
 ```
@@ -861,6 +892,7 @@ Adding columns is just as straightforward, and can be used to create bar
 charts or other similar visualisations:
 
 ``` r
+
 p |> 
   add_col(x = cyl, y = n(), width = 0.5)
 ```
@@ -878,6 +910,7 @@ directness.
 Plotting error bars is just as simple:
 
 ``` r
+
 p |> 
   add_errorbar(min = hp - 10, max = hp + 10)
 ```
@@ -898,6 +931,7 @@ For those working with geographic data,
 makes it easy to integrate spatial features:
 
 ``` r
+
 plot2(netherlands) |> 
   add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 2)
 #> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
@@ -936,6 +970,7 @@ Here’s how you can apply a custom font from Google Fonts, which will be
 downloaded automatically:
 
 ``` r
+
 mtcars |> 
   plot2(mpg, hp, wt * 1000,
         facet = ifelse(vs == 0, "V-shaped Engine", "Straight Engine"),
@@ -968,6 +1003,7 @@ consistent styling across multiple plots. This is particularly useful
 when preparing a series of visualisations for a report or presentation.
 
 ``` r
+
 options(plot2.font = "Lobster")
 options(plot2.colour = "viridis")
 
@@ -985,6 +1021,7 @@ argument shows that it can be used to scale the text size of all plot
 elements, ensuring readability and aesthetic balance.
 
 ``` r
+
 # reset again
 options(plot2.font = NULL, plot2.colour = NULL)
 ```

@@ -79,14 +79,14 @@ handling, and custom theming.
 
 ### Naming
 
-| Kind                 | Convention               | Example                                                                                                                                                                                                                         |
-|----------------------|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Exported functions   | `snake_case`             | [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md), [`get_colour()`](https://msberends.github.io/plot2/reference/colour.md), [`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md) |
-| Internal helpers     | `snake_case` (no prefix) | `like()`, `font_black()`, `group_sizes()`                                                                                                                                                                                       |
-| S3 methods           | `function.class`         | `plot2.data.frame`, `format2.Date`                                                                                                                                                                                              |
-| Package environment  | `plot2_env`              | `plot2_env$reg_cols`                                                                                                                                                                                                            |
-| Internal NSE columns | `_var_x`, `_var_y`, …    | prefixed with `_` to avoid clashes                                                                                                                                                                                              |
-| Options              | `plot2.<name>`           | `plot2.colour`, `plot2.font`                                                                                                                                                                                                    |
+| Kind | Convention | Example |
+|----|----|----|
+| Exported functions | `snake_case` | [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md), [`get_colour()`](https://msberends.github.io/plot2/reference/colour.md), [`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md) |
+| Internal helpers | `snake_case` (no prefix) | `like()`, `font_black()`, `group_sizes()` |
+| S3 methods | `function.class` | `plot2.data.frame`, `format2.Date` |
+| Package environment | `plot2_env` | `plot2_env$reg_cols` |
+| Internal NSE columns | `_var_x`, `_var_y`, … | prefixed with `_` to avoid clashes |
+| Options | `plot2.<name>` | `plot2.colour`, `plot2.font` |
 
 ### File Headers
 
@@ -94,6 +94,7 @@ Every `.R` source file starts with the same 73-character-wide box
 comment block:
 
 ``` r
+
 # ===================================================================== #
 #  An R package for Fast 'ggplot2' Plotting:                            #
 #  https://github.com/msberends/plot2                                   #
@@ -124,6 +125,7 @@ New files **must** include this header verbatim at the top.
   `devtools::document()`.
 
 ``` r
+
 #' Short Title
 #'
 #' @description Full description. The [plot2()] function …
@@ -144,6 +146,7 @@ New files **must** include this header verbatim at the top.
 - Always use `call. = FALSE`:
 
   ``` r
+
   stop("message", call. = FALSE)
   warning("message", call. = FALSE)
   ```
@@ -151,6 +154,7 @@ New files **must** include this header verbatim at the top.
 - Use the package’s own wrappers for user-facing messages:
 
   ``` r
+
   plot2_message("ℹ informational text")   # coloured blue via crayon
   plot2_warning("! warning text")         # coloured yellow
   ```
@@ -186,6 +190,7 @@ New files **must** include this header verbatim at the top.
 - The file defines local helper functions at the top:
 
   ``` r
+
   get_mapping(plot)   # extract aesthetic mappings
   get_layers(plot)    # extract layer list
   get_labels(plot)    # extract labels
@@ -198,6 +203,7 @@ New files **must** include this header verbatim at the top.
   calls are expected to return an object with S3 class `"gg"`:
 
   ``` r
+
   expect_s3_class(iris |> plot2(Species), "gg")
   ```
 
@@ -265,14 +271,14 @@ they are stored in `plot2_env$reg_cols`.
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 parameter names follow a consistent dot-namespacing pattern:
 
-| Prefix        | Controls                                                        |
-|---------------|-----------------------------------------------------------------|
-| `x.`          | x-axis settings (`x.title`, `x.sort`, `x.max_items`, …)         |
-| `y.`          | y-axis settings (`y.title`, `y.transform`, `y.limits`, …)       |
-| `facet.`      | facet settings (`facet.nrow`, `facet.position`, …)              |
+| Prefix | Controls |
+|----|----|
+| `x.` | x-axis settings (`x.title`, `x.sort`, `x.max_items`, …) |
+| `y.` | y-axis settings (`y.title`, `y.transform`, `y.limits`, …) |
+| `facet.` | facet settings (`facet.nrow`, `facet.position`, …) |
 | `datalabels.` | data-label settings (`datalabels.size`, `datalabels.colour`, …) |
-| `smooth.`     | smoothing settings                                              |
-| `sankey.`     | Sankey-specific settings                                        |
+| `smooth.` | smoothing settings |
+| `sankey.` | Sankey-specific settings |
 
 ### validate\_\*() Functions
 
@@ -285,6 +291,7 @@ Keep validation out of the main function body.
 ## Common Development Commands
 
 ``` r
+
 # Document (regenerates man/ and NAMESPACE)
 devtools::document()
 

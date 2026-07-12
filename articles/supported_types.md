@@ -10,6 +10,7 @@ more advanced plots.
 Used for comparing discrete categories through rectangular bars.
 
 ``` r
+
 diamonds |> # from the ggplot2 package
   plot2(x = cut,
         y = n())
@@ -21,6 +22,7 @@ In `plot2`, bar types are horizontal alternatives for column types (just
 like MS Excel):
 
 ``` r
+
 diamonds |>
   plot2(x = cut,
         y = n(),
@@ -34,6 +36,7 @@ diamonds |>
 Used for visualising trends over ordered intervals.
 
 ``` r
+
 pressure |> # from base R
   plot2(x = temperature,
         y = pressure,
@@ -43,6 +46,7 @@ pressure |> # from base R
 ![](supported_types_files/figure-html/unnamed-chunk-4-1.png)
 
 ``` r
+
 pressure |>
   plot2(x = temperature,
         y = pressure,
@@ -56,6 +60,7 @@ pressure |>
 Used for displaying individual observations in a two dimensional space.
 
 ``` r
+
 iris |> # from base R
   plot2()
 #> ℹ Using category = Species
@@ -67,6 +72,7 @@ iris |> # from base R
 ![](supported_types_files/figure-html/unnamed-chunk-5-1.png)
 
 ``` r
+
 diamonds |>
   plot2(x = carat,
         y = price,
@@ -81,6 +87,7 @@ diamonds |>
 Used for emphasising cumulative magnitudes across continuous domains.
 
 ``` r
+
 pressure |>
   plot2(x = temperature,
         y = pressure,
@@ -90,6 +97,7 @@ pressure |>
 ![](supported_types_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
+
 airquality |>
   plot2(x = Day, 
         y = Wind, 
@@ -107,6 +115,7 @@ Used for summarising and comparing distributions with focus on spread
 and density.
 
 ``` r
+
 iris |>
   plot2(x = Species,
         type = "violin")
@@ -116,6 +125,7 @@ iris |>
 ![](supported_types_files/figure-html/unnamed-chunk-7-1.png)
 
 ``` r
+
 iris |>
   plot2(x = Species,
         y = where(is.double),
@@ -130,6 +140,7 @@ iris |>
 Used for visualising the frequency distribution of continuous variables.
 
 ``` r
+
 diamonds |>
   plot2(x = price,
         type = "hist")
@@ -144,6 +155,7 @@ diamonds |>
 Used for mapping spatial data encoded as simple features.
 
 ``` r
+
 netherlands |> # from this plot2 package
   plot2()
 #> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
@@ -160,6 +172,7 @@ Used for showing distributions of individual observations without
 overlap.
 
 ``` r
+
 iris |>
   plot2(x = Species,
         y = Sepal.Length,
@@ -173,6 +186,7 @@ iris |>
 Used for contrasting two mirrored groups across shared categories.
 
 ``` r
+
 admitted_patients |> # from this plot2 package
   plot2(x = age_group,
         y = n(),
@@ -183,6 +197,7 @@ admitted_patients |> # from this plot2 package
 ![](supported_types_files/figure-html/unnamed-chunk-11-1.png)
 
 ``` r
+
 admitted_patients |> # from this plot2 package
   plot2(x = age_group,
         y = n(),
@@ -199,6 +214,7 @@ admitted_patients |> # from this plot2 package
 Used for depicting flows or transitions between connected stages.
 
 ``` r
+
 Titanic |> # from base R
   plot2(x = c(Age, Class, Survived),
         category = Sex,
@@ -216,6 +232,7 @@ radially, enabling pattern recognition and relative magnitude assessment
 between groups.
 
 ``` r
+
 diamonds |>
     plot2(x = cut,
           y = mean(price),
@@ -227,6 +244,7 @@ diamonds |>
 ![](supported_types_files/figure-html/unnamed-chunk-13-1.png)
 
 ``` r
+
 # spider plots can have a filling colour, but it's hardly ever useful
 diamonds |>
     plot2(x = cut,
@@ -245,6 +263,7 @@ Used for analysing intersections among multiple sets with scalable
 clarity.
 
 ``` r
+
 movies |> # from the ggplot2movies package
   plot2(x = c(Action, Animation, Comedy, Drama, Romance),
         type = "upset")
@@ -255,6 +274,7 @@ movies |> # from the ggplot2movies package
 ![](supported_types_files/figure-html/unnamed-chunk-14-1.png)
 
 ``` r
+
 movies |>
   plot2(x = c(Action, Animation, Comedy, Drama, Romance),
         y = median(rating),
@@ -271,6 +291,7 @@ movies |>
 Used for highlighting changes or differences between paired values.
 
 ``` r
+
 diamonds |>
   dplyr::filter(cut %in% c("Fair", "Very Good")) |>
   plot2(x = cut(carat, 6),
