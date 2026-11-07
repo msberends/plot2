@@ -1,0 +1,52 @@
+---
+id: F004
+title: Date-time (POSIXct) category produces thousands of nonsense legend breaks
+severity: critical
+type: bug
+area: scales
+status: open
+verification: verified
+effort: S
+api_change: no
+locations: [R/validate.R:1353, R/validate.R:1384]
+related: [F003]
+origin: R01 §1.4
+commit: d09e04d
+created: 2026-11-07
+updated: 2026-11-07
+---
+
+# F004 POSIXct category scale broken
+
+## Summary
+
+`validate_category_scale()` treats any date-like category as `Date`: breaks are generated with `seq.Date()` over values that are seconds since the epoch, and labels with `as.Date(as.numeric(x))`.
+
+## Evidence
+
+- `R/validate.R:1384`: `seq.Date(from = min(values), to = max(values), by = breaks)`.
+- `R/validate.R:1353`: `format2(as.Date(as.numeric(x), origin = "1970-01-01"), ...)`.
+
+## Reproduction
+
+```r
+d <- data.frame(x = 1:3, y = 1:3,
+                c = as.POSIXct(c("2024-01-01", "2024-02-01", "2024-03-01"), tz = "UTC"))
+p <- plot2(d, x, y, c, type = "point")
+b <- ggplot2::ggplot_build(p)
+lbls <- b$plot$scales$get_scales("colour")$get_labels()
+cat("number of legend labels:", length(lbls), "\n")
+# Expected after fix: a handful of sensible date-time labels.
+```
+
+## Impact
+
+Any plot coloured by a date-time variable has an unusable legend.
+
+## Proposed fix
+
+Branch on `inherits(values, "POSIXt")`: use `seq.POSIXt()` for breaks and `as.POSIXct(x, origin = "1970-01-01", tz = ...)` for labels, keeping the time zone of the data.
+
+## History
+
+- 2026-11-07: filed in R01, reproduced.

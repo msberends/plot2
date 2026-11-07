@@ -535,6 +535,7 @@ test_that("manual fonts work", {
 
 test_that("Plotly works", {
   skip_on_cran()
+  skip_if_not_installed("plotly")
   expect_error(as_plotly(mtcars))
   expect_s3_class(mtcars |> plot2(mpg, hp) |> as_plotly(), "plotly")
   expect_s3_class(mtcars |>

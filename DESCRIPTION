@@ -67,9 +67,11 @@ Suggests:
   shiny (>= 1.10.0),
   shinyjs,
   stringr (>= 1.5.0),
-  testthat,
+  testthat (>= 3.0.0),
   vctrs,
+  vdiffr,
   viridisLite,
+  withr,
   xml2,
   yaml
 License: GPL-2
@@ -77,5 +79,5 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Config/testthat/edition: 2
+Config/testthat/edition: 3
 VignetteBuilder: knitr

@@ -1,0 +1,60 @@
+# Journal
+
+Newest entry first. One entry per working session: what was done, what changed status, what is next.
+
+## 2026-11-08 (session 5)
+
+- Project CLAUDE.md updated: testing section rewritten for the new infrastructure, new section "Review and Overhaul" so that every session starts from README, JOURNAL and INDEX; layout tree updated. Memory note refreshed.
+- Maintainer decided R04: as R03 (sheets plus tests), review only, Shiny app deferred to a new round R07 (`plans/review_rounds.md`).
+- Ran R04: review file `reviews/R04_unreviewed-files.md`, 10 sheets in `reviews/R04_modules/`, 10 test files `tests/testthat/test-modules-M*.R`.
+- Filed F080 to F091 (1 high, 5 medium, 6 low) and idea I003 (spider facets). All 12 reproductions run in fresh processes.
+- `setup.R` now also resets `plot2.colour_font_axis`, `plot2.colour_sf`, `plot2.colour_sf_fill`.
+- Updated roadmap, coverage (all files except `R/shiny.R` now full), INDEX rebuilt.
+- Full test suite: no failures, no warnings, 43 skips (42 parked findings, 1 plotly not installed). Observed once: the random "Use options(plot2.silent = TRUE)" note printed during a test run, an instance of F002 (output depends on the RNG).
+- Next: R05 (API and documentation); format to be decided by the maintainer at its start.
+
+## 2026-11-07 (session 4)
+
+- Ran review round R03 (`plot2_exec()` orchestration, review only). Review file `reviews/R03_plot2_exec-orchestration.md`, 15 stage sheets in `reviews/R03_plot2_exec/`.
+- Wrote 15 test files `tests/testthat/test-plot2_exec-E01-*.R` to `E15`, one per sheet, with the I001 helpers. Desired behaviour for open findings is parked with `skip_open_finding()` (27 such skips).
+- Filed F064 to F079 (16 findings: 6 high, 6 medium, 4 low). Eight of them (F072 to F079) were found only because the tests were run, among them two crashes on common calls (F072 long vector expressions, F079 `plot2(df, y = col)`) and `summarise_function = NULL` failing although plot2 recommends it (F073).
+- F075 and F078 first looked like user-facing warnings; confirmed to be soft deprecations that only show in plot2's own checks, so downgraded to low.
+- Extended F005 (back-to-back locations) and F068 (default colour of the secondary series).
+- I001 helpers extended: `col_hex()`, `expect_clean_state(check = )`, `local_known_deprecation()`.
+- Updated roadmap (F064 to F079 placed), coverage (`R/plot2.R`, `R/back2back_plot.R`), review_rounds (R03 done); INDEX rebuilt; all new reproductions run.
+- Full test suite: no failures, no warnings, 28 skips (27 parked findings, 1 plotly not installed).
+- Next: R04 (unreviewed files); format to be decided by the maintainer at its start.
+
+## 2026-11-07 (session 3)
+
+- Maintainer approved testthat edition 3 and vdiffr; vdiffr installed in the user library.
+- Built the I001 test infrastructure: `helper-plot2.R` (accessors, diagnostics capture, 10 expectations, snapshot and skip helpers), `helper-fixtures.R` (14 fixtures), `setup.R` (deterministic environment), `test-helpers.R` (76 self-test expectations). Details in I001 History.
+- DESCRIPTION: edition 3, `testthat (>= 3.0.0)`, `vdiffr` and `withr` in Suggests.
+- Full test suite green (1 skip: plotly not installed). I001 and F038 now in progress.
+- Maintainer decided the review rounds: R03 = `plot2_exec()` orchestration, as sheets plus tests, review only; R04 to R06 = unreviewed files, API and documentation, cross-cutting themes. Recorded in `plans/review_rounds.md`.
+- Next: start R03.
+
+## 2026-11-07 (session 2)
+
+- Maintainer idea: end-to-end tests for every `validate.R` function and a testthat overhaul with helper files. Filed as I001 (infrastructure, with a draft design of helpers, fixtures and conventions) and I002 (end-to-end tests).
+- Ran review round R02: every function in `R/validate.R` reviewed in depth. One sheet per function in `reviews/R02_validate/` (role, call sites, contract, branches, findings, 231 numbered test cases).
+- Filed F041 to F063 (4 high, 9 medium, 10 low); extended F031. New maintainer decisions: F050, F052, F063 (total now 8).
+- Updated roadmap (Phase 0 now I001 and I002), coverage and README (round subfolders).
+- Ran the reproductions of F031 and F041 to F063.
+  - Confirmed and upgraded from "reading" to "verified": F055, F058, F060, F062, F063.
+  - Corrected the chunks for F041, F057 and F059.
+  - Closed F057 as `wontfix`: not reproducible, all text elements scale correctly.
+- Next: maintainer decisions; then Phase 0, starting with the I001 helpers.
+
+## 2026-11-07 (session 1)
+
+- Ran review round R01 on commit `d09e04d` (see `reviews/R01_initial-full-review.md`).
+- Set up this folder: structure, templates, `tools/build_index.R` (index and validation), `tools/run_repro.R` (runs reproduction chunks in fresh R processes).
+- Filed F001 to F040; drafted `plans/roadmap.md`; recorded review depth in `coverage.md`.
+- Added `^review_and_overhaul$` to `.Rbuildignore`.
+- Ran all 40 reproductions with `tools/run_repro.R all`: every runnable chunk shows its defect. Corrected four chunks:
+  - F014, F027: the first chunks used `rlang::local_interactive()`, which does not work at top level. Re-verified through `IN_PKGDOWN`; both defects confirmed.
+  - F012: now reproduced; it crashes rather than merely choosing the wrong y.
+  - F025: timings now taken after a warm-up call.
+- Five findings await a maintainer decision: F003, F011, F013, F020, F028.
+- Next: maintainer to add ideas (`ideas/`) and decide on the needs-decision items; then Phase 0.
