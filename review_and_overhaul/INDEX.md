@@ -9,7 +9,7 @@ Next free IDs: F132, I006, D002, R08.
 | severity | open | in-progress | needs-decision | fixed | verified | wontfix | duplicate | total |
 |---|---|---|---|---|---|---|---|---|
 | critical | 10 | 0 | 1 | 0 | 2 | 0 | 0 | 13 |
-| high | 22 | 1 | 3 | 0 | 4 | 0 | 0 | 30 |
+| high | 21 | 1 | 3 | 0 | 5 | 0 | 0 | 30 |
 | medium | 47 | 0 | 5 | 0 | 1 | 0 | 0 | 53 |
 | low | 33 | 0 | 1 | 0 | 0 | 1 | 0 | 35 |
 
@@ -32,7 +32,6 @@ Next free IDs: F132, I006, D002, R08.
 | [F011](findings/F011_font-download-and-global-showtext.md) | high | Fonts downloaded without consent and showtext enabled globally | fonts | design | needs-decision | reading | M | possible |
 | [F013](findings/F013_numeric-x-silently-made-discrete.md) | high | Numeric x of 2000-2050 or exactly 1:12 silently converted to character, also for scatter plots | data-validation | design | needs-decision | verified | S | possible |
 | [F014](findings/F014_messages-not-conditions.md) | high | Messages and warnings are not R conditions; plot2.silent has no effect | messaging | design | open | verified | M | possible |
-| [F016](findings/F016_get-colour-short-hex.md) | high | get_colour() expands only the first short hex code and uses a wrong character range | colours | bug | open | verified | S | no |
 | [F017](findings/F017_like-lowercases-regex-and-data-as-regex.md) | high | like() lowercases regex patterns, and data values are used as regex patterns | architecture | bug | open | verified | M | no |
 | [F018](findings/F018_markdown-apostrophe-and-dollar.md) | high | Markdown conversion breaks on apostrophes and turns any $ into plotmath | markdown | bug | open | verified | M | no |
 | [F019](findings/F019_formula-method-naive-parsing.md) | high | Formula method parses the formula as text and fails on function terms | methods | bug | open | verified | M | possible |
@@ -164,6 +163,7 @@ Next free IDs: F132, I006, D002, R08.
 | [F010](findings/F010_upset-print-falls-through.md) | high | UpSet plot with print = TRUE continues execution and errors | types | bug | verified | verified | S | no |
 | [F012](findings/F012_posixtt-typo.md) | high | Typo "POSIXTt" makes POSIXct columns eligible as automatic y | data-validation | bug | verified | verified | S | no |
 | [F015](findings/F015_dec-mark-invalid-option.md) | high | dec_mark() returns the warning text when the option is invalid | i18n | bug | verified | verified | S | no |
+| [F016](findings/F016_get-colour-short-hex.md) | high | get_colour() expands only the first short hex code and uses a wrong character range | colours | bug | verified | verified | S | no |
 | [F027](findings/F027_na-removal-message-garbled.md) | medium | "Removed n rows" message uses a vector condition and is garbled | messaging | bug | verified | verified | S | no |
 | [F057](findings/F057_text-factor-rel-sizes.md) | low | text_factor turns rel() sizes into absolute sizes relative to the base size, not the parent element | theme | bug | wontfix | verified | S | no |
 

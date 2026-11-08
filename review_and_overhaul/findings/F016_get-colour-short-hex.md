@@ -4,7 +4,7 @@ title: get_colour() expands only the first short hex code and uses a wrong chara
 severity: high
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F017]
 origin: R01 §2.9
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F016 get_colour() short hex codes
@@ -44,3 +44,4 @@ Vectorise: `vapply(strsplit(sub("^#", "", x[shorts]), ""), function(ch) paste0("
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Short codes expanded per element; hex validation uses `[0-9A-Fa-f]` with `grepl()`; regression test "F016".

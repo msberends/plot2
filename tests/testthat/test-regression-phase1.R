@@ -22,3 +22,9 @@ test_that("F015 an invalid dec_mark or big_mark option warns and falls back", {
   expect_warning(bm <- big_mark(), "big_mark")
   expect_identical(bm, " ")
 })
+
+test_that("F016 short hex colours are expanded each on their own; invalid hex codes are rejected", {
+  expect_identical(as.character(get_colour(c("#f0a", "#123", "abc"))), c("#FF00AA", "#112233", "#AABBCC"))
+  expect_identical(toupper(as.character(get_colour("#AbCdEf"))), "#ABCDEF")
+  expect_plot2_message(plot2(fx_cat, x, y, colour = "#12:4;6"), "Invalid colour", type = "caution")
+})

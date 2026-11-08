@@ -146,7 +146,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
   }
   
   # support #ffa -> #ffffaa
-  shorts <- x %like% "^#?[0-F]{3}$"
+  shorts <- grepl("^#?[0-9A-Fa-f]{3}$", x, perl = TRUE)
   if (any(shorts)) {
     x[shorts] <- paste0(sapply(strsplit(x[shorts], "")[[1]],
                                function(x) ifelse(x == "#", "", paste0(x, x))),
@@ -154,7 +154,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
   }
   
   # support fffaa -> #fffaa
-  missing_hastag <- x %like% "^[0-F]{6}$"
+  missing_hastag <- grepl("^[0-9A-Fa-f]{6}$", x, perl = TRUE)
   if (any(missing_hastag)) {
     x[missing_hastag] <- paste0("#", x[missing_hastag])
   }
@@ -162,7 +162,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
   # some colours add FF as opacity to HTML colour - remove them
   x[which(nchar(x) > 7 & x %like% "FF$")] <- substr(x[which(nchar(x) > 7 & x %like% "FF$")], 1, 7)
   
-  invalid <- x %unlike% "^#[0-F]{6,8}$"
+  invalid <- !grepl("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$", x, perl = TRUE)
   if (any(invalid)) {
     inv <- unique(x[invalid])
     plot2_caution("Invalid colour", ifelse(length(inv) != 1, "s", ""), " set (", toString(paste0('"', inv, '"')), "), replacing with default ggplot2 colour", ifelse(length(inv) != 1, "s", ""))
