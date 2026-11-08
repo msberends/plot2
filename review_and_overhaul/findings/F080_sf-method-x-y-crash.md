@@ -4,7 +4,7 @@ title: plot2() on sf data crashes when x or y is given, instead of the intended 
 severity: medium
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -36,3 +36,4 @@ Use `!missing(x)` (or `!rlang::quo_is_null(rlang::enquo(x))`) instead of `is.nul
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; plot2.sf() uses missing(x) and missing(y), so the caution is shown instead of an evaluation error.

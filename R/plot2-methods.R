@@ -1275,10 +1275,11 @@ plot2.sf <- function(.data,
     .data <- sf::st_transform(.data, crs = crs)
   }
   
-  if (!is.null(x)) {
+  # use missing(), since x and y are column names that cannot be evaluated here (F080)
+  if (!missing(x)) {
     plot2_caution("In 'sf' plots, ", font_blue("x"), " will be ignored - did you mean ", font_blue("category"), "?")
   }
-  if (!is.null(y)) {
+  if (!missing(y)) {
     plot2_caution("In 'sf' plots, ", font_blue("y"), " will be ignored - did you mean ", font_blue("category"), "?")
   }
   colour_fill_default <- getOption("plot2.colour_sf_fill", getOption("plot2.colour", "ggplot2"))

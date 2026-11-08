@@ -45,6 +45,5 @@ test_that("M04.05 colour without colour_fill: caution about borders", {
 
 test_that("M04.06 x given: caution instead of an error (F080)", {
   skip_if_not_installed("sf")
-  skip_open_finding("F080")
   expect_plot2_message(plot2(netherlands, x = province), "will be ignored", type = "caution")
 })
