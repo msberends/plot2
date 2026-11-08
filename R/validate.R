@@ -2829,19 +2829,13 @@ sort_data <- function(values,
   values <- as.character(values)
   
   # start the sorting
-  numeric_sort <- any(values %like% "[0-9]", na.rm = TRUE)
   if (sort_method %in% c("alpha", "alpha-asc", "asc")) {
-    rlang::check_installed("stringr")
     # alphabetical, or ascending
     out <- factor(values,
-                  levels = stringr::str_sort(unique(values),
-                                             numeric = numeric_sort))
+                  levels = natural_sort(unique(values)))
   } else if (sort_method %in% c("alpha-desc", "desc")) {
-    rlang::check_installed("stringr")
     out <- factor(values,
-                  levels = stringr::str_sort(unique(values),
-                                             numeric = numeric_sort,
-                                             decreasing = TRUE))
+                  levels = natural_sort(unique(values), decreasing = TRUE))
   } else if (sort_method == "inorder") {
     out <- factor(as.character(values),
                   levels = levels(fct_inorder(as.character(original_values))))

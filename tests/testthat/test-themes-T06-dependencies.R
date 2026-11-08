@@ -28,8 +28,21 @@ test_that("T06.01 every package imported in NAMESPACE is listed in Imports", {
 })
 
 test_that("T06.02 packages called on the default code path are in Imports", {
-  skip_open_finding("F008")
-  expect_true(all(c("cli", "rlang", "scales", "stringr") %in% desc_deps("Imports")))
+  expect_true(all(c("cli", "rlang", "scales", "grid", "grDevices") %in% desc_deps("Imports")))
+  # stringr is no longer used: sorting uses the internal natural_sort() (F008)
+  src <- unlist(lapply(list.files(source_file("R"), full.names = TRUE), readLines))
+  expect_false(any(grepl("stringr::", src[!grepl("^\\s*#", src)])))
+})
+
+test_that("T06.02b natural_sort() sorts like stringr::str_sort(numeric = TRUE)", {
+  skip_if_not_installed("stringr")
+  cases <- list(c("a10", "a2", "a1", "b", "B", "a"), c("item 10", "item 9", "Item 1", "item 1"),
+                c("10", "9", "100", "1a", "1b", "a1"), c("abc", "Abc", "aBc", "ABC", "abd"),
+                c("Ward 3", "Ward 12", "ward 2", "ICU"), c("a", NA, "b"), c("Q1 2024", "Q10 2023", "Q2 2023"))
+  for (x in cases) {
+    expect_identical(plot2:::natural_sort(x), stringr::str_sort(x, numeric = TRUE))
+    expect_identical(plot2:::natural_sort(x, decreasing = TRUE), stringr::str_sort(x, numeric = TRUE, decreasing = TRUE))
+  }
 })
 
 test_that("T06.03 the Shiny-only packages are not needed outside the Shiny app", {

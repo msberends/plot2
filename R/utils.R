@@ -941,3 +941,29 @@ fortify_df <- function(df, y = NULL) {
   
   list(new_df = new_df, y = y)
 }
+
+natural_sort <- function(x, decreasing = FALSE) {
+  # like stringr::str_sort(numeric = TRUE) (ICU collation): numbers within strings are
+  # compared as numbers and come before text; text ignores case, with lower case first
+  x <- as.character(x)
+  nas <- x[is.na(x)]
+  x <- x[!is.na(x)]
+  if (length(x) < 2) return(c(x, nas))
+  parts <- regmatches(x, gregexpr("[0-9]+|[^0-9]+", x))
+  n <- max(lengths(parts))
+  keys <- list()
+  for (i in seq_len(n)) {
+    tok <- vapply(parts, function(p) if (length(p) >= i) p[i] else NA_character_, character(1))
+    is_num <- !is.na(tok) & grepl("^[0-9]+$", tok)
+    # a string that has ended sorts first, then numbers, then text
+    keys[[length(keys) + 1]] <- ifelse(is.na(tok), 0L, ifelse(is_num, 1L, 2L))
+    keys[[length(keys) + 1]] <- ifelse(is_num, suppressWarnings(as.double(tok)), 0)
+    keys[[length(keys) + 1]] <- xtfrm(ifelse(is_num | is.na(tok), "", tolower(tok)))
+  }
+  # ties (only case differs): lower case first
+  # (a key of 0 for lower case and 1 for upper case per character, so independent of the locale)
+  keys[[length(keys) + 1]] <- xtfrm(gsub("[^1]", "0", gsub("[[:upper:]]", "1", x)))
+  ord <- do.call(order, keys)
+  if (isTRUE(decreasing)) ord <- rev(ord)
+  c(x[ord], nas)
+}

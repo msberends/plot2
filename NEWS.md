@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `cli`, `rlang`, `scales`, `grid` and `grDevices` are now listed in Imports, as plot2 always uses them; `stringr` is no longer needed for sorting
 * Messages and warnings of `plot2()` are now R conditions. Messages (class `plot2_message`, and `plot2_caution` for cautions) are still printed only in interactive sessions, now grouped at the end of the call in the order they occurred, and can be caught or hidden with `suppressMessages()`; `options(plot2.silent = TRUE)` now works. Warnings (such as "No observations" or values that could not be plotted) are now R warnings of class `plot2_warning`, also in scripts, R Markdown and Quarto
 * Fixed: internal state of one `plot2()` call could leak into the next call, or be wiped by a nested call (back-to-back and UpSet plots), which could give wrong axis titles and messages that belonged to an earlier plot
 * `x.zoom` (and `zoom`) no longer sets numeric limits on a discrete x axis
