@@ -2,6 +2,15 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 2)
+
+- Maintainer decided (AskUserQuestion): messages as conditions but printed only interactively, as now; warnings real R warnings, cautions as messages; diagnostics grouped at the end of the call in order of occurrence; F036 in Phase 2 only the per-call context, the guessing step (and any plot2.guess option) to Phase 5.
+- Fixed and verified F001 and F014 in one commit (e884459): call_state_enter()/call_state_exit() in every plot2() method save, clear and restore plot2_env per call (nested calls safe, no leaks; only reg_cols shared; font cache moved to plot2_session); plot2_message()/plot2_caution()/plot2_warning() collect per call and emit conditions at the end of the outermost call, or at once outside a call.
+- Real warnings exposed tests that hit plot2 warnings; those now expect them. Two real issues surfaced and were fixed: x.zoom set numeric limits on a discrete x axis; long plotmath titles warned about line wrapping. plot2_diagnostics() now classifies by condition class.
+- F036 in-progress; remainder in the Phase 5 list of the roadmap.
+- Checks: full suite (NOT_CRAN=true) 552 tests, 0 failures, 0 warnings, 68 skips; both vignettes render without warnings in their output; all examples run (plotly not installed here).
+- Next: Phase 3 (dependencies, locale, fonts) per roadmap.
+
 ## 2026-11-08 (session 6, continued: Phase 1, third part)
 
 - Fixed and verified: F048, F109 (CI checks R 4.1 and hard dependencies only), F103 (static colour.Rd), F102 (vignettes guard suggested packages), F099, F098 (plus an install hint for a missing ggbeeswarm), F104, F100, F101. F093 partly (points 3 and 5); points 1, 2, 4 and 6 depend on missing() and wait for F094.
