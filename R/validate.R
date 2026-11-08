@@ -1224,9 +1224,20 @@ validate_y_scale <- function(df,
       }
     } else {
       function(x, dec = decimal.mark, big = big.mark, ...) {
-        is_scientific <- any(format(x) %like% "^(-?[0-9.]+e-?[0-9.]+)$", na.rm = TRUE) ||
-          diff(range(values, na.rm = TRUE)) > 10e5
-        non_unique <- length(unique(format2(x[!is.na(x)]))) < length(format2(x[!is.na(x)]))
+        # scientific notation only for very large or very small values, so that e.g. population
+        # counts and costs keep big marks (F063)
+        nonzero <- abs(x[!is.na(x) & is.finite(x) & x != 0])
+        is_scientific <- length(nonzero) > 0 && (max(nonzero) >= 1e9 || min(nonzero) < 1e-4)
+        is_unique <- function(r) {
+          lbls <- format2(x[!is.na(x)], round = r)
+          length(unique(lbls)) == length(lbls)
+        }
+        # labels that are equal after rounding get more decimals first (F063)
+        digits <- 2
+        while (!isTRUE(is_scientific) && !is_unique(digits) && digits < 6) {
+          digits <- digits + 1
+        }
+        non_unique <- !is_unique(digits)
         if (isTRUE(non_unique) || (isTRUE(is_scientific) && is.null(y.scientific))) {
           if (isTRUE(is_scientific)) {
             plot2_message("Assuming ", font_blue("y.scientific = TRUE"))
@@ -1234,7 +1245,7 @@ validate_y_scale <- function(df,
           # scientific notation or non-unique labels
           format2_scientific(x, decimal.mark = dec, big.mark = big)
         } else {
-          format2(x, decimal.mark = dec, big.mark = big)
+          format2(x, round = digits, decimal.mark = dec, big.mark = big)
         }
       }
     }

@@ -104,7 +104,7 @@
 #' @param x.remove,y.remove A [logical] to indicate whether the axis labels and title should be removed.
 #' @param y.24h A [logical] to indicate whether the y labels and breaks should be formatted as 24-hour sequences.
 #' @param y.age A [logical] to indicate whether the y labels and breaks should be formatted as ages in years.
-#' @param y.scientific,y_secondary.scientific A [logical] to indicate whether the y labels should be formatted in scientific notation. Defaults to `TRUE` only if the range of the y values spans more than `10e5`.
+#' @param y.scientific,y_secondary.scientific A [logical] to indicate whether the y labels should be formatted in scientific notation. If not set, scientific notation is used only for labels of one billion (`1e9`) or more, or for non-zero labels below `0.0001`; other labels use `big.mark`, e.g. `2 000 000`.
 #' @param y.percent,y_secondary.percent A [logical] to indicate whether the y labels should be formatted as percentages.
 #' @param y.percent_break A value on which the Y-axis should have breaks.
 #' @param x.breaks,y.breaks A breaks function or numeric vector to use for the axis.

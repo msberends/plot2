@@ -1081,7 +1081,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y.age}{A \link{logical} to indicate whether the y labels and breaks should be formatted as ages in years.}
 
-\item{y.scientific, y_secondary.scientific}{A \link{logical} to indicate whether the y labels should be formatted in scientific notation. Defaults to \code{TRUE} only if the range of the y values spans more than \code{10e5}.}
+\item{y.scientific, y_secondary.scientific}{A \link{logical} to indicate whether the y labels should be formatted in scientific notation. If not set, scientific notation is used only for labels of one billion (\code{1e9}) or more, or for non-zero labels below \code{0.0001}; other labels use \code{big.mark}, e.g. \verb{2 000 000}.}
 
 \item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages.}
 

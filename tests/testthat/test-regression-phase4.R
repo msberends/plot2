@@ -158,3 +158,11 @@ test_that("F052 the data-dependent choice of facet scales is reported", {
   d <- data.frame(x = rep(c("a", "b"), 2), f = rep(c("p", "q"), each = 2), y = c(10, 11, 10, 12))
   expect_plot2_message(plot2(d, x, y, facet = f), "facet.fixed_y = TRUE", type = "info")
 })
+
+test_that("F063 scientific notation only from 1e9 or below 1e-4, otherwise big marks or more decimals", {
+  lab <- function(v) axis_labels(plot2(data.frame(g = c("a", "b"), v = v), g, v), "y")
+  expect_true(all(grepl("^[0-9 ]+$", lab(c(500000, 2500000)))))
+  expect_true(any(grepl("10^9", lab(c(5e8, 2.5e9)), fixed = TRUE)))
+  expect_true(any(grepl("10^-5", lab(c(0.00001, 0.00005)), fixed = TRUE)))
+  expect_true("0.001" %in% lab(c(0.001, 0.005)))
+})

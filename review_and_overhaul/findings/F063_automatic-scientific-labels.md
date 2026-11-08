@@ -4,7 +4,7 @@ title: Axis labels switch to scientific notation automatically for ranges above 
 severity: low
 type: design
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -37,3 +37,4 @@ print(ggplot2::ggplot_build(p)$layout$panel_params[[1]]$y$get_labels())
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: reproduced (labels such as "1.5 • 10^6").
 - 2026-11-08: maintainer decided (AskUserQuestion): automatic scientific notation only above a higher threshold (1e9) or for very small values (below 1e-4); otherwise big.mark labels.
+- 2026-11-08: fixed as decided: automatic scientific notation only when a non-zero label is 1e9 or more or below 1e-4 (previously a range above 1e6, or whenever format() chose e-notation, which it does for round numbers from 1e5); labels that are equal after rounding first get up to six decimals before the scientific fallback, so 0.001 to 0.006 stay plain. Documented under y.scientific. Tests: test-regression-phase4.R (F063).
