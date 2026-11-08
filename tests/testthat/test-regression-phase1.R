@@ -137,3 +137,9 @@ test_that("F087 theme_minimal2(...) changes only the given properties", {
   expect_identical(ggplot2::calc_element("plot.title", t)$colour, ggplot2::calc_element("plot.title", t_default)$colour)
   expect_identical(ggplot2::calc_element("plot.title", t)$size, ggplot2::calc_element("plot.title", t_default)$size)
 })
+
+test_that("F091 theme_minimal2() text sizes are plain numbers", {
+  size <- ggplot2::calc_element("plot.title", theme_minimal2())$size
+  expect_false(inherits(size, "unit"))
+  expect_equal(as.numeric(size), 13)
+})

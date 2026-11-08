@@ -4,7 +4,7 @@ title: theme_minimal2() passes grid units as element_text() sizes
 severity: low
 type: maintainability
 area: theme
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -37,3 +37,4 @@ Use plain numbers (`size = 13`).
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; theme_minimal2() uses plain numbers for element_text() sizes (legend.key.size stays a unit). Regression test F091.
