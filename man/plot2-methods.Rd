@@ -1236,7 +1236,9 @@ plot2(c("a", "b", "b", "c", "c", "c"))
 plot2(Sepal.Length ~ Species, data = iris)
 
 # frequency tables
-plot2(cleaner::freq(iris$Species))
+if (requireNamespace("cleaner", quietly = TRUE)) {
+  plot2(cleaner::freq(iris$Species))
+}
 
 # correlation matrices become a heatmap
 plot2(cor(mtcars[, 1:5]))

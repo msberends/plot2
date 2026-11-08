@@ -974,7 +974,6 @@ validate_x_scale <- function(df,
 
 #' @importFrom dplyr group_by across summarise
 #' @importFrom ggplot2 waiver expansion scale_y_continuous scale_y_discrete sec_axis
-#' @importFrom cleaner as.percentage
 validate_y_scale <- function(df,
                              type,
                              y.24h,
@@ -1159,7 +1158,7 @@ validate_y_scale <- function(df,
       }
     } else if (isTRUE(y.percent) || isTRUE(stacked_fill)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
-        format2(as.percentage(x), round = max(1, sigfigs(x) - 2), decimal.mark = dec, big.mark = big)
+        format2(as_percentage(x), round = max(1, sigfigs(x) - 2), decimal.mark = dec, big.mark = big)
       }
     } else {
       function(x, dec = decimal.mark, big = big.mark, ...) {
@@ -1334,7 +1333,6 @@ validate_y_scale <- function(df,
   )
 }
 
-#' @importFrom cleaner as.percentage
 #' @importFrom ggplot2 expansion guide_colourbar scale_colour_gradient scale_colour_gradient2 scale_colour_gradientn
 validate_category_scale <- function(values,
                                     type,
@@ -1376,7 +1374,7 @@ validate_category_scale <- function(values,
     if (!is.null(category.labels)) {
       category.labels
     } else if (isTRUE(category.percent) || isTRUE(stacked_fill)) {
-      function(x, dec = decimal.mark, big = big.mark, ...) format2(as.percentage(x), decimal.mark = dec, big.mark = big)
+      function(x, dec = decimal.mark, big = big.mark, ...) format2(as_percentage(x), decimal.mark = dec, big.mark = big)
     } else if (is_date(values)) {
       if (is.null(category.date_labels)) {
         lbls <- determine_date_breaks_labels(values)$labels
@@ -1590,7 +1588,7 @@ validate_category_scale <- function(values,
       mid_point <- sum(rng) / 2
       plot2_message("Using ", font_blue("category.midpoint =", round(mid_point, 2)),
                     ifelse(isTRUE(category.percent),
-                           paste0(" (", format2(as.percentage(mid_point)), ", "),
+                           paste0(" (", format2(as_percentage(mid_point)), ", "),
                            " ("),
                     "the current ", font_blue("category"), " scale centre)")
     }

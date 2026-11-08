@@ -21,7 +21,6 @@ desc_deps <- function(field) {
 }
 
 test_that("T06.01 every package imported in NAMESPACE is listed in Imports", {
-  skip_open_finding("F108")
   ns <- readLines(source_file("NAMESPACE"))
   imported <- unique(sub("^import(From)?\\(([^,)]+).*", "\\2", grep("^import(From)?\\(", ns, value = TRUE)))
   expect_identical(setdiff(imported, desc_deps("Imports")), character(0))

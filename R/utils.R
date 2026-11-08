@@ -99,33 +99,27 @@ like <- function(x, pattern) {
   !like(x = x, pattern = pattern)
 }
 
-#' @importFrom crayon black white
 font_black <- function(..., collapse = " ") {
   if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
-    white(paste0(c(...), collapse = collapse))
+    as.character(cli::col_white(paste0(c(...), collapse = collapse)))
   } else {
-    black(paste0(c(...), collapse = collapse))
+    as.character(cli::col_black(paste0(c(...), collapse = collapse)))
   }
 }
-#' @importFrom crayon blue
 font_blue <- function(..., collapse = " ") {
-  blue(paste0(c(...), collapse = collapse))
+  as.character(cli::col_blue(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon bold
 font_bold <- function(..., collapse = " ") {
-  bold(paste0(c(...), collapse = collapse))
+  as.character(cli::style_bold(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon italic
 font_italic <- function(..., collapse = " ") {
-  italic(paste0(c(...), collapse = collapse))
+  as.character(cli::style_italic(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon magenta
 font_magenta <- function(..., collapse = " ") {
-  magenta(paste0(c(...), collapse = collapse))
+  as.character(cli::col_magenta(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon strip_style
 font_stripstyle <- function(..., collapse = " ") {
-  strip_style(paste0(c(...), collapse = collapse))
+  as.character(cli::ansi_strip(paste0(c(...), collapse = collapse)))
 }
 font_url <- function(url, txt = url) {
   if (tryCatch(cli::ansi_has_hyperlink_support(), error = function(e) FALSE)) {
@@ -134,12 +128,11 @@ font_url <- function(url, txt = url) {
     url
   }
 }
-#' @importFrom crayon black white
 font_white <- function(..., collapse = " ") {
   if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
-    black(paste0(c(...), collapse = collapse))
+    as.character(cli::col_black(paste0(c(...), collapse = collapse)))
   } else {
-    white(paste0(c(...), collapse = collapse))
+    as.character(cli::col_white(paste0(c(...), collapse = collapse)))
   }
 }
 
@@ -886,22 +879,30 @@ format_error <- function(e, replace = character(0), by = character(0)) {
 }
 
 #' @importFrom ggplot2 fortify
-#' @importFrom broom augment
 #' @importFrom dplyr select mutate
 fortify_df <- function(df, y = NULL) {
-  augment_methods <- suppressMessages(utils::methods(augment))
-  augment_methods <- gsub("augment.", "", as.character(augment_methods), fixed = TRUE)
+  # broom is in Suggests (F108): use broom::augment() for model objects when it is installed
+  augment_classes <- function() {
+    m <- suppressMessages(utils::methods(broom::augment))
+    gsub("augment.", "", as.character(m), fixed = TRUE)
+  }
+  has_broom <- requireNamespace("broom", quietly = TRUE)
   
   if (is.null(tryCatch(rlang::eval_tidy(y), error = function(e) FALSE))) {
     y <- NULL
   }
   
-  if (inherits(df, augment_methods)) {
+  if (has_broom && inherits(df, augment_classes())) {
     # broom::augment() supports our data
-    new_df <- tryCatch(augment(df), error = function(e) NULL)
+    new_df <- tryCatch(broom::augment(df), error = function(e) NULL)
   } else {
     # try the ggplot2::fortify()
     new_df <- tryCatch(fortify(df), error = function(e) NULL)
+    if (!is.data.frame(new_df) && !has_broom) {
+      # e.g. a model object, which broom can turn into a data frame
+      rlang::check_installed("broom", reason = paste0("to plot an object of class '", class(df)[1], "'"))
+      new_df <- tryCatch(broom::augment(df), error = function(e) NULL)
+    }
   }
   
   if (is.data.frame(new_df)) {

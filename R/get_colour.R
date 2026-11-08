@@ -367,7 +367,6 @@ as.character.colour <- function(x, ...) {
 }
 
 #' @method print colour
-#' @importFrom crayon make_style
 #' @noRd
 #' @export
 print.colour <- function(x, ...) {
@@ -383,7 +382,7 @@ print.colour <- function(x, ...) {
     nms <- format(c(nms, strrep(" ", str_length + 4)), justify = "right")[seq_len(length(x))]
     cols <- substr(y[!is.na(x)], 1, str_length)
     y[!is.na(x)] <- paste0('"', cols, '"',
-                           sapply(cols, function(z) make_style(z, bg = TRUE)(" ")))
+                           sapply(cols, function(z) as.character(cli::make_ansi_style(z, bg = TRUE)(" "))))
     max_print <- floor(options()$width / (str_length + 5)) + 1
     for (i in c(0:(length(y) / max_print))) {
       from <- i * max_print + 1

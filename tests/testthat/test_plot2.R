@@ -99,6 +99,7 @@ test_that("S3 implementations work", {
   # lm
   expect_s3_class(lm(mpg ~ hp, mtcars) |> plot2(), "gg")
   # freq
+  skip_if_not_installed("cleaner")
   freq <- cleaner::freq(admitted_patients$hospital)
   expect_s3_class(freq |> plot2(), "gg")
   # sf
@@ -432,6 +433,7 @@ test_that("blank plot works", {
 test_that("misc elements works", {
   skip_on_cran()
   expect_s3_class(plotdata |> plot2(x_char, x.lbl_taxonomy = TRUE), "gg")
+  skip_if_not_installed("cleaner")
   expect_s3_class(AMR::example_isolates |>
                     cleaner::freq(AMR::mo_name(mo, "nl")) |>
                     plot2(type = "barpercent", x.lbl_taxonomy = TRUE), "gg")

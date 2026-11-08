@@ -18,10 +18,9 @@ format2 <- function(x, ...) {
 
 #' @method format2 default
 #' @exportS3Method
-#' @importFrom cleaner as.percentage
 format2.default <- function(x, ...) {
   if (isTRUE(list(...)$percent)) {
-    format2(as.percentage(x), ...)
+    format2(as_percentage(x), ...)
   } else {
     # all below have to be wrapped in tryCatch to also work for e.g. functions and calls
     if (tryCatch(all(x %like% "^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}$", na.rm = TRUE), error = function(e) FALSE)) {
@@ -37,7 +36,6 @@ format2.default <- function(x, ...) {
   }
 }
 
-#' @importFrom cleaner as.percentage
 #' @method format2 numeric
 #' @exportS3Method
 format2.numeric <- function(x,
@@ -50,7 +48,7 @@ format2.numeric <- function(x,
                             ...) {
   
   if (percent == TRUE) {
-    format2(x = as.percentage(x),
+    format2(x = as_percentage(x),
             round = round,
             force_decimals = force_decimals,
             decimal.mark = decimal.mark,
@@ -103,11 +101,11 @@ format2.percentage <- function(x,
   if (length(x) == 0) {
     return(character())
   }
-  # this will call cleaner:::format.percentage
-  out <- trimws(format(x,
-                       digits = round,
-                       decimal.mark = decimal.mark,
-                       big.mark = big.mark))
+  # formats like cleaner's percentage class did, without depending on cleaner (F108)
+  out <- trimws(format_percentage(x,
+                                  digits = round,
+                                  decimal.mark = decimal.mark,
+                                  big.mark = big.mark))
   out[out == "NA%"] <- NA_character_
   out
 }
@@ -293,4 +291,22 @@ posix_date_format <- function(format) {
     format <- gsub("iso", "%F", format, fixed = TRUE)
   }
   format
+}
+
+# percentages, formerly from the cleaner package (F108); the class name "percentage"
+# is kept, so that format2() also formats percentages made with cleaner
+as_percentage <- function(x) {
+  if (inherits(x, "percentage")) {
+    return(x)
+  }
+  structure(as.double(x), class = c("percentage", "numeric"))
+}
+
+format_percentage <- function(x, digits = 1, ...) {
+  x <- as.double(x) * 100
+  # round half away from zero
+  x <- trunc(abs(x) * 10 ^ digits + 0.5 + sqrt(.Machine$double.eps)) / 10 ^ digits * sign(x)
+  out <- format(x, scientific = FALSE, ...)
+  out[!is.na(out)] <- paste0(out[!is.na(out)], "%")
+  out
 }

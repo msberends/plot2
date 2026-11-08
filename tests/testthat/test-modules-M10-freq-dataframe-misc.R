@@ -16,6 +16,7 @@
 # review_and_overhaul/reviews/R04_modules/M10_freq-dataframe-small-files.md
 
 test_that("M10.01 freq object: frequency order, titles Item and Count", {
+  skip_if_not_installed("cleaner")
   fq <- cleaner::freq(c("a", "b", "b", "c", "c", "c"))
   p <- expect_plot2(plot2(fq))
   expect_identical(axis_labels(p, "x"), c("c", "b", "a"))

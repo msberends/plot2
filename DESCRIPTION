@@ -23,10 +23,7 @@ URL: https://msberends.github.io/plot2, https://github.com/msberends/plot2
 Depends: 
   R (>= 4.1.0)
 Imports: 
-  broom (>= 1.0.0),
-  cleaner (>= 1.5.1),
   cli,
-  crayon (>= 1.5.0),
   dplyr (>= 1.1.0),
   forcats (>= 1.0.0),
   ggplot2 (>= 4.0.0),
@@ -42,6 +39,8 @@ Imports:
 Suggests:
   AMR (>= 3.0.1),
   arrow,
+  broom (>= 1.0.0),
+  cleaner (>= 1.5.1),
   bslib,
   clipr,
   DT,
