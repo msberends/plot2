@@ -984,3 +984,32 @@ plot2_language <- function() {
   }
   lang
 }
+
+# Split a formula into plot2 directions (F019): y ~ x + category + facet, or
+# y ~ x + category | facet. Only top-level `+` separates terms; `|` gives the facet.
+formula_terms <- function(form) {
+  split_plus <- function(e) {
+    if (is.call(e) && identical(e[[1]], as.name("+")) && length(e) == 3) {
+      c(split_plus(e[[2]]), list(e[[3]]))
+    } else {
+      list(e)
+    }
+  }
+  lhs <- rlang::f_lhs(form)
+  rhs <- rlang::f_rhs(form)
+  facet <- NULL
+  if (is.call(rhs) && identical(rhs[[1]], as.name("|")) && length(rhs) == 3) {
+    facet <- split_plus(rhs[[3]])
+    facet <- if (length(facet) == 1) facet[[1]] else as.call(c(as.name("c"), facet))
+    rhs <- rhs[[2]]
+  }
+  rhs <- split_plus(rhs)
+  if (length(rhs) > 3 || (length(rhs) > 2 && !is.null(facet))) {
+    stop("A formula takes at most `y ~ x + category + facet` or `y ~ x + category | facet`, not: ",
+         paste(deparse(form), collapse = " "), call. = FALSE)
+  }
+  list(y = lhs,
+       x = rhs[[1]],
+       category = if (length(rhs) > 1) rhs[[2]] else NULL,
+       facet = if (!is.null(facet)) facet else if (length(rhs) > 2) rhs[[3]] else NULL)
+}

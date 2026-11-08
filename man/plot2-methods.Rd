@@ -631,7 +631,6 @@
     element_blank(), axis.ticks = element_blank()),
   background = getOption("plot2.colour_background", "white"),
   markdown = TRUE,
-  data = NULL,
   crs = NULL,
   datalabels.centroid = NULL,
   ...

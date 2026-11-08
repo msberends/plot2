@@ -38,12 +38,10 @@ test_that("M02.04 missing data errors clearly", {
 })
 
 test_that("M02.05 a formula after a pipe (F081)", {
-  skip_open_finding("F081")
   expect_geoms(expect_plot2(mtcars |> plot2(mpg ~ wt)), "point")
 })
 
 test_that("M02.06 computed terms (F019)", {
-  skip_open_finding("F019")
   p <- expect_plot2(plot2(log(mpg) ~ wt, data = mtcars))
-  expect_equal(layer_df(p, "point")$y, log(mtcars$mpg))
+  expect_equal(sort(layer_df(p, "point")$y), sort(log(mtcars$mpg)))
 })

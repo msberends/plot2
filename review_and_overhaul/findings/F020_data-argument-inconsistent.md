@@ -4,7 +4,7 @@ title: data argument documented on the generic but missing from most methods
 severity: high
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -47,3 +47,4 @@ Add `data = NULL` to all methods and warn when it is supplied but unused, or rem
 
 - 2026-11-07: filed in R01, reproduced.
 - 2026-11-08: maintainer decided (AskUserQuestion): only in plot2.formula(): `data` removed from the generic; other methods give a clear error when `data =` is supplied.
+- 2026-11-08: fixed as decided: data is accepted only in formula notation. The generic keeps a data formal, since without it plot2(y ~ x, data = df) would be partially matched to datalabels.* at the generic and fail; for any other input the generic stops with a clear message before dispatch. Removed the unused data argument from plot2.sf(). Tests: A01.02 unparked and adapted (only the formula method takes data), test-regression-phase4.R (F020).

@@ -1,5 +1,7 @@
 # plot2 1.99.0.9000
 
+* Passing `data =` to `plot2()` with anything other than a formula now gives a clear error instead of 'argument matches multiple formal arguments'
+* The formula interface now accepts computed terms such as `log(mpg) ~ hp` or `I(hp + 1)`, a facet after `|` (`y ~ x + category | facet`), and works after a pipe: `mtcars |> plot2(mpg ~ wt)`
 * Titles and category values with apostrophes ("Children's *E. coli*") no longer fail with markdown, a single dollar sign ("Costs in $") or currency amounts no longer turn a title into plotmath (plotmath needs `$...$` as in Pandoc), and markdown is no longer detected across separate titles
 * Column names and values containing regular expression characters (such as `rate (%)` or `n[1`) no longer break `plot2()`, and case-insensitive matching no longer changes the meaning of patterns such as `\D`
 * Dates in legends and on the x axis now follow the system locale instead of Dutch; the new option `plot2.language` (`"en"` or `"nl"`) sets the language of month names and of the words plot2 generates (automatic titles, `y.24h`, `y.age`), which no longer depend on the machine's locale. Changes of the time locale are always restored

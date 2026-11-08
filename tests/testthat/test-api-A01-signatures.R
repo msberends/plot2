@@ -28,10 +28,10 @@ test_that("A01.01 every argument of the generic is documented on its help page",
   expect_setequal(setdiff(names(formals(plot2)), documented), character(0))
 })
 
-test_that("A01.02 every method accepts every argument of the generic", {
-  skip_open_finding("F020")
+test_that("A01.02 every method accepts every argument of the generic; only the formula method takes `data` (F020)", {
   for (m in c("plot2.default", "plot2.data.frame", "plot2.formula", "plot2.matrix", "plot2.sf", "plot2.freq")) {
-    expect_setequal(setdiff(names(formals(plot2)), names(formals(getFromNamespace(m, "plot2")))), character(0))
+    expected <- if (m == "plot2.formula") character(0) else "data"
+    expect_setequal(setdiff(names(formals(plot2)), names(formals(getFromNamespace(m, "plot2")))), expected)
   }
 })
 

@@ -184,7 +184,7 @@
 #' @param theme A valid `ggplot2` [theme][ggplot2::theme()] to apply, or `NULL` to use the default [`theme_grey()`][ggplot2::theme_grey()]. This argument accepts themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and characters themes (e.g., `"theme_bw"`). The default is [theme_minimal2()], but can be set with `options(plot2.theme = "...")`.
 #' @param background The background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [get_colour()]. Only applies when `theme` is not `NULL`.
 #' @param markdown A [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`).
-#' @param data Substitute for `.data`, used in formula notation, e.g., `plot2(hp ~ mpg, data = mtcars)`.
+#' @param data Data for formula notation only, e.g. `plot2(mpg ~ hp, data = mtcars)`, which is the same as `mtcars |> plot2(mpg ~ hp)`. A formula takes the form `y ~ x + category + facet` or `y ~ x + category | facet`; terms can be expressions, such as `log(mpg) ~ hp`. For other input, `data` gives an error: pass the data as the first argument instead.
 #' @param ... Any argument to give to the geom. This will override automatically-set settings for the geom.
 #' @details The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions such as [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], [`geom_col()`][ggplot2::geom_col()], [`facet_wrap()`][ggplot2::facet_wrap()], [`labs()`][ggplot2::labs()], etc., and provides:
 #'   - Writing as few lines of codes as possible
@@ -551,6 +551,12 @@ plot2 <- function(.data,
                   markdown = TRUE,
                   data = NULL,
                   ...) {
+  
+  # `data` only exists for formula notation (F020)
+  if (!is.null(data) && !inherits(.data, "formula")) {
+    stop("`data` is only used in formula notation, e.g. `plot2(mpg ~ wt, data = mtcars)`; ",
+         "otherwise pass the data as the first argument, e.g. `mtcars |> plot2(wt, mpg)`", call. = FALSE)
+  }
   
   # no observations, return empty plot immediately
   if (NROW(.data) == 0) {

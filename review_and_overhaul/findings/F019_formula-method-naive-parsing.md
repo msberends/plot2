@@ -4,7 +4,7 @@ title: Formula method parses the formula as text and fails on function terms
 severity: high
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: possible
@@ -46,3 +46,4 @@ Use `rlang::f_lhs()`/`f_rhs()` and walk the right-hand side as a call tree (spli
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed: plot2.formula() walks the formula as a call tree (formula_terms() in R/utils.R): only top-level + separates terms, | gives the facet (several facet terms become c(...)), terms are quosures in the formula's environment, columns are no longer subset with select(), and too many terms give a clear error. Tests: M02.06 unparked, test-regression-phase4.R (F019).

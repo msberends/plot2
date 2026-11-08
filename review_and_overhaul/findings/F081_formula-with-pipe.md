@@ -4,7 +4,7 @@ title: A formula piped after the data (df |> plot2(y ~ x)) fails with a cryptic 
 severity: medium
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -37,3 +37,4 @@ In `plot2.data.frame()`, detect a formula in `x` (`rlang::quo_is_call(enquo(x), 
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed with F019: plot2.data.frame() detects a formula in x and hands over to plot2.formula() with data = .data and all other arguments. Tests: M02.05 unparked, test-regression-phase4.R (F081).

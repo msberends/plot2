@@ -417,7 +417,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{markdown}{A \link{logical} to turn all labels and titles into \link{plotmath} expressions, by converting common markdown language using the \code{\link[=md_to_expression]{md_to_expression()}} function (defaults to \code{TRUE}).}
 
-\item{data}{Substitute for \code{.data}, used in formula notation, e.g., \code{plot2(hp ~ mpg, data = mtcars)}.}
+\item{data}{Data for formula notation only, e.g. \code{plot2(mpg ~ hp, data = mtcars)}, which is the same as \code{mtcars |> plot2(mpg ~ hp)}. A formula takes the form \code{y ~ x + category + facet} or \code{y ~ x + category | facet}; terms can be expressions, such as \code{log(mpg) ~ hp}. For other input, \code{data} gives an error: pass the data as the first argument instead.}
 
 \item{...}{Any argument to give to the geom. This will override automatically-set settings for the geom.}
 }

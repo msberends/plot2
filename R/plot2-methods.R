@@ -427,7 +427,6 @@ plot2.default <- function(.data,
 }
 
 #' @rdname plot2-methods
-#' @importFrom dplyr any_of select
 #' @export
 plot2.formula <- function(.data = NULL,
                           x = NULL,
@@ -586,35 +585,18 @@ plot2.formula <- function(.data = NULL,
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
   if (is.null(data)) {
-    stop("Formula notation requires the `data` argument to be set", call. = FALSE)
+    stop("Formula notation requires the `data` argument to be set, e.g. `plot2(mpg ~ wt, data = mtcars)` or `mtcars |> plot2(mpg ~ wt)`", call. = FALSE)
   }
   form <- .data
   .data <- data
-  form_elements <- unlist(strsplit(as.character(form), " [\\+\\-] "))
-  form_elements <- form_elements[-1]
-  
-  x <- form_elements[2]
-  y = form_elements[1]
-  category <- NULL
-  facet <- NULL
-  if (length(form_elements) > 2) {
-    category <- form_elements[3]
-  }
-  if (length(form_elements) > 3) {
-    facet <- form_elements[4]
-  }
-  
-  .data <- .data |>
-    select(any_of(c(x, y, category, facet)))
-  
-  x <- str2lang(x)
-  y <- str2lang(y)
-  if (!is.null(category)) {
-    category <- str2lang(category)
-  }
-  if (!is.null(facet)) {
-    facet <- str2lang(facet)
-  }
+  # walk the formula as a call tree, so that terms such as log(y) or I(x + 1) are kept (F019)
+  terms <- formula_terms(form)
+  as_term <- function(e) if (is.null(e)) NULL else rlang::new_quosure(e, env = rlang::f_env(form))
+  x <- as_term(terms$x)
+  y <- as_term(terms$y)
+  category <- as_term(terms$category)
+  facet <- as_term(terms$facet)
+  term_label <- function(e) if (is.null(e)) "NULL" else paste(deparse(e), collapse = " ")
   
   plot2_exec(.data = .data,
              x = {{ x }},
@@ -785,11 +767,10 @@ plot2.formula <- function(.data = NULL,
              `_misses.x.zoom` = missing(x.zoom),
              `_misses.x.max_items` = missing(x.max_items),
              `_misses.facet.fixed_x` = missing(facet.fixed_x),
-             `_label.x` = list(...)$`_label.x` %or% deparse(substitute(x)),
-             `_label.y` = list(...)$`_label.y` %or% deparse(substitute(y)),
-             `_label.category` = list(...)$`_label.category` %or% deparse(substitute(category)),
-             `_label.facet` = list(...)$`_label.facet` %or% deparse(substitute(facet)),
-             `_label.y_secondary` = list(...)$`_label.y_secondary` %or% deparse(substitute(y_secondary)),
+             `_label.x` = term_label(terms$x),
+             `_label.y` = term_label(terms$y),
+             `_label.category` = term_label(terms$category),
+             `_label.facet` = term_label(terms$facet),
              `_label.y_secondary` = list(...)$`_label.y_secondary` %or% deparse(substitute(y_secondary)),
              `_summarise_fn_name` = list(...)$`_summarise_fn_name` %or% deparse(substitute(summarise_function)),
              `_misses.summarise_function` = missing(summarise_function),
@@ -1297,7 +1278,6 @@ plot2.sf <- function(.data,
                                             axis.ticks = element_blank()),
                      background = getOption("plot2.colour_background", "white"),
                      markdown = TRUE,
-                     data = NULL,
                      crs = NULL,
                      datalabels.centroid = NULL,
                      ...) {
@@ -1673,6 +1653,15 @@ plot2.data.frame <- function(.data,
   
   if (isTRUE(is_grouped_df(.data))) {
     .data <- ungroup(.data)
+  }
+  
+  # a formula after the data, e.g. mtcars |> plot2(mpg ~ wt), goes to the formula method (F081)
+  if (rlang::quo_is_call(rlang::enquo(x), "~")) {
+    args <- as.list(match.call())[-1]
+    args$.data <- rlang::eval_tidy(rlang::enquo(x))
+    args$x <- NULL
+    args$data <- .data
+    return(do.call(plot2.formula, args, envir = parent.frame()))
   }
   
   plot2_exec(.data = .data,

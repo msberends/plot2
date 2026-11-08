@@ -51,3 +51,27 @@ test_that("F018 markdown is not detected across titles", {
   expect_true(plot2:::validate_markdown(NULL, x.title = "*ab*", y.title = NULL, legend.title = NULL,
                                         title = NULL, subtitle = NULL, tag = NULL, caption = NULL))
 })
+
+test_that("F019 formula terms are expressions, evaluated in the formula's environment", {
+  k <- 2
+  p <- expect_plot2(plot2(I(mpg * k) ~ I(hp + 1), data = mtcars))
+  expect_equal(sort(layer_df(p, "point")$y), sort(mtcars$mpg * 2))
+  expect_equal(sort(layer_df(p, "point")$x), sort(mtcars$hp + 1))
+  expect_labels(p, x = "I(hp + 1)", y = "I(mpg * k)")
+})
+
+test_that("F019 `|` in a formula gives the facet, and too many terms error clearly", {
+  m <- transform(mtcars, cyl = as.character(cyl), am = as.character(am))
+  p <- expect_plot2(plot2(mpg ~ wt + cyl | am, data = m))
+  expect_facets(p, n_panels = 2L)
+  expect_error(plot2(mpg ~ wt + cyl + am + gear, data = m), "at most")
+})
+
+test_that("F081 a formula after a pipe keeps the other arguments", {
+  p <- expect_plot2(mtcars |> plot2(mpg ~ wt, title = "Fuel"))
+  expect_labels(p, x = "wt", y = "mpg", title = "Fuel")
+})
+
+test_that("F020 `data` outside formula notation errors clearly", {
+  expect_error(plot2(iris, Species, Sepal.Length, data = mtcars), "only used in formula notation")
+})
