@@ -44,7 +44,6 @@ test_that("E08.03 both halves share the same value range (F064)", {
 })
 
 test_that("E08.04 small counts with a category (F065)", {
-  skip_open_finding("F065")
   expect_plot2(plot2(fx_pop_cat, age, n, grp, facet = sex, type = "b2b"))
 })
 

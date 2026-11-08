@@ -68,7 +68,6 @@ test_that("E04.09 facet = where(is.character) combines columns", {
 })
 
 test_that("E04.10 numeric y values are not taken as column positions (F065)", {
-  skip_open_finding("F065")
   df <- data.frame(x = c("a", "b"), y = c(2, 3), z = c("p", "q"))
   p <- plot2(df, x, c(2, 3))
   expect_identical(as.numeric(layer_df(p, "bar")$y), c(2, 3))

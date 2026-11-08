@@ -943,13 +943,18 @@ plot2_exec <- function(.data,
                   sep = sep) |> 
     # add y (this will end in an ungrouped data.frame)
     { function(.data) {
-      suppressWarnings(
-        y_select <- tryCatch((.data |>
-                                # no tibbles, data.tables, sf, etc. objects:
-                                as.data.frame(stringsAsFactors = FALSE) |> 
-                                select({{ y }})),
-                             error = function(e) FALSE)
-      )
+      # only a column specification (names, c() of names, tidyselect helpers) can select
+      # several y columns; values such as c(1, 2) must never be read as column positions
+      y_select <- FALSE
+      if (is_column_selection(rlang::quo_get_expr(rlang::enquo(y)))) {
+        suppressWarnings(
+          y_select <- tryCatch((.data |>
+                                  # no tibbles, data.tables, sf, etc. objects:
+                                  as.data.frame(stringsAsFactors = FALSE) |> 
+                                  select({{ y }})),
+                               error = function(e) FALSE)
+        )
+      }
       
       has_multiple_cols <- is.data.frame(y_select) && ncol(y_select) > 1
       if (isTRUE(has_multiple_cols)) {

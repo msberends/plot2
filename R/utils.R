@@ -203,6 +203,24 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
   }
 }
 
+# whether an unevaluated direction (e.g. the y argument) is a column
+# specification: a name, a string, c() of those, a `:` range of names, or a
+# tidyselect helper; evaluated values (numeric vectors) are not
+is_column_selection <- function(expr) {
+  helpers <- c("where", "starts_with", "ends_with", "contains", "matches", "num_range",
+               "everything", "last_col", "all_of", "any_of", "c", ":", "-", "!")
+  if (is.symbol(expr)) return(TRUE)
+  if (is.character(expr)) return(TRUE)
+  if (!is.call(expr)) return(FALSE)
+  fn <- expr[[1]]
+  if (is.call(fn) && identical(fn[[1]], as.name("::"))) fn <- fn[[3]]
+  if (!is.symbol(fn) || !as.character(fn) %in% helpers) return(FALSE)
+  if (as.character(fn) %in% c("c", ":", "-", "!")) {
+    return(all(vapply(as.list(expr)[-1], is_column_selection, logical(1))))
+  }
+  TRUE
+}
+
 # whether a materialised direction column is the switch TRUE or FALSE (e.g.
 # `category = FALSE`, `datalabels = TRUE`) rather than data: only logical
 # columns qualify, so numeric 0/1 data and NA values are never mistaken for it

@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: back-to-back plots with small counts failed, and `y = c(2, 3)` was read as column positions
 * Fixed: back-to-back plots failed when the facet was given as an expression, such as `facet = tolower(sex)`
 * Fixed: a date-time (POSIXct) category produced thousands of nonsense legend breaks; a category with only a few dates now shows one legend entry per date
 * Fixed: a factor y with data labels failed with an `nchar()` error

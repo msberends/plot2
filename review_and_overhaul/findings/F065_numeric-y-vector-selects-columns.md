@@ -4,7 +4,7 @@ title: Numeric y values are interpreted as column positions; back-to-back plots 
 severity: high
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -13,7 +13,7 @@ related: [F064]
 origin: R03 sheets E04, E08
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F065 Numeric y vectors are taken as column positions
@@ -42,3 +42,4 @@ Only treat `y` as a column selection when it is a symbol, a `c()` of symbols, or
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). New helper `is_column_selection()`: only names, `c()` of names, ranges and tidyselect helpers can select several y columns; evaluated values never; regression tests in E04 and E08; full suite passes.
