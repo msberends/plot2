@@ -608,7 +608,7 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
     }
     linetype <- ifelse(identical(linetype, NA_missing_), "solid", linetype)
     p <- p +
-      geom_line(data = data.frame(x = c(as.Date(Inf), as.Date(Inf)), y = c(Inf, Inf), group = c(legend.value, legend.value)),
+      geom_line(data = data.frame(x = rep(legend_dummy_x(p), 2), y = c(Inf, Inf), group = c(legend.value, legend.value)),
                 mapping = aes(x = x, y = y, linetype = group),
                 colour = get_colour(colour[1L]),
                 linewidth = validate_linewidth(geom_data$params$linewidth, type = "geom_line", type_backup = "geom_line"),

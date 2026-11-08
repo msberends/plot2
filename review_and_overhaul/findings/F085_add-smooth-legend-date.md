@@ -4,7 +4,7 @@ title: add_smooth(legend.value = ) adds a Date dummy layer, which fails on non-d
 severity: low
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -38,3 +38,4 @@ Use the same legend construction as `add_line()` (numeric `Inf`), or better a ke
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; the legend dummy of add_smooth() takes the class of the x axis (Date, POSIXct or numeric) via legend_dummy_x(). Test M05.12 now uses 12 points (loess warnings with 3) and also covers a date axis.

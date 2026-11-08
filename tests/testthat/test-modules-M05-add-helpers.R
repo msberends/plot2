@@ -65,7 +65,6 @@ test_that("M05.09 add_errorbar() with a category: one bar per row", {
 })
 
 test_that("M05.10 add_errorbar() without a category (F082)", {
-  skip_open_finding("F082")
   d <- data.frame(g = c("a", "b"), n = c(3, 4))
   p <- expect_plot2(add_errorbar(plot2(d, g, n), min = n - 1, max = n + 1))
   expect_identical(layer_df(p, "errorbar")$ymin, c(2, 3))
@@ -77,8 +76,12 @@ test_that("M05.11 add_smooth() adds a smooth layer", {
 })
 
 test_that("M05.12 add_smooth(legend.value) on a discrete x-axis (F085)", {
-  skip_open_finding("F085")
-  expect_plot2(add_smooth(plot2(fx_counts, group, n, type = "point"), legend.value = "Trend"))
+  d <- data.frame(g = sprintf("g%02d", 1:12), n = c(3, 5, 4, 6, 8, 7, 9, 11, 10, 12, 14, 13))
+  p <- expect_plot2(add_smooth(plot2(d, g, n, type = "point"), legend.value = "Trend"))
+  expect_true("GeomSmooth" %in% geoms(p))
+  # also on a date axis
+  d$g <- as.Date("2026-01-01") + 0:11
+  expect_plot2(add_smooth(plot2(d, g, n, type = "point"), legend.value = "Trend"))
 })
 
 test_that("M05.13 add_type(): geom by name, move, invalid and missing type", {

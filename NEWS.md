@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `add_smooth(legend.value = )` now works on non-date x axes
 * `move_layer()` with a positive `move` no longer duplicates or drops layers
 * `add_errorbar()` now works for plots without a category, and with facets
 * `plot2()` on sf data with `x` or `y` now gives the intended caution instead of an error
