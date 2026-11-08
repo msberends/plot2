@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `?plot2` has a new section 'Automatic choices' that lists every decision plot2 makes by itself, its rule and the argument that overrides it
 * Much faster on large data: datalabels are formatted only for the rows that are drawn, e.g. 200,000 rows now take about 0.2 s instead of 1.5 to 3 s
 * Arguments renamed to follow one naming rule (see 'Argument names' in `?plot2`): `colour_opacity` is now `colour_transparency` (and `get_colour(opacity)` is `transparency`), `x.lbl_angle`, `x.lbl_align` and `x.lbl_italic` are `x.label_*`, `facet.repeat_lbls_*` are `facet.repeat_labels_*`, `facet.fill` is `facet.colour_fill`, `sankey.*` are `sankey_*`, and the options `dec_mark` and `big_mark` are `plot2.decimal.mark` and `plot2.big.mark`. The old argument names give an error that names the new one
 * New: `legend = FALSE` hides the legend; `stacked = "fill"` stacks to 100%; `label_taxonomy()` italicises microorganism names in any labels, e.g. `x.labels = label_taxonomy` (replacing `x.lbl_taxonomy`)

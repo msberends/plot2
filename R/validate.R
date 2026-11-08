@@ -685,7 +685,9 @@ validate_data <- function(df,
     
     if (!dots$summarise_fn_name %in% c("summarise_function", "function(x) x")) {
       plot2_caution("Applying ", font_blue(paste0("y = ", dots$summarise_fn_name, "(", get_y_name(df), ")")),
-                    " since ", font_blue(paste0("summarise_function = ", dots$summarise_fn_name)), " was set.\n",
+                    " since ", font_blue(paste0("summarise_function = ", dots$summarise_fn_name)),
+                    ifelse(isTRUE(dots$misses_summarise_function), " is the default (use ", " was set (use "),
+                    font_blue("summarise_function = FALSE"), " to plot all values).\n",
                     "  When using a transformation function on ", font_blue("x"), 
                     ifelse(has_category(df), paste0(" or ", font_blue("category")), ""),
                     ifelse(has_facet(df), paste0(" or ", font_blue("facet")), ""),

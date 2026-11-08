@@ -214,6 +214,32 @@
 #'   - Support for any `ggplot2` extension based on [ggplot2::fortify()]
 #'   
 #' The `ggplot2` package in conjunction with the `dplyr`, `tidyr` and `forcats` packages can provide above functionalities, but the goal of the [plot2()] function is to generalise this into one function. The generic [plot2()] function currently has `r length(formals(plot2))` arguments, all with a default value except `.data` and `...`. **Less typing, faster coding.**
+#' @section Automatic choices:
+#' Like base R's [plot()], [plot2()] decides what is not given. Every decision follows a fixed rule, is announced in a message (in interactive sessions, see the `plot2.silent` option in [plot2-options]), and is overridden by setting the argument concerned. The rules are:
+#' 
+#' **What to plot**
+#' - `y`: a column named `n`, otherwise the first numeric column (the second one if `x` is also chosen automatically); `y = n()` to count rows if the data have no numeric column, or for `type = "barpercent"` and Sankey plots.
+#' - `x`: the first numeric column if there is no `x` and the data have several numeric columns, otherwise the first column not used elsewhere.
+#' - `category`: the first character or factor column if neither `x` nor `category` is given and the data have more than two columns; for 'sf' data, the first numeric column.
+#' - `type`: a boxplot if there is no `x`, or if every group of `x`, `category` and `facet` has at least three values; points if `x` and `y` are both numeric; a histogram if `x` is the only numeric column; otherwise the `plot2.default_type` option (columns). A matrix with identical row and column names becomes a heatmap (`"tile"`).
+#' - `summarise_function`: [sum()] if groups contain several values (see `summarise_function`).
+#' 
+#' **Axes and scales**
+#' - `x.character` and `category.character`: `TRUE` if the values are whole years from 2000 to 2050, or exactly the months 1 to 12 (for `x` only in discrete plot types); `x.character` also if `x` is numeric in a discrete plot type, or if `x.sort` is set.
+#' - `x.date_remove_years`: `TRUE` if `category` contains the years of a date `x`.
+#' - `x.date_breaks`, `x.date_labels`, `category.date_breaks` and `category.date_labels`: based on the range of the dates.
+#' - `facet.fixed_x` and `facet.fixed_y`: the same scale in all facets if the maxima per facet differ by less than 25% (coefficient of variation), free scales otherwise; `facet.repeat_labels_y = FALSE` with a fixed y scale.
+#' - `x.expand` and `y.expand`: 0 if the limits are set.
+#' - `y.percent`: `TRUE` for density plots; `y.percent_break`: about 10 labels.
+#' - `y.scientific`: `TRUE` if a non-zero label would be 1e9 or larger, or smaller than 1e-4.
+#' - `category.midpoint`: the centre of the category scale, for three colours.
+#' - `binwidth`: based on the data for histograms, which also get `smooth = TRUE`.
+#' 
+#' **Labels and layout**
+#' - `datalabels`: the values of `y` in column-type plots, at most 25 and none for continuous plot types such as points and lines; for 'sf' data, the first character column, centred on the areas (`datalabels.centroid = TRUE`).
+#' - `legend.position`: `"right"` for numeric categories and 'sf' data, `"top"` otherwise; numeric categories also get a legend title.
+#' - `sankey_remove_axes`: `TRUE` for Sankey plots.
+#' 
 #' @section Argument names:
 #' The arguments follow one naming rule: `<argument>.<setting>`, where the part before the dot is itself an argument of [plot2()] (`x`, `y`, `category`, `facet`, `y_secondary`, `title`, `subtitle`, `datalabels`, `smooth` or `legend`) and the setting is written in snake case, e.g. `x.label_angle` or `facet.repeat_labels_x`. All other arguments are plain snake case, e.g. `colour_fill`, `sankey_node_width` or `jitter_seed`. The exceptions are names known from base R: `na.rm`, `na.replace`, `decimal.mark` and `big.mark`.
 #' 

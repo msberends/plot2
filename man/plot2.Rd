@@ -469,6 +469,40 @@ The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \
 
 The \code{ggplot2} package in conjunction with the \code{dplyr}, \code{tidyr} and \code{forcats} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 153 arguments, all with a default value except \code{.data} and \code{...}. \strong{Less typing, faster coding.}
 }
+\section{Automatic choices}{
+
+Like base R's \code{\link[=plot]{plot()}}, \code{\link[=plot2]{plot2()}} decides what is not given. Every decision follows a fixed rule, is announced in a message (in interactive sessions, see the \code{plot2.silent} option in \link{plot2-options}), and is overridden by setting the argument concerned. The rules are:
+
+\strong{What to plot}
+\itemize{
+\item \code{y}: a column named \code{n}, otherwise the first numeric column (the second one if \code{x} is also chosen automatically); \code{y = n()} to count rows if the data have no numeric column, or for \code{type = "barpercent"} and Sankey plots.
+\item \code{x}: the first numeric column if there is no \code{x} and the data have several numeric columns, otherwise the first column not used elsewhere.
+\item \code{category}: the first character or factor column if neither \code{x} nor \code{category} is given and the data have more than two columns; for 'sf' data, the first numeric column.
+\item \code{type}: a boxplot if there is no \code{x}, or if every group of \code{x}, \code{category} and \code{facet} has at least three values; points if \code{x} and \code{y} are both numeric; a histogram if \code{x} is the only numeric column; otherwise the \code{plot2.default_type} option (columns). A matrix with identical row and column names becomes a heatmap (\code{"tile"}).
+\item \code{summarise_function}: \code{\link[=sum]{sum()}} if groups contain several values (see \code{summarise_function}).
+}
+
+\strong{Axes and scales}
+\itemize{
+\item \code{x.character} and \code{category.character}: \code{TRUE} if the values are whole years from 2000 to 2050, or exactly the months 1 to 12 (for \code{x} only in discrete plot types); \code{x.character} also if \code{x} is numeric in a discrete plot type, or if \code{x.sort} is set.
+\item \code{x.date_remove_years}: \code{TRUE} if \code{category} contains the years of a date \code{x}.
+\item \code{x.date_breaks}, \code{x.date_labels}, \code{category.date_breaks} and \code{category.date_labels}: based on the range of the dates.
+\item \code{facet.fixed_x} and \code{facet.fixed_y}: the same scale in all facets if the maxima per facet differ by less than 25\% (coefficient of variation), free scales otherwise; \code{facet.repeat_labels_y = FALSE} with a fixed y scale.
+\item \code{x.expand} and \code{y.expand}: 0 if the limits are set.
+\item \code{y.percent}: \code{TRUE} for density plots; \code{y.percent_break}: about 10 labels.
+\item \code{y.scientific}: \code{TRUE} if a non-zero label would be 1e9 or larger, or smaller than 1e-4.
+\item \code{category.midpoint}: the centre of the category scale, for three colours.
+\item \code{binwidth}: based on the data for histograms, which also get \code{smooth = TRUE}.
+}
+
+\strong{Labels and layout}
+\itemize{
+\item \code{datalabels}: the values of \code{y} in column-type plots, at most 25 and none for continuous plot types such as points and lines; for 'sf' data, the first character column, centred on the areas (\code{datalabels.centroid = TRUE}).
+\item \code{legend.position}: \code{"right"} for numeric categories and 'sf' data, \code{"top"} otherwise; numeric categories also get a legend title.
+\item \code{sankey_remove_axes}: \code{TRUE} for Sankey plots.
+}
+}
+
 \section{Argument names}{
 
 The arguments follow one naming rule: \verb{<argument>.<setting>}, where the part before the dot is itself an argument of \code{\link[=plot2]{plot2()}} (\code{x}, \code{y}, \code{category}, \code{facet}, \code{y_secondary}, \code{title}, \code{subtitle}, \code{datalabels}, \code{smooth} or \code{legend}) and the setting is written in snake case, e.g. \code{x.label_angle} or \code{facet.repeat_labels_x}. All other arguments are plain snake case, e.g. \code{colour_fill}, \code{sankey_node_width} or \code{jitter_seed}. The exceptions are names known from base R: \code{na.rm}, \code{na.replace}, \code{decimal.mark} and \code{big.mark}.
