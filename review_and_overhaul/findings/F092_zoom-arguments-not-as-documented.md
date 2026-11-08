@@ -56,3 +56,4 @@ Decide the intended expansion for zoomed axes (the code comment says "set defaul
 ## History
 
 - 2026-11-08: filed in R05 (sheet A03); tests A03.01 to A03.03 parked.
+- 2026-11-08: maintainer decided: zoomed axes cover the data range with ggplot2's usual small expansion (5% on continuous axes); `zoom = TRUE` equals `x.zoom = TRUE, y.zoom = TRUE` and respects `y.limits`; documentation to match.

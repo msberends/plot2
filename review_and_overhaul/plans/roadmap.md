@@ -165,3 +165,7 @@ Reviewed in R07 (sheets in `reviews/R07_shiny/`, tests `test-shiny-S*.R`). The s
 ## Housekeeping (any time)
 
 - F039 project metadata
+
+## End of the overhaul: traceability
+
+Maintainer's decision (2026-11-08): when the overhaul ends, move findings that are still open to GitHub issues and replace the `F###` references in the tests (`skip_open_finding()`, `local_known_deprecation()`, test descriptions) by the issue numbers. Closed findings stay referenced by ID.

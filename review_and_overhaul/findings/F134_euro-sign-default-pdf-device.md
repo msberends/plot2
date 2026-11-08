@@ -4,7 +4,7 @@ title: euros() labels cannot be rendered by the default pdf() device
 severity: low
 type: bug
 area: i18n
-status: needs-decision
+status: wontfix
 verification: verified
 effort: S
 api_change: no
@@ -45,3 +45,4 @@ Wrong currency sign in PDF output with default settings; only a warning signals 
 ## History
 
 - 2026-11-08: split from F107; F107 points 1, 2 and 4 fixed, point 3 documented and filed here for a decision.
+- 2026-11-08: maintainer decided: documentation only (status quo since F107, the euros() help page advises cairo_pdf); no device detection.
