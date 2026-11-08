@@ -36,7 +36,6 @@ test_that("E06.04 point plots have no datalabels unless asked", {
 })
 
 test_that("E06.04b datalabels = TRUE with an explicit continuous type (F076)", {
-  skip_open_finding("F076")
   expect_true("GeomText" %in% geoms(plot2(fx_xy, x, y, type = "point", datalabels = TRUE)))
   expect_true("GeomText" %in% geoms(plot2(fx_xy, x, y, type = "line", datalabels = y)))
 })

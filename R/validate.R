@@ -288,12 +288,9 @@ validate_data <- function(df,
     df <- df |> select(-`_var_facet`)
     plot2_env$mapping_facet <- NULL
   }
-  if (has_datalabels(df) && 
-      (is_switch(get_datalabels(df), FALSE) ||
-       (!is.null(dots$type) && dots$type != "sf" &&
-        geom_is_continuous(suppressMessages(validate_type(dots$type, df))) &&
-        isTRUE(!type %in% c("geom_tile", "geom_raster", "geom_rect"))))) {
-    # remove datalabels if `datalabels = FALSE`, or if the type now seems to be continuous
+  if (has_datalabels(df) && is_switch(get_datalabels(df), FALSE)) {
+    # remove datalabels if `datalabels = FALSE`; for continuous types, plot2_exec() removes them
+    # only when `datalabels` was not given (F076)
     df <- df |> select(-`_var_datalabels`)
   }
   

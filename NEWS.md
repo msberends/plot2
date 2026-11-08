@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `datalabels` given with an explicit point or line type are no longer silently dropped
 * Numeric x and y with identical values now give a scatter plot instead of a histogram; a histogram is only chosen when x and y are the same column
 * UpSet plots no longer use a soft-deprecated tidyselect idiom
 * Box plots no longer use the `fatten` argument, which is deprecated in ggplot2 4.0.0
