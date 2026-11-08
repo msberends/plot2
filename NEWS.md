@@ -1,5 +1,7 @@
 # plot2 1.99.0.9000
 
+* Uploading in create_interactively(): the encoding is chosen from a list of valid values, and .txt files are read with the chosen delimiter
+* create_interactively() no longer accepts R serialisation files (.rds, .rda) for upload, since reading them can run code; pass such data with the data argument. With upload_tab = FALSE (the default) the app offers no way to upload files at all
 * create_interactively() serves only a copy of the logo, no longer the whole folder that contains it
 * Column names are no longer parsed as R code in back-to-back and UpSet plots, so data with unusual column names (such as `my col`) work, and column names can never run code
 * `label_taxonomy()` italicises species names only after a genus or an abbreviated genus, so ordinary words stay upright

@@ -4,7 +4,7 @@ title: Uploads accept R serialisation files, and uploading cannot be switched of
 severity: critical
 type: security
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -54,3 +54,4 @@ Remove `rds`/`rda` from the default formats (or allow them only through an expli
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
 - 2026-11-08: severity set to critical by the maintainer (all security findings are critical).
+- 2026-11-08: fixed: R serialisation formats removed (maintainer's decision: 'Remove them'); upload_tab = FALSE means no upload at all (no tab, no selector item, no server observers); a file with format 'auto' is checked by its extension. Tests S02.08, S02.09 (unparked), S02.12, S02.13.

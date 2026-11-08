@@ -4,7 +4,7 @@ title: Upload options produce invalid reader arguments: free-text encoding and .
 severity: medium
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -49,3 +49,4 @@ A selector for encodings with the values the reader accepts; for `txt`, pass `de
 ## History
 
 - 2026-11-08: filed in R07 (verified).
+- 2026-11-08: fixed: encodings are selectors with the values the readers accept; .txt is read as delimited text with the chosen delimiter; every upload value from the browser is checked against its choices; the non-existent Stata labels option was removed; upload_tab documentation rewritten. Tests S02.06, S02.07 (unparked), S02.12.

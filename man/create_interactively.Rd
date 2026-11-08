@@ -27,7 +27,7 @@ create_interactively(
 
 \item{hide_export_buttons}{A logical to hide export buttons and functionality. \code{TRUE} will hide the elements completely, \code{NULL} will show a clickable text to expand buttons (default), \code{FALSE} will show the expanded buttons.}
 
-\item{upload_tab}{A logical to show a dedicated \strong{Upload} tab in the sidebar. When \code{TRUE}, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the \code{readxl} package in addition to the packages checked for \code{upload_tab = FALSE}. Administrators can ensure all dependencies are present by running \code{plot2:::install_shiny_deps()} before launching the app.}
+\item{upload_tab}{A logical to allow uploading data files. When \code{TRUE}, an \strong{Upload} tab is added to the sidebar, with format-specific options for text (CSV, TSV, TXT), spreadsheet (Excel, OpenDocument), statistical software (SPSS, Stata, SAS, Minitab), Parquet, Feather, JSON, YAML, XML and HTML files; the data set selector then also offers "Upload data set...". R serialisation files (\code{.rds}, \code{.rda}) are not accepted, since reading them can run code: pass such data with the \code{data} argument instead. When \code{FALSE} (default), the app offers no way to upload files. Uploading requires the \code{readxl} package, and per format the package that reads it; administrators can install all of them with \code{plot2:::install_shiny_deps()}.}
 }
 \description{
 This Shiny app allows for interactive creation of a \code{plot2}.

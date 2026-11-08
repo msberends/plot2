@@ -90,21 +90,19 @@ test_that("S02.05 the comment character, skip and NA strings of a CSV file are a
   })
 })
 
-test_that("S02.06 the encoding of a CSV file can be given as R spells it", {
-  skip_open_finding("F120")
+test_that("S02.06 the encoding of a CSV file is chosen from the values the reader accepts", {
   f <- csv_file()
   app <- shiny_app(upload_tab = TRUE)
   shiny::testServer(app, {
     shiny_init(session)
     session$setInputs(upload_file = shiny_file(f))
-    csv_inputs(session, upload_encoding = "latin1")
+    csv_inputs(session, upload_encoding = "Latin-1")
     do_preview()
     expect_identical(nrow(preview_data()), 3L)
   })
 })
 
 test_that("S02.07 a .txt file with the default delimiter can be read", {
-  skip_open_finding("F120")
   f <- csv_file()
   app <- shiny_app(upload_tab = TRUE)
   shiny::testServer(app, {
@@ -117,7 +115,6 @@ test_that("S02.07 a .txt file with the default delimiter can be read", {
 })
 
 test_that("S02.08 an uploaded R serialisation file is not deserialised", {
-  skip_open_finding("F111")
   f <- tempfile(fileext = ".rds")
   saveRDS(data.frame(a = 1:2), f)
   app <- shiny_app(upload_tab = TRUE)
@@ -130,7 +127,6 @@ test_that("S02.08 an uploaded R serialisation file is not deserialised", {
 })
 
 test_that("S02.09 the app can be started without any way to upload files", {
-  skip_open_finding("F111")
   f <- csv_file()
   app <- shiny_app(upload_tab = FALSE)
   shiny::testServer(app, {
@@ -143,7 +139,6 @@ test_that("S02.09 the app can be started without any way to upload files", {
 })
 
 test_that("S02.10 a missing reader package gives a notification and keeps the session", {
-  skip_open_finding("F115")
   skip_if(requireNamespace("readODS", quietly = TRUE), "readODS is installed")
   f <- tempfile(fileext = ".ods")
   writeLines("not really ods", f)
@@ -166,4 +161,32 @@ test_that("S02.11 data passed under a name that is also a function is still the 
     invisible(output$plot)
     expect_identical(nrow(plot2_env$last_shiny_plot$data), 3L)
   })
+})
+
+test_that("S02.12 values the browser sends outside the choices of an upload input are not used", {
+  f <- csv_file()
+  app <- shiny_app(upload_tab = TRUE)
+  shiny::testServer(app, {
+    shiny_init(session)
+    session$setInputs(upload_file = shiny_file(f))
+    csv_inputs(session, upload_encoding = "latin1", upload_delim = "x", upload_skip = -3)
+    do_preview()
+    expect_identical(nrow(preview_data()), 3L)
+    # an R serialisation file with format 'auto' is refused by its extension
+    rds <- tempfile(fileext = ".rds")
+    saveRDS(data.frame(a = 1), rds)
+    session$setInputs(upload_file = shiny_file(rds), upload_format = "auto")
+    do_preview()
+    expect_null(preview_data())
+  })
+})
+
+test_that("S02.13 without the upload tab, there is no tab and no item to upload", {
+  app <- shiny_app(upload_tab = FALSE)
+  html <- as.character(shiny_app_env(app)$ui)
+  expect_false(grepl('data-value="Upload"', html, fixed = TRUE))
+  expect_false("import" %in% unlist(shiny_app_env(app)$data_sets))
+  html <- as.character(shiny_app_env(shiny_app(upload_tab = TRUE))$ui)
+  expect_match(html, 'data-value="Upload"', fixed = TRUE)
+  expect_false(grepl(".rds", html, fixed = TRUE))
 })
