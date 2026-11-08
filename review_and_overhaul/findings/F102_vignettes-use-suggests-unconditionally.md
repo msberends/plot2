@@ -4,7 +4,7 @@ title: Vignettes use suggested packages unconditionally and fail to build withou
 severity: low
 type: dependency
 area: dependencies
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -42,3 +42,4 @@ Guard per section with `eval = requireNamespace(...)`, or replace `movies` by a 
 ## History
 
 - 2026-11-08: filed in R05; reproduced by rendering on this server; test A09.02 parked.
+- 2026-11-08: fixed and verified (Phase 1). Both vignettes set requireNamespace() flags in the set-up chunk and guard every chunk that needs a suggested package with eval = has_*; supported_types.Rmd builds without ggplot2movies.

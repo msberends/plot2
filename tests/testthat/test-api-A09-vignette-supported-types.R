@@ -26,7 +26,6 @@ test_that("A09.01 every chunk of the supported types vignette runs without error
 })
 
 test_that("A09.02 the vignette builds without its suggested data packages", {
-  skip_open_finding("F102")
   src <- readLines(source_file("vignettes", "supported_types.Rmd"))
   expect_true(any(grepl("requireNamespace\\(\"ggplot2movies\"", src)))
 })

@@ -19,8 +19,18 @@ knitr::opts_chunk$set(
 )
 library(plot2)
 diamonds <- ggplot2::diamonds
-movies <- ggplot2movies::movies
-options(plot2.colour = "viridis")
+# suggested packages are used conditionally, so that the vignette also builds without them (F102)
+has_sf <- requireNamespace("sf", quietly = TRUE)
+has_beeswarm <- requireNamespace("ggbeeswarm", quietly = TRUE)
+has_ggforce <- requireNamespace("ggforce", quietly = TRUE)
+has_movies <- requireNamespace("ggplot2movies", quietly = TRUE)
+has_viridis <- requireNamespace("viridisLite", quietly = TRUE)
+if (has_movies) {
+  movies <- ggplot2movies::movies
+}
+if (has_viridis) {
+  options(plot2.colour = "viridis")
+}
 ```
 
 The following plot types are supported.
@@ -120,7 +130,7 @@ diamonds |>
 
 Used for mapping spatial data encoded as simple features.
 
-```{r}
+```{r, eval = has_sf}
 netherlands |> # from this plot2 package
   plot2()
 ```
@@ -129,7 +139,7 @@ netherlands |> # from this plot2 package
 
 Used for showing distributions of individual observations without overlap.
 
-```{r}
+```{r, eval = has_beeswarm}
 iris |>
   plot2(x = Species,
         y = Sepal.Length,
@@ -159,7 +169,7 @@ admitted_patients |> # from this plot2 package
 
 Used for depicting flows or transitions between connected stages.
 
-```{r}
+```{r, eval = has_ggforce}
 Titanic |> # from base R
   plot2(x = c(Age, Class, Survived),
         category = Sex,
@@ -177,6 +187,9 @@ diamonds |>
           category = color,
           type = "spider",
           y.labels = dollars)
+```
+
+```{r, eval = has_viridis}
 # spider plots can have a filling colour, but it's hardly ever useful
 diamonds |>
     plot2(x = cut,
@@ -191,7 +204,7 @@ diamonds |>
 
 Used for analysing intersections among multiple sets with scalable clarity.
 
-```{r}
+```{r, eval = has_movies}
 movies |> # from the ggplot2movies package
   plot2(x = c(Action, Animation, Comedy, Drama, Romance),
         type = "upset")
