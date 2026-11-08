@@ -2,7 +2,7 @@
 id: I004
 title: Consolidated proposal for argument names, defaults and conventions of plot2()
 area: architecture
-status: needs-decision
+status: open
 effort: L
 api_change: yes
 related: [D001, F094, F093, F035, F034, F020, F098, F050]
@@ -59,3 +59,4 @@ The dot-prefix scheme (`x.`, `y.`, `category.`, `facet.`, ...) works well and is
 
 - 2026-11-08: filed in R05 as the consolidated API proposal decided at the start of the round; decision in D001.
 - 2026-11-08: maintainer: not on CRAN, beta, no known public users, so breaking changes are allowed until (not later than) the first CRAN release. Deprecation path replaced by direct renames.
+- 2026-11-08: decided item by item in D001 (verified); D001's Consequences section is the binding list of changes. Status set to open (to be implemented before the first CRAN release).

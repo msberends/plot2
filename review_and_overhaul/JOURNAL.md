@@ -12,7 +12,8 @@ Newest entry first. One entry per working session: what was done, what changed s
 - Updated roadmap (new "Documentation pass" section; F092, F095 to F097 in Phase 1; F094 and I004 in Phase 5), coverage (roxygen, vignettes, README, NEWS now full), review README (tools), INDEX rebuilt.
 - Full test suite: 329 tests, no failures, no warnings, 65 skips (62 parked findings; plotly, ggbeeswarm and ggplot2movies not installed). Two new tests needed `local_known_deprecation("F078")` for the boxplot `fatten` deprecation.
 - Maintainer: plot2 is not on CRAN, is beta and has no known public users; breaking changes are allowed until (not later than) the first CRAN release. I004 and D001 revised (no deprecation path), F094 and F100 extended (README claims CRAN availability).
-- Next: maintainer decision D001 (it may change the API that R06 reviews); then R06 (cross-cutting themes), format to be decided at its start.
+- Committed R05 as 6d51430. Then decided D001 item by item with the maintainer (19 items plus the naming rule D001.R: `<argument>.<setting_in_snake_case>`, dot only after a plot2() argument). D001 verified; I004 open for implementation before the first CRAN release. Maintainer's design principle recorded in D001. New idea I005 (more outspoken documentation tone).
+- Next: R06 (cross-cutting themes), format to be decided at its start.
 
 ## 2026-11-08 (session 5)
 

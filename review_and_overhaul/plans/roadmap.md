@@ -81,6 +81,7 @@ Goal: help pages, examples, vignettes and README that match the behaviour. Corre
 - F102 vignettes and Suggests
 - F103 reproducible help pages
 - F104 missing examples, return values, NEWS
+- I005 more outspoken tone in README, vignettes and website (rewrite texts once, with F100 and F101)
 
 ## Phase 2: state and messaging redesign
 
@@ -131,7 +132,7 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 - F025 performance
 - F034 documented defaults
 - F094 visible defaults acting as sentinels (with F035; scope set by D001)
-- I004 consolidated API proposal (decision D001)
+- I004 consolidated API proposal: implement D001 (decided) before the first CRAN release
 - F058 taxonomy performance and scope
 - F061 validate_colour hack
 - F062 set_max_items details
