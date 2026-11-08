@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Density plots now get `Density` as y axis title instead of the name of the x variable
 * `category.focus` now also works with the default colours; the focused category keeps its own colour
 * Long titles with accented, Greek, Cyrillic or CJK characters are now wrapped like other titles
 * `x.limits` now works for a discrete x axis: `x.limits = c("b", "a")` shows only these items, in this order

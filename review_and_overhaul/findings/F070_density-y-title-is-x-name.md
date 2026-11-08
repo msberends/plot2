@@ -4,7 +4,7 @@ title: Density plots get the x variable's name as y-axis title instead of Densit
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R03 sheet E10
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F070 Density plot y-axis title
@@ -34,3 +34,4 @@ print(label_text(plot2(data.frame(x = c(1, 2, 2, 3, 5)), x, type = "density"), "
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; y.title = TRUE gives 'Density' for density plots.

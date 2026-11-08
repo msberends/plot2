@@ -2092,6 +2092,9 @@ plot2_exec <- function(.data,
   if (isTRUE(y.title)) {
     if (type == "geom_histogram") {
       y.title <- "Count"
+    } else if (type == "geom_density") {
+      # y is a copy of x for density plots (F070)
+      y.title <- "Density"
     } else {
       y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
     }

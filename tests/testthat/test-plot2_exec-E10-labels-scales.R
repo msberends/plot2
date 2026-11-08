@@ -25,7 +25,6 @@ test_that("E10.02 histogram y title is 'Count'", {
 })
 
 test_that("E10.03 density y title is 'Density' (F070)", {
-  skip_open_finding("F070")
   expect_labels(plot2(fx_xy, x, type = "density"), y = "Density")
 })
 
