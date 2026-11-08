@@ -52,7 +52,6 @@ test_that("07.05 a viridis option name gives the viridis gradient", {
 })
 
 test_that("07.06 category.percent = TRUE gives percent labels", {
-  skip_open_finding("F023")
   p <- expect_plot2(plot2(fx_numcat, x, y, value, category.percent = TRUE))
   expect_true(all(endsWith(scale_labels(p, "colour"), "%")))
 })

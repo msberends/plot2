@@ -4,7 +4,7 @@ title: category.percent = TRUE (or a function for category.limits) errors for nu
 severity: high
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R01 §2.16
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F023 category.percent with numeric category
@@ -45,3 +45,4 @@ Only coerce when the result is not a function.
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Fixed by the change in the F132 commit: limits returned as a function are no longer coerced with `as.numeric()`; regression test 07.06 unparked.
