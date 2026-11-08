@@ -189,7 +189,7 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
 
 NA_missing_ <- structure(NA, class = c("missing", "logical"))
 
-#' @importFrom dplyr mutate group_by across reframe arrange select pull any_of if_else as_tibble bind_cols
+#' @importFrom dplyr across any_of arrange as_tibble bind_cols first group_by mutate reframe select
 new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!is.null(plot$mapping$colour) && isTRUE(colour_missing)) {
     category_name <- rlang::as_label(plot$mapping$colour)
@@ -325,7 +325,8 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_line aes scale_linetype_manual
+#' @importFrom dplyr n_distinct
+#' @importFrom ggplot2 aes geom_line is_ggplot scale_linetype_manual
 #' @param x,y aesthetic arguments
 #' @param colour,colour_fill colour of the line or column, will be evaluated with [get_colour()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
 #' @details The function [add_line()] will add:
@@ -395,7 +396,7 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_point aes scale_shape_manual
+#' @importFrom ggplot2 aes geom_point is_ggplot scale_shape_manual
 #' @export
 add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), size, shape, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is_ggplot(plot)) {
@@ -440,7 +441,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_line aes geom_col scale_linewidth_manual
+#' @importFrom ggplot2 aes geom_col is_ggplot scale_linewidth_manual
 #' @export
 add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), colour_fill, width, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is_ggplot(plot)) {
@@ -488,8 +489,8 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 
 #' @rdname add_type
 #' @param min,max minimum (lower) and maximum (upper) values of the error bars
-#' @importFrom dplyr group_by across reframe
-#' @importFrom ggplot2 aes
+#' @importFrom dplyr across any_of arrange group_by mutate reframe select
+#' @importFrom ggplot2 is_ggplot
 #' @details
 #' The function [add_errorbar()] only adds error bars to the `y` values, see *Examples*.
 #' @export
@@ -559,7 +560,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
 
 #' @rdname add_type
 #' @inheritParams ggplot2::geom_smooth
-#' @importFrom ggplot2 is_ggplot geom_line scale_linetype_manual
+#' @importFrom ggplot2 aes geom_line is_ggplot scale_linetype_manual
 #' @export
 add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, formula, method, se, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is_ggplot(plot)) {
@@ -624,8 +625,8 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param datalabels a column of `sf_data` to add as label below the points
 #' @param datalabels.colour,datalabels.size,datalabels.angle,datalabels.font properties of `datalabels`
 #' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
-#' @importFrom dplyr mutate
-#' @importFrom ggplot2 geom_sf geom_sf_text aes is_ggplot
+#' @importFrom dplyr mutate n_distinct
+#' @importFrom ggplot2 aes geom_sf geom_sf_text is_ggplot
 #' @export
 add_sf <- function(plot,
                    sf_data,

@@ -121,8 +121,8 @@ validate_legend.position <- function(legend.position) {
   legend.position
 }
 
-#' @importFrom dplyr select pull mutate arrange across if_all cur_column filter distinct group_by summarise bind_rows
-#' @importFrom tidyselect starts_with matches
+#' @importFrom dplyr across arrange bind_rows cur_column distinct filter group_by mutate pull select summarise
+#' @importFrom tidyselect matches starts_with
 validate_data <- function(df,
                           misses_x,
                           misses_category,
@@ -729,7 +729,8 @@ validate_taxonomy <- function(df) {
   df
 }
 
-#' @importFrom ggplot2 scale_x_discrete scale_x_date scale_x_datetime scale_x_continuous expansion waiver
+#' @importFrom dplyr across group_by summarise
+#' @importFrom ggplot2 expansion scale_x_continuous scale_x_date scale_x_datetime scale_x_discrete waiver
 validate_x_scale <- function(df,
                              values,
                              x.date_breaks,
@@ -1327,8 +1328,8 @@ validate_y_scale <- function(df,
   )
 }
 
-#' @importFrom ggplot2 scale_colour_gradient2 scale_colour_gradient scale_colour_gradientn expansion guide_colourbar element_text
 #' @importFrom cleaner as.percentage
+#' @importFrom ggplot2 expansion guide_colourbar scale_colour_gradient scale_colour_gradient2 scale_colour_gradientn
 validate_category_scale <- function(values,
                                     type,
                                     cols,
@@ -1603,7 +1604,7 @@ validate_category_scale <- function(values,
   }
 }
 
-#' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter geom_polygon
+#' @importFrom ggplot2 position_dodge2 position_fill position_jitter position_stack
 generate_geom <- function(type,
                           df,
                           stacked,
@@ -1812,6 +1813,7 @@ generate_geom <- function(type,
   }
 }
 
+#' @importFrom dplyr n_distinct
 validate_colour <- function(df,
                             type,
                             type_backup,
@@ -2112,7 +2114,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   out
 }
 
-#' @importFrom ggplot2 theme_grey element_blank margin rel
+#' @importFrom ggplot2 element_blank element_rect margin theme_grey unit
 validate_theme <- function(theme,
                            type,
                            background,
@@ -2318,6 +2320,7 @@ validate_theme <- function(theme,
   return(theme)
 }
 
+#' @importFrom dplyr vars
 #' @importFrom ggplot2 facet_grid facet_wrap
 validate_facet <- function(df,
                            type,
@@ -2400,7 +2403,7 @@ validate_facet <- function(df,
   }
 }
 
-#' @importFrom ggplot2 geom_text geom_label geom_sf_label geom_sf_text aes position_fill position_stack position_dodge2
+#' @importFrom ggplot2 aes geom_label geom_sf_label geom_sf_text geom_text position_dodge2 position_fill position_stack unit
 generate_datalabels <- function(p,
                                 df,
                                 type,
@@ -2668,7 +2671,7 @@ validate_font <- function(font) {
   }
 }
 
-#' @importFrom tidyr complete full_seq
+#' @importFrom tidyr full_seq
 complete_direction <- function(df, direction, has_direction, filler) {
   if (has_direction && !is.null(filler) && !isFALSE(filler)) {
     direction_col <- paste0("_var_", direction)
@@ -2751,6 +2754,7 @@ validate_sorting <- function(sort_method, horizontal) {
   sort_method
 }
 
+#' @importFrom dplyr n_distinct
 #' @importFrom forcats fct_inorder fct_reorder
 sort_data <- function(values,
                       original_values, # required for sort = FALSE, should be according to original values
@@ -2864,7 +2868,6 @@ sort_data <- function(values,
 }
 
 #' @importFrom forcats fct_relevel
-#' @importFrom dplyr group_by across group_size mutate summarise
 set_max_items <- function(df,
                           y,
                           x,

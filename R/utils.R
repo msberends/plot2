@@ -473,7 +473,6 @@ has_datalabels <- function(df) {
   "_var_datalabels" %in% colnames(df)
 }
 
-#' @importFrom dplyr n_distinct
 determine_date_breaks_labels <- function(x) {
   rng <- range(x, na.rm = TRUE)
   range_in_days <- as.double(difftime(rng[2], rng[1], units = "days"))

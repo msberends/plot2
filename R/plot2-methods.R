@@ -18,7 +18,7 @@
 #' @rdname plot2-methods
 #' @name plot2-methods
 #' @inheritParams plot2
-#' @importFrom dplyr count filter mutate select
+#' @importFrom dplyr count filter
 #' @export
 plot2.default <- function(.data,
                           x = NULL,
@@ -396,7 +396,7 @@ plot2.default <- function(.data,
 }
 
 #' @rdname plot2-methods
-#' @importFrom dplyr is_grouped_df ungroup
+#' @importFrom dplyr any_of select
 #' @export
 plot2.formula <- function(.data = NULL,
                           x = NULL,
@@ -1101,6 +1101,7 @@ plot2.freq <- function(.data,
 #' @param crs The coordinate reference system (CRS) to use. If this is not left blank, [sf::st_transform()] will be used to transform the geometric data to the new CRS.
 #' @param datalabels.centroid A [logical] to indicate whether datalabels must be centred on the polygon (using [sf::st_centroid()], the default), or be placed on the 'best' spot on the surface (using [sf::st_point_on_surface()]).
 #' @export
+#' @importFrom ggplot2 element_blank unit
 plot2.sf <- function(.data,
                      x = NULL,
                      y = NULL,

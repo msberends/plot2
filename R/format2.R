@@ -18,6 +18,7 @@ format2 <- function(x, ...) {
 
 #' @method format2 default
 #' @exportS3Method
+#' @importFrom cleaner as.percentage
 format2.default <- function(x, ...) {
   if (isTRUE(list(...)$percent)) {
     format2(as.percentage(x), ...)
@@ -91,7 +92,6 @@ format2.numeric <- function(x,
   }
 }
 
-#' @importFrom cleaner percentage
 format2.percentage <- function(x,
                                round = 1,
                                force_decimals = TRUE,

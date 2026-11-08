@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+#' @importFrom dplyr select
+#' @importFrom ggplot2 element_blank element_text
+#' @importFrom tidyselect starts_with
 back2back_plot <- function(df,
                            x.title,
                            y.title,

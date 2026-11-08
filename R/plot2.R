@@ -609,9 +609,10 @@ plot2 <- function(.data,
   }
 }
 
-#' @importFrom dplyr mutate vars group_by across summarise reframe select bind_cols filter as_tibble any_of all_of desc rowwise c_across left_join
-#' @importFrom ggplot2 ggplot aes labs stat_boxplot scale_colour_manual scale_fill_manual coord_flip coord_cartesian geom_smooth geom_density guides guide_legend scale_x_discrete waiver ggplot_build after_stat scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_continuous scale_colour_date scale_colour_datetime scale_colour_continuous geom_segment scale_colour_discrete scale_fill_discrete scale_y_discrete theme
+#' @importFrom dplyr across all_of any_of arrange as_tibble bind_cols c_across desc filter group_by left_join mutate n_distinct reframe rowwise select summarise
+#' @importFrom ggplot2 aes after_stat coord_cartesian coord_flip element_blank element_text expansion geom_density geom_point geom_segment geom_text ggplot ggplot_build guide_legend guides labs margin scale_x_continuous scale_x_discrete scale_y_continuous scale_y_discrete stat_boxplot theme waiver
 #' @importFrom tidyr pivot_longer pivot_wider
+#' @importFrom tidyselect everything matches
 plot2_exec <- function(.data,
                        x = NULL,
                        y = NULL,
