@@ -20,10 +20,12 @@ on:
     branches: '**'
   schedule:
     # also run a schedule everyday at 1 AM.
-    # this is to check that all dependencies are still available (see R/zzz.R)
+    # this is to check that all dependencies are still available
     - cron:  '0 1 * * *'
 
 name: check
+
+permissions: read-all
 
 jobs:
   R-code-check:
@@ -42,6 +44,8 @@ jobs:
           - {os: ubuntu-latest,  r: 'oldrel-1'}
           - {os: ubuntu-latest,  r: 'oldrel-2'}
           - {os: ubuntu-latest,  r: 'oldrel-3'}
+          # the minimum R version declared in DESCRIPTION
+          - {os: ubuntu-latest,  r: '4.1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -69,6 +73,38 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
+          needs: check
+          upgrade: 'TRUE'
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+
+  R-code-check-hard-dependencies:
+    # check with only the hard dependencies (Imports), so that unguarded use of suggested packages is detected
+    runs-on: ubuntu-latest
+    name: ubuntu-latest (R-release, hard dependencies only)
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_FORCE_SUGGESTS_: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"hard"'
+          extra-packages: any::rcmdcheck, any::testthat, any::knitr, any::rmarkdown
           needs: check
           upgrade: 'TRUE'
 

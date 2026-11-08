@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* CI now also checks R 4.1 (the declared minimum) and a set-up with only the hard dependencies
 * `x.complete`, `category.complete` and `facet.complete` now work for character and factor values (crossed with the other directions), and complete date-times at the observed period instead of per second
 * The colour palette `"ggplot2"` (the default) now gives exactly the colours ggplot2 itself uses, also for more than one colour
 * The help page of `get_colour()` no longer changes at every documentation run

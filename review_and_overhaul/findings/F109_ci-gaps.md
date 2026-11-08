@@ -4,7 +4,7 @@ title: CI does not test the declared minimum R version or a set-up without sugge
 severity: medium
 type: test
 area: tests
-status: open
+status: fixed
 verification: verified
 effort: S
 api_change: no
@@ -47,3 +47,4 @@ Add `{os: ubuntu-latest, r: '4.1'}`; add a job with `dependencies: '"hard"'` plu
 ## History
 
 - 2026-11-08: filed in R06 (sheet T08); tests T08.01 to T08.03 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed in the workflows (R 4.1 job, hard-dependencies job with _R_CHECK_FORCE_SUGGESTS_ = false, permissions: read-all, stale R/zzz.R comments removed, dev-versions job on schedule and pull requests only and printing the installed versions). Status fixed, not verified, until the first CI run. Coverage upload left to F039 (codecov.yml). The maintainer prefers the minimum-R test in CI over local containers.

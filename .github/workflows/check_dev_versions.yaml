@@ -16,14 +16,13 @@ on:
   pull_request:
     # run in each PR in this repo
     branches: '**'
-  push:
-    branches: '**'
   schedule:
-    # also run a schedule everyday at 1 AM.
-    # this is to check that all dependencies are still available (see R/zzz.R)
+    # also run a schedule everyday at 1 AM, to test against the development versions of dependencies
     - cron:  '0 1 * * *'
 
 name: check_dev_versions
+
+permissions: read-all
 
 jobs:
   R-code-check-dev:
@@ -58,9 +57,15 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::sessioninfo
           needs: check
           upgrade: 'TRUE'
+
+      - name: Show the installed versions of the dependencies
+        run: |
+          options(width = 150)
+          print(sessioninfo::package_info(c("ggplot2", "dplyr", "tidyr", "scales", "AMR"), dependencies = FALSE))
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
