@@ -44,8 +44,8 @@ validate_type <- function(type, df = NULL) {
                              collapse = font_black(" and ")), 
                       " contain at least three values")
       } else {
-        # otherwise: the default
-        type <- getOption("plot2.default_type", "geom_col")
+        # otherwise: the default, normalised like `type` so that e.g. "line" and "l" work (F095)
+        type <- validate_type(getOption("plot2.default_type", "geom_col"), df = NULL)
         if (!is.null(df) && has_x(df) && has_category(df) && n_distinct(get_category(df)) == 2) {
           count_nrs <- df |>
             group_by(across(c(get_x_name(df), get_category_name(df)))) |>

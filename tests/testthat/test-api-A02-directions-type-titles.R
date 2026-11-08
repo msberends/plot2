@@ -32,7 +32,6 @@ test_that("A02.03 type left blank otherwise: columns, or the plot2.default_type 
 })
 
 test_that("A02.04 plot2.default_type accepts the same values as type", {
-  skip_open_finding("F095")
   d <- data.frame(x = c("a", "b"), y = 1:2)
   withr::local_options(plot2.default_type = "line")
   expect_geoms(plot2(d, x, y), "line", exact = TRUE)
@@ -56,7 +55,6 @@ test_that("A02.06 type = 'barpercent' is horizontal, sorted by frequency, with '
 })
 
 test_that("A02.07 type = 'barpercent' without y counts rows", {
-  skip_open_finding("F097")
   d <- data.frame(g = c("a", "b", "b"), id = c(101, 102, 103))
   p <- plot2(d, g, type = "barpercent")
   expect_identical(sort(layer_df(p, layer_index(p, "GeomBar"))$y), c(1, 2))

@@ -2,6 +2,7 @@
 
 * Without `y` and without a numeric column, `plot2()` now counts rows (`y = n()`) instead of stopping; Sankey plots can be drawn from raw rows
 * `type = "barpercent"` without `y` now counts rows instead of summing the first numeric column
+* `options(plot2.default_type = )` now accepts the same values as `type`, such as `"line"` and `"l"`
 * `colour_opacity` now also applies to the default colours and to all built-in R palettes
 * Subsetting a colour vector with `[` or `[[` now keeps the `colour` class
 * `theme_minimal2()` text sizes are now plain numbers instead of grid units

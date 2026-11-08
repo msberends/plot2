@@ -4,7 +4,7 @@ title: options(plot2.default_type) skips the type aliases, so "line" or "l" sile
 severity: medium
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -43,3 +43,4 @@ Normalise the option with the same function that normalises `type` (one alias ta
 ## History
 
 - 2026-11-08: filed in R05; test A02.04 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; the plot2.default_type option is normalised by validate_type() like the type argument.
