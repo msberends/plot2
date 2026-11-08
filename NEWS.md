@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Violin plots no longer fail when groups have a single observation
 * Without `y` and without a numeric column, `plot2()` now counts rows (`y = n()`) instead of stopping; Sankey plots can be drawn from raw rows
 * `type = "barpercent"` without `y` now counts rows instead of summing the first numeric column
 * `options(plot2.default_type = )` now accepts the same values as `type`, such as `"line"` and `"l"`

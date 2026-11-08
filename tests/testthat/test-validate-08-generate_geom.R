@@ -85,7 +85,6 @@ test_that("08.07 violins draw quartiles and honour violin_scale", {
 })
 
 test_that("08.07b violins with groups of one value do not error", {
-  skip_open_finding("F131")
   expect_plot2(plot2(fx_cat, x, y, category, type = "violin"), allow_warnings = TRUE)
 })
 

@@ -152,3 +152,9 @@ test_that("F091 theme_minimal2() text sizes are plain numbers", {
   expect_false(inherits(size, "unit"))
   expect_equal(as.numeric(size), 13)
 })
+
+test_that("F131 violin plots with single-observation groups render", {
+  d <- data.frame(x = c("a", "a", "a", "b"), y = c(1, 2, 3, 4))
+  p <- expect_plot2(plot2(d, x, y, type = "violin"), allow_warnings = TRUE)
+  expect_true(nrow(suppressWarnings(layer_df(p, "violin"))) > 0)
+})

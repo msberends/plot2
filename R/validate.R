@@ -1207,6 +1207,10 @@ validate_y_scale <- function(df,
       }
     } else {
       function(x, min_val = min_value, ...) {
+        if (!is.numeric(x) || all(is.na(x))) {
+          # no data on this axis, e.g. when a stat dropped all groups (F131)
+          return(c(0, 1))
+        }
         if (all(x == 0, na.rm = TRUE)) {
           if (identical(x, floor(x))) {
             c(0, 8) # will not print half ones if they are integers

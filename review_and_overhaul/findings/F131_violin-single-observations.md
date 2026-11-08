@@ -4,7 +4,7 @@ title: Violin plots error when a group has a single observation
 severity: low
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -41,3 +41,4 @@ Locate the numeric operation on the violin layer's data that assumes at least tw
 ## History
 
 - 2026-11-08: filed while coding the I002 tests (case 08.07b).
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; the y limits function returns c(0, 1) when the axis has no data (stat_ydensity() dropped all single-observation groups), instead of failing in floor(). ggplot2's own warning about dropped groups remains. Regression test F131.
