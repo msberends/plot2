@@ -74,7 +74,6 @@ test_that("E05.08 a single x column errors", {
 })
 
 test_that("E05.09 x.sort as a vector (F071)", {
-  skip_open_finding("F071")
   expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = c("1", "2")))
 })
 

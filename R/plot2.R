@@ -891,6 +891,15 @@ plot2_exec <- function(.data,
     type_backup <- ""
   }
   
+  # check type-specific requirements before any data preparation (F071)
+  if (type_backup == "sankey" &&
+      (isTRUE(misses_x) || tryCatch(NCOL(select(as.data.frame(.data), {{ x }})) < 2, error = function(e) FALSE))) {
+    stop("Sankey plots require an X-axis of at least two variables", call. = FALSE)
+  }
+  if (type_backup == "sankey" && isTRUE(misses_y)) {
+    stop("Sankey plots require `y`", call. = FALSE)
+  }
+  
   if (decimal.mark == big.mark) {
     big.mark <- " "
   }
@@ -1151,7 +1160,7 @@ plot2_exec <- function(.data,
     
     if (is.null(x.sort)) {
       x.sort <- "freq-desc"
-    } else if (x.sort == TRUE) {
+    } else if (isTRUE(x.sort)) {
       x.sort <- "desc"
     }
     x.sort <- validate_sorting(x.sort, horizontal = FALSE)
@@ -1406,9 +1415,6 @@ plot2_exec <- function(.data,
   
   # check requirements for Sankey plots
   if (type_backup == "sankey") {
-    if (isTRUE(misses_x) || (.data |> select({{ x }}) |> NCOL()) < 2 ) {
-      stop("Sankey plots require an X-axis of at least two variables", call. = FALSE)
-    }
     if (!has_y(df)) {
       stop("Sankey plots require `y`", call. = FALSE)
     }

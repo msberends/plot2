@@ -60,7 +60,6 @@ test_that("E15.07 sankey.alpha reaches the flow layer", {
 })
 
 test_that("E15.08 a single x variable gives the friendly message (F071)", {
-  skip_open_finding("F071")
   expect_error(plot2(fx_sankey, x = from, y = n, category = grp, type = "sankey"), "at least two")
 })
 

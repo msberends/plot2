@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Sankey plots without two x variables or without `y` now give a clear error instead of a cryptic one, and UpSet plots accept a manual `x.sort` vector
 * Density plots now get `Density` as y axis title instead of the name of the x variable
 * `category.focus` now also works with the default colours; the focused category keeps its own colour
 * Long titles with accented, Greek, Cyrillic or CJK characters are now wrapped like other titles

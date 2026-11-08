@@ -4,7 +4,7 @@ title: Requirement checks of special types run after the code that needs them, g
 severity: low
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F010]
 origin: R03 sheets E05, E15
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F071 Requirement checks for special types run too late
@@ -40,3 +40,4 @@ Validate type-specific requirements right after the type shortcuts are resolved,
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; the Sankey requirements for x and y are checked right after the type shortcuts, before data preparation; the UpSet x.sort check uses isTRUE(). Regression test F071.

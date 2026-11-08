@@ -88,3 +88,10 @@ test_that("F067 category.focus keeps the focused category's own colour and greys
   expect_identical(focused[2], unfocused[2])
   expect_identical(col_hex(focused[c(1, 3)]), rep(col_hex("grey85"), 2))
 })
+
+test_that("F071 type requirements are checked before the data are prepared", {
+  d <- data.frame(from = c("A", "A", "B"), to = c("X", "Y", "X"), n = 1:3, grp = c("A", "A", "B"))
+  expect_error(plot2(d, x = from, y = n, category = grp, type = "sankey"), "at least two variables")
+  expect_error(plot2(d, x = c(from, to), category = grp, type = "sankey"), "require `y`")
+  expect_error(plot2(d, x = c(from, to), y = n, type = "sankey"), "require `category`")
+})
