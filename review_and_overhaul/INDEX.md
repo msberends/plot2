@@ -10,7 +10,7 @@ Next free IDs: F132, I006, D002, R08.
 |---|---|---|---|---|---|---|---|---|
 | critical | 10 | 0 | 1 | 0 | 2 | 0 | 0 | 13 |
 | high | 18 | 1 | 3 | 0 | 8 | 0 | 0 | 30 |
-| medium | 45 | 0 | 5 | 0 | 3 | 0 | 0 | 53 |
+| medium | 44 | 0 | 5 | 0 | 4 | 0 | 0 | 53 |
 | low | 32 | 0 | 1 | 0 | 1 | 1 | 0 | 35 |
 
 ## Open findings
@@ -97,7 +97,6 @@ Next free IDs: F132, I006, D002, R08.
 | [F118](findings/F118_code-generation-value-typing.md) | medium | Generated code types input values by guesswork: vectors and expressions cannot be entered, and text that looks numeric changes type | shiny | bug | open | verified | M | no |
 | [F120](findings/F120_upload-reader-options.md) | medium | Upload options produce invalid reader arguments: free-text encoding and .txt with the default delimiter | shiny | bug | open | verified | S | no |
 | [F124](findings/F124_app-derives-inputs-by-regex.md) | medium | The app derives tabs, widgets and labels from argument names and defaults by regular expressions, so D001 will change it silently | shiny | maintainability | open | reading | M | no |
-| [F127](findings/F127_x-transform-linear-breaks.md) | medium | x.transform gives linear breaks on a transformed x axis | scales | bug | open | verified | S | no |
 | [F128](findings/F128_x-mic-amr-scale.md) | medium | x.mic = TRUE errors with the current AMR package: unused argument drop | dependencies | bug | open | verified | S | possible |
 | [F130](findings/F130_limits-length-one.md) | medium | x.limits and y.limits of length 1 are duplicated into a zero-width axis that removes all data | scales | design | needs-decision | verified | S | possible |
 | [F039](findings/F039_outdated-project-files.md) | low | Project metadata outdated (CLAUDE.md, codecov.yml) and stray files not build-ignored | housekeeping | docs | open | verified | S | no |
@@ -164,6 +163,7 @@ Next free IDs: F132, I006, D002, R08.
 | [F027](findings/F027_na-removal-message-garbled.md) | medium | "Removed n rows" message uses a vector condition and is garbled | messaging | bug | verified | verified | S | no |
 | [F042](findings/F042_percent-breaks-not-anchored.md) | medium | Percentage breaks start at the data minimum, giving unround breaks with negative values | scales | bug | verified | verified | S | no |
 | [F126](findings/F126_x-limits-expansion.md) | medium | x.limits announces x.expand = 0 but keeps the default expansion | scales | bug | verified | verified | S | no |
+| [F127](findings/F127_x-transform-linear-breaks.md) | medium | x.transform gives linear breaks on a transformed x axis | scales | bug | verified | verified | S | no |
 | [F033](findings/F033_stop-without-call-false.md) | low | Eight stop() calls lack call. = FALSE | housekeeping | maintainability | verified | reading | S | no |
 | [F057](findings/F057_text-factor-rel-sizes.md) | low | text_factor turns rel() sizes into absolute sizes relative to the base size, not the parent element | theme | bug | wontfix | verified | S | no |
 

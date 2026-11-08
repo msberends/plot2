@@ -75,7 +75,6 @@ test_that("05.10 x.transform = 'log10' drops the zero lower limit and gives loga
   d <- data.frame(x = c(1, 10, 100, 1000), y = 1:4)
   p <- expect_plot2(plot2(d, x, y, x.transform = "log10"))
   expect_true(all(is.finite(axis_range(p, "x"))))
-  skip_open_finding("F127")
   expect_identical(axis_labels(p, "x"), c("1", "10", "100", "1 000"))
 })
 

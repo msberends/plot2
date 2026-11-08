@@ -906,6 +906,9 @@ validate_x_scale <- function(df,
       breaks_fn <- function(values, x.breaks, x.n_breaks, waiver) {
         if (!is.null(x.breaks)) {
           x.breaks
+        } else if (!isTRUE(x_reversed) && !identical(x.transform, "identity")) {
+          # transformed scale (e.g. log10): use the transformation's own breaks
+          waiver
         } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
           # whole numbers - only strip decimal numbers if total y range is low
           breaks_whole_numbers

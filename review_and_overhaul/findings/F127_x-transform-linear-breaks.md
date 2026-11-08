@@ -4,7 +4,7 @@ title: x.transform gives linear breaks on a transformed x axis
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -42,3 +42,4 @@ Use the transformation's own breaks (`waiver()`) when `x.transform` is not ident
 ## History
 
 - 2026-11-08: filed while coding the I002 tests (case 05.10).
+- 2026-11-08: fixed and verified (Phase 1). Transformed x scales (other than the reversal for `horizontal`) use the transformation's own breaks unless `x.breaks` is given; regression test 05.10.
