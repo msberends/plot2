@@ -44,7 +44,6 @@ test_that("03.05 a difftime y is coerced to double, with a message", {
 })
 
 test_that("03.06 a POSIXct column is never chosen as automatic y", {
-  skip_open_finding("F012")
   d <- data.frame(t = as.POSIXct(c("2024-01-01", "2024-01-02"), tz = "UTC"), grp = c("a", "b"), v = c(5, 6))
   p <- expect_plot2(plot2(d, grp))
   expect_labels(p, y = "v")

@@ -4,7 +4,7 @@ title: Typo "POSIXTt" makes POSIXct columns eligible as automatic y
 severity: high
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R01 §2.5
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F012 Typo "POSIXTt"
@@ -47,3 +47,4 @@ Correct the class name; add a regression test.
 ## History
 
 - 2026-11-07: filed in R01 (by reading); reproduced the same day via `tools/run_repro.R` (crash).
+- 2026-11-08: fixed and verified (Phase 1). Typo corrected in `validate_data()` (both occurrences); regression test 03.06 in `test-validate-03-validate_data.R`.

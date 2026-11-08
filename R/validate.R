@@ -130,11 +130,11 @@ validate_data <- function(df,
   dots <- list(...)
   type <- validate_type(dots$type, df = NULL) # quick validation
   
-  numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) == "numeric" & !inherits(col, c("Date", "POSIXTt", "factor")))))
+  numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) == "numeric" & !inherits(col, c("Date", "POSIXt", "factor")))))
   numeric_cols <- numeric_cols[numeric_cols %unlike% "^_var_"]
   character_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) is.character(col) || is.factor(col))))
   character_cols <- character_cols[character_cols %unlike% "^_var_"]
-  non_numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) != "numeric" || inherits(col, c("Date", "POSIXTt", "factor")))))
+  non_numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) != "numeric" || inherits(col, c("Date", "POSIXt", "factor")))))
   non_numeric_cols <- non_numeric_cols[non_numeric_cols %unlike% "^_var_"]
   
   if (!has_y(df) && "n" %in% numeric_cols && mode(df$n) == "numeric") {
