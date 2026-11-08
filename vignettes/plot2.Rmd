@@ -37,23 +37,21 @@ reexported <- sort(exported[!exported %in% ls(envir = asNamespace("plot2"))])
 
 # Introduction
 
-If you've been using `ggplot2` for a while, you're likely familiar with its strengths and versatility in creating a wide array of visualisations. However, as powerful as `ggplot2` is, it often requires you to define every single detail yourself. Whether it's specifying aesthetics, selecting geoms, or adjusting scales, you're in control of every element. And that's one of the reasons we love `ggplot2`; it offers immense flexibility and precision.
+`ggplot2` is a developer's masterpiece. Its grammar of graphics composes any plot from layers, aesthetics, scales, coordinates and themes, and that makes it flexible and precise. For the people who simply need a plot, the same design is a burden. A plot of "counts per ward, coloured by year" requires knowing about `geom_col()`, `aes(fill = )`, `position_dodge()`, `scale_fill_*()` and `theme()`, and about the data steps that come before them. That gap is real, and few packages close it well.
 
-But what if you could streamline this process for many common tasks? Enter `plot2()`, a friendly companion to `ggplot2` designed to reduce the repetitive aspects of plotting without sacrificing the customisability that `ggplot2` is known for. Think of `plot2()` as your plotting assistant, doing a lot of the heavy lifting automatically so you can focus on the fun parts — like exploring your data and finding insights.
+`plot2()` is written for users. Like base R's `plot()`, one call gives a plot, even when you do not say which type of plot you want: give it your data and it chooses the plot type, aggregates and sorts, and sets colours, axes, data labels and the theme. You state what you want to see (`x`, `y`, `category`, `facet`), not how `ggplot2` should build it. And since `plot2()` returns a standard `ggplot` object, everything `ggplot2` offers remains available afterwards.
 
-In this vignette, we'll take a deep dive into the `plot2()` function and its companion `add_*()` functions. We'll walk through everything from the basics to some of the more advanced features, helping you unlock the full potential of this powerful tool. Whether you're plotting simple bar charts or complex Sankey diagrams, `plot2()` has got you covered.
+In this vignette, we walk through `plot2()` and its companion `add_*()` functions, from the basics to more advanced features such as Sankey diagrams.
 
-## The Plot2 Philosophy: Less Typing, More Plotting
+## The Plot2 Philosophy: Users First
 
-Before we dive into the code, let's talk briefly about the philosophy behind `plot2()`. At its core, `plot2()` is designed to make plotting in R more intuitive and less cumbersome. If you've ever been frustrated by having to write out `ggplot()` and `aes()` over and over again, `plot2()` is the answer.
+The concept is the opposite of `ggplot2`'s: you do not assemble a plot from parts, you describe it and `plot2()` assembles the parts. Plot types, geoms and aesthetics stay in the background; the arguments are named after what users think in, such as `category` for groups shown in colour (whatever the geom), `x.sort` for the order of bars and `stacked` for stacked bars. Data transformations go directly into the arguments, as in `y = mean(age)` or `x = format(date, "%Y")`.
 
-The concept is simple, and the exact opposite of `ggplot2`: give `plot2()` your data, and it will figure out the rest, while enabling many popular plotting options without ever needing to leave this single function. The goal is to get you from data to visualisation with as little friction as possible. And since `plot2()` just returns a `ggplot` object, you can extend it in any way you would with the outcome of `ggplot()`.
-
-This philosophy shines particularly in how `plot2()` simplifies functionalities like faceting, theming, and applying in-line transformations. Rather than managing multiple functions and layers, `plot2()` allows you to achieve the same results more directly.
+This shows most in facetting, theming and in-line transformations: instead of managing several functions and layers, you set one argument of a single function.
 
 # Getting Started with `plot2()`
 
-Let's start with the basics. The `plot2()` function is a wrapper around `ggplot2` that simplifies many of the tasks you usually have to handle manually. To begin with, you don't even need to specify what kind of plot you want — `plot2()` will make an educated guess based on your data.
+Let's start with the basics. The `plot2()` function is a wrapper around `ggplot2` that simplifies many of the tasks you usually have to handle manually. To begin with, you don't even need to specify what kind of plot you want: `plot2()` will make an educated guess based on your data.
 
 ## Basic Usage: Let `plot2()` Do the Work
 

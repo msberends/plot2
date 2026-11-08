@@ -2,7 +2,7 @@
 id: I005
 title: State plot2's case against ggplot2's user experience more directly in README, vignettes and website
 area: housekeeping
-status: open
+status: fixed
 effort: M
 api_change: no
 related: [D001, F100, F101]
@@ -39,3 +39,4 @@ Combine with the documentation pass (F100, F101) so that the texts are rewritten
 
 - 2026-11-08: filed from the maintainer's remark during D001.
 - 2026-11-08: added README material selected by the maintainer (the ward example, the `plot()` framing).
+- 2026-11-08: written directly at the maintainer's request (decision during this session), in one separate commit so it can be reverted as a whole: README.Rmd opening ("Plots for users, not for developers.", the ward example as one plot2() call, the plot() framing) and the introduction and philosophy section of vignettes/plot2.Rmd. The conclusion of the vignette, the pkgdown home page and DESCRIPTION are unchanged.

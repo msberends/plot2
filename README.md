@@ -4,12 +4,32 @@
 
 # `plot2`
 
-**ggplot2, without the boilerplate.**
+**Plots for users, not for developers.**
 
-`plot2` is a single-function wrapper around `ggplot2` that handles the
-routine work — grouping, aggregating, sorting, facetting, labelling — so
-you do not have to. It returns a standard `ggplot` object, so every
-`ggplot2` extension and layer works as usual.
+`ggplot2` is a remarkable piece of engineering: a grammar in which any
+plot is composed of layers, aesthetics, scales, coordinates and themes.
+That design serves developers well. Users pay for it: hundreds of
+arguments spread over tens of functions, and a plot only looks right
+once the right ones are found and set. Someone who wants “counts per
+ward, coloured by year” should not need to know about `geom_col()`,
+`aes(fill = )`, `position_dodge()`, `scale_fill_*()` and `theme()`. That
+gap is real, and few packages close it well.
+
+`plot2` sets out to close it. Like base R’s `plot()`, one call gives a
+plot, even when you do not say which type of plot you want. `plot2`
+groups, aggregates, sorts, facets and labels, and chooses the plot type,
+colours, axes and theme. Users first:
+
+``` r
+admitted_patients |>
+  subset(date >= as.Date("2015-01-01")) |>
+  plot2(ward, n(), format(date, "%Y"), category.title = "Year")
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
+
+The result is a standard `ggplot` object, so every `ggplot2` layer and
+extension still works on it.
 
 `plot2` is not on CRAN yet. Install it from r-universe:
 
@@ -49,7 +69,7 @@ library(plot2)
 mpg |> plot2(x = class, y = n(), x.sort = "freq-asc")
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
 
 Both produce a sorted column chart with data labels; `plot2` also
 chooses the axis titles, theme and axis expansion by itself. The
@@ -84,25 +104,27 @@ most plots:
 ``` r
 # x and y: plot2 picks the type. Two numerics → scatter.
 iris |> plot2(x = Sepal.Width, y = Sepal.Length)
+#> Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" alt="" width="100%" />
 
 ``` r
 # category: colours the groups — works the same regardless of geom type.
 # In ggplot2 you would use aes(fill = ...) for bars and aes(colour = ...) for
 # points, each requiring its own scale_*. Here it is always category =.
 iris |> plot2(x = Sepal.Width, y = Sepal.Length, category = Species)
+#> Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
 
 ``` r
 # Categorical x → column with data labels. Inline aggregation in y.
 iris |> plot2(x = Species, y = mean(Sepal.Length))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />
 
 ``` r
 # facet: splits into panels. Fourth argument, same idea.
@@ -115,7 +137,7 @@ mpg |> plot2(x = class, y = mean(hwy), category = drv, facet = year)
 mpg |> plot2(x = manufacturer, y = n(), x.sort = "freq-desc")
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" alt="" width="100%" />
 
 ### Colour
 
@@ -183,9 +205,11 @@ Titanic |>
   plot2(x = c(Age, Class, Survived),
         category = Sex,
         type = "sankey")
+#> Assuming sankey_remove_axes = TRUE
+#> Input class 'table' was transformed using `as.data.frame()`
 ```
 
-<img src="man/figures/README-unnamed-chunk-15-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-16-1.png" alt="" width="100%" />
 
 ### Correlation matrix
 
@@ -195,9 +219,11 @@ mtcars |>
   plot2(datalabels = TRUE,
         colour = c("steelblue", "white", "firebrick"),
         title = "Correlation matrix of `mtcars`")
+#> Assuming type = "tile" since the matrix contains identical row and column names
+#> Using category.midpoint = 0 (the current category scale centre)
 ```
 
-<img src="man/figures/README-unnamed-chunk-16-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-17-1.png" alt="" width="100%" />
 
 ### Full ggplot2 compatibility
 
