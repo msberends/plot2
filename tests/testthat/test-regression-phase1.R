@@ -102,3 +102,8 @@ test_that("F072 character vectors given as a long expression or named y are plot
   y <- c("p", "q", "q")
   expect_plot2(plot2(y))
 })
+
+test_that("F074 a histogram is chosen by the arguments, not by identical values", {
+  expect_geoms(plot2(data.frame(x = 1:4, y = 1:4), x, y), "point", exact = TRUE)
+  expect_true("GeomBar" %in% geoms(plot2(data.frame(x = c(1, 2, 2, 3, 3, 3)), x, x)))
+})

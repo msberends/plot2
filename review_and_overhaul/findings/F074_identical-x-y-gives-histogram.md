@@ -4,7 +4,7 @@ title: Numeric x and y with identical values silently give a histogram that igno
 severity: high
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F007, F013]
 origin: R03 sheet E04
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F074 Identical x and y values select a histogram
@@ -38,3 +38,4 @@ Decide on the arguments: histogram only when `y` was not given (or refers to the
 ## History
 
 - 2026-11-07: found by an R03 end-to-end test (E04.09), reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; validate_type() chooses a histogram when x and y refer to the same column (names compared), not when their values are identical. Regression test F074.

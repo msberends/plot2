@@ -23,8 +23,8 @@ validate_type <- function(type, df = NULL) {
       plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", type), "\"", collapse = NULL),
                     font_black(" since there is no X-axis"))
     } else if (has_x(df) && is.numeric(get_x(df))) {
-      if (identical(get_x(df), get_y(df))) {
-        # both x and y are numeric - if they are equal then use histogram
+      if (identical(get_x_name(df), get_y_name(df))) {
+        # x and y refer to the same column, so use a histogram; compare names, not values (F074)
         # see plot_message below 'since the variable ... is the only numeric variable'
         type <- "geom_histogram"
       } else {

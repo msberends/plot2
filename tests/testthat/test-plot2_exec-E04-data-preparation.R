@@ -81,6 +81,5 @@ test_that("E04.11 column names with regex characters in y = c(...) (F017)", {
 })
 
 test_that("E04.12 numeric x and y with identical values give points, not a histogram (F074)", {
-  skip_open_finding("F074")
   expect_geoms(plot2(data.frame(x = 1:4, y = 1:4), x, y), "point", exact = TRUE)
 })
