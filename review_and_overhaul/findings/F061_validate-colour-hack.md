@@ -35,3 +35,4 @@ Always produce exactly one colour per category level, named by level, and pass `
 ## History
 
 - 2026-11-07: filed in R02 (by reading).
+- 2026-11-08: attempted fix reverted (c329cb2, reverted in 4ff67bf). The block is not dead: when colours reach the geom as fixed parameters instead of through a scale (e.g. a boxplot with a category and named `colour` plus a single `colour_fill`, or a registered colour set with `y = where(is.double)`), ggplot2 needs one value per drawn group, and the block supplies that by repeating the colours up to the number of x-category-facet groups. A comparison of 16 plots that only used scales showed no difference; the API tests A06.01 and A08.01 caught it. A proper fix maps these colours through the scale instead of geom parameters, so that one colour per category level suffices.
