@@ -2,6 +2,17 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 1, second part)
+
+- Fixed and verified (one commit per finding; shared code in one commit): F049+F053+F073, F051, F054, F056, F067, F069, F070, F071, F072, F074, F075, F076, F077, F078, F079, F080, F082, F083, F085, F086, F087, F090, F091, F095, F096, F097+F106, F107 (points 1, 2, 4), F131. Earlier in this stretch: F004, F007, F021, F026, F044 to F047, F065.
+- History repaired: my zero-context hunk staging (`git apply --unidiff-zero`) put inserted lines at shifted positions in four local commits (F049 trio, F051, F054, F056). Reset to eb94d0c and recommitted with a helper that applies hunks by line number; all commits since 7a60828 checked for parse errors and relocated lines. Nothing had been pushed.
+- Migrated to roxygen2 8.1.0 at the maintainer's request (034c5fa). roxygen2 8 groups importFrom() per package; R's NAMESPACE parser backticks non-syntactic names except the first in such a call, so the import of `%+replace%` broke installation and load_all(). theme_minimal2() now takes the operator from ggplot2 locally.
+- New: F134 (euro sign on the default pdf() device), needs-decision, split from F107.
+- Behaviour notes: colours keep the colour class after `[` (F090), also in built layer data; without y, plot2() counts rows when the data have no numeric column or the type is barpercent or sankey (replaces the F071 "Sankey requires y" error); F077 fixed only for an explicit y_secondary.colour.
+- For the maintainer: F092 (zoom expansion), F130 (length-1 limits), area stacking default (F045 note), default of y_secondary.colour (methods use the second palette colour, plot2() documents `colour`), a default category for Sankey plots (would change E06.06/E15.03), F134, the 'ggplot2' palette differs from ggplot2's hue spacing (#00BA38 versus #00BFC4 for two groups), and F103 (colour.Rd changes at every document() run; I reverted that noise each time).
+- Full suite after the last fix: 537 tests, 0 failures, 0 warnings, 82 skips.
+- Next: remaining Phase 1 items F048, F093, F094 (possible API change), F098 to F104 (documentation, with I005), F109 (CI).
+
 ## 2026-11-08 (session 6, continued: Phase 0 and Phase 1)
 
 - Maintainer decided: I002 Phase 1 sheets first; same branch; one commit per finding; autonomous.
