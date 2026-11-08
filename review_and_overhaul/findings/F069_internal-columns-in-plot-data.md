@@ -4,7 +4,7 @@ title: Internal columns (_var_datalabels, _sankey_*) remain in the returned plot
 severity: low
 type: bug
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F001]
 origin: R03 sheet E14
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F069 Internal columns left in the plot data
@@ -38,3 +38,4 @@ Rename remaining internal columns to readable names and update the layer mapping
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; restore_mapping() removes internal columns that no inherited layer uses and gives the others readable names (datalabels, sankey_x, sankey_split, sankey_id, made unique against user columns), rewriting the layer mappings accordingly. Tests M03 and 03.22 updated to the new names.

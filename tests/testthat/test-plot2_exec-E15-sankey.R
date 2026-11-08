@@ -64,7 +64,6 @@ test_that("E15.08 a single x variable gives the friendly message (F071)", {
 })
 
 test_that("E15.09 no helper columns in p$data (F069)", {
-  skip_open_finding("F069")
   p <- plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey")
   expect_false(any(startsWith(colnames(p$data), "_sankey")))
 })

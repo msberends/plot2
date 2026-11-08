@@ -22,7 +22,6 @@ all_mapping_text <- function(p) {
 }
 
 test_that("E14.01 no mapping refers to internal direction names", {
-  # datalabel layers map `_var_datalabels`, which is F069 (see E14.03)
   for (p in list(plot2(fx_cat_unique, x, y, category),
                  plot2(fx_facet, x, y, facet = facet),
                  plot2(data.frame(x = 1:30, y = sin(1:30 / 5)), x, y, smooth = TRUE))) {
@@ -38,7 +37,6 @@ test_that("E14.02 p$data has no internal direction columns", {
 })
 
 test_that("E14.03 no internal columns or mappings at all (F069)", {
-  skip_open_finding("F069")
   p <- plot2(fx_counts, group, n)
   expect_false(any(startsWith(colnames(p$data), "_")))
   expect_false(any(grepl("_var_", all_mapping_text(p))))

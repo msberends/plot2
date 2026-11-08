@@ -158,7 +158,7 @@ test_that("03.21b summarise_function = NULL disables summarising", {
 test_that("03.22 Sankey data are reshaped; the flow levels follow the order of x", {
   d <- data.frame(a = c("p", "q", "p"), b = c("u", "v", "v"), n = c(1, 2, 3))
   p <- expect_plot2(plot2(d, x = c(b, a), y = n, category = a, type = "sankey"))
-  expect_identical(levels(factor(plot_data(p)$`_sankey_x`)), c("b", "a"))
+  expect_identical(levels(factor(plot_data(p)$sankey_x)), c("b", "a"))
 })
 
 test_that("03.23 the output is sorted by x", {

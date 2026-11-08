@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* The returned plot data no longer contain internal columns starting with `_`; datalabels and Sankey helper columns get readable names (`datalabels`, `sankey_x`, ...)
 * Character and factor vectors given as a long expression, or named `y`, can now be plotted
 * Sankey plots without two x variables or without `y` now give a clear error instead of a cryptic one, and UpSet plots accept a manual `x.sort` vector
 * Density plots now get `Density` as y axis title instead of the name of the x variable

@@ -684,6 +684,53 @@ restore_mapping <- function(p, df) {
   
   # now remove these anonymous`_var_*` columns from the data
   p$data <- p$data[, colnames(p$data)[colnames(p$data) %unlike% "^_var_(x|y|category|facet)$"], drop = FALSE]
+
+  # give the remaining internal columns (such as `_var_datalabels` and `_sankey_x`) readable names,
+  # or remove them if no layer uses them (F069)
+  internal <- colnames(p$data)[startsWith(colnames(p$data), "_")]
+  if (length(internal) > 0) {
+    # mapping entries are quosures or, after the renaming above, plain symbols
+    map_expr <- function(m) if (rlang::is_quosure(m)) rlang::quo_get_expr(m) else m
+    used <- unique(unlist(c(lapply(p$mapping, function(m) all.vars(map_expr(m))),
+                            lapply(p$layers, function(l) {
+                              if (inherits(l$data, "waiver")) {
+                                unlist(lapply(l$mapping, function(m) all.vars(map_expr(m))))
+                              }
+                            }))))
+    internal_used <- internal[internal %in% used]
+    p$data <- p$data[, colnames(p$data)[!colnames(p$data) %in% setdiff(internal, internal_used)], drop = FALSE]
+    if (length(internal_used) > 0) {
+      others <- setdiff(colnames(p$data), internal_used)
+      readable <- make.unique(c(others, sub("^_(var_)?", "", internal_used)))[-seq_along(others)]
+      colnames(p$data)[match(internal_used, colnames(p$data))] <- readable
+      rename_symbols <- function(expr) {
+        if (is.symbol(expr) && as.character(expr) %in% internal_used) {
+          as.symbol(readable[match(as.character(expr), internal_used)])
+        } else if (is.call(expr)) {
+          as.call(lapply(as.list(expr), rename_symbols))
+        } else {
+          expr
+        }
+      }
+      rename_mapping <- function(mapping) {
+        if (is.null(mapping)) {
+          return(mapping)
+        }
+        att <- attributes(mapping)
+        out <- lapply(mapping, function(m) {
+          if (rlang::is_quosure(m)) rlang::quo_set_expr(m, rename_symbols(rlang::quo_get_expr(m))) else rename_symbols(m)
+        })
+        attributes(out) <- att
+        out
+      }
+      p$mapping <- rename_mapping(p$mapping)
+      for (i in seq_along(p$layers)) {
+        if (inherits(p$layers[[i]]$data, "waiver")) {
+          p$layers[[i]]$mapping <- rename_mapping(p$layers[[i]]$mapping)
+        }
+      }
+    }
+  }
   
   # return the plot object
   p

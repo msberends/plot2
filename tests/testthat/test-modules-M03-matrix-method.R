@@ -26,7 +26,7 @@ test_that("M03.02 correlation matrix: the diagonal is 1", {
   m <- cor(mtcars[, 1:3])
   d <- plot_data(plot2(m))
   diag_vals <- d[as.character(d$x) == as.character(d$y), , drop = FALSE]
-  expect_equal(as.numeric(diag_vals[[setdiff(colnames(d), c("x", "y", "_var_datalabels"))[1]]]), c(1, 1, 1))
+  expect_equal(as.numeric(diag_vals[[setdiff(colnames(d), c("x", "y", "datalabels"))[1]]]), c(1, 1, 1))
 })
 
 test_that("M03.03 plain matrix: row names on the x-axis", {
