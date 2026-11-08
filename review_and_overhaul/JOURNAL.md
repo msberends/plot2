@@ -2,6 +2,33 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 5)
+
+- Maintainer decided (AskUserQuestion):
+  - F094: `summarise_function` defaults to `NULL` (automatic, sum), and `FALSE` turns summarising off. `NULL` no longer means "do not summarise".
+  - D001.3: `x.lbl_taxonomy` is replaced by the exported labeller `label_taxonomy()`. `x.mic` is removed; users add `+ AMR::scale_x_mic()` instead.
+  - F036: the automatic choices are documented in one place, without a central guessing function or a `plot2.guess` option.
+- Fixed and verified:
+  - F035, F105 and F034 (60aa87a): the arguments are defined once, in the generic. `R/zzz.R` generates the formals of the methods and `plot2_exec()` (`plot2_method_formals()`) and builds the forwarding call (`plot2_exec_call()`). Default titles come from quosures, with `{{ }}`, `!!` and `.data` resolved.
+  - F094 and F093 (6a997c0): automatic defaults are `NULL` and the hidden `_misses.*` arguments are gone. The Shiny app offers Automatic/Always/Never for `datalabels`.
+  - D001/I004 (a153afd): all renames, the new `legend` argument, `stacked = "fill"`, the error for `category.title` together with `legend.title`, and `label_taxonomy()`. Old argument names give an error that names the replacement. The naming rule is in `?plot2` and CLAUDE.md.
+  - F025 (b8c10ea): datalabels are formatted once, on the final rows and only when drawn.
+  - F037 (1755e22): no more editing of ggplot2 internals (facet params, labels).
+  - F036 (this session's last commit): the 'Automatic choices' section in `?plot2`, with one test per rule (A11).
+- F110 is partly fixed (in-progress):
+  - The default theme, the validated theme and the list of geoms are cached per session.
+  - Installed build, five rows: 0.058 s per call, against 0.11 s before. The target of well below 0.05 s is not reached; the remaining profile is flat (dplyr verbs, ggplot2 layers, `group_sizes()` via `dplyr::group_by(.drop = FALSE)`, which I left as it is because of its empty-group semantics).
+- Timings, installed build (F025):
+  - 2e5 rows: 0.17 s (was 1.5 to 2.9 s).
+  - Scatter plot of 2e5 rows: 0.39 s (was 2.0 s).
+  - 1e6 rows: 0.70 s (was 7.4 s).
+- Found on the way:
+  - The summarising caution said "summarise_function = sum was set" when nothing was set.
+  - The `markdown` default is `TRUE`, not automatic, so it is not listed as an automatic choice.
+- F037 remainder: `p$layers`, `p$mapping` and `p$data` still use the `$` accessors that ggplot2 4.x keeps for its S7 classes. These are covered by T01 and by the daily check against development versions. I do not know whether ggplot2 will deprecate these accessors.
+- Checks: full suite 609 tests, 0 failed, 0 errors, 0 warnings, 36 skipped (open findings and optional dependencies); both vignettes and all examples run (only the intended "red123" warning in `?colour`).
+- Next: end of the roadmap's Phase 5. Remaining open items are listed in INDEX.md, and their move to GitHub issues at the end of the overhaul is still to come.
+
 ## 2026-11-08 (session 6, continued: Phase 4)
 
 - Maintainer decided (AskUserQuestion): F020 `data` only in plot2.formula; F013 year/month guess only for discrete geoms, and only when `type` is unset; F028 percentages per x through a new argument `datalabels.percent_by`; F068 secondary axis as line plus points when the primary is a column/bar type; F050 legend.position accepts FALSE, numeric and "inside"; F052 heuristic kept, with a message; F063 scientific notation only at 1e9 or above, or below 1e-4; F030 lookup in the caller's environment, documented; F130 limits must have length 2 (error).
