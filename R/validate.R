@@ -708,14 +708,7 @@ validate_data <- function(df,
                         facet = get_facet_name(df), 
                         facet.max_items = dots$facet.max_items, 
                         facet.max_txt = dots$facet.max_txt,
-                        horizontal = dots$horizontal,
-                        summarise_function = dots$summarise_function,
-                        decimal.mark = dots$decimal.mark,
-                        big.mark = dots$big.mark,
-                        datalabels.round = dots$datalabels.round,
-                        datalabels.format = dots$datalabels.format,
-                        datalabels.percent_by = dots$datalabels.percent_by,
-                        y.percent = dots$y.percent)
+                        horizontal = dots$horizontal)
     # sort on x, important when piping plot2()'s after plot2()'s
     if (has_x(df)) {
       df <- df |> 
@@ -2931,14 +2924,7 @@ set_max_items <- function(df,
                           facet,
                           facet.max_items,
                           facet.max_txt,
-                          horizontal,
-                          summarise_function,
-                          decimal.mark,
-                          big.mark,
-                          datalabels.round,
-                          datalabels.format,
-                          datalabels.percent_by = "x",
-                          y.percent) {
+                          horizontal) {
   if (is.infinite(x.max_items) && is.infinite(category.max_items) && is.infinite(facet.max_items)) {
     return(df)
   }
@@ -2946,7 +2932,9 @@ set_max_items <- function(df,
     return(df)
   }
   
-  # helper function
+  # helper function: n_max is the number of items including the item for the rest,
+  # %n is the number of values merged into that item and %p their share of the
+  # total of y (F062), or of the rows when y is not numeric
   set_max <- function(values, n_max, txt, horizontal) {
     if (is.null(n_max) || is.infinite(n_max)) {
       return(values)
@@ -2963,7 +2951,13 @@ set_max_items <- function(df,
       }
       lvls_remove <- lvls_remove[order(-nchar(lvls_remove))]
       value_new <- gsub("%n", format2(length(lvls_remove)), txt, fixed = TRUE)
-      pct <- format2(length(values[values %in% lvls_remove]) / length(values), percent = TRUE)
+      merged <- values %in% lvls_remove
+      share <- if (is.numeric(y) && length(y) == length(values) && isTRUE(sum(y, na.rm = TRUE) != 0)) {
+        sum(y[merged], na.rm = TRUE) / sum(y, na.rm = TRUE)
+      } else {
+        sum(merged) / length(values)
+      }
+      pct <- format2(share, percent = TRUE)
       value_new <- gsub("%p", pct, value_new, fixed = TRUE)
       # add new factor level
       levels(values) <- c(levels(values), value_new)
@@ -3003,18 +2997,7 @@ set_max_items <- function(df,
                            horizontal = FALSE)
     df$`_var_facet` <- df[, facet, drop = TRUE]
   }
-  
-  if (all(group_sizes(df) == 1)) {
-    # summarise again
-    df <- summarise_data(df = df,
-                         summarise_function = summarise_function,
-                         decimal.mark = decimal.mark,
-                         big.mark = big.mark,
-                         datalabels.round = datalabels.round,
-                         datalabels.format = datalabels.format,
-                         datalabels.percent_by = datalabels.percent_by,
-                         y.percent = y.percent)
-  }
+  # merged values are summarised later in plot2_exec(), with the other groups
   df
   
 }

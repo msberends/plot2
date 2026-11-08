@@ -38,3 +38,13 @@ test_that("F136 a selection label is parsed only into column names", {
   expect_identical(column_selection_expr("my col"), as.name("my col"))
   expect_identical(column_selection_expr('c(a, system("x"))'), as.name('c(a, system("x"))'))
 })
+
+test_that("F062 max_items counts the rest item, %p is the share of y, %n the number of merged values", {
+  d <- data.frame(g = letters[1:5], v = c(50, 20, 10, 10, 10))
+  p <- plot2(d, g, v, x.max_items = 3, x.max_txt = "rest (%p, %n)")
+  expect_identical(levels(p$data$g), c("a", "b", "rest (30%, 3)"))
+  expect_identical(p$data$v, c(50, 20, 30))
+  # without a numeric y, the share of rows
+  p <- plot2(data.frame(g = c("a", "a", "b", "c", "d")), g, x.max_items = 2, x.max_txt = "rest (%p)")
+  expect_identical(levels(p$data$g), c("a", "rest (60%)"))
+})

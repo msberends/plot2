@@ -4,7 +4,7 @@ title: set_max_items(): inverted-looking summarise condition, %p counts rows, n 
 severity: low
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -37,3 +37,4 @@ print(levels(p$data$g))
 
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: reproduced.
+- 2026-11-08: fixed: %p is the share of the total of y (maintainer's decision: 'Share of y'), or of the rows when y is not numeric; *.max_items counts the rest item (decision: 'Total items'), now documented; %n documented as the number of merged values, which the code already did (the documentation said 'outcome of summarise_function'); the summarising block that only ran when there was nothing to summarise is removed, since plot2_exec() summarises the merged groups. Test in test-regression-phase6.R.

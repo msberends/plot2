@@ -259,9 +259,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.position, y.position}{Position of the axis.}
 
-\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. Left \code{NULL} (default for \code{x.max_items}), this is infinite, except for \code{type = "barpercent"} and back-to-back plots (10). All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the X-axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
+\item{x.max_items, category.max_items, facet.max_items}{Maximum number of items to show, including the item that holds the rest: \code{x.max_items = 5} shows four values and the rest, see \code{x.max_txt}. Defaults to infinite. Left \code{NULL} (default for \code{x.max_items}), this is infinite, except for \code{type = "barpercent"} and back-to-back plots (10). The remaining values are grouped into one item and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, so that e.g. \code{x.sort = "freq-desc"} with \code{x.max_items = 5} shows the four most frequent values of the X-axis and the rest.}
 
-\item{x.max_txt, category.max_txt, facet.max_txt}{The text to use of values not included number of \verb{*.max_items}. The placeholder \verb{\%n} will be replaced with the outcome of the \code{summarise_function} function, the placeholder \verb{\%p} will be replaced with the percentage.}
+\item{x.max_txt, category.max_txt, facet.max_txt}{The text of the item that holds the values beyond \verb{*.max_items}. The placeholder \verb{\%n} is replaced with the number of values in that item, and \verb{\%p} with their share of the total of \code{y} (or of the rows, when \code{y} is not numeric). For example, the default \code{"(rest, x\%n)"} gives \code{"(rest, x4)"} for four values.}
 
 \item{x.breaks, y.breaks}{A breaks function or numeric vector to use for the axis.}
 
