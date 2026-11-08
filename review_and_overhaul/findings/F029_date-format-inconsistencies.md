@@ -13,7 +13,7 @@ related: [F003, F008]
 origin: R01 §3.5
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F029 Date formatting inconsistencies
@@ -41,3 +41,4 @@ Always return character; tokenise the format string (only recognised tokens, all
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: R06 (sheet T02): the `d` format code gives space-padded days (`%e`), so date labels start with a space (" 5 February 2024") in every locale.

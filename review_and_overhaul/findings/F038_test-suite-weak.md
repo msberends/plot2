@@ -13,7 +13,7 @@ related: []
 origin: R01 §5.1
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F038 Weak test suite
@@ -48,3 +48,4 @@ This should come before the large refactors.
 
 - 2026-11-07: filed in R01, test suite run locally.
 - 2026-11-07: in progress via I001. Edition 3, helper and fixture files and helper self-tests added; plotly test now skips without plotly. Remaining: content-based tests (I002), splitting `test_plot2.R`, CRAN-run subset.
+- 2026-11-08: R06 (sheet T05, R 4.1.3 container without sf, AMR and ggforce): four legacy tests in `test_plot2.R` (lines 61, 105, 371, 431) error because they use suggested packages without `skip_if_not_installed()`. The R04 tests of M08 used `@` on S7 objects, which fails before R 4.3; corrected in R06 to `S7::prop()`.

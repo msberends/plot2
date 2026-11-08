@@ -68,6 +68,8 @@ Goal: stop wrong figures and crashes with minimal code movement.
 - F095 plot2.default_type aliases
 - F096 colour_opacity with palettes (with F067)
 - F097 barpercent without y
+- F106 counting without a numeric column (with F097)
+- F107 scientific-label sign and euro sign on pdf()
 
 ## Documentation pass (with or after the related Phase 1 fixes)
 
@@ -81,6 +83,7 @@ Goal: help pages, examples, vignettes and README that match the behaviour. Corre
 - F102 vignettes and Suggests
 - F103 reproducible help pages
 - F104 missing examples, return values, NEWS
+- F109 CI: R 4.1, hard-dependencies job, dev-version verification, coverage
 - I005 more outspoken tone in README, vignettes and website (rewrite texts once, with F100 and F101)
 
 ## Phase 2: state and messaging redesign
@@ -97,6 +100,7 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 - F003 locale (needs decision)
 - F029 date formatting
 - F011 fonts and showtext (needs decision)
+- F108 dependency footprint (decide together with F008)
 
 ## Phase 4: input handling and parsing
 
@@ -129,7 +133,9 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 
 - F035 single argument definition
 - F037 ggplot2 internals
-- F025 performance
+- F025 performance (now also scatter plots)
+- F110 fixed overhead per call (theme caching)
+- F105 titles in programmatic use (with F035 quosure capture)
 - F034 documented defaults
 - F094 visible defaults acting as sentinels (with F035; scope set by D001)
 - I004 consolidated API proposal: implement D001 (decided) before the first CRAN release

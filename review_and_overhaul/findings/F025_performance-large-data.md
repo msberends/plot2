@@ -13,7 +13,7 @@ related: [F022]
 origin: R01 §3.1
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F025 Performance on large data
@@ -47,3 +47,4 @@ Format datalabels only after summarising and only when they will be drawn; evalu
 ## History
 
 - 2026-11-07: filed in R01, profiled. Warm timings at 2e5 rows: default 1.5 to 2.9 s, `datalabels = FALSE` 0.2 s (a cold first call distorts the comparison).
+- 2026-11-08: R06 (sheet T03, `repro/perf_r06.R`, installed build): scatter plots are affected as well. 1e6 rows take 9.5 s for `plot2(d, v, w)`, of which about 70% (profile at 2e5 rows) is `format_datalabels()`, although point plots never show datalabels. Columns: 8.2 s with default datalabels against 0.6 s with `datalabels = FALSE`.

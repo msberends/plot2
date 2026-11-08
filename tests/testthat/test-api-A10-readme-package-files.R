@@ -17,6 +17,7 @@
 
 test_that("A10.01 the evaluated README chunks run without error or warning", {
   skip_on_cran()
+  skip_if_not_installed("ggforce")
   withr::local_pdf(NULL)
   res <- eval_chunks(source_file("README.Rmd"), include_unevaluated = FALSE, exclude = "opts_chunk|install.packages")
   expect_identical(res$code[!is.na(res$error)], character(0))

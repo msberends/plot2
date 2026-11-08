@@ -2,6 +2,17 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: R06)
+
+- Committed D001 as 2d262e9. Maintainer decided R06: theme sheets plus tests; review only; four extra themes (R version support, dependency footprint, graphics devices, CI workflows); current code reviewed, D001 names mentioned where relevant.
+- Ran R06: review file `reviews/R06_cross-cutting-themes.md`, 8 sheets T01 to T08 in `reviews/R06_themes/`, 8 test files `tests/testthat/test-themes-T*.R`, benchmark `repro/perf_r06.R` with results `repro/perf_r06_results_2026-11-08.csv`.
+- Temporary environments only (scratchpad libraries, a disposable `rocker/r-ver:4.1.3` container; nothing in the user library): full suite passes on ggplot2 4.0.3.9000; plot2 works on R 4.1.3 (test-suite issues only); plot2 works with hard dependencies only, except `lubridate` for one format.
+- Filed F105 to F110 (4 medium, 2 low). Extended F003, F004, F008, F025, F029, F038.
+- Test fix: the R04 tests of M08 used `@` on S7 objects, which fails before R 4.3; changed to `S7::prop()`. README test A10.01 now skips without ggforce.
+- Updated roadmap, coverage (workflows now full), review_rounds, INDEX rebuilt.
+- Full test suite: 364 tests, no failures, no warnings, 83 skips (80 parked findings; plotly, ggbeeswarm, ggplot2movies not installed).
+- Next: R07 (Shiny app), format to be decided at its start; implementation of D001 before the first CRAN release.
+
 ## 2026-11-08 (session 6)
 
 - Maintainer decided R05: format "Inventory + sheets + tests"; review only, also no documentation fixes; API changes collected in one idea plus one decision file (`plans/review_rounds.md`).

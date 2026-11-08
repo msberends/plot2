@@ -13,7 +13,7 @@ related: [F029]
 origin: R01 §2.1
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F008 Runtime dependencies listed in Suggests
@@ -48,3 +48,4 @@ Move `cli`, `rlang`, `scales` to Imports (they are already hard dependencies of 
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: R06 (sheet T06), measured in a library with only the Imports and their dependencies (43 packages, site library disabled): `cli`, `rlang`, `scales`, `stringr`, `viridisLite` and `vctrs` are all present transitively, so 12 default-path calls (sorting, dates, scales, viridis, percentages, scientific labels, spider) work. Only `lubridate` is missing: `format2(x, "mmm")` stops with 'The package "lubridate" is required.' The practical risk is therefore lower than this finding suggested, but it rests on other packages' Imports, which can change at any time; declaring them remains the fix.

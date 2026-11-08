@@ -33,4 +33,6 @@ Depth: **full** (every function body read), **partial** (main paths read, rest s
 | vignettes/, README.Rmd, NEWS.md | | full | R05 | all chunks run, including README `eval = FALSE` chunks (sheets A08 to A10) |
 | man/ (generated), _pkgdown.yml | | full | R05 | R documentation checks, pkgdown check, aspell |
 | roxygen of all other files | | full | R05 | sheet A07; Shiny help text only |
-| .github/workflows/ | | none | | |
+| .github/workflows/ | | full | R06 | sheet T08 |
+
+Cross-cutting (R06): every file reviewed per theme (ggplot2 internals, i18n, performance, embedding, R version, dependencies, devices, CI); sheets in `reviews/R06_themes/`.

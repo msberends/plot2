@@ -19,36 +19,36 @@ el <- function(t, name) ggplot2::calc_element(name, ggplot2::complete_theme(t))
 
 test_that("M08.01 complete theme with plot2's sizes", {
   t <- theme_minimal2()
-  expect_true(isTRUE(attr(t, "complete")) || isTRUE(t@complete))
-  expect_equal(as.numeric(el(t, "plot.title")@size), 13)
-  expect_equal(as.numeric(el(t, "plot.subtitle")@size), 11)
+  expect_true(isTRUE(attr(t, "complete")) || isTRUE(S7::prop(t, "complete")))
+  expect_equal(as.numeric(S7::prop(el(t, "plot.title"), "size")), 13)
+  expect_equal(as.numeric(S7::prop(el(t, "plot.subtitle"), "size")), 11)
 })
 
 test_that("M08.02 font colour options are honoured", {
   withr::local_options(plot2.colour_font_primary = "red", plot2.colour_font_secondary = "blue", plot2.colour_font_axis = "green")
   t <- theme_minimal2()
-  expect_identical(col_hex(el(t, "plot.title")@colour), "#FF0000")
-  expect_identical(col_hex(el(t, "plot.subtitle")@colour), "#0000FF")
-  expect_identical(col_hex(el(t, "axis.title.x")@colour), "#00FF00")
+  expect_identical(col_hex(S7::prop(el(t, "plot.title"), "colour")), "#FF0000")
+  expect_identical(col_hex(S7::prop(el(t, "plot.subtitle"), "colour")), "#0000FF")
+  expect_identical(col_hex(S7::prop(el(t, "axis.title.x"), "colour")), "#00FF00")
 })
 
 test_that("M08.03 plot2.colour_background sets the backgrounds", {
   withr::local_options(plot2.colour_background = "yellow")
   t <- theme_minimal2()
-  expect_identical(col_hex(el(t, "plot.background")@fill), "#FFFF00")
-  expect_identical(col_hex(el(t, "panel.background")@fill), "#FFFF00")
+  expect_identical(col_hex(S7::prop(el(t, "plot.background"), "fill")), "#FFFF00")
+  expect_identical(col_hex(S7::prop(el(t, "panel.background"), "fill")), "#FFFF00")
 })
 
 test_that("M08.04 + theme(...) merges with plot2's settings", {
   t <- theme_minimal2() + ggplot2::theme(plot.title = ggplot2::element_text(face = "italic"))
-  expect_identical(el(t, "plot.title")@face, "italic")
-  expect_equal(as.numeric(el(t, "plot.title")@size), 13)
+  expect_identical(S7::prop(el(t, "plot.title"), "face"), "italic")
+  expect_equal(as.numeric(S7::prop(el(t, "plot.title"), "size")), 13)
 })
 
 test_that("M08.05 theme_minimal2(...) merges as well (F087)", {
   skip_open_finding("F087")
   t <- theme_minimal2(plot.title = ggplot2::element_text(face = "italic"))
-  expect_equal(as.numeric(el(t, "plot.title")@size), 13)
+  expect_equal(as.numeric(S7::prop(el(t, "plot.title"), "size")), 13)
 })
 
 test_that("M08.06 every plot2.* option used in the code is documented", {

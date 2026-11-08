@@ -13,7 +13,7 @@ related: [F003]
 origin: R01 §1.4
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F004 POSIXct category scale broken
@@ -50,3 +50,4 @@ Branch on `inherits(values, "POSIXt")`: use `seq.POSIXt()` for breaks and `as.PO
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: R06 (sheet T02): also for `Date` categories. A category with two dates (2024-01-01 and 2024-02-01) gives a legend with 32 daily entries ("1 jan" to "1 feb"); the date labels are Dutch in every locale (F003).
