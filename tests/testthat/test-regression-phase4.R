@@ -166,3 +166,21 @@ test_that("F063 scientific notation only from 1e9 or below 1e-4, otherwise big m
   expect_true(any(grepl("10^-5", lab(c(0.00001, 0.00005)), fixed = TRUE)))
   expect_true("0.001" %in% lab(c(0.001, 0.005)))
 })
+
+test_that("F032 a partial theme is added on top of the default theme and wins", {
+  d <- data.frame(g = c("a", "b", "c"), v = 1:3)
+  p <- expect_plot2(plot2(d, g, v, theme = ggplot2::theme(panel.background = ggplot2::element_rect(fill = "pink"))))
+  expect_identical(theme_el(p, "panel.background")$fill, "pink")
+  # the rest of the default theme is still there
+  expect_identical(theme_el(p, "axis.text.x")$size, theme_el(plot2(d, g, v), "axis.text.x")$size)
+  expect_type(theme_el(plot2(d, g, v, facet = g), "strip.text")$size, "double")
+})
+
+test_that("F057 text_factor multiplies every text size exactly", {
+  els <- c("axis.text.x", "axis.title.y", "plot.title", "legend.text", "strip.text")
+  sizes <- function(p) vapply(els, function(el) theme_el(p, el)$size, double(1))
+  for (th in c("theme_minimal2", "theme_bw")) {
+    expect_equal(sizes(plot2(iris, Species, theme = th, text_factor = 2)) / sizes(plot2(iris, Species, theme = th)),
+                 stats::setNames(rep(2, length(els)), els))
+  }
+})

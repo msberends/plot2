@@ -4,7 +4,7 @@ title: Partial theme objects fail because elements are modified via $ on missing
 severity: medium
 type: bug
 area: theme
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -38,3 +38,4 @@ Complete the theme first (`theme_minimal2() + user_theme` or `ggplot2::complete_
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed: a partial theme is kept aside, plot2 edits theme_minimal2(), and the partial theme is added last, so all edited elements exist and the user's elements take precedence (also over background); strip.text size is a plain number. Documented under theme. Tests: test-regression-phase4.R (F032).

@@ -1,5 +1,7 @@
 # plot2 1.99.0.9000
 
+* `text_factor` now scales every text element by exactly that factor, also in themes with relative sizes such as `theme_bw()`
+* A partial theme, such as `theme = theme(panel.background = element_blank())`, now works: it is added on top of `theme_minimal2()` and its elements take precedence
 * Axis labels now switch to scientific notation automatically only from one billion (`1e9`) or for values below `0.0001`; large counts such as 2 500 000 are shown with big marks, and small values get more decimals instead of scientific notation
 * With facets, the automatic choice between free and fixed y (and x) scales is now always reported in a message and documented, since it depends on the data
 * `legend.position` now also accepts `FALSE` (no legend), `"inside"`, and two numbers between 0 and 1 to place the legend inside the plot, e.g. `legend.position = c(0.95, 0.95)`

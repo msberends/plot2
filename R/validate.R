@@ -2186,7 +2186,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   out
 }
 
-#' @importFrom ggplot2 element_blank element_rect margin theme_grey unit
+#' @importFrom ggplot2 element_blank element_rect margin theme_grey
 validate_theme <- function(theme,
                            type,
                            background,
@@ -2236,6 +2236,15 @@ validate_theme <- function(theme,
       plot2_warning("No valid ggplot2 theme, using ", font_blue("theme = ggplot2::theme_grey()"))
       theme <- NULL
     }
+  }
+  
+  user_partial <- NULL
+  if (!is.null(theme) && !isTRUE(attr(theme, "complete"))) {
+    # a partial theme, e.g. theme(panel.background = element_blank()), is added on top of the
+    # default theme at the end, so that all elements exist while they are edited below and
+    # the user's elements win (F032)
+    user_partial <- theme
+    theme <- theme_minimal2()
   }
   
   orginally_empty <- is_empty(theme)
@@ -2332,22 +2341,18 @@ validate_theme <- function(theme,
     theme$strip.text$face <- "plain"
   }
   theme$strip.text$margin <- margin(t = facet.margin, b = facet.margin / 2)
-  theme$strip.text$size <- unit(facet.size, "pt")
+  # a plain number, as for all text sizes in ggplot2 (F032)
+  theme$strip.text$size <- as.double(facet.size)
   
   # set the font family and font size, taking text_factor into account
   attr_bak <- attributes(theme)
-  base_size <- theme$text$size
   theme <- lapply(theme, function(el) {
     if (inherits(el, "element_text")) {
       el$family <- font
-      if (text_factor != 1 && !is.null(el$size) && is.numeric(el$size)) {
-        if (inherits(el$size, "rel")) {
-          # in theme_minimal2, these are the x and Y-axis labels, not their titles
-          # in thme_bw, a lot of element have class 'rel'
-          el$size <- base_size * text_factor * as.double(el$size)
-        } else {
-          el$size <- base_size * text_factor * (as.double(el$size) / base_size)
-        }
+      # absolute sizes are multiplied; rel() sizes are relative to their parent element, so they
+      # scale through inheritance and stay as they are (F057)
+      if (text_factor != 1 && !is.null(el$size) && is.numeric(el$size) && !inherits(el$size, "rel")) {
+        el$size <- as.double(el$size) * text_factor
       }
     }
     el
@@ -2386,6 +2391,10 @@ validate_theme <- function(theme,
       theme$axis.text.y <- element_blank()
     }
     theme$axis.title <- element_blank()
+  }
+  
+  if (!is.null(user_partial)) {
+    theme <- theme + user_partial
   }
   
   # return the theme

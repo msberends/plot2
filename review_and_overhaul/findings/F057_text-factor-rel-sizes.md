@@ -4,7 +4,7 @@ title: text_factor turns rel() sizes into absolute sizes relative to the base si
 severity: low
 type: bug
 area: theme
-status: wontfix
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Multiply only `theme$text$size` (and absolute sizes) by `text_factor` and leave 
 
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: closed as not reproducible. With `theme_minimal2`, `theme_bw` and `theme_grey`, all 21 text elements are exactly doubled by `text_factor = 2` (checked with `calc_element()` on the completed theme). The concern from reading does not occur in practice; test case 15.10 keeps guarding it.
+- 2026-11-08: fixed with F032: text_factor multiplies only absolute text sizes; rel() sizes stay relative to their parent, so every text element scales by exactly text_factor (checked for theme_minimal2 and theme_bw). Tests: test-regression-phase4.R (F057).
