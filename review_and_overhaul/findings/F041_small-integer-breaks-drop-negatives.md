@@ -4,7 +4,7 @@ title: Breaks for small whole numbers start at 0, so negative values get no axis
 severity: high
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F042]
 origin: R02 sheets 05, 06, 07
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F041 Small-integer breaks drop negative values
@@ -47,3 +47,4 @@ Use `scales::breaks_pretty()` (or `breaks_extended(Q = c(1, 2, 5))`) and drop no
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). One helper `breaks_whole_numbers()` (pretty breaks without decimals, also below zero) replaces the three copies for x, y and category; regression tests 05.02, 06.02, 07.10; full suite passes.

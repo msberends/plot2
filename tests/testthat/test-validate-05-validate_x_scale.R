@@ -25,7 +25,6 @@ test_that("05.01 a character x gives a discrete scale; x.drop = FALSE keeps unus
 test_that("05.02 numeric x gets pretty breaks, including negative ones for small integers", {
   p <- expect_plot2(plot2(fx_xy, x, y))
   expect_axis_breaks(p, "x", c(0, 1, 2, 3, 4, 5, 6))
-  skip_open_finding("F041")
   p <- expect_plot2(plot2(data.frame(x = -3:4, y = 1:8), x, y, type = "point"))
   expect_true(any(axis_breaks(p, "x") < 0))
 })

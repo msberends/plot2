@@ -24,7 +24,6 @@ test_that("06.01 data from 0 to 100 get round breaks from zero", {
 })
 
 test_that("06.02 integer data from -3 to 2 get negative breaks", {
-  skip_open_finding("F041")
   p <- expect_plot2(plot2(fx_neg, x, y))
   expect_true(any(axis_breaks(p, "y") < 0))
 })

@@ -80,7 +80,6 @@ test_that("07.09 category.breaks and category.labels are honoured", {
 })
 
 test_that("07.10 an integer category from -2 to 3 gets negative breaks", {
-  skip_open_finding("F041")
   p <- expect_plot2(plot2(data.frame(x = c(1.5, 2, 3, 4, 5, 6), y = c(2, 1, 4, 3, 6, 5), v = -2:3), x, y, v))
   expect_true(any(scale_breaks(p, "colour") < 0))
 })

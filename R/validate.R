@@ -897,7 +897,7 @@ validate_x_scale <- function(df,
           x.breaks
         } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
           # whole numbers - only strip decimal numbers if total y range is low
-          function(x, ...) unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
+          breaks_whole_numbers
         } else {
           scales::breaks_pretty(n = ifelse(is.null(x.n_breaks), 5, x.n_breaks))
         }
@@ -1100,9 +1100,7 @@ validate_y_scale <- function(df,
       
     } else if (all(values %% 1 == 0, na.rm = TRUE) && data_max < 5) {
       # whole numbers - only strip decimal numbers if total y range is low
-      function(x, ...) {
-        unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
-      }
+      breaks_whole_numbers
     } else {
       scales::breaks_pretty(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
     }
@@ -1390,7 +1388,7 @@ validate_category_scale <- function(values,
       if (diff(range(values, na.rm = TRUE)) < 5 && 0 %in% values[!is.na(values)]) {
         sort(unique(values[!is.na(values)]))
       } else {
-        function(x, ...) unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
+        breaks_whole_numbers
       }
     } else {
       # print 5 labels nicely

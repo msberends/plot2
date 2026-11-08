@@ -203,6 +203,19 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
   }
 }
 
+# breaks for whole numbers with a small range: pretty breaks without decimals,
+# also below zero (used for the x, y and category scales)
+breaks_whole_numbers <- function(x, ...) {
+  x <- x[is.finite(x)]
+  if (length(x) == 0) return(numeric(0))
+  b <- scales::breaks_pretty()(x)
+  b <- b[abs(b - round(b)) < 1e-8]
+  if (length(b) < 2) {
+    b <- seq(floor(min(x)), ceiling(max(x)), by = 1)
+  }
+  b
+}
+
 requires_numeric_coercion <- function(x) {
   !is.null(x) && mode(x) == "numeric" && !is.numeric(x) && !inherits(x, c("factor", "Date", "POSIXt"))
 }
