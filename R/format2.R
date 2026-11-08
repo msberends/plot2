@@ -92,6 +92,7 @@ format2.numeric <- function(x,
   }
 }
 
+#' @exportS3Method
 format2.percentage <- function(x,
                                round = 1,
                                force_decimals = TRUE,
