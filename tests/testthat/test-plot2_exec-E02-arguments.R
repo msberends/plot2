@@ -32,7 +32,6 @@ test_that("E02.03 summarise_function must be a function", {
 
 test_that("E02.04 summarise_function = NULL keeps duplicates (F073)", {
   expect_identical(nrow(plot_data(plot2(fx_cat, x, y))), 3L)
-  skip_open_finding("F073")
   expect_identical(nrow(plot_data(plot2(fx_cat, x, y, summarise_function = NULL))), 6L)
 })
 

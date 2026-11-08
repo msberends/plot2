@@ -151,7 +151,6 @@ test_that("03.21 duplicate rows are summarised; identical rows with an explicit 
 })
 
 test_that("03.21b summarise_function = NULL disables summarising", {
-  skip_open_finding("F073")
   p <- expect_plot2(plot2(fx_cat, x, y, summarise_function = NULL))
   expect_identical(nrow(plot_data(p)), 6L)
 })

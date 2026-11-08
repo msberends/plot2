@@ -1351,7 +1351,8 @@ plot2_exec <- function(.data,
     y_secondary.type <- suppressMessages(validate_type(type = y_secondary.type, df = df))
   }
   # transform data if not a continuous geom but group sizes are > 1
-  if (any(group_sizes(df) > 1) && !geom_is_continuous(type) && type_backup != "sankey") {
+  if (any(group_sizes(df) > 1) && !geom_is_continuous(type) && type_backup != "sankey" &&
+      !identical(dots$`_summarise_fn_name`, "function(x) x")) {
     if (identical(type_backup, "barpercent")) {
       plot2_message("Summarising values for ", font_blue("type = \"barpercent\""), " using ",
                     font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)))

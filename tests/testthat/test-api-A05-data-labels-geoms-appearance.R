@@ -79,6 +79,5 @@ test_that("A05.10 na.replace sets the label of NA values", {
 })
 
 test_that("A05.11 summarise_function = NULL keeps the values, as documented", {
-  skip_open_finding("F073")
   expect_geoms(plot2(admitted_patients, hospital, age, type = "col", summarise_function = NULL), "bar")
 })

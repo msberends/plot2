@@ -624,13 +624,14 @@ validate_data <- function(df,
   type_validated <- suppressMessages(validate_type(dots$type, df))
   if ((!geom_is_continuous(type_validated) || geom_is_line_or_area(type_validated)) &&
       !is.null(dots$summarise_function) &&
+      !identical(dots$summarise_fn_name, "function(x) x") &&
       dots$type_backup != "sankey" &&
       (df |> select(starts_with("_var")) |> distinct() |> nrow()) < nrow(df)) {
     y_name <- get_y_name(df)
     df <- df |> 
       group_by(across(c(get_x_name(df), get_category_name(df), get_facet_name(df),
                         matches("_var_(x|category|facet)")))) |> 
-      summarise(`_var_y` = dots$summarise_function(`_var_y`),
+      summarise(`_var_y` = summarise_single(`_var_y`, dots$summarise_function),
                 .groups = "drop")
     df[, y_name] <- df$`_var_y`
     
@@ -2938,22 +2939,20 @@ summarise_data <- function(df,
   category <- get_category_name(df)
   facet <- get_facet_name(df)
   has_datalbls <- has_datalabels(df)
-  summ_fn <- function(x, fn = summarise_function, ...) {
-    # alter summarise_function to remove NAs
-    if (is.factor(x)) {
-      out <- x
-    } else {
-      out <- fn(x, ...)
+  summ_fn <- function(values) {
+    if (is.factor(values)) {
+      return(values)
     }
-    out[!is.na(out)]
+    summarise_single(values, summarise_function)
   }
+  # summarise the reserved column directly, so that user columns (such as 'n') are never overwritten
   df <- df |>
-    mutate(n = get_y(df)) |>
-    group_by(across(all_of(c(x, category, facet)))) |>
-    summarise(n = summ_fn(n),
+    group_by(across(all_of(unique(c(x, category, facet))))) |>
+    summarise(`_var_y` = summ_fn(`_var_y`),
               .groups = "drop")
-  colnames(df)[colnames(df) == "n"] <- y
-  df$`_var_y` <- df[, y, drop = TRUE]
+  if (!is.null(y) && y != "_var_y") {
+    df[[y]] <- df$`_var_y`
+  }
   if (!is.null(x)) df$`_var_x` <- df[, x, drop = TRUE]
   if (!is.null(category)) df$`_var_category` <- df[, category, drop = TRUE]
   if (!is.null(facet)) df$`_var_facet` <- df[, facet, drop = TRUE]
@@ -2967,6 +2966,17 @@ summarise_data <- function(df,
                                                    y.percent = y.percent))
   }
   df
+}
+
+summarise_single <- function(values, fn) {
+  # apply summarise_function to one group and check that it returns one value (F053)
+  out <- fn(values)
+  if (length(out) != 1) {
+    stop("'summarise_function' must return a single value per group, but returned ", length(out),
+         " values. Use e.g. summarise_function = mean, or summarise_function = NULL to plot all values.",
+         call. = FALSE)
+  }
+  out
 }
 
 #' @importFrom dplyr n_distinct

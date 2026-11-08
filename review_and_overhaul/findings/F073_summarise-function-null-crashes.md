@@ -4,7 +4,7 @@ title: summarise_function = NULL crashes for duplicate x values, although plot2 
 severity: high
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F053]
 origin: R03 sheet E02
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F073 summarise_function = NULL fails when summarising is needed
@@ -37,3 +37,4 @@ When `summarise_function` is `NULL`, skip `summarise_data()` entirely (keep the 
 ## History
 
 - 2026-11-07: found by an R03 end-to-end test (E02.04), reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; summarise_function = NULL now skips summarising in plot2_exec() and validate_data(), so all values are kept.

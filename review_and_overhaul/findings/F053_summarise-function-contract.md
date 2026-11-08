@@ -4,7 +4,7 @@ title: Non-scalar or NA results of summarise_function give unclear dplyr errors 
 severity: low
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F049]
 origin: R02 sheet 23
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F053 summarise_function contract
@@ -36,3 +36,4 @@ Validate the result length with a clear plot2 error; keep NA results (and let th
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; summarise_single() checks that summarise_function returns one value per group with a clear error; NA results are kept instead of silently dropping the group.

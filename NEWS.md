@@ -1,5 +1,8 @@
 # plot2 1.99.0.9000
 
+* `summarise_function = NULL` now keeps all values instead of failing for duplicate x values, as documented
+* `summarise_function` must now return a single value per group, with a clear error otherwise; groups whose summary is `NA` are no longer dropped silently
+* A column named `n` in `x`, `category` or `facet` no longer breaks the summarising of `y`
 * Fixed: back-to-back plots with small counts failed, and `y = c(2, 3)` was read as column positions
 * Fixed: back-to-back plots failed when the facet was given as an expression, such as `facet = tolower(sex)`
 * Fixed: a date-time (POSIXct) category produced thousands of nonsense legend breaks; a category with only a few dates now shows one legend entry per date

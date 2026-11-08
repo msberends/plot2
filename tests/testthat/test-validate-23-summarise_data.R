@@ -29,13 +29,11 @@ test_that("23.02 summarise_function = mean, median and max are applied", {
 test_that("23.03 an x, category or facet column named n, y or count is summarised correctly", {
   p <- expect_plot2(plot2(data.frame(count = c("a", "a", "b"), v = 1:3), count, v))
   expect_identical(layer_df(p, "bar")$y, c(3, 3))
-  skip_open_finding("F049")
   p <- expect_plot2(plot2(data.frame(n = c("a", "a", "b"), v = 1:3), n, v))
   expect_identical(layer_df(p, "bar")$y, c(3, 3))
 })
 
 test_that("23.04 a summarise_function that returns several values gives a clear error", {
-  skip_open_finding("F053")
   expect_error(plot2(fx_cat, x, y, summarise_function = range), "single value")
 })
 
