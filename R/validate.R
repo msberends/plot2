@@ -280,16 +280,16 @@ validate_data <- function(df,
   }
   
   # if given FALSE for a direction (e.g., category = FALSE), remove these columns
-  if (has_category(df) && all(get_category(df) == FALSE)) {
+  if (has_category(df) && is_switch(get_category(df), FALSE)) {
     df <- df |> select(-`_var_category`)
     plot2_env$mapping_category <- NULL
   }
-  if (has_facet(df) && all(get_facet(df) == FALSE)) {
+  if (has_facet(df) && is_switch(get_facet(df), FALSE)) {
     df <- df |> select(-`_var_facet`)
     plot2_env$mapping_facet <- NULL
   }
   if (has_datalabels(df) && 
-      (all(get_datalabels(df) == FALSE) ||
+      (is_switch(get_datalabels(df), FALSE) ||
        (!is.null(dots$type) && dots$type != "sf" &&
         geom_is_continuous(suppressMessages(validate_type(dots$type, df))) &&
         isTRUE(!type %in% c("geom_tile", "geom_raster", "geom_rect"))))) {
@@ -337,7 +337,7 @@ validate_data <- function(df,
   }
   
   if (has_datalabels(df)) {
-    if (all(get_datalabels(df) == TRUE)) {
+    if (is_switch(get_datalabels(df), TRUE)) {
       # for when given: datalabels = TRUE, guess the results
       if (type == "geom_sf") {
         # take values from first character column in case of sf plots
@@ -1434,7 +1434,7 @@ validate_category_scale <- function(values,
       # round upper to significance of lower
       new_upper <- max(upper, round(upper, digits = nchar(lower) * -1))
       # but only if within a 5th of the scale
-      if (upper / new_upper >= 0.8) {
+      if (isTRUE(upper / new_upper >= 0.8)) {
         upper <- new_upper
       }
       # and set lower to 0 if need be
@@ -1442,7 +1442,7 @@ validate_category_scale <- function(values,
         lower <- 0
       }
       # check if negative lower should be equal to upper
-      if (lower < 0 && lower / (upper * -1) >= 0.8) {
+      if (lower < 0 && isTRUE(lower / (upper * -1) >= 0.8)) {
         lower <- upper * -1
       }
       c(lower, upper)

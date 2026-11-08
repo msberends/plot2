@@ -203,6 +203,13 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
   }
 }
 
+# whether a materialised direction column is the switch TRUE or FALSE (e.g.
+# `category = FALSE`, `datalabels = TRUE`) rather than data: only logical
+# columns qualify, so numeric 0/1 data and NA values are never mistaken for it
+is_switch <- function(x, value) {
+  is.logical(x) && length(x) > 0 && !anyNA(x) && all(x == value)
+}
+
 # name of a transformation given as a string or as a transformation object
 # (e.g. scales::transform_log10()), for comparisons such as == "identity"
 transform_name <- function(x) {

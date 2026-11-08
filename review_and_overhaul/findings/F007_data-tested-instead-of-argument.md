@@ -4,7 +4,7 @@ title: Logical checks on data instead of arguments crash on NA and misread 0/1 v
 severity: critical
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R01 §1.7
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F007 Data tested instead of arguments
@@ -51,3 +51,4 @@ Inspect the quosure before turning it into a column: if the evaluated argument i
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). New helper `is_switch()` (only logical columns without NA count as the TRUE/FALSE switch); the numeric category limits heuristic no longer fails for constant 0; regression tests 03.10 and 03.11.

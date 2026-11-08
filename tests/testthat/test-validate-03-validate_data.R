@@ -69,7 +69,6 @@ test_that("03.09 category, facet and datalabels = FALSE remove these directions"
 })
 
 test_that("03.10 constant numeric columns of 0 or 1 used as category or datalabels are kept as data", {
-  skip_open_finding("F007")
   p <- expect_plot2(plot2(data.frame(x = letters[1:3], y = 1:3, c = 0), x, y, c))
   expect_true("fill" %in% names(plot_of(p)$mapping))
   p <- expect_plot2(plot2(data.frame(x = letters[1:3], y = 4:6, d = 1), x, y, datalabels = d))
@@ -77,7 +76,6 @@ test_that("03.10 constant numeric columns of 0 or 1 used as category or datalabe
 })
 
 test_that("03.11 a category or datalabels containing NA does not crash", {
-  skip_open_finding("F007")
   expect_plot2(plot2(data.frame(x = letters[1:3], y = 1:3, c = NA), x, y, c))
   expect_plot2(plot2(data.frame(x = letters[1:3], y = 1:3, d = c(1, NA, 1)), x, y, datalabels = d))
 })
