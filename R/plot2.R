@@ -2167,7 +2167,7 @@ plot2_exec <- function(.data, ...) {
       x.limits <- NULL
     }
     y.limits <- y.limits %or% plot2_env$y_lim
-    put_clip_off <- has_datalabels(df) && type != "geom_sf" && (!is.null(p$labels$title) || !is.null(p$labels$subtitle) || has_facet(df))
+    put_clip_off <- has_datalabels(df) && type != "geom_sf" && ((!misses_title && !is.null(title)) || (!misses_subtitle && !is.null(subtitle)) || has_facet(df))
     if (isTRUE(horizontal)) {
       p <- p +
         coord_flip(xlim = x.limits,

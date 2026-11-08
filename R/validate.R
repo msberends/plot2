@@ -2404,6 +2404,9 @@ validate_facet <- function(df,
     scales <- "fixed"
   }
   
+  # refer to the readable column, so that the facet needs no editing afterwards (F037)
+  facet_var <- vars(!!rlang::sym(get_facet_name(df)))
+  
   if (any(is.na(get_facet(df)))) {
     # 'drop' means dropping of factor levels. If this is FALSE and the columns contains NA, this throws an error:
     # Error in scale_apply(layer_data, x_vars, "train", SCALE_X, x_scales)
@@ -2416,7 +2419,7 @@ validate_facet <- function(df,
       switch <- "x"
     }
     if (is.null(facet.nrow) || facet.nrow == 1) {
-      return(facet_grid(cols = vars(`_var_facet`),
+      return(facet_grid(cols = facet_var,
                         space = scales, # <- this makes the facet.relative happen
                         drop = facet.drop,
                         scales = scales,
@@ -2424,7 +2427,7 @@ validate_facet <- function(df,
     } else {
       plot2_warning("When using ", font_blue("facet.relative = TRUE"), ", the number of columns cannot be > 1 when ",
                     font_blue("facet.nrow"), " is larger than 1")
-      return(facet_grid(rows = vars(`_var_facet`),
+      return(facet_grid(rows = facet_var,
                         space = scales,
                         drop = facet.drop,
                         scales = scales,
@@ -2436,7 +2439,7 @@ validate_facet <- function(df,
     facet.position <- gsub("^r$", "right", facet.position)
     facet.position <- gsub("^b$", "bottom", facet.position)
     facet.position <- gsub("^l$", "left", facet.position)
-    return(facet_wrap("`_var_facet`",
+    return(facet_wrap(facet_var,
                       scales = scales,
                       strip.position = facet.position,
                       drop = facet.drop,

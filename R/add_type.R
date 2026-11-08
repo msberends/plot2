@@ -203,8 +203,9 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
     colour_unique <- ""
   }
   
-  if (!is.null(plot$facet$params) && length(plot$facet$params) != 0) {
-    facet_name <- rlang::as_label(plot$facet$params$facets[[1]])
+  # the public vars() method of the facet, not its internal params (F037)
+  if (length(plot$facet$vars()) > 0) {
+    facet_name <- plot$facet$vars()[1]
     facet_unique <- unique(plot$data[[facet_name]])
   } else {
     facet_name <- NULL
@@ -526,7 +527,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   new_df$x <- plot$data[[rlang::as_label(plot$mapping$x)]]
   
   # carry the facet columns, so that the error bars are drawn in the right panels
-  facet_names <- unique(c(names(plot$facet$params$facets), names(plot$facet$params$rows), names(plot$facet$params$cols)))
+  facet_names <- plot$facet$vars()
   for (facet_name in intersect(facet_names, colnames(plot$data))) {
     new_df[[facet_name]] <- plot$data[[facet_name]]
   }

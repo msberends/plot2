@@ -31,7 +31,6 @@ test_that("T01.02 titles are available through ggplot2's public get_labs()", {
 })
 
 test_that("T01.03 plot2 does not edit facet internals (p$facet$params)", {
-  skip_open_finding("F037")
   src <- unlist(lapply(list.files(source_file("R"), full.names = TRUE), readLines))
   expect_false(any(grepl("\\$facet\\$params", src[!grepl("^\\s*#", src)])))
 })

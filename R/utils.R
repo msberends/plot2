@@ -719,20 +719,7 @@ restore_mapping <- function(p, df) {
     p$layers[[i]]$mapping <- fn_new_mapping(mapping = p$layers[[i]]$mapping, df = df)
   }
   
-  # facet mapping
-  if (has_facet(df)) {
-    p$facet$params$facets[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
-    names(p$facet$params$facets)[1] <- get_facet_name(df)
-    # required for ggplot2::facet_grid(), which is used when facet.relative = TRUE:
-    if (length(p$facet$params$rows) > 0) {
-      p$facet$params$rows[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
-      names(p$facet$params$rows)[1] <- get_facet_name(df)
-    }
-    if (length(p$facet$params$cols) > 0) {
-      p$facet$params$cols[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
-      names(p$facet$params$cols)[1] <- get_facet_name(df)
-    }
-  }
+  # the facet already refers to the readable column, see validate_facet() (F037)
   
   # now remove these anonymous`_var_*` columns from the data
   p$data <- p$data[, colnames(p$data)[colnames(p$data) %unlike% "^_var_(x|y|category|facet)$"], drop = FALSE]

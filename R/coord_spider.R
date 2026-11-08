@@ -427,13 +427,7 @@ CoordSpider <- ggproto(
 ggplot_add.CoordSpider <- function(object, plot, ...) {
   plot$coordinates <- object
   
-  # Prevent ggplot2 from regenerating default axis titles at build time
-  plot$labels$x <- ""
-  plot$labels$y <- ""
-  
-  # Secondary axes if present
-  if (!is.null(plot$labels$x.sec)) plot$labels$x.sec <- ""
-  if (!is.null(plot$labels$y.sec)) plot$labels$y.sec <- ""
-  
-  plot
+  # prevent ggplot2 from regenerating default axis titles at build time; through labs(),
+  # not by editing the labels directly (F037)
+  plot + ggplot2::labs(x = "", y = "")
 }
