@@ -15,7 +15,7 @@ label_taxonomy(x, ...)
 An \link{expression} vector if any taxonomic name was found, otherwise \code{x} as character.
 }
 \description{
-Format the names of microorganisms in axis or legend labels in italics, as is the convention in microbiology. Every word that is a family, genus, species or subspecies name in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package is italicised; other words are kept as they are.
+Format the names of microorganisms in axis or legend labels in italics, as is the convention in microbiology. Family and genus names in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package are italicised, and so are species and subspecies names that follow a genus or an abbreviated genus (such as \emph{S. aureus}); other words are kept as they are.
 }
 \details{
 Use this function for the labels of any plotting direction, e.g. \code{x.labels = label_taxonomy} or \code{category.labels = label_taxonomy}. It requires the \code{AMR} package.
