@@ -2,6 +2,17 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: R07)
+
+- Maintainer decided R07: sheets plus `shiny::testServer()` tests; review only (F006 too); current code reviewed with D001 dependencies noted; server deployment in scope, every input treated as untrusted.
+- Read `R/shiny.R` in full. Review file `reviews/R07_shiny-app.md`, README and 7 sheets S01 to S07 in `reviews/R07_shiny/`, 7 test files `tests/testthat/test-shiny-S*.R` (48 cases). New helpers `shiny_app()`, `shiny_app_env()`, `shiny_init()`, `shiny_change()`, `shiny_file()` with a self-test. Widget probe `repro/shiny_widgets_r07.R`.
+- F006 verified: four routes to arbitrary code (direction selectors, text inputs, `summarise_function`, data set selector), each confirmed with a marker file in a temporary folder; reproduction replaced by an executable one.
+- Filed F111 to F125 (3 high, 9 medium, 3 low); the maintainer then set all security findings (F111, F112, F113, F122) to critical: 4 critical, 8 medium, 3 low. Notable: every `plot2()` call clears `plot2_env`, which holds the app's defaults and last plot (F112); `create_interactively(data = df)` uses `stats::df` (F114).
+- Every parked test was run once without its skip and failed; all other cases pass. The maximum-size export was not executed (memory).
+- Updated roadmap (Phase 6 ordered: security first, input specification with D001), coverage (`R/shiny.R` full), review_rounds (R07 done), project CLAUDE.md (test file families), INDEX rebuilt.
+- Full test suite: 413 tests, no failures, no warnings, 112 skips (83 as before, 28 parked Shiny cases, and S05.02 because svglite is not installed).
+- Next: no further review rounds planned; fixes per roadmap, D001 (I004) before the first CRAN release.
+
 ## 2026-11-08 (session 6, continued: R06)
 
 - Committed D001 as 2d262e9. Maintainer decided R06: theme sheets plus tests; review only; four extra themes (R version support, dependency footprint, graphics devices, CI workflows); current code reviewed, D001 names mentioned where relevant.

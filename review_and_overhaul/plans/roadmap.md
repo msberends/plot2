@@ -147,9 +147,12 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 
 ## Phase 6: Shiny app
 
-- Full review in round R07 before fixes.
+Reviewed in R07 (sheets in `reviews/R07_shiny/`, tests `test-shiny-S*.R`). The security findings must be fixed before the app is deployed on any server; for local use by one person, F112, F114 to F121 matter on their own. Order:
 
-- F006 safe call construction (do before any server deployment, can be pulled forward)
+1. Security, before any deployment (can be pulled forward): F006 safe call construction (language objects, whitelisted values, no `eval(parse())`); F113 serve the logo alone; F111 no R serialisation uploads by default, `upload_tab = FALSE` disables uploads; F122 export size budget; F112 per-session state in reactive values instead of `plot2_env` (also fixes the lost defaults).
+2. Input specification, together with D001: F124 one explicit table of the app's inputs (tab, widget, kind of value, label, range), checked against `formals(plot2)`; this carries F118 (value types), F119 (missing and unusable inputs) and F123 (change tracking without observers).
+3. Robustness and usability: F114 data set lookup by key, F115 errors as notifications, F116 Automatic type, F117 copy in the browser, F120 upload reader options, F121 messages on servers, escaped, with real error text.
+4. F125 housekeeping and a documented statement on deployment.
 
 ## Housekeeping (any time)
 

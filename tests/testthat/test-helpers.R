@@ -187,3 +187,18 @@ test_that("source_file() and eval_chunks() read and run R Markdown chunks", {
   expect_identical(nrow(eval_chunks(f, exclude = "boom")), 2L)
   expect_true(file.exists(source_file("DESCRIPTION")))
 })
+
+test_that("shiny_app(), shiny_init() and shiny_change() drive the app's server", {
+  app <- shiny_app()
+  expect_s3_class(app, "shiny.appobj")
+  expect_true(is.environment(shiny_app_env(app)))
+  shiny::testServer(app, {
+    shiny_init(session)
+    expect_identical(input$dataset, "iris")
+    shiny_change(session, title = "a")
+    expect_true("title" %in% changed_inputs$names)
+  })
+  f <- tempfile(fileext = ".csv")
+  writeLines("a", f)
+  expect_identical(shiny_file(f)$datapath, f)
+})

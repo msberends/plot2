@@ -5,15 +5,15 @@ severity: critical
 type: security
 area: shiny
 status: open
-verification: reading
+verification: verified
 effort: M
 api_change: no
-locations: [R/shiny.R:913, R/shiny.R:960, R/shiny.R:811, R/shiny.R:1000, R/shiny.R:1105, R/shiny.R:1230]
-related: []
+locations: [R/shiny.R:913, R/shiny.R:926, R/shiny.R:939, R/shiny.R:961, R/shiny.R:811, R/shiny.R:1000, R/shiny.R:1105, R/shiny.R:1230]
+related: [F111, F112, F113, F114, F118, F121]
 origin: R01 §1.6
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F006 Code injection in create_interactively()
@@ -28,13 +28,24 @@ The Shiny app assembles a `plot2()` call as a string, pasting free-text inputs w
 - `R/shiny.R:1000`: `eval(parse(text = code))`.
 - `R/shiny.R:811`, `R/shiny.R:1105`, `R/shiny.R:1230`: `eval(parse(text = input$dataset))` and similar.
 - `install_shiny_deps()` documentation addresses administrators, which suggests multi-user server deployment.
+- R07 (verified with `shiny::testServer()`): four independent routes run arbitrary code, each confirmed by writing a marker file:
+  1. a value of the x/y/category/facet selectors (free text allowed, pasted unquoted at `R/shiny.R:926`);
+  2. a title or any other text input (`"` closes the string at `R/shiny.R:961`);
+  3. `summarise_function`, evaluated directly with `eval(str2lang(val))` at `R/shiny.R:939` while building the code;
+  4. a value of the data set selector (`R/shiny.R:811`); Shiny does not check selectize values against the choices on the server.
+- Tests S02.03, S03.06, S04.05, S04.06 and S04.07 (parked).
 
 ## Reproduction
 
 ```r
-# Manual: run create_interactively(), type the following as the plot title:
-#   x"); message("injected"); ("
-# Expected after fix: the title is shown literally; nothing is executed.
+marker <- tempfile()
+app <- create_interactively()
+shiny::testServer(app, {
+  session$setInputs(dataset = "iris", type = "auto", y_calc = "None")
+  session$setInputs(dataset = sprintf('{writeLines("x", "%s"); iris}', marker))
+})
+print(file.exists(marker))
+# Expected after fix: FALSE; nothing typed or sent by the browser is executed
 ```
 
 ## Impact
@@ -48,3 +59,4 @@ Build the call as a language object (`rlang::call2("plot2", !!!args)` with symbo
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: R07 verified all four routes with `shiny::testServer()` and replaced the manual reproduction; related findings F111 to F121 cover further server-deployment risks.

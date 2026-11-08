@@ -538,3 +538,45 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
   }
   do.call(rbind, out)
 }
+
+# Shiny app (R07) -------------------------------------------------------------
+
+#' The app object of create_interactively() for shiny::testServer(). Skips
+#' when a package of the app is missing. Outside an interactive session
+#' create_interactively() returns the app instead of running it. The plot
+#' that the app stores in plot2_env is cleared when the calling test ends.
+shiny_app <- function(..., .env = parent.frame()) {
+  for (p in c("shiny", "shinyjs", "bslib", "DT", "clipr", "pillar", "rio", "fansi")) {
+    testthat::skip_if_not_installed(p)
+  }
+  withr::defer({
+    plot2_env$last_shiny_plot <- NULL
+    if ("plot2res" %in% names(shiny::resourcePaths())) shiny::removeResourcePath("plot2res")
+  }, envir = .env)
+  create_interactively(...)
+}
+
+#' The environment in which the app was built (holds `ui`, `data_sets`, ...).
+shiny_app_env <- function(app) {
+  environment(app$serverFuncSource())
+}
+
+#' Input values a browser sends when the app starts.
+shiny_init <- function(session, dataset = "iris") {
+  session$setInputs(dataset = dataset, type = "auto", y_calc = "None",
+                    export_width_cm = 15, export_height_cm = 10, export_dpi = 300)
+}
+
+#' Change inputs as a user would. The app records an input as changed only
+#' from the second value it receives (its observer ignores the first, F123),
+#' so every input first receives NA.
+shiny_change <- function(session, ...) {
+  vals <- list(...)
+  do.call(session$setInputs, lapply(vals, function(v) NA))
+  do.call(session$setInputs, vals)
+}
+
+#' A file in the shape of shiny::fileInput()'s value.
+shiny_file <- function(path) {
+  list(name = basename(path), datapath = path, size = file.size(path), type = "")
+}

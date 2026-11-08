@@ -47,6 +47,9 @@ plot2/
 │   ├── test-helpers.R        # Self-tests of the helpers
 │   ├── test-plot2_exec-E*.R  # End-to-end tests per plot2_exec() stage (R03)
 │   ├── test-modules-M*.R     # End-to-end tests for methods, add_*(), coord, theme, colours (R04)
+│   ├── test-api-A*.R         # Documented behaviour, examples, vignettes, README (R05)
+│   ├── test-themes-T*.R      # Cross-cutting themes: i18n, devices, dependencies, ... (R06)
+│   ├── test-shiny-S*.R       # Shiny app server tests with shiny::testServer() (R07)
 │   └── test_plot2.R          # Legacy tests, to be split per topic
 ├── vignettes/
 │   ├── plot2.Rmd             # Main vignette (comprehensive examples)
@@ -170,7 +173,7 @@ New files **must** include this header verbatim at the top.
   - `helper-fixtures.R`: small deterministic fixtures `fx_*`; add shared data there, not inline.
   - `setup.R`: deterministic environment (UTC, C locale, plot2 options reset).
   - `test-helpers.R`: self-tests of the helpers; extend it whenever a helper is added or changed.
-- Test files: `test_plot2.R` (legacy, to be split) and per-topic files. `test-plot2_exec-E<nn>-<topic>.R` follow the R03 sheets and `test-modules-M<nn>-<topic>.R` the R04 sheets; every `test_that()` description starts with its case ID (e.g. `"E05.03 ..."`).
+- Test files: `test_plot2.R` (legacy, to be split) and per-topic files. `test-plot2_exec-E<nn>-<topic>.R` follow the R03 sheets and `test-modules-M<nn>-<topic>.R` the R04 sheets, `test-api-A<nn>`, `test-themes-T<nn>` and `test-shiny-S<nn>` the R05, R06 and R07 sheets (Shiny tests drive the server with the `shiny_*()` helpers); every `test_that()` description starts with its case ID (e.g. `"E05.03 ..."`).
 - Tests for open findings describe the desired behaviour and start with `skip_open_finding("F0xx")`. When fixing a finding, remove that line and the test must pass. Known soft deprecations caused by plot2 are silenced per test with `local_known_deprecation("F0xx")`, never globally.
 - Test content, not only class: prefer `expect_geoms()`, `expect_labels()` etc. over `expect_s3_class(p, "gg")`. `expect_plot2()` renders the plot and fails on R warnings.
 - The full suite takes several minutes: run it detached and read the log.
