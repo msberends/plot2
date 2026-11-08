@@ -4,8 +4,8 @@ title: validate_colour() contains a self-declared hack and dead code for repeate
 severity: low
 type: maintainability
 area: colours
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: M
 api_change: no
 locations: [R/validate.R:1853, R/validate.R:1877]
@@ -35,3 +35,4 @@ Always produce exactly one colour per category level, named by level, and pass `
 ## History
 
 - 2026-11-07: filed in R02 (by reading).
+- 2026-11-08: fixed: the expansion block is removed. It only appended repeated colours after the colours for the categories, which the manual scales ignore (they use the first value per level). Verified by comparing the drawn colour and fill of 16 plots (categories with facets, named, recycled and viridis colours, horizontal, focus, stacked, continuous geoms) before and after: identical. Sheet 09 tests pass.

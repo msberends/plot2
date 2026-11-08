@@ -1820,7 +1820,6 @@ generate_geom <- function(type,
   }
 }
 
-#' @importFrom dplyr n_distinct
 validate_colour <- function(df,
                             type,
                             type_backup,
@@ -1927,33 +1926,7 @@ validate_colour <- function(df,
       colour_fill <- colour
     }
     
-    # expand the range
-    df_nonempty <- df |> 
-      filter(!is.na(`_var_category`) & !is.na(`_var_y`))
-    if (has_x(df)) {
-      df_nonempty <- df_nonempty |> 
-        filter(!is.na(`_var_x`))
-    }
-    if (has_facet(df)) {
-      df_nonempty <- df_nonempty |> 
-        filter(!is.na(`_var_facet`))
-    }
-    # TODO this very hacky... since ggplot2 3.4.0 manual values in scale_*_manual work differently
-    grp_sizes <- group_sizes(df_nonempty)
-    grp_sizes <- grp_sizes[grp_sizes != 0]
-    n_categories <- length(grp_sizes)
-    if (any(grp_sizes > 1, na.rm = TRUE) && n_categories * n_distinct(get_category(df)) < nrow(df)) {
-      if (length(colour) < n_categories) {
-        # expand colour for all categories, except when all colours were named
-        colour <- c(colour, rep(colour, n_categories)[seq_len(n_categories - length(colour))])
-      }
-      if (length(colour_fill) < n_categories) {
-        # expand colour_fill for all categories, except when all colours were named
-        colour_fill <- c(colour_fill, rep(colour_fill, n_categories)[seq_len(n_categories - length(colour_fill))])
-        # remove empty groups
-        colour_fill <- colour_fill[grp_sizes != 0]
-      }
-    }
+    # one colour per category: the manual scales take the first value per level (F061)
   }
   
   if (type == "geom_sf" && !has_category(df)) {
