@@ -1282,7 +1282,7 @@ validate_y_scale <- function(df,
                                 stacked_fill = stacked_fill,
                                 y.limits = limits_evaluated)
   if (transform_name(y.transform) == "reverse") {
-    expand_evaluated <- c(expand_evaluated[3], expand_evaluated[c(1, 2, 4)])
+    expand_evaluated <- expand_evaluated[c(3, 4, 1, 2)]
   }
   scale_y_continuous(
     breaks = breaks_fn(values = values,

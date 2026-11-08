@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: `y.transform = "reverse"` applied `y.expand` to the wrong sides and in the wrong units
 * Fixed: `category.percent = TRUE` failed for numeric categories
 * Fixed: a logarithmic `category.transform` failed when the automatic colour scale started at 0
 * Fixed: transformation objects such as `scales::transform_log10()` in `x.transform`, `y.transform` and `category.transform` caused errors

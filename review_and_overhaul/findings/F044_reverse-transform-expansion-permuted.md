@@ -4,7 +4,7 @@ title: Reverse y transform permutes the expansion vector incorrectly
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F043]
 origin: R02 sheet 06
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F044 Reverse transform permutes expansion incorrectly
@@ -34,3 +34,4 @@ print(unclass(ggplot2::layer_scales(p)$y$expand))
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Expansion swapped as `e[c(3, 4, 1, 2)]`; regression test 06.13.

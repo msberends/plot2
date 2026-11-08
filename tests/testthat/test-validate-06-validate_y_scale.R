@@ -92,7 +92,6 @@ test_that("06.12 y.transform accepts a transformation object", {
 })
 
 test_that("06.13 y.transform = 'reverse' keeps the expansion on the right sides", {
-  skip_open_finding("F044")
   p <- expect_plot2(plot2(d100, x, y, y.transform = "reverse", y.expand = c(0.1, 0.5)))
   r <- axis_range(p, "y")
   expect_equal(r, c(-97 - 0.5 * 97, 0 + 0.1 * 97))
