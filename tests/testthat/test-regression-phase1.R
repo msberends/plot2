@@ -19,6 +19,7 @@ test_that("F015 an invalid dec_mark or big_mark option warns and falls back", {
   withr::local_options(dec_mark = "x", big_mark = "y", OutDec = ".")
   expect_warning(expect_identical(dec_mark(), "."), "dec_mark")
   expect_warning(expect_identical(suppressWarnings(dec_mark()), "."), NA)
+  withr::local_options(dec_mark = NULL)
   expect_warning(bm <- big_mark(), "big_mark")
   expect_identical(bm, " ")
 })
