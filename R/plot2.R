@@ -140,7 +140,12 @@
 #' - `TRUE` or `FALSE` to force or remove datalabels
 #' - A function to calculate over `.data`, such as `datalabels = paste(round(column1), "\n", column2)`
 #' @param datalabels.round Number of digits to round the datalabels, applies to both `"%n"` and `"%p"` for replacement (see `datalabels.format`).
-#' @param datalabels.format Format to use for datalabels. This can be a function (such as [euros()]) or a text. For the text, `"%n"` will be replaced by the count number, and `"%p"` will be replaced by the percentage of the total count. Use `datalabels.format = NULL` to *not* transform the datalabels.
+#' @param datalabels.format Format to use for datalabels. This can be a function (such as [euros()]) or a text. For the text, `"%n"` will be replaced by the count number, and `"%p"` will be replaced by the percentage (see `datalabels.percent_by`). Use `datalabels.format = NULL` to *not* transform the datalabels.
+#' @param datalabels.percent_by Group within which the `"%p"` percentages of `datalabels.format` sum to 100%. This can be:
+#' - `"x"` (default): within each x value and facet, so that the stacked or dodged bars of one x value sum to 100%. Without a `category`, each x value has a single bar, so this is the same as `"facet"`.
+#' - `"category"`: within each category and facet
+#' - `"facet"`: within each facet
+#' - `"total"`: over all data in the plot
 #' @param datalabels.colour,datalabels.colour_fill,datalabels.size,datalabels.angle,datalabels.lineheight Settings for the datalabels.
 #' @param decimal.mark Decimal mark, defaults to [dec_mark()].
 #' @param big.mark Thousands separator, defaults to [big_mark()].
@@ -506,6 +511,7 @@ plot2 <- function(.data,
                   datalabels.size = (3 * text_factor),
                   datalabels.angle = 0,
                   datalabels.lineheight = 1.0,
+                  datalabels.percent_by = "x",
                   decimal.mark = dec_mark(),
                   big.mark = big_mark(),
                   summarise_function = base::sum,
@@ -728,6 +734,7 @@ plot2_exec <- function(.data,
                        datalabels.size = (3 * text_factor),
                        datalabels.angle = 0,
                        datalabels.lineheight = 1.0,
+                       datalabels.percent_by = "x",
                        decimal.mark = dec_mark(),
                        big.mark = big_mark(),
                        summarise_function = base::sum,
@@ -1107,6 +1114,7 @@ plot2_exec <- function(.data,
                   type_backup = type_backup,
                   datalabels.round = datalabels.round,
                   datalabels.format = datalabels.format,
+                  datalabels.percent_by = datalabels.percent_by,
                   x.sort = x.sort,
                   category.sort = category.sort,
                   facet.sort = facet.sort,
@@ -1391,6 +1399,7 @@ plot2_exec <- function(.data,
                          big.mark = big.mark,
                          datalabels.round = datalabels.round,
                          datalabels.format = datalabels.format,
+                         datalabels.percent_by = datalabels.percent_by,
                          y.percent = y.percent)
   }
   
@@ -1619,6 +1628,7 @@ plot2_exec <- function(.data,
                           datalabels = datalabels,
                           datalabels.round = datalabels.round,
                           datalabels.format = datalabels.format,
+                          datalabels.percent_by = datalabels.percent_by,
                           datalabels.colour = datalabels.colour,
                           datalabels.colour_fill = datalabels.colour_fill,
                           datalabels.size = datalabels.size,

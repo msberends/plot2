@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* New argument `datalabels.percent_by`: `"%p"` datalabels are now percentages within each x value (so stacked bars sum to 100% per bar), or within each category, facet, or the total; previously they were always relative to the grand total of the plot. Without a category, the default gives percentages within each facet
 * Numeric x values that look like years (2000 to 2050) or months (1 to 12) now stay numeric for continuous types such as `"point"` and `"line"`, and are only treated as years or months when they are whole numbers; columns of years without `type` work as before
 * An unknown or ambiguous `type` now gives an error with suggestions ("did you mean 'boxplot'?") instead of silently using the first geom whose name contains the text; abbreviations such as `"hist"` must be the start of a geom name
 * `plot2("name")` now looks up a data frame of that name only in the calling environment, not along the search path or in plot2's namespace; `plot2(numbers, y = values)` now uses the vector as x

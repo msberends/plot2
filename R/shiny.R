@@ -1137,7 +1137,7 @@ make_input <- function(name, default, pretty_labels) {
     default <- NULL
   }
   
-  if ((is.logical(default) && !is.na(default) && name %unlike% "title$") || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)" || name == "smooth") {
+  if ((is.logical(default) && !is.na(default) && name %unlike% "title$") || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)$" || name == "smooth") {
     if (is.null(default)) default <- FALSE
     create_field(bslib::input_switch(name, NULL, value = default), name, default, pretty_labels)
   } else if (is.numeric(default) && is.null(default)) {
@@ -1168,6 +1168,8 @@ make_input <- function(name, default, pretty_labels) {
   } else if (name %like% "[.]level$") {
     if (is.null(default) || is.infinite(default)) default <- 0
     create_field(shiny::sliderInput(name, NULL, value = default, min = 0.75, max = 1, step = 0.005, width = "100%"), name, default, pretty_labels, slider = TRUE)
+  } else if (name == "datalabels.percent_by") {
+    create_field(shiny::selectInput(name, NULL, selected = default, choices = c("x", "category", "facet", "total"), width = "100%"), name, default, pretty_labels)
   } else if (name == "category.type") {
     create_field(shiny::selectInput(name, NULL, selected = default, choices = c("colour/fill" = "colour", "shape", "size", "linetype", "linewidth", "alpha"), multiple = TRUE, width = "100%"), name, default, pretty_labels)
   } else if (name %like% "linetype$") {

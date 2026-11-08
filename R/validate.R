@@ -375,13 +375,14 @@ validate_data <- function(df,
       df <- df |> 
         mutate(`_var_datalabels` = as.double(`_var_datalabels`))
     }
-    df <- df |>
-      mutate(`_var_datalabels` = format_datalabels(`_var_datalabels`, 
-                                                   datalabels.round = dots$datalabels.round,
-                                                   datalabels.format = dots$datalabels.format,
-                                                   decimal.mark = dots$decimal.mark,
-                                                   big.mark = dots$big.mark,
-                                                   y.percent = dots$y.percent))
+    # %p is relative to the group set in datalabels.percent_by (F028)
+    df$`_var_datalabels` <- format_datalabels(df$`_var_datalabels`,
+                                              datalabels.round = dots$datalabels.round,
+                                              datalabels.format = dots$datalabels.format,
+                                              decimal.mark = dots$decimal.mark,
+                                              big.mark = dots$big.mark,
+                                              y.percent = dots$y.percent,
+                                              group = percent_group(df, dots$datalabels.percent_by))
   }
   
   # turn x to character if data seems to suggest so; years and months are only guessed for
@@ -679,6 +680,7 @@ validate_data <- function(df,
                         big.mark = dots$big.mark,
                         datalabels.round = dots$datalabels.round,
                         datalabels.format = dots$datalabels.format,
+                        datalabels.percent_by = dots$datalabels.percent_by,
                         y.percent = dots$y.percent)
     # sort on x, important when piping plot2()'s after plot2()'s
     if (has_x(df)) {
@@ -2886,6 +2888,7 @@ set_max_items <- function(df,
                           big.mark,
                           datalabels.round,
                           datalabels.format,
+                          datalabels.percent_by = "x",
                           y.percent) {
   if (is.infinite(x.max_items) && is.infinite(category.max_items) && is.infinite(facet.max_items)) {
     return(df)
@@ -2960,19 +2963,21 @@ set_max_items <- function(df,
                          big.mark = big.mark,
                          datalabels.round = datalabels.round,
                          datalabels.format = datalabels.format,
+                         datalabels.percent_by = datalabels.percent_by,
                          y.percent = y.percent)
   }
   df
   
 }
 
-#' @importFrom dplyr mutate group_by across all_of summarise
+#' @importFrom dplyr group_by across all_of summarise
 summarise_data <- function(df,
                            summarise_function,
                            decimal.mark,
                            big.mark,
                            datalabels.round,
                            datalabels.format,
+                           datalabels.percent_by = "x",
                            y.percent) {
   x <- get_x_name(df)
   y <- get_y_name(df)
@@ -2997,13 +3002,13 @@ summarise_data <- function(df,
   if (!is.null(category)) df$`_var_category` <- df[, category, drop = TRUE]
   if (!is.null(facet)) df$`_var_facet` <- df[, facet, drop = TRUE]
   if (isTRUE(has_datalbls)) {
-    df <- df |>
-      mutate(`_var_datalabels` = format_datalabels(`_var_y`,
-                                                   datalabels.round = datalabels.round,
-                                                   datalabels.format = datalabels.format,
-                                                   decimal.mark = decimal.mark,
-                                                   big.mark = big.mark,
-                                                   y.percent = y.percent))
+    df$`_var_datalabels` <- format_datalabels(df$`_var_y`,
+                                              datalabels.round = datalabels.round,
+                                              datalabels.format = datalabels.format,
+                                              decimal.mark = decimal.mark,
+                                              big.mark = big.mark,
+                                              y.percent = y.percent,
+                                              group = percent_group(df, datalabels.percent_by))
   }
   df
 }
@@ -3025,7 +3030,8 @@ format_datalabels <- function(datalabels,
                               datalabels.format,
                               decimal.mark,
                               big.mark,
-                              y.percent) {
+                              y.percent,
+                              group = NULL) {
   datalabels[as.character(datalabels) %in% c("", "0")] <- NA
   datalabels_out <- datalabels
   
@@ -3055,7 +3061,9 @@ format_datalabels <- function(datalabels,
     datalabels <- as.double(datalabels)
     datalabels_out <- rep(datalabels.format, length(datalabels_out))
     if (datalabels.format %like% "%p") {
-      datalabels_p <- trimws(format2(datalabels / sum(datalabels, na.rm = TRUE),
+      if (is.null(group)) group <- rep(1L, length(datalabels))
+      denominator <- stats::ave(datalabels, group, FUN = function(v) sum(v, na.rm = TRUE))
+      datalabels_p <- trimws(format2(datalabels / denominator,
                                      round = datalabels.round,
                                      decimal.mark = decimal.mark,
                                      big.mark = big.mark,
@@ -3091,4 +3099,29 @@ looks_like_years <- function(x) {
 # exactly the whole numbers 1 to 12 (F013)
 looks_like_months <- function(x) {
   is.numeric(x) && isTRUE(all.equal(sort(unique(as.double(x[!is.na(x)]))), as.double(seq_len(12))))
+}
+
+# Groups within which "%p" datalabels sum to 100% (F028). "x" means each x value within its
+# facet, so that stacked or dodged bars of one x value sum to 100%; without a category every
+# x value has a single bar, so then "x" is the same as "facet".
+percent_group <- function(df, percent_by = "x") {
+  if (is.null(percent_by)) percent_by <- "x"
+  percent_by <- tolower(trimws(percent_by[1L]))
+  if (!percent_by %in% c("x", "category", "facet", "total")) {
+    stop("`datalabels.percent_by` must be \"x\", \"category\", \"facet\" or \"total\"", call. = FALSE)
+  }
+  if (percent_by == "x" && !has_category(df)) {
+    percent_by <- "facet"
+  }
+  cols <- switch(percent_by,
+                 x = c("_var_x", "_var_facet"),
+                 category = c("_var_category", "_var_facet"),
+                 facet = "_var_facet",
+                 total = character(0))
+  cols <- intersect(cols, colnames(df))
+  if (length(cols) == 0) {
+    return(rep(1L, NROW(df)))
+  }
+  # missing values form their own group
+  interaction(lapply(cols, function(col) ifelse(is.na(df[[col]]), "\001NA", as.character(df[[col]]))), drop = TRUE)
 }

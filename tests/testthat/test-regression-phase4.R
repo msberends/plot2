@@ -97,3 +97,19 @@ test_that("F013 years and months become discrete only for discrete or automatic 
   expect_false(plot2:::looks_like_years(c(2001.5, 2010)))
   expect_true(plot2:::looks_like_months(c(1:12, NA)))
 })
+
+test_that("F028 %p datalabels sum to 100% per x value by default, or per datalabels.percent_by", {
+  d <- data.frame(x = rep(c("a", "b"), each = 2), c = rep(c("p", "q"), 2), f = "z", y = c(1, 3, 2, 2))
+  pct <- function(p) as.double(sub("%", "", datalabels_of(p))) / 100
+  p <- expect_plot2(plot2(d, x, y, c, datalabels.format = "%p", stacked = TRUE))
+  expect_equal(sort(pct(p)), c(0.25, 0.5, 0.5, 0.75))
+  p <- expect_plot2(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "total"))
+  expect_equal(sort(pct(p)), c(0.125, 0.25, 0.25, 0.375))
+  p <- expect_plot2(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "category"))
+  expect_equal(sort(pct(p)), c(1 / 3, 0.4, 0.6, 2 / 3), tolerance = 0.001)
+  # without a category, "x" is the same as within the facet
+  p <- expect_plot2(plot2(admitted_patients, hospital, n(), facet = gender, datalabels.format = "%p"))
+  ld <- layer_df(p, "text")
+  expect_equal(as.vector(tapply(as.double(sub("%", "", ld$label)), ld$PANEL, sum)), c(100, 100), tolerance = 0.002)
+  expect_error(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "row"), "must be")
+})

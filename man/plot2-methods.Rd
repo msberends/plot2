@@ -119,6 +119,7 @@
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
   summarise_function = base::sum,
@@ -274,6 +275,7 @@
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
   summarise_function = base::sum,
@@ -430,6 +432,7 @@
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
   summarise_function = base::sum,
@@ -585,6 +588,7 @@
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
   summarise_function = base::sum,
@@ -745,6 +749,7 @@
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
   summarise_function = base::sum,
@@ -900,6 +905,7 @@
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
   summarise_function = base::sum,
@@ -1123,9 +1129,17 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{datalabels.round}{Number of digits to round the datalabels, applies to both \code{"\%n"} and \code{"\%p"} for replacement (see \code{datalabels.format}).}
 
-\item{datalabels.format}{Format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage of the total count. Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
+\item{datalabels.format}{Format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage (see \code{datalabels.percent_by}). Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
 
 \item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{Settings for the datalabels.}
+
+\item{datalabels.percent_by}{Group within which the \code{"\%p"} percentages of \code{datalabels.format} sum to 100\%. This can be:
+\itemize{
+\item \code{"x"} (default): within each x value and facet, so that the stacked or dodged bars of one x value sum to 100\%. Without a \code{category}, each x value has a single bar, so this is the same as \code{"facet"}.
+\item \code{"category"}: within each category and facet
+\item \code{"facet"}: within each facet
+\item \code{"total"}: over all data in the plot
+}}
 
 \item{decimal.mark}{Decimal mark, defaults to \code{\link[=dec_mark]{dec_mark()}}.}
 
