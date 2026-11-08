@@ -1938,7 +1938,11 @@ validate_colour <- function(df,
       df_nonempty <- df_nonempty |> 
         filter(!is.na(`_var_facet`))
     }
-    # TODO this very hacky... since ggplot2 3.4.0 manual values in scale_*_manual work differently
+    # Some layers get their colours as fixed geom parameters instead of through a scale (e.g. a
+    # boxplot with a category, named `colour` and a single `colour_fill`, or a registered colour set
+    # with several y columns). ggplot2 then needs one value per drawn group, so the colours are
+    # repeated up to the number of x-category-facet groups (F061). Mapping these colours through
+    # the scale would make this block unnecessary.
     grp_sizes <- group_sizes(df_nonempty)
     grp_sizes <- grp_sizes[grp_sizes != 0]
     n_categories <- length(grp_sizes)
@@ -1950,8 +1954,6 @@ validate_colour <- function(df,
       if (length(colour_fill) < n_categories) {
         # expand colour_fill for all categories, except when all colours were named
         colour_fill <- c(colour_fill, rep(colour_fill, n_categories)[seq_len(n_categories - length(colour_fill))])
-        # remove empty groups
-        colour_fill <- colour_fill[grp_sizes != 0]
       }
     }
   }
