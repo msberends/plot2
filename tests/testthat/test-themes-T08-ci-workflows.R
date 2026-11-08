@@ -16,20 +16,17 @@
 # review_and_overhaul/reviews/R06_themes/T08_ci-workflows.md
 
 test_that("T08.01 the CI matrix includes the declared minimum R version", {
-  skip_open_finding("F109")
   wf <- paste(readLines(source_file(".github", "workflows", "check.yaml")), collapse = "\n")
   min_r <- sub(".*>= *([0-9]+\\.[0-9]+).*", "\\1", read.dcf(source_file("DESCRIPTION"))[, "Depends"])
   expect_true(grepl(paste0("r: '", min_r), wf, fixed = TRUE))
 })
 
 test_that("T08.02 CI has a job without suggested packages", {
-  skip_open_finding("F109")
   wf <- paste(unlist(lapply(list.files(source_file(".github", "workflows"), full.names = TRUE), readLines)), collapse = "\n")
   expect_true(grepl("dependencies: .*hard|_R_CHECK_FORCE_SUGGESTS_", wf))
 })
 
 test_that("T08.03 workflow comments do not refer to files that do not exist", {
-  skip_open_finding("F109")
   wf <- unlist(lapply(list.files(source_file(".github", "workflows"), full.names = TRUE), readLines))
   refs <- unique(regmatches(wf, regexpr("R/[A-Za-z0-9_.-]+\\.R", wf)))
   expect_true(all(file.exists(file.path(dirname(source_file("DESCRIPTION")), refs))))

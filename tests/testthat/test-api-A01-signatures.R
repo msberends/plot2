@@ -58,7 +58,6 @@ test_that("A01.05 passing the default shown in the usage gives the same plot as 
 })
 
 test_that("A01.06 help pages are reproducible: no random or session-dependent text in roxygen", {
-  skip_open_finding("F103")
   src <- readLines(source_file("R", "get_colour.R"))
   expect_false(any(grepl("^#'.*(sample\\(|R\\.version)", src)))
 })
