@@ -18,6 +18,3 @@ coverage:
   range:
   - 0.0
   - 90.0
-
-ignore:
-  - "R/universal.R"

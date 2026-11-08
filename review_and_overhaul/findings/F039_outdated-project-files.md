@@ -4,7 +4,7 @@ title: Project metadata outdated (CLAUDE.md, codecov.yml) and stray files not bu
 severity: low
 type: docs
 area: housekeeping
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Update CLAUDE.md and codecov.yml; add `^Rplots\.pdf$` and `^\.claude$` to `.Rbui
 
 - 2026-11-07: filed in R01.
 - 2026-11-08: extended in R05 (sheets A01, A06, A10): CLAUDE.md lists an S3 method `plot2.lm` that does not exist (lm objects go through `plot2.default` and `fortify()`), describes `format2()` as if exported (it is internal), and gives version 1.99.0.9028 (DESCRIPTION: 1.99.0.9031).
+- 2026-11-08: fixed: CLAUDE.md (plot2.lm and R/universal.R references, file list with zzz.R, version no longer hard-coded), codecov.yml (no ignore of a non-existent file), .Rbuildignore (Rplots.pdf, .claude) and .gitignore (Rplots.pdf).
