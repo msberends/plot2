@@ -35,9 +35,9 @@ F047 (fewer colours than categories errors), F061 (hack and dead code), F016 (vi
 - [x] 09.03 boxplot without category: white fill and a darker outline (corrected 2026-11-08: the sheet expected a lighter version of the colour; the current white fill is intended and tested).
 - [x] 09.04 Discrete category, palette name: one distinct colour per category.
 - [x] 09.05 Named colour vector maps names to categories regardless of order.
-- [ ] 09.06 Two colours for three categories: recycled or clear warning (F047). (test written, parts parked: F047)
-- [ ] 09.07 `colour_opacity = 0.5`: alpha in the hex codes. (test written, parts parked: F096)
+- [x] 09.06 Two colours for three categories: recycled or clear warning (F047). (parked on F047 until it was fixed)
+- [x] 09.07 `colour_opacity = 0.5`: alpha in the hex codes. (parked on F096 until it was fixed)
 - [x] 09.08 `horizontal = TRUE`: colours reversed so the legend order matches the bars.
 - [x] 09.09 Registered colour set with a numeric category: four-colour gradient.
-- [ ] 09.10 `category.focus = "b"`: b coloured, others grey85; numeric focus uses the displayed order. (test written, parts parked: F067)
+- [x] 09.10 `category.focus = "b"`: b coloured, others grey85; numeric focus uses the displayed order. (parked on F067 until it was fixed)
 - [x] 09.11 Invalid colour name: caution and fallback to ggplot2 colours.

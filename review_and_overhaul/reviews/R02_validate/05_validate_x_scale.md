@@ -33,18 +33,18 @@ F041 (small-integer breaks drop negative values), F054 (`x.limits` silently igno
 ## End-to-end test cases
 
 - [x] 05.01 Character x: discrete scale, `x.drop` respected.
-- [ ] 05.02 Numeric x: breaks pretty; integer x from -3 to 4 shows negative breaks (F041). (test written, parts parked: F041)
-- [ ] 05.03 `x.limits = c(0, 10)` on numeric x: panel range and message about `x.expand = 0`. (test written, parts parked: F126)
-- [ ] 05.04 `x.limits` on discrete x: applied or a clear warning (F054). (test written, parts parked: F054)
+- [x] 05.02 Numeric x: breaks pretty; integer x from -3 to 4 shows negative breaks (F041). (parked on F041 until it was fixed)
+- [x] 05.03 `x.limits = c(0, 10)` on numeric x: panel range and message about `x.expand = 0`. (parked on F126 until it was fixed)
+- [x] 05.04 `x.limits` on discrete x: applied or a clear warning (F054). (parked on F054 until it was fixed)
 - [x] 05.05 `x.limits` of the wrong class: warning.
 - [x] 05.06 `x.limits` of length 3: error.
 - [x] 05.07 Date x: automatic `x.date_breaks` and `x.date_labels` messages; values for 1 week, 1 month, 1 year, 10 years ranges.
 - [x] 05.08 POSIXct x within one day: hour breaks and "HH:MM" labels.
 - [x] 05.09 `x.date_breaks = "1 month"`, `x.date_labels = "mmm yyyy"` honoured.
-- [ ] 05.10 `x.transform = "log10"`: zero lower limit removed. (test written, parts parked: F127)
-- [ ] 05.11 `horizontal = TRUE` with numeric x: reversed scale. (test written, parts parked: F129)
+- [x] 05.10 `x.transform = "log10"`: zero lower limit removed. (parked on F127 until it was fixed)
+- [x] 05.11 `horizontal = TRUE` with numeric x: reversed scale. (parked on F129 until it was fixed)
 - [x] 05.12 `x.position = "top"`.
 - [x] 05.13 Facets with similar maxima: `facet.fixed_x` assumed, message; dissimilar: free.
-- [ ] 05.14 `x.zoom = TRUE`: limits follow the data. (test written, parts parked: F092)
+- [x] 05.14 `x.zoom = TRUE`: limits follow the data. (parked on F092 until it was fixed)
 - [x] 05.15 `x.labels` function and `x.breaks` vector honoured.
-- [ ] 05.16 `x.mic = TRUE` uses `AMR::scale_x_mic()` (skip without AMR). (test written, parts parked: F128)
+- [x] 05.16 `x.mic = TRUE` uses `AMR::scale_x_mic()` (skip without AMR). (parked on F128 until it was fixed)

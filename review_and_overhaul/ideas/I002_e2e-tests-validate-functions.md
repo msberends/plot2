@@ -2,7 +2,7 @@
 id: I002
 title: End-to-end tests for every function in validate.R
 area: tests
-status: in-progress
+status: fixed
 effort: XL
 api_change: no
 related: [I001, F038]
@@ -38,3 +38,4 @@ These functions decide what users see; most R01/R02 defects live here. They are 
 
 - 2026-11-07: filed from the maintainer's request; specification sheets created in R02.
 - 2026-11-08: Phase 0 (maintainer's decision: the Phase 1 sheets first): 103 cases of sheets 03, 05, 06, 07, 08, 09 and 23 coded in `tests/testthat/test-validate-<nn>-<function>.R`; 68 pass, 35 contain parts parked on open findings (each fails without its skip). Six new findings F126 to F131. The other 17 sheets follow alongside Phase 4.
+- 2026-11-08: completed: all 24 sheets coded, one file per function (`test-validate-<nn>-<function>.R`; sheet 04 against `label_taxonomy()`, which replaced `validate_taxonomy()`). The 35 parked cases of Phase 0 are active since their findings were fixed. Coding the remaining 17 sheets found five defects: F137, F138, F140 and F141 (fixed) and F139 (open, one parked test). Sheet lines whose wording no longer matched the API (02.03, 17.10, sheet 04) are annotated.

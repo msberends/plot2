@@ -47,22 +47,22 @@ F007, F012, F013, F022, F025, F027, F036, F049 (via summarise), F048 (via comple
 - [x] 03.03 No y, one numeric column, no other columns: histogram.
 - [x] 03.04 No y, x is the only numeric column, explicit non-histogram type: error message suggests histogram.
 - [x] 03.05 difftime y coerced to double, message.
-- [ ] 03.06 POSIXct column before the numeric one is never chosen as y (F012). (test written, parts parked: F012)
+- [x] 03.06 POSIXct column before the numeric one is never chosen as y (F012). (parked on F012 until it was fixed)
 - [x] 03.07 Missing x: first non-y column chosen, message.
 - [x] 03.08 Missing x and category: first character column becomes category.
 - [x] 03.09 `category = FALSE`, `facet = FALSE`, `datalabels = FALSE` remove the direction.
-- [ ] 03.10 Constant 0 or 1 numeric columns as category or datalabels are kept as data (F007). (test written, parts parked: F007)
-- [ ] 03.11 Category or datalabels containing NA do not crash (F007). (test written, parts parked: F007)
+- [x] 03.10 Constant 0 or 1 numeric columns as category or datalabels are kept as data (F007). (parked on F007 until it was fixed)
+- [x] 03.11 Category or datalabels containing NA do not crash (F007). (parked on F007 until it was fixed)
 - [x] 03.12 Surrogate column for `y = n()` and for `x = c(a, b)` present in `p$data`, labels match.
 - [x] 03.13 `datalabels = TRUE` uses y; for tiles uses category.
-- [ ] 03.14 Years heuristic only for discrete geoms (F013, desired behaviour after decision). (test written, parts parked: F013)
+- [x] 03.14 Years heuristic only for discrete geoms (F013, desired behaviour after decision). (parked on F013 until it was fixed)
 - [x] 03.15 Infinite y removed with message; -Inf too.
 - [x] 03.16 integer64 y converted (skip without bit64).
-- [ ] 03.17 `na.rm = TRUE` removes rows with NA in x, category or facet; message count correct (F027). (test written, parts parked: F027)
+- [x] 03.17 `na.rm = TRUE` removes rows with NA in x, category or facet; message count correct (F027). (parked on F027 until it was fixed)
 - [x] 03.18 `na.replace = "Unknown"` for character and factor columns; numeric NA untouched.
-- [ ] 03.19 NA in y removed with a warning that can be caught (F014). (test written, parts parked: F014)
+- [x] 03.19 NA in y removed with a warning that can be caught (F014). (parked on F014 until it was fixed)
 - [x] 03.20 Date x with category equal to the year: years unified, message.
-- [ ] 03.21 Non-distinct rows summarised with `summarise_function`, caution message; `summarise_function = NULL` disables. (test written, parts parked: F073)
+- [x] 03.21 Non-distinct rows summarised with `summarise_function`, caution message; `summarise_function = NULL` disables. (parked on F073 until it was fixed)
 - [x] 03.22 Sankey data reshaped: `_sankey_x` levels follow the order of `x` variables.
 - [x] 03.23 Output sorted by x.
 - [x] 03.24 tibble, data.frame, data.table and grouped_df inputs give identical plots.
