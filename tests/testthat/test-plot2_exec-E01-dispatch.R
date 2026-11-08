@@ -62,6 +62,5 @@ test_that("E01.07b a character vector given as a long expression (F072)", {
 })
 
 test_that("E01.08 empty data leaves no internal state behind (F002)", {
-  skip_open_finding("F002")
   expect_clean_state(plot2(fx_xy[0, ], x, y))
 })

@@ -91,7 +91,6 @@ test_that("E05.11 no internal state left behind", {
 })
 
 test_that("E05.11b the random-number stream is untouched (F002)", {
-  skip_open_finding("F002")
   expect_clean_state(plot2(fx_upset, x = c(a, b, c), type = "upset"), check = "rng")
 })
 

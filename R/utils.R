@@ -13,6 +13,8 @@
 # ===================================================================== #
 
 plot2_env <- new.env(hash = FALSE)
+# state that lives for the whole R session (never cleared by clear_plot2_env())
+plot2_session <- new.env(hash = FALSE)
 plot2_env$reg_cols <- list()
 
 globalVariables(c(".",
@@ -192,11 +194,12 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
       plot2_message_out(plot2_env$warnings[i], print = print, type = "warning")
     }
   }
-  if (isTRUE(has_given_note) && stats::runif(1) < 0.01 && Sys.getenv("IN_PKGDOWN") == "") {
+  # show the tip about plot2.silent once per session, without touching the random-number stream
+  if (isTRUE(has_given_note) && isTRUE(print) && !isTRUE(plot2_session$silent_tip_shown) && Sys.getenv("IN_PKGDOWN") == "") {
     if (is.null(getOption("plot2.silent"))) {
       message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
     }
-    has_given_note <- FALSE
+    plot2_session$silent_tip_shown <- TRUE
   }
 }
 
@@ -719,53 +722,6 @@ format_error <- function(e, replace = character(0), by = character(0)) {
 
 `%or%` <- function(x, y) {
   if (is.null(x)) y else x
-}
-
-# this is to prevent that messages/notes will be printed for every facet rather than once per call
-msg_not_thrown_before <- function(fn, ..., entire_session = FALSE) {
-  if (identical(Sys.getenv("TESTTHAT"), "true")) {
-    # always print in testthat runs
-    return(TRUE)
-  }
-  unique_call_id <- function(entire_session = FALSE, match_fn = NULL) {
-    if (entire_session == TRUE) {
-      return(c(envir = "session", call = "session"))
-    }
-    # combination of environment ID (such as "0x7fed4ee8c848") and relevant system call (where 'match_fn' is being called in)
-    calls <- sys.calls()
-    if (!is.null(match_fn)) {
-      for (i in seq_len(length(calls))) {
-        call_clean <- gsub("[^a-zA-Z0-9_().-]", "", as.character(calls[[i]]), perl = TRUE)
-        if (match_fn %in% call_clean || any(call_clean %like% paste0(match_fn, "\\("), na.rm = TRUE)) {
-          return(c(
-            envir = gsub("<environment: (.*)>", "\\1", utils::capture.output(sys.frames()[[1]]), perl = TRUE),
-            call = paste0(deparse(calls[[i]]), collapse = "")
-          ))
-        }
-      }
-    }
-    c(envir = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""),
-      call = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""))
-  }
-  
-  salt <- gsub("[^a-zA-Z0-9|_-]", "?", substr(paste(c(...), sep = "|", collapse = "|"), 1, 512), perl = TRUE)
-  not_thrown_before <- is.null(plot2_env[[paste0("thrown_msg.", fn, ".", salt)]]) ||
-    !identical(
-      plot2_env[[paste0("thrown_msg.", fn, ".", salt)]],
-      unique_call_id(
-        entire_session = entire_session,
-        match_fn = fn
-      )
-    )
-  if (isTRUE(not_thrown_before)) {
-    # message was not thrown before - remember this so on the next run it will return FALSE:
-    assign(
-      x = paste0("thrown_msg.", fn, ".", salt),
-      value = unique_call_id(entire_session = entire_session, match_fn = fn),
-      envir = plot2_env
-    )
-  }
-  not_thrown_before
 }
 
 #' @importFrom ggplot2 fortify

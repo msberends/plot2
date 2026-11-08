@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: `plot2()` no longer changes the random-number stream (`.Random.seed`); the tip about `options(plot2.silent = TRUE)` is now shown once per session
 * Fixed: the message about rows removed with `na.rm = TRUE` was garbled ("rowss")
 * Fixed: date-time (POSIXct) columns could be chosen as the automatic y variable, which crashed `plot2()`
 * Support for ggplot2 4.0.0

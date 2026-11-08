@@ -4,7 +4,7 @@ title: plot2() consumes the user's random-number stream
 severity: critical
 type: bug
 area: messaging
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F014]
 origin: R01 §1.2
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F002 plot2() consumes the user's random-number stream
@@ -48,3 +48,4 @@ Remove the random tip, or show it deterministically (for example once per sessio
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Random tip replaced by a once-per-session tip (new `plot2_session` environment); dead `msg_not_thrown_before()` removed; regression tests E01.08 and E05.11b.
