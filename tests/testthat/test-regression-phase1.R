@@ -59,13 +59,17 @@ test_that("F043 transformation objects are accepted for x, y and category", {
 
 test_that("F051 x.label_angle and x.label_align apply to the category labels of horizontal plots", {
   d <- data.frame(g = c("a", "b"), v = 1:2)
+  # the angle is set by guide_axis() on the left axis after coord_flip() (F142)
   p <- expect_plot2(plot2(d, g, v, horizontal = TRUE, x.label_angle = 45))
-  expect_identical(theme_el(p, "axis.text.y")$angle, 45)
-  expect_null(p$theme$axis.text.x$angle)
+  expect_identical(axis_guide_angle(p, "y"), 45)
+  expect_null(axis_guide_angle(p, "x"))
   p <- plot2(d, g, v, horizontal = TRUE, x.label_align = 0)
   expect_identical(theme_el(p, "axis.text.y")$hjust, 0)
   p <- plot2(d, g, v, x.label_angle = 45)
-  expect_identical(theme_el(p, "axis.text.x")$angle, 45)
+  expect_identical(axis_guide_angle(p, "x"), 45)
+  # a user-set alignment uses the theme
+  p <- plot2(d, g, v, horizontal = TRUE, x.label_angle = 45, x.label_align = 0)
+  expect_identical(theme_el(p, "axis.text.y")$angle, 45)
 })
 
 test_that("F054 x.limits on a discrete x selects and orders the items, also horizontally", {

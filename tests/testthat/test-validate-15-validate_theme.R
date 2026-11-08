@@ -57,12 +57,14 @@ test_that("15.06 x.remove, y.remove and x.label_italic follow the orientation", 
   expect_identical(c(theme_el(p, "axis.text.y")$face, theme_el(p, "axis.text.x")$face), c("italic", "plain"))
 })
 
-test_that("15.07 x.label_angle rotates the category labels, also when horizontal (F051)", {
-  el <- theme_el(plot2(fx_cat_unique, x, y, x.label_angle = 45), "axis.text.x")
-  expect_identical(c(el$angle, el$hjust), c(45, 1))
+test_that("15.07 x.label_angle rotates the category labels, anchored at their ticks, also when horizontal (F051, F142)", {
+  expect_identical(axis_guide_angle(plot2(fx_cat_unique, x, y, x.label_angle = 45), "x"), 45)
   p <- plot2(fx_cat_unique, x, y, x.label_angle = 45, horizontal = TRUE)
-  expect_identical(c(theme_el(p, "axis.text.y")$angle, theme_el(p, "axis.text.y")$hjust), c(45, 1))
-  expect_identical(theme_el(p, "axis.text.x")$angle, 0)
+  expect_identical(axis_guide_angle(p, "y"), 45)
+  expect_null(axis_guide_angle(p, "x"))
+  # with a user-set alignment, the theme rotates and justifies the labels
+  el <- theme_el(plot2(fx_cat_unique, x, y, x.label_angle = 45, x.label_align = 0), "axis.text.x")
+  expect_identical(c(el$angle, el$hjust), c(45, 0))
 })
 
 test_that("15.08 title.colour and subtitle.colour", {

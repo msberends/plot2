@@ -2268,23 +2268,10 @@ validate_theme_build <- function(theme,
   
   # the x axis labels are on the vertical axis after coord_flip() (F051)
   x_text <- ifelse(isTRUE(horizontal), "axis.text.y", "axis.text.x")
-  if (x.label_angle != 0) {
+  # rotated labels are justified by guide_axis(angle = ) in plot2_exec(), which anchors them at
+  # their ticks for every angle and axis position (F142); only a user-set x.label_align uses the theme
+  if (x.label_angle != 0 && !is.null(x.label_align)) {
     theme[[x_text]]$angle <- x.label_angle
-  }
-  if (is.null(x.label_align) && x.label_angle != 0) {
-    # determine the better alignment
-    if (abs(x.label_angle) %in% c(0:10, 171:190, 351:360)) {
-      x.label_align <- 0.5 # centre
-    }
-    if (abs(x.label_angle) %in% 191:350) {
-      x.label_align <- 0 # left
-    }
-    if (abs(x.label_angle) %in% 11:170) {
-      x.label_align <- 1 # right
-    }
-    if (x.label_angle < 0) {
-      x.label_align <- 1 - x.label_align
-    }
   }
   if (!is.null(x.label_align)) {
     theme[[x_text]]$hjust <- x.label_align
@@ -2533,25 +2520,17 @@ generate_datalabels <- function(p,
   text_vertical <- -0.75
   label_horizontal <- 0.5
   label_vertical <- -0.1
-  if (isTRUE(horizontal) || datalabels.angle == 90) {
-    text_horizontal <- -0.25
+  # rotated text (or any text in a horizontal plot) is anchored exactly at the end of the bar,
+  # with a fixed padding inside the label, so that the gap is the same for short and long
+  # labels; a relative offset would grow with the length of the label (F140)
+  pad_side <- datalabels_pad_side(angle = datalabels.angle,
+                                  horizontal = horizontal,
+                                  reversed = transform_name(y.transform) == "reverse")
+  if (!is.null(pad_side)) {
+    text_horizontal <- if (pad_side == "start") 0 else 1
+    label_horizontal <- text_horizontal
     text_vertical <- 0.5
-    label_horizontal <- -0.1
     label_vertical <- 0.5
-    if (transform_name(y.transform) == "reverse") {
-      text_horizontal <- text_horizontal + 1.5
-      label_horizontal <- label_horizontal + 1.2
-    }
-  } else if (datalabels.angle == 270) {
-    # text reads downwards, so its end is at the bar (F140)
-    text_horizontal <- 1.25
-    text_vertical <- 0.5
-    label_horizontal <- 1.1
-    label_vertical <- 0.5
-    if (transform_name(y.transform) == "reverse") {
-      text_horizontal <- text_horizontal - 1.5
-      label_horizontal <- label_horizontal - 1.2
-    }
   }
   
   # set positioning function
@@ -2595,16 +2574,23 @@ generate_datalabels <- function(p,
     }
   }
   
+  # stacked, sf and tile labels are centred, so they get no offset or padding
+  is_offset_free <- isTRUE(stacked) || isTRUE(stacked_fill) || isTRUE(is_sf) || isTRUE(is_tile)
+  
   # generate the datalabels
   p <- p +
     # set background label
     do.call(geom_label_fn,
             # the padded label is computed from the data column, not from a vector of this
             # function, so that it follows the layer data (F055)
-            args = c(list(mapping = aes(label = ifelse(is.na(`_var_datalabels`),
-                                                       NA_character_,
-                                                       paste0(`_var_datalabels`,
-                                                              strrep("-", ceiling(nchar(as.character(`_var_datalabels`)) * 0.33))))),
+            args = c(list(mapping = if (!is.null(pad_side) && !is_offset_free) {
+                            aes(label = datalabels_pad(`_var_datalabels`, side = pad_side))
+                          } else {
+                            aes(label = ifelse(is.na(`_var_datalabels`),
+                                               NA_character_,
+                                               paste0(`_var_datalabels`,
+                                                      strrep("-", ceiling(nchar(as.character(`_var_datalabels`)) * 0.33)))))
+                          },
                           colour = NA,
                           fill = datalabels.colour_fill,
                           size = datalabels.size,
@@ -2626,7 +2612,11 @@ generate_datalabels <- function(p,
                      list(fun.geometry = geometry_fix_fn)[isTRUE(is_sf)])) +
     # set text
     do.call(geom_text_fn,
-            args = c(list(mapping = aes(label = `_var_datalabels`),
+            args = c(list(mapping = if (!is.null(pad_side) && !is_offset_free) {
+                            aes(label = datalabels_pad(`_var_datalabels`, side = pad_side))
+                          } else {
+                            aes(label = `_var_datalabels`)
+                          },
                           colour = datalabels.colour,
                           size = datalabels.size * ifelse(isTRUE(markdown) & isTRUE(is_sf), 1.05, 1),
                           family = font,
@@ -3192,4 +3182,31 @@ geom_function <- function(type) {
   } else {
     getExportedValue(name = type, ns = asNamespace("ggplot2"))
   }
+}
+
+# on which side of a datalabel the bar is, or NULL for unrotated labels above the bar (F140)
+datalabels_pad_side <- function(angle, horizontal, reversed) {
+  angle <- angle %% 360
+  if (isTRUE(horizontal)) {
+    starts_at_bar <- TRUE
+  } else if (angle > 0 && angle < 180) {
+    # text runs upwards: it starts at the bar
+    starts_at_bar <- TRUE
+  } else if (angle > 180) {
+    # text runs downwards: it ends at the bar
+    starts_at_bar <- FALSE
+  } else {
+    return(NULL)
+  }
+  if (isTRUE(reversed)) {
+    starts_at_bar <- !starts_at_bar
+  }
+  if (starts_at_bar) "start" else "end"
+}
+
+# a fixed gap between bar and datalabel: padding on the side of the bar (F140)
+datalabels_pad <- function(x, side, pad = "  ") {
+  ifelse(is.na(x),
+         NA_character_,
+         if (side == "start") paste0(pad, x) else paste0(x, pad))
 }

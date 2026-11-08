@@ -1,7 +1,8 @@
 # plot2 1.99.0.9000
 
+* Rotated x-axis labels (`x.label_angle`) are now anchored at their ticks for every angle, also in horizontal plots, using `ggplot2::guide_axis(angle = )`; setting `x.label_align` still uses your own alignment.
 * In horizontal plots, the values now always read from top to bottom in the order of `x.sort`, as they read from left to right in vertical plots. Previously, factors (such as age groups), `x.sort = "alpha"` and `x.sort = FALSE` read in reverse.
-* `datalabels.angle = 270` now places the labels beyond the end of the bars, as `datalabels.angle = 90` does.
+* Rotated datalabels (any `datalabels.angle`) and the datalabels of horizontal plots are now anchored at the end of their bar with the same small gap for every label; before, the gap grew with the length of the label, and at 270 degrees the labels overlapped the bars.
 * `size`, `width` and `linewidth` now give a clear error when they are not a non-negative number, instead of failing only when the plot is printed.
 * `type` with more than one value now warns that only the first is used, instead of silently using it.
 * In back-to-back plots, each category has the same colour on both sides, also when a category is missing on one side, and the legend is shown once.

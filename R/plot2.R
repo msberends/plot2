@@ -94,7 +94,7 @@
 #' @param colour_fill Colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()].
 #' @param colour_transparency Amount of transparency for `colour`/`colour_fill` (0 = solid, 1 = fully transparent).
 #' @param x.label_angle Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom).
-#' @param x.label_align Alignment for the X-axis between `0` (left aligned) and `1` (right aligned).
+#' @param x.label_align Alignment for the X-axis between `0` (left aligned) and `1` (right aligned). If not set, rotated labels (see `x.label_angle`) are anchored at their ticks with [`guide_axis(angle = )`][ggplot2::guide_axis()], for every angle and also when `horizontal = TRUE`.
 #' @param x.label_italic [logical] to indicate whether the x labels should be in *italics*.
 #' @param x.character A [logical] to indicate whether the values of the X-axis should be forced to [character]. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when `type` is not set or is a discrete type such as `"col"` or `"boxplot"`, with a message; for continuous types such as `"point"`, `"line"` and `"area"` they stay numeric. Numeric values also become character for other discrete types. Use `x.character = FALSE` to keep numeric values.
 #' @param x.drop [logical] to indicate whether factor levels should be dropped.
@@ -657,7 +657,7 @@ plot2 <- function(.data,
 }
 
 #' @importFrom dplyr across all_of any_of arrange as_tibble bind_cols c_across desc filter group_by left_join mutate n_distinct reframe rowwise select summarise
-#' @importFrom ggplot2 aes after_stat coord_cartesian coord_flip element_blank element_text expansion geom_density geom_point geom_segment geom_text ggplot ggplot_build guide_legend guides labs margin scale_x_continuous scale_x_discrete scale_y_continuous scale_y_discrete stat_boxplot theme waiver
+#' @importFrom ggplot2 aes after_stat coord_cartesian coord_flip element_blank element_text expansion geom_density geom_point geom_segment geom_text ggplot ggplot_build guide_axis guide_legend guides labs margin scale_x_continuous scale_x_discrete scale_y_continuous scale_y_discrete stat_boxplot theme waiver
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @importFrom tidyselect everything matches
 plot2_exec <- function(.data, ...) {
@@ -2049,6 +2049,12 @@ plot2_exec <- function(.data, ...) {
                    col_y_primary = cols$colour[1L],
                    col_y_secondary = y_secondary.colour,
                    sankey_remove_axes = sankey_remove_axes)
+  
+  # rotated x labels, anchored at their ticks (F142); after coord_flip() they are on the left axis
+  if (x.label_angle != 0 && is.null(x.label_align)) {
+    p <- p + do.call(guides, stats::setNames(list(guide_axis(angle = x.label_angle)),
+                                             if (isTRUE(horizontal)) "y" else "x"))
+  }
   
   # add titles ----
   if (!misses_title) p <- p + labs(title = title)

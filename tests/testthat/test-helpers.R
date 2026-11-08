@@ -203,3 +203,8 @@ test_that("shiny_app(), shiny_init() and shiny_change() drive the app's server",
   writeLines("a", f)
   expect_identical(shiny_file(f)$datapath, f)
 })
+
+test_that("axis_guide_angle() reads the angle of an axis guide", {
+  expect_identical(axis_guide_angle(gg_bar + guides(x = guide_axis(angle = 45))), 45)
+  expect_null(axis_guide_angle(gg_bar))
+})

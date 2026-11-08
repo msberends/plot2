@@ -251,7 +251,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.label_angle}{Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
 
-\item{x.label_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned).}
+\item{x.label_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned). If not set, rotated labels (see \code{x.label_angle}) are anchored at their ticks with \code{\link[ggplot2:guide_axis]{guide_axis(angle = )}}, for every angle and also when \code{horizontal = TRUE}.}
 
 \item{x.label_italic}{\link{logical} to indicate whether the x labels should be in \emph{italics}.}
 

@@ -94,7 +94,14 @@ layer_params <- function(x, i = 1) {
 datalabels_of <- function(x) {
   i <- which(geoms(x) %in% c("GeomText", "GeomSfText"))
   if (length(i) == 0) return(character(0))
-  as.character(layer_df(x, max(i))$label)
+  # without the fixed padding that separates rotated labels from their bar (F140)
+  trimws(as.character(layer_df(x, max(i))$label))
+}
+
+#' Angle of the axis guide at a position ("x" or "y"), NULL if none is set (F142).
+axis_guide_angle <- function(x, position = "x") {
+  g <- plot_of(x)$guides$guides[[position]]
+  if (is.null(g)) NULL else g$params$angle
 }
 
 #' Number of rows in the plot's own data (p$data).

@@ -46,18 +46,30 @@ test_that("17.05 horizontal: labels beyond the end of the bars", {
   t <- layer_df(p, "text")
   expect_s3_class(p$coordinates, "CoordFlip")
   expect_equal(sort(t$y), sort(layer_df(p, "bar")$ymax))
-  expect_true(all(t$hjust < 0))
+  # anchored at the bar, with a fixed padding instead of a gap relative to the label length (F140)
+  expect_identical(unique(t$hjust), 0)
+  expect_true(all(startsWith(t$label, "  ")))
 })
 
-test_that("17.06 datalabels.angle 90 and 270 both place the labels beyond the bars (F140)", {
-  t90 <- layer_df(plot2(fx_counts, group, n, datalabels.angle = 90), "text")
-  t270 <- layer_df(plot2(fx_counts, group, n, datalabels.angle = 270), "text")
+test_that("17.06 rotated labels are anchored at the bar with the same gap for every length (F140)", {
+  d <- data.frame(g = c("a", "b", "c"), n = c(1, 4567, 1234567))
+  t90 <- layer_df(plot2(d, g, n, datalabels.angle = 90), "text")
+  t270 <- layer_df(plot2(d, g, n, datalabels.angle = 270), "text")
+  t45 <- layer_df(plot2(d, g, n, datalabels.angle = 45), "text")
+  t270r <- layer_df(plot2(d, g, n, datalabels.angle = 270, y.transform = "reverse"), "text")
   expect_identical(unique(t90$angle), 90)
   expect_identical(unique(t270$angle), 270)
-  # the text starts beyond the bar at 90 degrees, and ends beyond it at 270 degrees
-  expect_true(all(t90$hjust < 0))
-  expect_true(all(t270$hjust > 1))
+  # upwards text starts at the bar, downwards text ends at it; a reversed axis mirrors this
+  expect_identical(unique(c(t90$hjust, t45$hjust, t270r$hjust)), 0)
+  expect_identical(unique(t270$hjust), 1)
   expect_identical(unique(c(t90$vjust, t270$vjust)), 0.5)
+  # the gap is a fixed padding on the side of the bar, not a share of the label length
+  expect_true(all(startsWith(t90$label, "  ")))
+  expect_true(all(endsWith(t270$label, "  ")))
+  # unrotated labels above vertical bars are unchanged
+  t0 <- layer_df(plot2(d, g, n), "text")
+  expect_identical(unique(t0$hjust), 0.5)
+  expect_false(any(startsWith(t0$label, " ")))
 })
 
 test_that("17.07 colour, fill, size and line height of the datalabels", {
