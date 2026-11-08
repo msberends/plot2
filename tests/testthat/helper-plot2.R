@@ -543,6 +543,8 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
 #' create_interactively() returns the app instead of running it. The served
 #' logo folder is removed when the calling test ends.
 shiny_app <- function(..., .env = parent.frame()) {
+  # the server tests take about 40 seconds, so they are not part of the CRAN core (F038)
+  testthat::skip_on_cran()
   for (p in c("shiny", "shinyjs", "bslib", "DT", "pillar", "rio")) {
     testthat::skip_if_not_installed(p)
   }

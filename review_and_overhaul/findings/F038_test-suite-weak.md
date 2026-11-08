@@ -4,7 +4,7 @@ title: Test suite skips everything on CRAN and mostly checks only the object cla
 severity: high
 type: test
 area: tests
-status: in-progress
+status: verified
 verification: verified
 effort: L
 api_change: no
@@ -49,3 +49,4 @@ This should come before the large refactors.
 - 2026-11-07: filed in R01, test suite run locally.
 - 2026-11-07: in progress via I001. Edition 3, helper and fixture files and helper self-tests added; plotly test now skips without plotly. Remaining: content-based tests (I002), splitting `test_plot2.R`, CRAN-run subset.
 - 2026-11-08: R06 (sheet T05, R 4.1.3 container without sf, AMR and ggforce): four legacy tests in `test_plot2.R` (lines 61, 105, 371, 431) error because they use suggested packages without `skip_if_not_installed()`. The R04 tests of M08 used `@` on S7 objects, which fails before R 4.3; corrected in R06 to `S7::prop()`.
+- 2026-11-08: Fixed: test_plot2.R is split into test-legacy-{types,mapping,scales,text}.R with its data and accessors in helper-legacy.R, and its uses of sf, AMR and ggforce are guarded with skip_if_not_installed(). Content tests live in the E, M, A, T, S, validate and regression files. 21 vdiffr snapshots in test-snapshots-types.R. CRAN core: everything except the legacy, Shiny server, documentation, snapshot and timing tests; measured under CRAN conditions at 165 s before the Shiny tests were also excluded (about 42 s less), all passing.

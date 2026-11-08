@@ -2,13 +2,13 @@
 id: I001
 title: Overhaul the testthat infrastructure with dedicated helpers, fixtures and per-topic files
 area: tests
-status: in-progress
+status: fixed
 effort: L
 api_change: no
 related: [F038, I002]
 origin: user
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # I001 testthat infrastructure overhaul
@@ -103,3 +103,4 @@ Small, documented data sets covering the shapes needed: `fx_xy` (numeric x, y), 
 - 2026-11-07 (R03): first real use, 15 test files for `plot2_exec()`. Additions: `col_hex()` (normalises colour names and hex codes), a `check` argument for `expect_clean_state()` ("state", "rng", "locale", so a state test is not hidden behind F002), and `local_known_deprecation(id)` (silences soft deprecations caused by plot2 for one test, always with a finding ID). All with self-tests.
 - 2026-11-08 (R04): 10 test files `test-modules-M*.R`; `setup.R` resets three more options.
 - Still to do: split `test_plot2.R` into per-topic files and convert its `expect_s3_class()` checks to content checks; first vdiffr snapshots.
+- 2026-11-08: completed: the legacy test_plot2.R is split per topic (F038), visual snapshots are added (test-snapshots-types.R), and shiny_app() skips on CRAN so that the CRAN core stays at about two minutes. The end-to-end tests per validate.R function continue under I002.
