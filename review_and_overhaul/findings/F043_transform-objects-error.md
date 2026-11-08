@@ -4,7 +4,7 @@ title: x.transform and y.transform only accept strings; transformation objects e
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -13,7 +13,7 @@ related: [F044]
 origin: R02 sheet 06
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F043 Transformation objects not supported
@@ -37,3 +37,4 @@ Normalise at the start: `tr <- scales::as.transform(y.transform)` and use `tr$na
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). New helper `transform_name()`; all comparisons on `x.transform`, `y.transform` and `category.transform` use it; regression tests 06.12 and "F043" (the category part waits for the new finding F132).

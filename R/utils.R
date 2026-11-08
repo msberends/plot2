@@ -203,6 +203,15 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
   }
 }
 
+# name of a transformation given as a string or as a transformation object
+# (e.g. scales::transform_log10()), for comparisons such as == "identity"
+transform_name <- function(x) {
+  if (is.null(x)) return("identity")
+  if (is.character(x)) return(x[1L])
+  if (inherits(x, "transform") || is.list(x)) return(as.character(x$name %or% "custom")[1L])
+  "custom"
+}
+
 # a sequence of breaks that are multiples of `by` (anchored at zero), also when
 # `from` is negative and not a multiple of `by`
 seq_anchored <- function(from, to, by) {

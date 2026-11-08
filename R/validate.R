@@ -877,7 +877,7 @@ validate_x_scale <- function(df,
                        expand = if (set_x.expand) x.expand else waiver())
     } else {
       x_reversed <- FALSE
-      if (x.transform == "identity" && isTRUE(horizontal)) {
+      if (transform_name(x.transform) == "identity" && isTRUE(horizontal)) {
         x.transform <- scales::reverse_trans()
         x_reversed <- TRUE
       }
@@ -890,7 +890,7 @@ validate_x_scale <- function(df,
         x.limits <- rev(x.limits)
         plot2_env$x_lim <- x.limits
       }
-      if (tryCatch(length(x.transform) == 1 && x.transform != "identity", error = function(x) FALSE)) {
+      if (!isTRUE(x_reversed) && transform_name(x.transform) != "identity") {
         # some transformations, such as log, do not allow 0
         x.limits[x.limits == 0] <- NA_real_ 
         plot2_env$x_lim <- x.limits
@@ -906,7 +906,7 @@ validate_x_scale <- function(df,
       breaks_fn <- function(values, x.breaks, x.n_breaks, waiver) {
         if (!is.null(x.breaks)) {
           x.breaks
-        } else if (!isTRUE(x_reversed) && !identical(x.transform, "identity")) {
+        } else if (!isTRUE(x_reversed) && transform_name(x.transform) != "identity") {
           # transformed scale (e.g. log10): use the transformation's own breaks
           waiver
         } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
@@ -1054,7 +1054,7 @@ validate_y_scale <- function(df,
     if (!inherits(values, c("Date", "POSIXt"))) {
       data_max <- data_max * (1 + y.expand[length(y.expand)])
     }
-    if (y.transform != "identity") {
+    if (transform_name(y.transform) != "identity") {
       if (!is.null(y.breaks)) {
         plot2_warning("Ignoring ", font_blue("y.breaks"), " since ",
                       font_blue(paste0("y.transform = \"", y.transform, "\"")))
@@ -1169,14 +1169,14 @@ validate_y_scale <- function(df,
                         y.expand, facet.fixed_y, y.age, y.transform,
                         df) {
     min_value <- min(0, min(values, na.rm = TRUE))
-    if (y.transform != "identity") {
+    if (transform_name(y.transform) != "identity") {
       # in certain transformations, such as log, 0 is not allowed
       min_value <- NA_real_
     }
     if (!is.null(y.limits)) {
       # respect the user's limits literally; only a zero that the transformation
       # cannot handle (e.g. log) becomes data-driven
-      if (is.numeric(y.limits) && y.transform != "identity") {
+      if (is.numeric(y.limits) && transform_name(y.transform) != "identity") {
         y.limits[y.limits == 0] <- NA_real_
       }
       y.limits
@@ -1273,7 +1273,7 @@ validate_y_scale <- function(df,
                                 y.transform = y.transform,
                                 df)
   
-  if (y.transform == "reverse") {
+  if (transform_name(y.transform) == "reverse") {
     limits_evaluated <- NULL
   }
   expand_evaluated <- expand_fn(values = values,
@@ -1281,7 +1281,7 @@ validate_y_scale <- function(df,
                                 y.age = y.age,
                                 stacked_fill = stacked_fill,
                                 y.limits = limits_evaluated)
-  if (y.transform == "reverse") {
+  if (transform_name(y.transform) == "reverse") {
     expand_evaluated <- c(expand_evaluated[3], expand_evaluated[c(1, 2, 4)])
   }
   scale_y_continuous(
@@ -1372,7 +1372,7 @@ validate_category_scale <- function(values,
     }
   }
   breaks_fn <- function(values, category.breaks, category.percent, category.transform, category.date_breaks, waiver) {
-    if (category.transform != "identity") {
+    if (transform_name(category.transform) != "identity") {
       if (!is.null(category.breaks)) {
         plot2_warning("Ignoring ", font_blue("category.breaks"), " since ",
                       font_blue(paste0("category.transform = \"", category.transform, "\"")))
@@ -1414,7 +1414,7 @@ validate_category_scale <- function(values,
     }
   }
   limits_fn <- function(values, category.limits, category.percent, category.transform, category.date_breaks, waiver) {
-    if (isTRUE(category.transform %in% c("log", "log2", "log10")) && isTRUE(0 %in% category.limits)) {
+    if (isTRUE(transform_name(category.transform) %in% c("log", "log2", "log10", "log-10", "log-2")) && isTRUE(0 %in% category.limits)) {
       # in certain transformations, such as log, 0 is not allowed
       plot2_warning("Ignoring ", font_blue("category.limits"), " since it contains 0, and ",
                     font_blue(paste0("category.transform = \"", category.transform, "\"")))
@@ -2409,7 +2409,7 @@ generate_datalabels <- function(p,
     text_vertical <- 0.5
     label_horizontal <- -0.1
     label_vertical <- 0.5
-    if (y.transform == "reverse") {
+    if (transform_name(y.transform) == "reverse") {
       text_horizontal <- text_horizontal + 1.5
       label_horizontal <- label_horizontal + 1.2
     }

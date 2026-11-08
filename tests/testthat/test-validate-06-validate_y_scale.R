@@ -87,7 +87,6 @@ test_that("06.11 y.transform = 'log10' with zeros does not error and drops the z
 })
 
 test_that("06.12 y.transform accepts a transformation object", {
-  skip_open_finding("F043")
   p <- expect_plot2(plot2(d100, x, y, y.transform = scales::transform_log10()))
   expect_identical(scale_of(p, "y")$trans$name, "log-10")
 })

@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: transformation objects such as `scales::transform_log10()` in `x.transform`, `y.transform` and `category.transform` caused errors
 * Fixed: `x.mic = TRUE` failed with current versions of the AMR package
 * Fixed: logarithmic and other transformed x axes got linear breaks
 * Fixed: `horizontal = TRUE` with a numeric x removed all data points

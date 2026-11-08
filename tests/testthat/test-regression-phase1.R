@@ -45,3 +45,12 @@ test_that("F033 every stop() and warning() in R/ uses call. = FALSE", {
   for (f in files) for (e in parse(f, keep.source = FALSE)) walk(e, f)
   expect_identical(offenders, character(0))
 })
+
+test_that("F043 transformation objects are accepted for x, y and category", {
+  d <- data.frame(x = c(1, 10, 100, 1000), y = c(3, 1, 4, 2), v = c(1, 10, 100, 1000))
+  expect_identical(axis_labels(expect_plot2(plot2(d, x, y, x.transform = scales::transform_log10())), "x"),
+                   c("1", "10", "100", "1 000"))
+  expect_plot2(plot2(fx_cat, x, y, y.transform = scales::transform_reverse()))
+  skip_open_finding("F132")
+  expect_plot2(plot2(d, x, y, v, category.transform = scales::transform_log10()))
+})
