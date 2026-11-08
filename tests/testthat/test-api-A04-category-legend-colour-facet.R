@@ -38,7 +38,6 @@ test_that("A04.04 colour_opacity applies with an explicit colour", {
 })
 
 test_that("A04.05 colour_opacity applies with the default colours", {
-  skip_open_finding("F096")
   expect_true(all(substr(bar_fill(plot2(fx_counts, group, n, colour_opacity = 0.5)), 8, 9) == "80"))
   expect_true(all(substr(bar_fill(plot2(fx_cat, x, y, category, colour_opacity = 0.5)), 8, 9) == "80"))
 })

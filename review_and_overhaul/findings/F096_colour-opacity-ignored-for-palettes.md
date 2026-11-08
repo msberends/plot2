@@ -4,7 +4,7 @@ title: colour_opacity is ignored for the default colours and every built-in R pa
 severity: medium
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -43,3 +43,4 @@ Apply the opacity in one place at the end of `get_colour()` for every branch, ra
 ## History
 
 - 2026-11-08: filed in R05; test A04.05 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; get_colour() no longer returns early for registered colours and palettes, so opacity and NA handling apply to every branch; plot2() sets the colours itself (original_colours = FALSE) when colour_opacity > 0. Side note for the maintainer: plot2's 'ggplot2' palette is R's fixed palette (second colour #00BA38), whereas ggplot2's default hue spacing depends on the number of groups (#00BFC4 for two), so setting an opacity changes the second default colour.

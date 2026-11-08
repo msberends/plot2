@@ -53,7 +53,6 @@ test_that("09.06 fewer colours than categories are recycled or give a clear warn
 test_that("09.07 colour_opacity adds transparency, also for palette names", {
   p <- expect_plot2(plot2(fx_cat, x, y, category, colour = c("red", "blue"), colour_opacity = 0.5))
   expect_true(all(nchar(scale_values(p, "fill")) == 9))
-  skip_open_finding("F096")
   p <- expect_plot2(plot2(fx_cat, x, y, category, colour_opacity = 0.5))
   expect_true(all(nchar(scale_values(p, "fill")) == 9))
 })

@@ -1449,6 +1449,10 @@ plot2_exec <- function(.data,
     original_colours <- (is.null(colour) || identical(colour, "ggplot2")) &&
       (identical(colour_fill, "ggplot2") || (is.null(colour_fill) && (is.null(colour) || identical(colour, "ggplot2"))))
   }
+  if (isTRUE(original_colours) && isTRUE(as.double(colour_opacity) > 0)) {
+    # ggplot2's own colours have no opacity, so set them via get_colour() (F096)
+    original_colours <- FALSE
+  }
   if (!any(c("colour", "fill") %in% category.type)) {
     # "colour" and "fill" are not in category.type, so do not set colours regardless of the `colour` argument
     original_colours <- TRUE

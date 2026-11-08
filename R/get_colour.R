@@ -82,8 +82,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
         # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
       }
       x <- x[seq_len(length)]
-      # some support names, so return the object
-      return(structure(x, class = c("colour", "character")))
+      # no early return: opacity and NA handling below apply to every branch (F096)
       
     } else if (x %in% viridisLite_colours) {
       rlang::check_installed("viridisLite")
@@ -112,10 +111,11 @@ get_colour <- function(x, length = 1, opacity = 0) {
         }
         if (tolower(x) == "ggplot2") {
           new_cols <- new_cols[2:length(new_cols)]
+          length <- length - 1
         }
       }
-      # some support names, so return the object
-      return(structure(new_cols, class = c("colour", "character")))
+      # no early return: opacity and NA handling below apply to every branch (F096)
+      x <- unname(new_cols)
       
     } else if (x == "topo") {
       x <- topo.colors(length)

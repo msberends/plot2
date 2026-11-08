@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `colour_opacity` now also applies to the default colours and to all built-in R palettes
 * Subsetting a colour vector with `[` or `[[` now keeps the `colour` class
 * `theme_minimal2()` text sizes are now plain numbers instead of grid units
 * `theme_minimal2(...)` now changes only the given properties, like `+ theme(...)`
