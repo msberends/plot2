@@ -29,8 +29,8 @@ The check that the facet has exactly two values runs `.data |> select({{ facet }
 ## Reproduction
 
 ```r
-d <- data.frame(a = rep(c("x", "y"), 2), v = 1:4, s = c("m", "m", "f", "f"))
-print(tryCatch({ ggplot2::ggplot_build(plot2(d, a, v, facet = toupper(s), type = "b2b")); "OK" }, error = function(e) conditionMessage(e)))
+d <- data.frame(a = rep(c("x", "y"), 2), v = c(10, 20, 100, 200), s = c(1, 1, 2, 2))
+print(tryCatch({ ggplot2::ggplot_build(plot2(d, a, v, facet = s == 1, type = "b2b")); "OK" }, error = function(e) conditionMessage(e)))
 # Expected after fix: "OK"
 ```
 
@@ -45,5 +45,5 @@ Use `n_distinct(get_facet(df))`.
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
-- 2026-11-08: reproduction changed to a facet expression that keeps the values (`toupper(s)`); expressions that change the type of the facet (`s == 1`, `s * 2`) fail later in the back-to-back code, filed separately as F133.
+- 2026-11-08: the original reproduction also hit F065 (back-to-back with small counts); the reproduction now uses larger counts and passes. F133, filed on that wrong diagnosis, is closed as a duplicate of F065.
 - 2026-11-08: fixed and verified (Phase 1). The check uses the computed facet column (`n_distinct(get_facet(df))`); regression test E08.07; the remaining failure for type-changing expressions is F133.

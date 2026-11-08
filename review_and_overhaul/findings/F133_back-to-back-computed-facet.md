@@ -4,12 +4,12 @@ title: Back-to-back plots fail when the facet is an expression that changes its 
 severity: low
 type: bug
 area: types
-status: open
+status: duplicate
 verification: verified
 effort: M
 api_change: no
 locations: [R/back2back_plot.R]
-related: [F021, F064]
+related: [F021, F064, F065]
 origin: fix of F021
 commit: d09e04d
 created: 2026-11-08
@@ -41,3 +41,4 @@ Pass the computed `_var_facet` column (as character) to the nested calls instead
 ## History
 
 - 2026-11-08: found while fixing F021.
+- 2026-11-08: closed as a duplicate of F065: the failures come from the small counts in the reproduction (1 to 4); with counts such as 10 to 200, `s == 1`, `s * 2` and `toupper(s)` all work.
