@@ -65,3 +65,42 @@ test_that("F003 the x axis formats dates with plot2's tokens", {
   withr::local_locale(c(LC_TIME = "C"))
   expect_true(all(grepl("^Q[1-4] 2024$", stats::na.omit(axis_labels(plot2(d, dt, v, x.date_labels = "qq yyyy", x.date_breaks = "3 months"), "x")))))
 })
+
+test_that("F011 fonts unused for 90 days are pruned from the cache", {
+  d <- withr::local_tempdir()
+  dir.create(file.path(d, "old_font"))
+  dir.create(file.path(d, "new_font"))
+  file.create(file.path(d, c("old_font", "new_font"), ".last_used"))
+  Sys.setFileTime(file.path(d, "old_font", ".last_used"), Sys.time() - 91 * 24 * 3600)
+  expect_identical(plot2:::prune_font_cache(d), "old_font")
+  expect_identical(list.files(d), "new_font")
+})
+
+test_that("F011 the font cache is in the user cache folder, and a cached font is registered", {
+  skip_if_not_installed("sysfonts")
+  ttf <- "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+  skip_if_not(file.exists(ttf))
+  expect_identical(plot2:::font_cache_dir(), file.path(tools::R_user_dir("plot2", "cache"), "fonts"))
+  d <- withr::local_tempdir()
+  dir.create(file.path(d, "plot2_test_font"))
+  file.copy(ttf, file.path(d, "plot2_test_font", "regular.ttf"))
+  expect_false(plot2:::font_from_cache("Not Cached", d))
+  expect_true(plot2:::font_from_cache("Plot2 Test Font", d))
+  expect_true("Plot2 Test Font" %in% sysfonts::font_families())
+  expect_true(file.exists(file.path(d, "plot2_test_font", ".last_used")))
+})
+
+test_that("F011 a custom font is used only while its plot is drawn", {
+  skip_if_not_installed("showtext")
+  skip_if_not_installed("sysfonts")
+  skip_if_not("Plot2 Test Font" %in% sysfonts::font_families())
+  hooks_before <- getHook("grid.newpage")
+  p <- plot2(fx_xy, x, y, font = "Plot2 Test Font")
+  expect_s3_class(p, "plot2_font")
+  expect_false(inherits(plot2(fx_xy, x, y), "plot2_font"))
+  withr::local_pdf(withr::local_tempfile(fileext = ".pdf"))
+  print(p)
+  expect_identical(getHook("grid.newpage"), hooks_before)
+  expect_identical(tools::R_user_dir("plot2", "cache"),
+                   file.path(Sys.getenv("R_USER_CACHE_DIR"), "R", "plot2"))
+})

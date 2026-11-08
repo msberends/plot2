@@ -39,3 +39,5 @@ withr::local_options(
 withr::local_timezone("UTC", .local_envir = testthat::teardown_env())
 withr::local_envvar(c(IN_PKGDOWN = ""), .local_envir = testthat::teardown_env())
 withr::local_locale(c(LC_TIME = "C", LC_COLLATE = "C"), .local_envir = testthat::teardown_env())
+# fonts downloaded by tests go to a temporary folder, not to the user cache (F011)
+withr::local_envvar(c(R_USER_CACHE_DIR = file.path(tempdir(), "plot2-cache")), .local_envir = testthat::teardown_env())

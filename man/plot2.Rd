@@ -409,7 +409,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{text_factor}{Text factor to use, which will apply to all texts shown in the plot.}
 
-\item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
+\item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. Custom fonts require the \code{showtext}, \code{showtextdb} and \code{sysfonts} packages. A Google Font that is not installed is downloaded once into the user cache folder of plot2 (\code{\link[tools:R_user_dir]{tools::R_user_dir("plot2", "cache")}}); fonts that have not been used for 90 days are removed from it automatically. The font is applied only while the plot is drawn, so other plots in the session are not affected. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
 
 \item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:theme_grey]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
@@ -637,10 +637,13 @@ netherlands |>
   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
   add_sf(netherlands, colour = "black", colour_fill = NA)
 
-# support for any system or Google font
-mtcars |>
-  plot2(mpg, hp,
-        font = "Rock Salt",
-        text_factor = 1.25,
-        title = "This plot uses a Google Font")
+# support for any system or Google font (a Google Font is downloaded once
+# into the user cache, see the 'font' argument)
+if (interactive() && requireNamespace("showtext", quietly = TRUE)) {
+  mtcars |>
+    plot2(mpg, hp,
+          font = "Rock Salt",
+          text_factor = 1.25,
+          title = "This plot uses a Google Font")
+}
 }

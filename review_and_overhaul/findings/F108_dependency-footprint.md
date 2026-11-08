@@ -4,7 +4,7 @@ title: Imports pull in heavy packages for one or two functions, crayon duplicate
 severity: low
 type: dependency
 area: dependencies
-status: in-progress
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -57,3 +57,4 @@ Move `broom` to Suggests (use it only for model objects, with `check_installed()
 - 2026-11-08: filed in R06 (sheet T06).
 - 2026-11-08: maintainer decided: broom to Suggests, replace cleaner by an internal formatter (plot2.freq stays), drop crayon in favour of cli, font packages (showtext, showtextdb, sysfonts) to Suggests with an install hint.
 - 2026-11-08: broom to Suggests (fortify_df() uses it when installed, otherwise ggplot2::fortify() and an install hint); cleaner to Suggests (internal as_percentage()/format_percentage(), identical output; class name "percentage" kept); crayon removed (cli styles); grDevices in Imports (F008); T06.01 unparked. Font packages follow with F011.
+- 2026-11-08: font packages (showtext, showtextdb, sysfonts) moved to Suggests with `rlang::check_installed()` in `validate_font()`, together with F011. Imports are now cli, dplyr, forcats, ggplot2, grDevices, grid, rlang, scales, tidyselect, tidyr.

@@ -180,7 +180,7 @@
 #' @param sep Separator character to use if multiple columns are given to either of the three directions: `x`, `category` and `facet`, e.g. `facet = c(column1, column2)`.
 #' @param print A [logical] to indicate if the result should be [printed][print()] instead of just returned.
 #' @param text_factor Text factor to use, which will apply to all texts shown in the plot.
-#' @param font Font (family) to use, can be set with `options(plot2.font = "...")`. Can be any installed system font or any of the > 1400 font names from [Google Fonts](https://fonts.google.com). When using custom fonts in R Markdown, be sure to set the chunk option `fig.showtext = TRUE`, otherwise an informative error will be generated.
+#' @param font Font (family) to use, can be set with `options(plot2.font = "...")`. Can be any installed system font or any of the > 1400 font names from [Google Fonts](https://fonts.google.com). Custom fonts require the `showtext`, `showtextdb` and `sysfonts` packages. A Google Font that is not installed is downloaded once into the user cache folder of plot2 ([`tools::R_user_dir("plot2", "cache")`][tools::R_user_dir()]); fonts that have not been used for 90 days are removed from it automatically. The font is applied only while the plot is drawn, so other plots in the session are not affected. When using custom fonts in R Markdown, be sure to set the chunk option `fig.showtext = TRUE`, otherwise an informative error will be generated.
 #' @param theme A valid `ggplot2` [theme][ggplot2::theme()] to apply, or `NULL` to use the default [`theme_grey()`][ggplot2::theme_grey()]. This argument accepts themes (e.g., `theme_bw()`), functions (e.g., `theme_bw`) and characters themes (e.g., `"theme_bw"`). The default is [theme_minimal2()], but can be set with `options(plot2.theme = "...")`.
 #' @param background The background colour of the entire plot, can also be `NA` to remove it. Will be evaluated with [get_colour()]. Only applies when `theme` is not `NULL`.
 #' @param markdown A [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`).
@@ -389,12 +389,15 @@
 #'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
 #'   add_sf(netherlands, colour = "black", colour_fill = NA)
 #' 
-#' # support for any system or Google font
-#' mtcars |>
-#'   plot2(mpg, hp,
-#'         font = "Rock Salt",
-#'         text_factor = 1.25,
-#'         title = "This plot uses a Google Font")
+#' # support for any system or Google font (a Google Font is downloaded once
+#' # into the user cache, see the 'font' argument)
+#' if (interactive() && requireNamespace("showtext", quietly = TRUE)) {
+#'   mtcars |>
+#'     plot2(mpg, hp,
+#'           font = "Rock Salt",
+#'           text_factor = 1.25,
+#'           title = "This plot uses a Google Font")
+#' }
 plot2 <- function(.data,
                   x = NULL,
                   y = NULL,
@@ -2301,6 +2304,11 @@ plot2_exec <- function(.data,
   # but only when it's nothing more than a data.frame without row names
   if (identical(class(p$data), "data.frame") && identical(rownames(p$data), as.character(seq_len(nrow(p$data))))) {
     p$data <- as_tibble(p$data)
+  }
+  
+  # a custom font: showtext is switched on when the plot is drawn (F011)
+  if (!identical(font, "")) {
+    p <- as_plot2_font(p)
   }
   
   # return plot ----

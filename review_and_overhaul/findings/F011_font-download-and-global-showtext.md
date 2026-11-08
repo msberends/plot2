@@ -4,8 +4,8 @@ title: Fonts downloaded without consent and showtext enabled globally
 severity: high
 type: design
 area: fonts
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: M
 api_change: possible
 locations: [R/validate.R:2506, R/validate.R:2544, R/validate.R:2563]
@@ -49,3 +49,4 @@ Make downloading opt-in (option `plot2.download_fonts`, or an exported `install_
 
 - 2026-11-07: filed in R01 (by reading).
 - 2026-11-08: maintainer decided: automatic download, scoped, if CRAN allows it, otherwise opt-in. CRAN Repository Policy (revision 6985, read 2026-11-08) allows user cache files in tools::R_user_dir() for R >= 4.0 if sizes are kept small and contents are actively managed (removing outdated material), and requires Internet use to fail gracefully; writing into the installed showtextdb folder is not allowed. So: automatic download into R_user_dir("plot2", "cache") with automatic pruning, graceful fallback, showtext switched on only while plot2 output is drawn.
+- 2026-11-08: fixed. New `R/fonts.R`: Google Fonts are downloaded once into `tools::R_user_dir("plot2", "cache")/fonts` (https, failures fall back silently with the existing font error), registered with `sysfonts::font_add()`, and fonts unused for 90 days are pruned at each download. `showtext_auto()` removed: plots with a custom font get the class `plot2_font`, whose `print()` and `grid.draw()` methods switch showtext on for that drawing only (pixel-identical output for print and ggsave). showtext, showtextdb and sysfonts moved to Suggests with an install hint (F108). Tests and vignettes redirect `R_USER_CACHE_DIR` to a temporary folder; the ?plot2 font example runs only interactively. Tests: test-regression-phase3.R (F011).

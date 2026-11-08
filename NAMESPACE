@@ -12,6 +12,7 @@ S3method(format2,hms)
 S3method(format2,numeric)
 S3method(format2,percentage)
 S3method(ggplot_add,CoordSpider)
+S3method(grid::grid.draw,plot2_font)
 S3method(plot2,data.frame)
 S3method(plot2,default)
 S3method(plot2,formula)
@@ -19,6 +20,7 @@ S3method(plot2,freq)
 S3method(plot2,matrix)
 S3method(plot2,sf)
 S3method(print,colour)
+S3method(print,plot2_font)
 S3method(rep,colour)
 S3method(rev,colour)
 S3method(unique,colour)
@@ -171,17 +173,6 @@ importFrom(grDevices,
   rgb,
   terrain.colors,
   topo.colors
-)
-importFrom(showtext,showtext_auto)
-importFrom(showtextdb,
-  font_install,
-  google_fonts,
-  load_showtext_fonts
-)
-importFrom(sysfonts,
-  font_add,
-  font_families,
-  font_files
 )
 importFrom(tidyr,
   full_seq,

@@ -2578,9 +2578,6 @@ generate_datalabels <- function(p,
   p
 }
 
-#' @importFrom showtext showtext_auto
-#' @importFrom sysfonts font_families font_files font_add
-#' @importFrom showtextdb google_fonts font_install load_showtext_fonts
 validate_font <- function(font) {
   if (is_empty(font)) {
     # no font set, so return empty string to use default
@@ -2617,36 +2614,33 @@ validate_font <- function(font) {
                   "For more information, see ", font_url("https://yihui.org/knitr/options/#plots", "this knitr manual"), "."),
            call. = FALSE)
     }
-  } else {
-    # enable showtext
-    showtext_auto(enable = TRUE)
   }
+  # showtext is switched on only while the plot is drawn, see print.plot2_font() (F011)
+  rlang::check_installed(c("showtext", "showtextdb", "sysfonts"), reason = "to use custom fonts")
   
   font.bak <- font
   font <- trimws(tolower(font)[1L])
-  if (font %in% tolower(font_families())) {
+  if (font %in% tolower(sysfonts::font_families())) {
     # this is for previously activated fonts, or fonts installed from Google Fonts
-    return(font_families()[tolower(font_families()) == font])
+    return(sysfonts::font_families()[tolower(sysfonts::font_families()) == font])
   }
   
   # get font files from system
   if (is.null(plot2_session$fonts)) {
     # so it only runs the first time in a session
-    plot2_session$fonts <- font_files()
+    plot2_session$fonts <- sysfonts::font_files()
   }
   fonts <- plot2_session$fonts[which(tolower(plot2_session$fonts$family) == trimws(tolower(font)[1L])), , drop = FALSE]
   
   if (NROW(fonts) == 0) {
-    # font does not exist yet - try to download from Google Fonts
-    tryCatch({
-      font_urls <- google_fonts(font.bak)
-      # install and register using showtextdb
-      suppressMessages(font_install(font_urls, quiet = TRUE))
-      plot2_message("Downloaded font ", font_blue(font_url(paste0("https://fonts.google.com/specimen/", gsub(" ", "+", font.bak)), font.bak)), " from Google Fonts")
-      load_showtext_fonts()
-    }, error = function(e) invisible())
-    
-  } else if (!fonts$family[1L] %in% font_families()) {
+    # not installed: use the cached copy, or download it from Google Fonts into the user cache (F011)
+    if (!font_from_cache(font.bak)) {
+      if (font_from_google(font.bak)) {
+        plot2_message("Downloaded font ", font_blue(font_url(paste0("https://fonts.google.com/specimen/", gsub(" ", "+", font.bak)), font.bak)),
+                      " from Google Fonts into ", font_blue(font_cache_dir()))
+      }
+    }
+  } else if (!fonts$family[1L] %in% sysfonts::font_families()) {
     # helper function for adding fonts
     set_if_not_null <- function(type) {
       fonts$fullpath <- paste(fonts$path, fonts$file, sep = "/")
@@ -2659,7 +2653,7 @@ validate_font <- function(font) {
       }
     }
     # still has to be 'registered' with sysfonts, so do it
-    font_add(family = fonts$family[1L],
+    sysfonts::font_add(family = fonts$family[1L],
              regular = set_if_not_null("regular"),
              bold = set_if_not_null("bold"),
              italic = set_if_not_null("italic"),
@@ -2667,8 +2661,8 @@ validate_font <- function(font) {
   }
   
   # return the font if it is available
-  if (font %in% tolower(font_families())) {
-    return(font_families()[tolower(font_families()) == font])
+  if (font %in% tolower(sysfonts::font_families())) {
+    return(sysfonts::font_families()[tolower(sysfonts::font_families()) == font])
   } else {
     plot2_warning("Ignoring unknown font family \"", font.bak, "\"")
     return("")

@@ -703,6 +703,10 @@ add_sf <- function(plot,
                      x[!sf::st_is_valid(x)] <- sf::st_point()
                      suppressWarnings(sf::st_point_on_surface(sf::st_zm(x)))
                    })
+    if (!identical(datalabels.font, "")) {
+      # a custom font: showtext is switched on when the plot is drawn (F011)
+      p <- as_plot2_font(p)
+    }
   }
   p
 }
