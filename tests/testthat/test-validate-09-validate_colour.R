@@ -68,7 +68,8 @@ test_that("09.09 a registered colour set with a numeric category gives a gradien
   register_colour(testset_0909 = c("#111111", "#555555", "#999999", "#DDDDDD"))
   withr::defer(unregister_colour("testset_0909"))
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = "testset_0909"))
-  expect_identical(unname(col_hex(scale_of(p, "colour")$map(0.9))), "#DDDDDD")
+  # the scale ends at 1, the data range (0.1 to 0.9) rounded to pretty values (F059)
+  expect_identical(unname(col_hex(scale_of(p, "colour")$map(1))), "#DDDDDD")
 })
 
 test_that("09.10 category.focus colours the focused category and greys the others", {
