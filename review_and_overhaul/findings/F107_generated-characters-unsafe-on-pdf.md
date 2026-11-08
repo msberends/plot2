@@ -4,7 +4,7 @@ title: Characters that plot2 generates (scientific-notation bullet, euro sign) f
 severity: medium
 type: bug
 area: i18n
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -49,3 +49,4 @@ Use plotmath `%*%` for scientific labels. For the euro sign, document that `cair
 ## History
 
 - 2026-11-08: filed in R06 (sheet T07); tests T07.01 and T07.02 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed points 1, 2 and 4: scientific labels use plotmath %*% (×) instead of the console bullet, so they are identical on every console and device; euros() and dollars() no longer switch to scientific notation. Point 3 (euro sign on pdf()) is documented in ?euros (cairo_pdf) and split off to F134 for a decision; T07.02b parked under F134.

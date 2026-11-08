@@ -232,7 +232,6 @@ format2_scientific <- function(x,
                                round = 2,
                                decimal.mark = dec_mark(),
                                ...) {
-  bullet <- cli::symbol$bullet
   out <- vector("list", length(x))
   
   for (i in seq_along(x)) {
@@ -260,7 +259,8 @@ format2_scientific <- function(x,
     mant <- trimws(format(mant, decimal.mark = decimal.mark))
     
     # Build expression
-    out[[i]] <- bquote(.(mant) * " " * .(bullet) * " " * 10^.(expn))
+    # plotmath %*% gives a multiplication sign on every device and console (F107)
+    out[[i]] <- bquote(.(mant) %*% 10^.(expn))
   }
   out
 }

@@ -25,15 +25,17 @@ render_warnings <- function(device, p) {
 p_sci <- function() plot2(data.frame(x = c("a", "b"), y = c(1e7, 3e7)), x, y, y.scientific = TRUE)
 
 test_that("T07.01 scientific labels do not depend on the console's Unicode support", {
-  skip_open_finding("F107")
   a <- withr::with_options(list(cli.unicode = TRUE), axis_labels(p_sci(), "y"))
   b <- withr::with_options(list(cli.unicode = FALSE), axis_labels(p_sci(), "y"))
   expect_identical(a, b)
 })
 
 test_that("T07.02 plot2's own labels render on the default pdf() device without encoding warnings", {
-  skip_open_finding("F107")
   expect_identical(render_warnings(function(f) grDevices::pdf(f), p_sci()), character(0))
+})
+
+test_that("T07.02b euros() labels render on the default pdf() device (F134)", {
+  skip_open_finding("F134")
   p <- plot2(data.frame(x = c("a", "b"), y = c(1500, 2500)), x, y, datalabels.format = euros)
   expect_identical(render_warnings(function(f) grDevices::pdf(f), p), character(0))
 })
