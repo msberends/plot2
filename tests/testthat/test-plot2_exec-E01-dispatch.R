@@ -56,7 +56,6 @@ test_that("E01.07 an atomic character vector gives counted columns", {
 })
 
 test_that("E01.07b a character vector given as a long expression (F072)", {
-  skip_open_finding("F072")
   expect_plot2(plot2(c("a", "b", "b", "c", "c", "c")))
 })
 

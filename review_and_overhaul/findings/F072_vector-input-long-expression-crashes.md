@@ -4,7 +4,7 @@ title: Character or factor vector input crashes when its expression is longer th
 severity: high
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F030]
 origin: R03 sheet E01
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F072 Long vector expressions crash plot2.default()
@@ -40,3 +40,4 @@ Use `"x"` as the fallback name for the x column (and a truncated expression as t
 ## History
 
 - 2026-11-07: found by an R03 end-to-end test (E01.07), reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; plot2.default() falls back to the column name 'x' for long expressions and for vectors named y. Regression test F072.

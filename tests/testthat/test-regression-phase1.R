@@ -95,3 +95,10 @@ test_that("F071 type requirements are checked before the data are prepared", {
   expect_error(plot2(d, x = c(from, to), category = grp, type = "sankey"), "require `y`")
   expect_error(plot2(d, x = c(from, to), y = n, type = "sankey"), "require `category`")
 })
+
+test_that("F072 character vectors given as a long expression or named y are plotted", {
+  p <- expect_plot2(plot2(c("a", "b", "b", "c", "c", "c", "a", "a", "a", "b")))
+  expect_identical(sort(layer_df(p, 1)$y), c(3, 3, 4))
+  y <- c("p", "q", "q")
+  expect_plot2(plot2(y))
+})

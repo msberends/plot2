@@ -189,7 +189,8 @@ plot2.default <- function(.data,
     # an atomic vector, such as numeric, character, factor
     y_deparse <- paste0(trimws(deparse(substitute(.data))), collapse = " ")
     if (nchar(y_deparse) > 30) {
-      y_deparse <- "y"
+      # fall back to "x", never to the name of the count column "y" (F072)
+      y_deparse <- "x"
     }
     if (missing(.data)) {
       .data <- y
@@ -197,7 +198,7 @@ plot2.default <- function(.data,
     }
     if (is.character(.data) || is.factor(.data)) {
       new_df <- as.data.frame(table(.data))
-      colnames(new_df) <- c(y_deparse, "y")
+      colnames(new_df) <- c(ifelse(y_deparse == "y", "x", y_deparse), "y")
       new_df <- new_df |> filter(y != 0)
     } else if (is.numeric(.data) && missing(y)) {
       new_df <- data.frame(x = seq_len(length(.data)),
