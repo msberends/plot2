@@ -4,7 +4,7 @@ title: x.complete fails for character values and completes date-times per second
 severity: high
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R02 sheet 19
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F048 complete_direction() and value types
@@ -44,3 +44,4 @@ Branch per class: `tidyr::complete(df, _var_x, _var_category)` (crossing observe
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; complete_direction() branches by class (factor levels, observed character values, Date per day, POSIXct per greatest common divisor of the observed gaps, numeric as before) and crosses the completed direction with the other directions present. Regression test F048.

@@ -2671,35 +2671,57 @@ validate_font <- function(font) {
 #' @importFrom tidyr complete full_seq
 complete_direction <- function(df, direction, has_direction, filler) {
   if (has_direction && !is.null(filler) && !isFALSE(filler)) {
-    direction_data <- df[[paste0("_var_", direction)]]
+    direction_col <- paste0("_var_", direction)
+    direction_data <- df[[direction_col]]
     if (isTRUE(filler)) {
       filler <- 0
     }
     fill_list <- list(`_var_y` = filler,
                       y_name = filler)
     names(fill_list)[2] <- get_y_name(df)
-    if (!inherits(direction_data, c("Date", "POSIXt")) && is.double(direction_data)) {
+    # the values to complete, per class (F048)
+    if (is.factor(direction_data)) {
+      values <- factor(levels(direction_data), levels = levels(direction_data))
+    } else if (is.character(direction_data) || is.logical(direction_data)) {
+      values <- sort(unique(direction_data[!is.na(direction_data)]))
+    } else if (inherits(direction_data, "POSIXt")) {
+      # the period is the greatest common divisor of the observed gaps (in seconds), not 1 second
+      gaps <- unique(round(as.double(diff(sort(unique(direction_data))), units = "secs")))
+      gaps <- gaps[gaps > 0]
+      period <- if (length(gaps) == 0) 1 else Reduce(gcd, gaps)
+      values <- seq(min(direction_data, na.rm = TRUE), max(direction_data, na.rm = TRUE), by = period)
+    } else if (inherits(direction_data, "Date")) {
+      values <- full_seq(direction_data, period = 1)
+    } else if (is.double(direction_data)) {
       # determine significance
       sig <- max(sigfigs(diff(direction_data)), na.rm = TRUE)
-      period <- 1 / 10 ^ sig
+      values <- full_seq(direction_data, period = 1 / 10 ^ sig)
     } else {
-      period <- 1
+      values <- full_seq(direction_data, period = 1)
     }
-    if (direction == "x") {
-      df <- df |> 
-        complete(`_var_x` = full_seq(direction_data, period = period), fill = fill_list)
-      df[, get_x_name(df)] <- df$`_var_x`  
-    } else if (direction == "category") {
-      df <- df |> 
-        complete(`_var_category` = full_seq(direction_data, period = period), fill = fill_list)
-      df[, get_category_name(df)] <- df$`_var_category`  
-    } else if (direction == "facet") {
-      df <- df |> 
-        complete(`_var_facet` = full_seq(direction_data, period = period), fill = fill_list)
-      df[, get_facet_name(df)] <- df$`_var_facet`  
+    # cross with the other directions that are present, e.g. all categories for every x value
+    others <- intersect(setdiff(c("_var_x", "_var_category", "_var_facet"), direction_col), colnames(df))
+    completion <- c(stats::setNames(list(values), direction_col), rlang::syms(others))
+    df <- tidyr::complete(df, !!!completion, fill = fill_list)
+    # keep the columns with the original names in line
+    for (d in c("x", "category", "facet")) {
+      col <- paste0("_var_", d)
+      nm <- switch(d, x = get_x_name(df), category = get_category_name(df), facet = get_facet_name(df))
+      if (col %in% colnames(df) && !is.null(nm) && nm != col && nm %in% colnames(df)) {
+        df[[nm]] <- df[[col]]
+      }
     }
   }
   df
+}
+
+gcd <- function(a, b) {
+  while (b > 0) {
+    r <- a %% b
+    a <- b
+    b <- r
+  }
+  a
 }
 
 validate_sorting <- function(sort_method, horizontal) {

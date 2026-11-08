@@ -166,3 +166,13 @@ test_that("F096 the 'ggplot2' palette gives ggplot2's own colours, also with an 
   transparent <- layer_df(expect_plot2(plot2(d, x, y, k, colour_opacity = 0.5)), "bar")$fill
   expect_identical(unname(substr(as.character(transparent), 1, 7)), toupper(plain))
 })
+
+test_that("F048 x.complete works for character and date-time values", {
+  p <- expect_plot2(plot2(data.frame(g = c("a", "c", "a"), v = 1:3, k = c("u", "w", "w")), g, v, k, x.complete = TRUE))
+  expect_identical(nrow(plot_data(p)), 4L)
+  t <- as.POSIXct(c("2024-01-01 00:00", "2024-01-01 12:00", "2024-01-01 18:00"), tz = "UTC")
+  p <- expect_plot2(plot2(data.frame(t = t, v = 1:3), t, v, x.complete = TRUE))
+  expect_identical(nrow(plot_data(p)), 4L)
+  p <- expect_plot2(plot2(data.frame(x = c(1, 2, 5), y = 1:3), x, y, x.complete = TRUE))
+  expect_identical(nrow(plot_data(p)), 5L)
+})
