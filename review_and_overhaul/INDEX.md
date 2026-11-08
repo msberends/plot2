@@ -10,7 +10,7 @@ Next free IDs: F133, I006, D002, R08.
 |---|---|---|---|---|---|---|---|---|
 | critical | 9 | 0 | 1 | 0 | 3 | 0 | 0 | 13 |
 | high | 16 | 1 | 3 | 0 | 10 | 0 | 0 | 30 |
-| medium | 39 | 0 | 5 | 0 | 10 | 0 | 0 | 54 |
+| medium | 38 | 0 | 5 | 0 | 11 | 0 | 0 | 54 |
 | low | 32 | 0 | 1 | 0 | 1 | 1 | 0 | 35 |
 
 ## Open findings
@@ -48,7 +48,6 @@ Next free IDs: F133, I006, D002, R08.
 | [F074](findings/F074_identical-x-y-gives-histogram.md) | high | Numeric x and y with identical values silently give a histogram that ignores y | types | bug | open | verified | S | no |
 | [F082](findings/F082_add-errorbar-without-category.md) | high | add_errorbar() fails on any plot2 plot without a category | methods | bug | open | verified | S | no |
 | [F025](findings/F025_performance-large-data.md) | medium | Slow on large data; datalabels formatted row by row before summarising | performance | performance | open | verified | M | no |
-| [F026](findings/F026_factor-y-cryptic-error.md) | medium | Factor y fails with a cryptic nchar() error from the datalabels code | data-validation | bug | open | verified | S | no |
 | [F028](findings/F028_percentage-datalabels-grand-total.md) | medium | "%p" datalabels are relative to the grand total, not per facet or category | data-validation | design | needs-decision | reading | S | possible |
 | [F029](findings/F029_date-format-inconsistencies.md) | medium | Date formatting returns inconsistent types and mangles literal text; time zone dropped | i18n | bug | open | verified | M | possible |
 | [F030](findings/F030_default-method-get-lookup.md) | medium | plot2.default looks up character scalars with get() and can leave new_df undefined | methods | bug | open | reading | S | possible |
@@ -155,6 +154,7 @@ Next free IDs: F133, I006, D002, R08.
 | [F041](findings/F041_small-integer-breaks-drop-negatives.md) | high | Breaks for small whole numbers start at 0, so negative values get no axis breaks | scales | bug | verified | verified | S | no |
 | [F045](findings/F045_area-dodged-by-default.md) | high | Area plots with a category are dodged (shifted sideways) when not stacked | types | bug | verified | verified | S | no |
 | [F129](findings/F129_horizontal-numeric-x-empty.md) | high | horizontal = TRUE with a numeric x removes all data: reversed scale with limits starting at 0 | scales | bug | verified | verified | S | no |
+| [F026](findings/F026_factor-y-cryptic-error.md) | medium | Factor y fails with a cryptic nchar() error from the datalabels code | data-validation | bug | verified | verified | S | no |
 | [F027](findings/F027_na-removal-message-garbled.md) | medium | "Removed n rows" message uses a vector condition and is garbled | messaging | bug | verified | verified | S | no |
 | [F042](findings/F042_percent-breaks-not-anchored.md) | medium | Percentage breaks start at the data minimum, giving unround breaks with negative values | scales | bug | verified | verified | S | no |
 | [F043](findings/F043_transform-objects-error.md) | medium | x.transform and y.transform only accept strings; transformation objects error | scales | bug | verified | verified | S | possible |

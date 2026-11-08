@@ -132,7 +132,6 @@ test_that("06.18 a secondary axis is drawn; a zero series does not error", {
 test_that("06.19 a character y gives a clear error; a factor y works with datalabels", {
   expect_error(plot2(data.frame(x = c("a", "b"), y = c("p", "q")), x, y, type = "col"), "must be numeric")
   expect_identical(axis_class(plot2(data.frame(x = c("a", "b"), y = factor(c("p", "q"))), x, y, type = "point"), "y"), "discrete")
-  skip_open_finding("F026")
   expect_plot2(plot2(data.frame(x = c("a", "b"), y = factor(c("p", "q"))), x, y, datalabels = TRUE))
 })
 
