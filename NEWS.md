@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* In horizontal plots, the values now always read from top to bottom in the order of `x.sort`, as they read from left to right in vertical plots. Previously, factors (such as age groups), `x.sort = "alpha"` and `x.sort = FALSE` read in reverse.
 * `datalabels.angle = 270` now places the labels beyond the end of the bars, as `datalabels.angle = 90` does.
 * `size`, `width` and `linewidth` now give a clear error when they are not a non-negative number, instead of failing only when the plot is printed.
 * `type` with more than one value now warns that only the first is used, instead of silently using it.

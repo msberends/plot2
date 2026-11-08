@@ -26,11 +26,11 @@ F008 (stringr only in Suggests), F013 (numeric x made character first). By readi
 
 ## End-to-end test cases
 
-- [ ] 21.01 Character x default: natural alphabetical ("A2" before "A10").
-- [ ] 21.02 Factor x default: level order kept.
-- [ ] 21.03 `x.sort = c("c", "a")`: c, a, then remaining in data order.
-- [ ] 21.04 `x.sort = "freq-desc"` with duplicates: ordered by summed y, message.
-- [ ] 21.05 `x.sort = FALSE`: order of appearance.
-- [ ] 21.06 `category.sort` and `facet.sort` equivalents.
-- [ ] 21.07 `x.drop = FALSE` keeps unused factor levels on the axis.
-- [ ] 21.08 Without stringr installed: still sorts (F008; run in a separate library or mock).
+- [x] 21.01 Character x default: natural alphabetical ("A2" before "A10").
+- [x] 21.02 Factor x default: level order kept.
+- [x] 21.03 `x.sort = c("c", "a")`: c, a, then remaining in data order.
+- [x] 21.04 `x.sort = "freq-desc"` with duplicates: ordered by summed y, message.
+- [x] 21.05 `x.sort = FALSE`: order of appearance.
+- [x] 21.06 `category.sort` and `facet.sort` equivalents.
+- [x] 21.07 `x.drop = FALSE` keeps unused factor levels on the axis.
+- [x] 21.08 Without stringr installed: still sorts (F008; run in a separate library or mock).

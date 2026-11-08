@@ -20,7 +20,7 @@ None separately. By reading: "alpha" passes through unchanged and is handled in 
 
 ## End-to-end test cases
 
-- [ ] 20.01 Each accepted spelling (TRUE, FALSE, "asc", "ascending", "desc", "descending", "order", "inorder", "freq", "freq-asc", "freq-desc", "infreq", "alpha", "alpha-desc") gives the documented x order.
-- [ ] 20.02 Same set with `horizontal = TRUE`: order reversed on the axis as documented (top to bottom).
-- [ ] 20.03 Invalid value: error naming the value.
-- [ ] 20.04 Legend order reversed for horizontal plots except with frequency sorting.
+- [x] 20.01 Each accepted spelling (TRUE, FALSE, "asc", "ascending", "desc", "descending", "order", "inorder", "freq", "freq-asc", "freq-desc", "infreq", "alpha", "alpha-desc") gives the documented x order.
+- [x] 20.02 Same set with `horizontal = TRUE`: order reversed on the axis as documented (top to bottom).
+- [x] 20.03 Invalid value: error naming the value.
+- [x] 20.04 Legend order reversed for horizontal plots except with frequency sorting.

@@ -2847,9 +2847,32 @@ sort_data <- function(values,
     return(values)
   }
   
-  # set up sort_method
+  # sort as for a vertical plot; for a horizontal plot, the levels are reversed at the end,
+  # so that the values read from top to bottom as they would read from left to right (F141)
+  out <- sort_data_vertical(values = values,
+                            original_values = original_values,
+                            sort_method = sort_method,
+                            datapoints = datapoints,
+                            summarise_function = summarise_function,
+                            summarise_fn_name = summarise_fn_name,
+                            drop = drop,
+                            argument = argument)
+  if (isTRUE(horizontal)) {
+    out <- factor(as.character(out), levels = rev(levels(out)), ordered = is.ordered(out))
+  }
+  out
+}
+
+sort_data_vertical <- function(values,
+                               original_values,
+                               sort_method,
+                               datapoints,
+                               summarise_function,
+                               summarise_fn_name,
+                               drop,
+                               argument) {
   sort_method.bak <- sort_method
-  sort_method <- validate_sorting(sort_method = sort_method, horizontal = horizontal)
+  sort_method <- validate_sorting(sort_method = sort_method, horizontal = FALSE)
   if (sort_method != "manual") {
     # 'manual' is because of a manually set vector of values
     sort_method.bak <- sort_method.bak[1L]
@@ -2860,31 +2883,18 @@ sort_data <- function(values,
     values <- as.character(values)
     sort_method.bak <- as.character(sort_method.bak)
     lvls <- union(sort_method.bak, values[!values %in% sort_method.bak])
-    if (isTRUE(horizontal)) {
-      lvls <- rev(lvls)
-    }
     return(factor(values, levels = lvls, ordered = TRUE))
   }
   
   # factors get a special treatment - they are sorted on their levels
   if (is.factor(values)) {
     if (sort_method %in% c("alpha", "alpha-asc", "asc")) {
-      if (isTRUE(horizontal)) {
-        lvls <- rev(levels(values))
-      } else {
-        lvls <- levels(values)
-      }
       return(factor(as.character(values),
-                    levels = lvls,
+                    levels = levels(values),
                     ordered = is.ordered(values)))
     } else if (sort_method %in% c("alpha-desc", "desc")) {
-      if (isTRUE(horizontal)) {
-        lvls <- levels(values)
-      } else {
-        lvls <- rev(levels(values))
-      }
       return(factor(as.character(values),
-                    levels = lvls,
+                    levels = rev(levels(values)),
                     ordered = is.ordered(values)))
     }
   }
