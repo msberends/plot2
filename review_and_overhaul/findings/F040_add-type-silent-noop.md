@@ -4,8 +4,8 @@ title: add_type() silently returns the plot unchanged when the plot has no top-l
 severity: low
 type: design
 area: methods
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: S
 api_change: no
 locations: [R/add_type.R:161]
@@ -38,3 +38,4 @@ Only skip when neither the plot nor the call provides data, and say so; resolve 
 ## History
 
 - 2026-11-07: filed while reading in R01.
+- 2026-11-08: fixed: add_type() skips only when neither the plot nor the call provides data, and then gives a plot2_warning; geoms are resolved with the new geom_function() (ggplot2 or ggbeeswarm), shared with generate_geom(). Tests: test-regression-phase4.R (F040).

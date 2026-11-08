@@ -1705,12 +1705,7 @@ generate_geom <- function(type,
   if (type == "geom_col") {
     type <- "geom_bar"
   }
-  if (type == "geom_beeswarm") {
-    rlang::check_installed("ggbeeswarm")
-    geom_fn <- ggbeeswarm::geom_beeswarm
-  } else {
-    geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
-  }
+  geom_fn <- geom_function(type)
   
   # set position
   if (isTRUE(stacked)) {
@@ -3203,4 +3198,14 @@ percent_group <- function(df, percent_by = "x") {
   }
   # missing values form their own group
   interaction(lapply(cols, function(col) ifelse(is.na(df[[col]]), "\001NA", as.character(df[[col]]))), drop = TRUE)
+}
+
+# the function of a validated geom type, from ggplot2 or ggbeeswarm (F040)
+geom_function <- function(type) {
+  if (type %in% c("geom_beeswarm", "geom_quasirandom")) {
+    rlang::check_installed("ggbeeswarm")
+    getExportedValue(name = type, ns = asNamespace("ggbeeswarm"))
+  } else {
+    getExportedValue(name = type, ns = asNamespace("ggplot2"))
+  }
 }

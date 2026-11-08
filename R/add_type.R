@@ -158,9 +158,6 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
-  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
-    return(plot)
-  }
   type <- validate_type(type[1L])
   if (type == "") {
     stop("`type` must be set for `add_type()`", call. = FALSE)
@@ -175,10 +172,17 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
     data <- args$data
   }
   args$data <- NULL
+  # without data in the plot and in this call, there is nothing to draw (F040)
+  plot_data <- attr(plot, "data", exact = TRUE) %or% plot$data
+  if (is.null(data) && (inherits(plot_data, "waiver") || NROW(plot_data) == 0)) {
+    plot2_warning("The plot has no data and no ", font_blue("data"), " was given, so no ",
+                  font_blue(gsub("geom_", "", type)), " layer was added")
+    return(plot)
+  }
   args <- utils::modifyList(list(mapping = mapping, data = data), args)
   args <- args[!vapply(FUN.VALUE = logical(1), args, is.null)]
   
-  geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
+  geom_fn <- geom_function(type)
   p <- plot +
     do.call(geom_fn, args = args)
   if (move != 0) {

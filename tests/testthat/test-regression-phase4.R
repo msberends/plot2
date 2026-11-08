@@ -191,3 +191,14 @@ test_that("F055 the datalabel background follows the layer data", {
   b <- ggplot2::ggplot_build(p)
   expect_identical(b$data[[1]]$label, c("4-", "5-"))
 })
+
+test_that("F040 add_type() adds a layer when data is given, and warns when there is no data at all", {
+  d <- data.frame(x = 1:3, y = 1:3)
+  p <- ggplot2::ggplot() + ggplot2::geom_point(ggplot2::aes(x, y), data = d)
+  expect_length(add_type(p, type = "line", mapping = ggplot2::aes(x, y), data = d)$layers, 2L)
+  expect_warning(p2 <- add_type(p, type = "line", mapping = ggplot2::aes(x, y)), "no data", class = "plot2_warning")
+  expect_length(p2$layers, 1L)
+  skip_if_not_installed("ggbeeswarm")
+  p3 <- add_type(plot2(iris, Species, Sepal.Length, type = "boxplot"), type = "beeswarm")
+  expect_s3_class(p3$layers[[length(p3$layers)]]$position, "PositionBeeswarm")
+})
