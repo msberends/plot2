@@ -221,3 +221,11 @@ test_that("F059 numeric category limits are the data range rounded to pretty val
   expect_equal(lim(d(c(-0.37, 0.2, 0.5)), x, y, c, type = "point",
                    colour = c("blue", "white", "red"), category.midpoint = 0), c(-0.6, 0.6))
 })
+
+test_that("F130 limits must be of length 2", {
+  d <- data.frame(x = c("a", "b", "c"), y = c(10, 50, 100))
+  expect_error(plot2(d, x, y, y.limits = 50), "must be of length 2")
+  expect_error(plot2(data.frame(x = 1:3, y = 1:3), x, y, x.limits = 2), "must be of length 2")
+  expect_error(plot2(data.frame(x = 1:3, y = 1, c = c(1, 5, 9)), x, y, c, category.limits = 5), "must be of length 2")
+  expect_plot2(plot2(d, x, y, y.limits = c(0, NA)))
+})

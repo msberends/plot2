@@ -274,7 +274,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.expand, y.expand}{\link[ggplot2:expansion]{expansion} to use for the axis, can be length 1 or 2. \code{x.expand} defaults to 0.5 and \code{y.expand} defaults to \code{0.25}, except for sf objects (then both default to 0).}
 
-\item{x.limits, y.limits}{Limits to use for the axis, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero.}
+\item{x.limits, y.limits}{Limits to use for the axis, must be length 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero. For a discrete x axis, \code{x.limits} are the items to show, in this order.}
 
 \item{x.labels, y.labels, y_secondary.labels}{A labels function or character vector to use for the axis.}
 
@@ -306,7 +306,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{Settings for the plotting direction \code{category}.}
 
-\item{category.limits}{Limits to use for a numeric category, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{category.limits = c(0, NA)} to have the scale start at zero. If not set, the limits are the range of the data, rounded outwards to pretty values with \code{\link[=pretty]{pretty()}} (e.g., values from 12 to 87 give limits 0 to 100). With three colours and \code{category.midpoint} set, the limits are made symmetric around the midpoint.}
+\item{category.limits}{Limits to use for a numeric category, must be length 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{category.limits = c(0, NA)} to have the scale start at zero. If not set, the limits are the range of the data, rounded outwards to pretty values with \code{\link[=pretty]{pretty()}} (e.g., values from 12 to 87 give limits 0 to 100). With three colours and \code{category.midpoint} set, the limits are made symmetric around the midpoint.}
 
 \item{category.date_breaks}{Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to \code{\link[=seq.Date]{seq.Date(by = ...)}} and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").}
 

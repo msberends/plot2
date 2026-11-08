@@ -876,12 +876,8 @@ validate_x_scale <- function(df,
       plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
     }
     if (length(x.limits) != 2) {
-      if (length(x.limits) == 1) {
-        x.limits <- rep(x.limits, 2)
-        plot2_env$x_lim <- x.limits
-      } else {
-        stop("`x.limits` must be of length 1 or 2", call. = FALSE)
-      }
+      # a single value used to become a zero-width axis (F130)
+      stop("`x.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `x.limits = c(0, NA)`", call. = FALSE)
     }
     if (inherits(values, "Date")) {
       x.limits <- as.Date(x.limits, origin = "1970-01-01")
@@ -1078,13 +1074,9 @@ validate_y_scale <- function(df,
       y.expand <- 0
     }
   }
-  if (!is.null(y.limits) && length(y.limits) != 2) {
-    if (length(y.limits) == 1) {
-      y.limits <- rep(y.limits, 2)
-      plot2_env$y_lim <- y.limits
-    } else {
-      stop("`y.limits` must be of length 1 or 2", call. = FALSE)
-    }
+  if (!is.null(y.limits) && !is.function(y.limits) && length(y.limits) != 2) {
+    # a single value used to become a zero-width axis (F130)
+    stop("`y.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `y.limits = c(0, NA)`", call. = FALSE)
   }
   
   values <- get_y(df)
@@ -1525,6 +1517,9 @@ validate_category_scale <- function(values,
                     font_blue(paste0("category.transform = \"", category.transform, "\"")))
       c(NA_real_, NA_real_)
     } else if (!is.null(category.limits)) {
+      if (!is.function(category.limits) && length(category.limits) != 2) {
+        stop("`category.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `category.limits = c(0, NA)`", call. = FALSE)
+      }
       category.limits
     } else if (isTRUE(category.percent)) {
       function(x, ...) c(min(0, x, na.rm = TRUE), max(1, x, na.rm = TRUE))

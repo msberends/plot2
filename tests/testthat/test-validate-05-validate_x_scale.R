@@ -47,7 +47,7 @@ test_that("05.05 x.limits of the wrong class is reported", {
 })
 
 test_that("05.06 x.limits of length 3 is an error", {
-  expect_error(plot2(fx_xy, x, y, x.limits = c(1, 2, 3)), "length 1 or 2")
+  expect_error(plot2(fx_xy, x, y, x.limits = c(1, 2, 3)), "must be of length 2")
 })
 
 test_that("05.07 a date x gets automatic breaks and labels depending on its range", {

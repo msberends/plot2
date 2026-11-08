@@ -71,11 +71,9 @@ test_that("06.09 y.limits = c(0, 10) with negative data keeps 0 as the lower lim
   expect_equal(suppressWarnings(axis_range(p, "y")), c(0, 10))
 })
 
-test_that("06.10 y.limits of length 3 is an error; length 1 does not remove all data", {
-  expect_error(plot2(d100, x, y, y.limits = c(1, 2, 3)), "length 1 or 2")
-  skip_open_finding("F130")
-  p <- expect_plot2(plot2(d100, x, y, y.limits = 50))
-  expect_identical(nrow(layer_df(p, "bar")), 3L)
+test_that("06.10 y.limits must be of length 2 (F130)", {
+  expect_error(plot2(d100, x, y, y.limits = c(1, 2, 3)), "must be of length 2")
+  expect_error(plot2(d100, x, y, y.limits = 50), "must be of length 2")
 })
 
 test_that("06.11 y.transform = 'log10' with zeros does not error and drops the zero limit", {

@@ -4,7 +4,7 @@ title: x.limits and y.limits of length 1 are duplicated into a zero-width axis t
 severity: medium
 type: design
 area: scales
-status: needs-decision
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -41,3 +41,5 @@ Needs a decision on the meaning of a single value, for example the lower limit (
 ## History
 
 - 2026-11-08: filed while coding the I002 tests (case 06.10); status needs-decision.
+- 2026-11-08: maintainer decided (AskUserQuestion): error, limits must be of length 2.
+- 2026-11-08: fixed as decided: x.limits (continuous), y.limits and category.limits of a length other than 2 give a clear error that suggests NA for a data-driven side; for category.limits a single value already failed later inside ggplot2. Documentation corrected. Tests: 06.10 rewritten, 05 x.limits regex updated, test-regression-phase4.R (F130).
