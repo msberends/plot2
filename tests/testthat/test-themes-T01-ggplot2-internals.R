@@ -16,7 +16,6 @@
 # review_and_overhaul/reviews/R06_themes/T01_ggplot2-internals.md
 
 test_that("T01.01 plots of all main types build and render without warnings", {
-  local_known_deprecation("F078")
   withr::local_pdf(NULL)
   plots <- list(plot2(fx_counts, group, n), plot2(iris, Sepal.Length, Sepal.Width), plot2(iris, Species, Sepal.Length),
                 plot2(admitted_patients, age, type = "hist"), plot2(admitted_patients, age_group, n(), facet = ward, type = "b2b"),

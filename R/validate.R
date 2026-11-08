@@ -1714,7 +1714,8 @@ generate_geom <- function(type,
                                       outlier.alpha = 0.75,
                                       width = width,
                                       linewidth = linewidth, # line width of whole box
-                                      fatten = ifelse((linewidth %or% 0.5) < 1, 1.5, (linewidth %or% 0.5) + 0.5), # factor to make median thicker compared to lwd
+                                      # median thicker than the box; `fatten` is deprecated since ggplot2 4.0.0 (F078)
+                                      median.linewidth = (linewidth %or% 0.5) * ifelse((linewidth %or% 0.5) < 1, 1.5, (linewidth %or% 0.5) + 0.5),
                                       na.rm = na.rm),
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
                                  list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],

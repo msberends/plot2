@@ -36,14 +36,12 @@ test_that("E09.03 category.type = 'shape' maps shape, not colour", {
 })
 
 test_that("E09.04 boxplot: whiskers drawn first, in the set colour", {
-  local_known_deprecation("F078")
   p <- expect_plot2(plot2(iris, Species, Sepal.Length, colour = "red"))
   expect_identical(geoms(p)[1:2], c("GeomErrorbar", "GeomBoxplot"))
   expect_identical(unique(col_hex(as.character(layer_df(p, "errorbar")$colour))), "#FF0000")
 })
 
 test_that("E09.04b boxplots raise no deprecation warning (F078)", {
-  skip_open_finding("F078")
   expect_plot2(plot2(iris, Species, Sepal.Length))
 })
 

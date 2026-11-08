@@ -69,7 +69,6 @@ test_that("E14.08 two identical calls give identical layer data", {
 })
 
 test_that("E14.09 several types leave no internal state behind", {
-  local_known_deprecation("F078")
   df_smooth <- data.frame(x = 1:30, y = sin(1:30 / 5) + 1:30 / 10)
   expect_clean_state(plot2(fx_counts, group, n), check = c("state", "locale"))
   expect_clean_state(plot2(df_smooth, x, y, smooth = TRUE), check = c("state", "locale"))

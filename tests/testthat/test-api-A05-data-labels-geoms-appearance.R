@@ -44,7 +44,6 @@ test_that("A05.05 x.max_items with x.sort = 'freq-desc' keeps the most frequent 
 })
 
 test_that("A05.06 documented size, width and linewidth defaults", {
-  local_known_deprecation("F078")
   p_point <- plot2(iris, Sepal.Length, Sepal.Width)
   expect_identical(unique(layer_df(p_point)$size), 2)
   p_box <- plot2(admitted_patients, hospital, age)

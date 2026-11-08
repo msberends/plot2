@@ -28,7 +28,6 @@ run_rd_examples <- function(rd, exclude = NULL) {
 
 test_that("A06.01 every example of ?plot2 runs without error or warning (font example excluded)", {
   skip_on_cran()
-  local_known_deprecation("F078")
   withr::local_options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
   withr::local_pdf(NULL)
   skip_if_not_installed("sf")

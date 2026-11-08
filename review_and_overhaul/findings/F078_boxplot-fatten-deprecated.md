@@ -4,7 +4,7 @@ title: Box plots pass the fatten argument, soft-deprecated in ggplot2 4.0.0
 severity: low
 type: bug
 area: dependencies
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F037, F075]
 origin: R03 sheet E09
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F078 Deprecated fatten in geom_boxplot()
@@ -41,3 +41,4 @@ Replace `fatten` by `median.linewidth` (computed as the box line width times the
 ## History
 
 - 2026-11-07: found by an R03 end-to-end test (E09.04), reproduced; downgraded to low after confirming that end users do not see the warning.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; geom_boxplot() gets median.linewidth (box line width times the former fatten factor) instead of fatten. No geom_crossbar() or geom_pointrange() calls with fatten exist.
