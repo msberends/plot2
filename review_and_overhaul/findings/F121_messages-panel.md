@@ -1,7 +1,7 @@
 ---
 id: F121
 title: The messages panel is empty on a server, shows messages as unescaped HTML, and errors are reduced to a generic sentence
-severity: medium
+severity: critical
 type: bug
 area: shiny
 status: open
@@ -54,3 +54,4 @@ Collect plot2's messages independently of `interactive()` (e.g. an option or arg
 ## History
 
 - 2026-11-08: filed in R07 (verified).
+- 2026-11-08: severity set to critical by the maintainer (security aspect: HTML injection through column names).

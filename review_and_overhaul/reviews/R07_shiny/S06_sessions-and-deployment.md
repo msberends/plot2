@@ -13,9 +13,9 @@ Severity overview for a deployed app (one R process, several visitors); the main
 | One visitor's plot exported by another | F112 | critical |
 | Files next to the logo downloadable | F113 | critical |
 | Memory exhaustion through export size | F122 | critical |
-| Global data frames of the host offered to visitors | F114 | medium |
+| Global data frames of the host offered to visitors | F114 | critical |
 | Session ends on errors (copy button, missing reader, odd names) | F115, F117 | medium |
-| HTML from column names in messages (only where messages are shown) | F121 | medium |
+| HTML from column names in messages (only where messages are shown) | F121 | critical |
 
 - The app keeps no state in `plot2_env` that belongs to one session only; both items it stores there are shared and cleared by any `plot2()` call (F112).
 - The documentation does not say whether deployment is supported; `install_shiny_deps()` addresses administrators, which suggests it is (F125).

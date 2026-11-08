@@ -1,7 +1,7 @@
 ---
 id: F114
 title: Data sets are looked up by name with get() and eval(parse()), which picks up functions, fails on non-syntactic names and exposes the global environment
-severity: medium
+severity: critical
 type: bug
 area: shiny
 status: open
@@ -58,3 +58,4 @@ Collect data sets into a named list of objects once (`list(Provided = data, iris
 ## History
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
+- 2026-11-08: severity set to critical by the maintainer (security aspect: global data frames of the host offered to visitors).

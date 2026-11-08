@@ -27,10 +27,10 @@ All of `R/shiny.R`. Not covered: the browser side (JavaScript, CSS, layout), sin
 
 ## Outcome
 
-15 new findings, F111 to F125 (4 critical, 8 medium, 3 low). F006 (critical) verified: four routes to arbitrary code instead of the one described. All security findings are critical (maintainer, 2026-11-08).
+15 new findings, F111 to F125 (6 critical, 6 medium, 3 low). F006 (critical) verified: four routes to arbitrary code instead of the one described. All security findings are critical (maintainer, 2026-11-08).
 
-- Critical (security): F111 (R serialisation uploads; uploads cannot be disabled), F112 (state in `plot2_env`: shared between sessions, cleared by every `plot2()` call), F113 (the folder of the logo is served), F122 (export size unbounded).
-- Medium: F114 (data set lookup by name), F115 (errors end the session), F116 (Automatic type again), F117 (copy button uses the server's clipboard), F118 (value types guessed), F120 (upload reader options), F121 (messages panel), F124 (inputs derived by pattern, coupled to D001).
+- Critical (security): F111 (R serialisation uploads; uploads cannot be disabled), F112 (state in `plot2_env`: shared between sessions, cleared by every `plot2()` call), F113 (the folder of the logo is served), F122 (export size unbounded), F114 (data set lookup by name; exposes the host's global data frames), F121 (messages panel; HTML injection through column names).
+- Medium: F115 (errors end the session), F116 (Automatic type again), F117 (copy button uses the server's clipboard), F118 (value types guessed), F120 (upload reader options), F124 (inputs derived by pattern, coupled to D001).
 - Low: F119 (missing and unusable inputs), F123 (change tracking), F125 (housekeeping, deployment statement).
 
 Headline conclusions:
