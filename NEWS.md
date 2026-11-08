@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `plot2()` on a plain numeric matrix now plots all columns (as categories) instead of only the first, and uses the names of named dimensions as titles
 * `x.limits`, `y.limits` and `category.limits` must now be of length 2 (use `NA` for a limit that follows the data); a single value previously gave a zero-width axis without any data
 * Numeric category scales now use the data range rounded to pretty values (e.g. 0 to 100 for values from 12 to 87) instead of an undocumented heuristic; with three colours and `category.midpoint`, the scale is symmetric around the midpoint
 * `add_sf()` now uses `datalabels.colour` for its labels, works with any name of the geometry column, and no longer shifts labels by default (`datalabels.nudge_y = 0`; the former 2500 only suited the Dutch RD New projection)

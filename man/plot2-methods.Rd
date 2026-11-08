@@ -1244,7 +1244,7 @@ The methods differ from the data frame method as follows:
 \item \strong{Formulas} (\code{plot2.formula()}): \code{y ~ x} takes the variables from \code{data}, e.g. \code{plot2(Sepal.Length ~ Species, data = iris)}.
 \item \strong{Frequency tables} (\code{plot2.freq()}, from \code{\link[cleaner:freq]{cleaner::freq()}}): \code{x} and \code{y} default to the items and their counts, the axis titles to "Item" and "Count", and \code{x.sort} to \code{"freq-desc"}.
 \item \strong{Spatial data} (\code{plot2.sf()}, from the \code{sf} package): plots a map, without axis titles, axis expansion, grid or axes; the borders use the \code{plot2.colour_sf} option (default \code{"grey50"}), the fill uses \code{plot2.colour_sf_fill}, and the legend is on the right. The extra arguments \code{crs} and \code{datalabels.centroid} apply only here.
-\item \strong{Matrices} (\code{plot2.matrix()}): the row names become \code{x}. A matrix with identical row and column names, such as the outcome of \code{\link[=cor]{cor()}}, is plotted as a heatmap (\code{type = "tile"}). The axis titles are left out.
+\item \strong{Matrices} (\code{plot2.matrix()}): the row names (or row numbers) become \code{x} and every column becomes a \code{category}. A matrix with identical row and column names, such as the outcome of \code{\link[=cor]{cor()}}, is plotted as a heatmap (\code{type = "tile"}). The axis titles are left out, unless the dimensions are named (e.g. \code{dimnames = list(region = ..., year = ...)}); these names are then used as titles of x and of the category.
 }
 
 For geographic information system (GIS) analysis, use the \code{sf} package with a data set containing geometries. The result can be used as input for \code{\link[=plot2]{plot2()}}.

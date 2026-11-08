@@ -22,7 +22,7 @@
 #' - **Formulas** (`plot2.formula()`): `y ~ x` takes the variables from `data`, e.g. `plot2(Sepal.Length ~ Species, data = iris)`.
 #' - **Frequency tables** (`plot2.freq()`, from [cleaner::freq()]): `x` and `y` default to the items and their counts, the axis titles to "Item" and "Count", and `x.sort` to `"freq-desc"`.
 #' - **Spatial data** (`plot2.sf()`, from the `sf` package): plots a map, without axis titles, axis expansion, grid or axes; the borders use the `plot2.colour_sf` option (default `"grey50"`), the fill uses `plot2.colour_sf_fill`, and the legend is on the right. The extra arguments `crs` and `datalabels.centroid` apply only here.
-#' - **Matrices** (`plot2.matrix()`): the row names become `x`. A matrix with identical row and column names, such as the outcome of [cor()], is plotted as a heatmap (`type = "tile"`). The axis titles are left out.
+#' - **Matrices** (`plot2.matrix()`): the row names (or row numbers) become `x` and every column becomes a `category`. A matrix with identical row and column names, such as the outcome of [cor()], is plotted as a heatmap (`type = "tile"`). The axis titles are left out, unless the dimensions are named (e.g. `dimnames = list(region = ..., year = ...)`); these names are then used as titles of x and of the category.
 #' @return A [`ggplot`][ggplot2::ggplot()] object.
 #' @rdname plot2-methods
 #' @name plot2-methods
@@ -2043,9 +2043,25 @@ plot2.matrix <- function(.data,
       row_to_col(var = "rowname") |> 
       pivot_longer(-rowname, names_to = "y", values_to = "category") |> 
       rename(x = rowname)
-  } else if (!identical(rownames(df), as.character(seq_len(nrow(df))))) {
-    df <- df |> 
-      row_to_col(var = "x")
+  } else {
+    # a plain matrix: rows on x, every column as a category (F089)
+    if (identical(rownames(df), as.character(seq_len(nrow(df))))) {
+      df$x <- seq_len(nrow(df))
+      rownames(df) <- NULL
+    } else {
+      df <- df |> row_to_col(var = "x")
+    }
+    df <- df |>
+      pivot_longer(-x, names_to = "category", values_to = "y")
+    df$category <- factor(df$category, levels = unique(df$category))
+  }
+  # axis titles from the names of the dimensions, if any
+  dim_names <- names(dimnames(.data))
+  label_of <- function(i, default) {
+    if (length(dim_names) >= i && !is.na(dim_names[i]) && nzchar(dim_names[i])) dim_names[i] else default
+  }
+  if (missing(x.title) && !identical(label_of(1, ""), "")) {
+    x.title <- label_of(1, "")
   }
   
   df |> 
@@ -2218,11 +2234,10 @@ plot2.matrix <- function(.data,
                `_misses.x.zoom` = missing(x.zoom),
                `_misses.x.max_items` = missing(x.max_items),
                `_misses.facet.fixed_x` = missing(facet.fixed_x),
-               `_label.x` = deparse(substitute(x)),
-               `_label.y` = deparse(substitute(y)),
-               `_label.category` = deparse(substitute(category)),
+               `_label.x` = label_of(1, "x"),
+               `_label.y` = "y",
+               `_label.category` = label_of(2, "category"),
                `_label.facet` = deparse(substitute(facet)),
-               `_label.y_secondary` = deparse(substitute(y_secondary)),
                `_label.y_secondary` = deparse(substitute(y_secondary)),
                `_summarise_fn_name` = deparse(substitute(summarise_function)),
                `_misses.summarise_function` = missing(summarise_function),

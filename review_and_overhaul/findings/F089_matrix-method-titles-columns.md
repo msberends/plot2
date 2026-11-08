@@ -4,7 +4,7 @@ title: plot2() on a plain matrix plots only the first column and loses the axis 
 severity: low
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -39,3 +39,4 @@ Decide the intended semantics of a plain matrix (all columns as categories is th
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed: a plain matrix is pivoted to long format, rows (names or numbers) on x and every column as a category, so all columns are plotted. Axis titles: the matrix method deliberately defaults to x.title = FALSE and y.title = FALSE (documented), so they are not restored in general; when the dimensions are named, those names are used as the x title (if x.title is not given) and the category title. Labels no longer come from deparse(substitute()) of the method's defaults. Tests: M03.04 unparked and adapted to the documented title defaults.

@@ -34,10 +34,13 @@ test_that("M03.03 plain matrix: row names on the x-axis", {
   expect_identical(axis_labels(expect_plot2(plot2(m)), "x"), c("r1", "r2", "r3"))
 })
 
-test_that("M03.04 plain matrix: all columns and axis titles (F089)", {
-  skip_open_finding("F089")
+test_that("M03.04 plain matrix: all columns, and titles from named dimensions (F089)", {
   m <- matrix(1:6, nrow = 3, dimnames = list(c("r1", "r2", "r3"), c("A", "B")))
-  p <- plot2(m)
-  expect_false(is.na(label_text(p, "x")))
+  p <- expect_plot2(plot2(m))
   expect_identical(as.character(scale_breaks(p, "fill")), c("A", "B"))
+  expect_identical(nrow(layer_df(p, "bar")), 6L)
+  m <- matrix(1:6, nrow = 3, dimnames = list(region = c("r1", "r2", "r3"), year = c("2020", "2021")))
+  p <- expect_plot2(plot2(m))
+  expect_identical(label_text(p, "x"), "region")
+  expect_identical(label_text(p, "fill"), "year")
 })
