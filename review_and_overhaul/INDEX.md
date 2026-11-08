@@ -9,7 +9,7 @@ Next free IDs: F132, I006, D002, R08.
 | severity | open | in-progress | needs-decision | fixed | verified | wontfix | duplicate | total |
 |---|---|---|---|---|---|---|---|---|
 | critical | 10 | 0 | 1 | 0 | 2 | 0 | 0 | 13 |
-| high | 20 | 1 | 3 | 0 | 6 | 0 | 0 | 30 |
+| high | 19 | 1 | 3 | 0 | 7 | 0 | 0 | 30 |
 | medium | 46 | 0 | 5 | 0 | 2 | 0 | 0 | 53 |
 | low | 32 | 0 | 1 | 0 | 1 | 1 | 0 | 35 |
 
@@ -39,7 +39,6 @@ Next free IDs: F132, I006, D002, R08.
 | [F021](findings/F021_back2back-facet-expression.md) | high | Back-to-back check re-evaluates facet on raw data, so facet expressions fail | types | bug | open | verified | S | no |
 | [F022](findings/F022_secondary-y-axis-scaling.md) | high | Secondary y-axis scaling divides by zero, ignores negatives and builds the plot twice | scales | bug | open | verified | M | no |
 | [F023](findings/F023_category-percent-numeric-errors.md) | high | category.percent = TRUE (or a function for category.limits) errors for numeric categories | scales | bug | open | verified | S | no |
-| [F024](findings/F024_user-y-limits-overwritten.md) | high | An explicit 0 in y.limits is replaced by the negative data minimum | scales | bug | open | reading | S | no |
 | [F038](findings/F038_test-suite-weak.md) | high | Test suite skips everything on CRAN and mostly checks only the object class | tests | test | in-progress | verified | L | no |
 | [F045](findings/F045_area-dodged-by-default.md) | high | Area plots with a category are dodged (shifted sideways) when not stacked | types | bug | open | verified | S | no |
 | [F048](findings/F048_complete-direction-types.md) | high | x.complete fails for character values and completes date-times per second | data-validation | bug | open | verified | S | no |
@@ -161,6 +160,7 @@ Next free IDs: F132, I006, D002, R08.
 | [F012](findings/F012_posixtt-typo.md) | high | Typo "POSIXTt" makes POSIXct columns eligible as automatic y | data-validation | bug | verified | verified | S | no |
 | [F015](findings/F015_dec-mark-invalid-option.md) | high | dec_mark() returns the warning text when the option is invalid | i18n | bug | verified | verified | S | no |
 | [F016](findings/F016_get-colour-short-hex.md) | high | get_colour() expands only the first short hex code and uses a wrong character range | colours | bug | verified | verified | S | no |
+| [F024](findings/F024_user-y-limits-overwritten.md) | high | An explicit 0 in y.limits is replaced by the negative data minimum | scales | bug | verified | reading | S | no |
 | [F041](findings/F041_small-integer-breaks-drop-negatives.md) | high | Breaks for small whole numbers start at 0, so negative values get no axis breaks | scales | bug | verified | verified | S | no |
 | [F027](findings/F027_na-removal-message-garbled.md) | medium | "Removed n rows" message uses a vector condition and is garbled | messaging | bug | verified | verified | S | no |
 | [F042](findings/F042_percent-breaks-not-anchored.md) | medium | Percentage breaks start at the data minimum, giving unround breaks with negative values | scales | bug | verified | verified | S | no |

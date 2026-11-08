@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: an explicit 0 in `y.limits` was silently replaced by the lowest (negative) data value
 * Fixed: percentage axes (and age and 24-hour axes) with negative values had breaks at odd values such as -28%, -18%, -8%
 * Fixed: axes and colour bars for small whole numbers had no breaks below zero
 * Error messages no longer show internal function calls

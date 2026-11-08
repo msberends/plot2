@@ -4,7 +4,7 @@ title: An explicit 0 in y.limits is replaced by the negative data minimum
 severity: high
 type: bug
 area: scales
-status: open
+status: verified
 verification: reading
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R01 §2.17
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F024 y.limits overwritten
@@ -45,3 +45,4 @@ Respect user limits literally; only handle `NA` entries (meaning "data-driven").
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: fixed and verified (Phase 1). User limits are respected literally; only a 0 that the transformation cannot handle becomes data-driven; regression test 06.09.

@@ -66,9 +66,9 @@ test_that("06.08 y.scientific = TRUE gives scientific labels", {
 })
 
 test_that("06.09 y.limits = c(0, 10) with negative data keeps 0 as the lower limit", {
-  skip_open_finding("F024")
-  p <- expect_plot2(plot2(fx_neg, x, y, y.limits = c(0, 10)))
-  expect_equal(axis_range(p, "y"), c(0, 10))
+  # ggplot2 warns that the negative bars fall outside the limits the user set
+  p <- expect_plot2(plot2(fx_neg, x, y, y.limits = c(0, 10)), allow_warnings = TRUE)
+  expect_equal(suppressWarnings(axis_range(p, "y")), c(0, 10))
 })
 
 test_that("06.10 y.limits of length 3 is an error; length 1 does not remove all data", {

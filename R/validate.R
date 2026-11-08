@@ -1160,7 +1160,11 @@ validate_y_scale <- function(df,
       min_value <- NA_real_
     }
     if (!is.null(y.limits)) {
-      y.limits[y.limits == 0] <- min_value
+      # respect the user's limits literally; only a zero that the transformation
+      # cannot handle (e.g. log) becomes data-driven
+      if (is.numeric(y.limits) && y.transform != "identity") {
+        y.limits[y.limits == 0] <- NA_real_
+      }
       y.limits
     } else if (isTRUE(y.age)) {
       # so no function, but force a vector (y.expand is needed since it won't expand)
