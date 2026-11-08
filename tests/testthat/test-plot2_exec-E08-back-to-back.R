@@ -56,7 +56,6 @@ test_that("E08.05 category colours are equal on both sides (F066)", {
 })
 
 test_that("E08.06 theme given as a function (F005)", {
-  skip_open_finding("F005")
   expect_plot2(plot2(fx_pop, age, n, facet = sex, type = "b2b", theme = ggplot2::theme_bw))
 })
 

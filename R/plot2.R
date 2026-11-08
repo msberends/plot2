@@ -1187,7 +1187,7 @@ plot2_exec <- function(.data,
       geom_text(label = if (isTRUE(y.title)) "Intersection size" else y.title, angle = 90) +
       scale_x_continuous(limits = c(0, 3)) +
       scale_y_continuous(limits = c(0, 4), expand = c(0, 0)) +
-      theme(panel.background = element_blank(),
+      ggplot2::theme(panel.background = element_blank(),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             axis.ticks = element_blank(),
@@ -1227,7 +1227,7 @@ plot2_exec <- function(.data,
             markdown = markdown,
             width = width
       )  +
-      theme(axis.ticks.x = element_blank(),
+      ggplot2::theme(axis.ticks.x = element_blank(),
             axis.line = element_blank())
     
     layers <- tryCatch(upper_right@layers, error = function(e) upper_right$layers)
@@ -1262,7 +1262,7 @@ plot2_exec <- function(.data,
                            name = if (isTRUE(x.title)) NULL else x.title,
                            expand = expansion(mult = c(0.25, 0))) +
         scale_x_discrete(expand = c(0.05, 0.05)) +
-        theme(panel.background = element_blank(),
+        ggplot2::theme(panel.background = element_blank(),
               panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),
               plot.margin = margin(0, 0, 0, 0),
@@ -1295,7 +1295,7 @@ plot2_exec <- function(.data,
                    linewidth = linewidth,
                    inherit.aes = FALSE) +
       scale_y_discrete(expand = c(0.05, 0.05)) +
-      theme(panel.background = element_blank(),
+      ggplot2::theme(panel.background = element_blank(),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.margin = margin(0, 0, 0, 0),
@@ -2107,7 +2107,7 @@ plot2_exec <- function(.data,
     }
   }
   legend.position <- validate_legend.position(legend.position)
-  p <- p + theme(legend.position = legend.position)
+  p <- p + ggplot2::theme(legend.position = legend.position)
   
   if (!(has_category(df) && is.numeric(get_category(df)))) {
     # only change this when there is no guide_colourbar(), see validate_category_scale()
@@ -2245,7 +2245,7 @@ plot2_exec <- function(.data,
       move_layer(layer = length(p$layers), move = -1)
   }
   if (type_backup == "spider") {
-    p <- p + theme(axis.title = element_blank())
+    p <- p + ggplot2::theme(axis.title = element_blank())
   }
   
   # restore mapping to original names ----

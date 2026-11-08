@@ -328,7 +328,7 @@ back2back_plot <- function(df,
             background = background,
             markdown = markdown
       ) +
-      theme(axis.text.y = element_blank(),
+      ggplot2::theme(axis.text.y = element_blank(),
             plot.margin = margin(5,5,5,5))
   )
   
@@ -461,7 +461,7 @@ back2back_plot <- function(df,
             background = background,
             markdown = markdown
       ) +
-      theme(axis.text.y = element_text(hjust = 0.5,
+      ggplot2::theme(axis.text.y = element_text(hjust = 0.5,
                                        margin = margin(l = 10, r = 10)),
             plot.margin = margin(5, 5, 5, 0))
   )
@@ -497,7 +497,7 @@ back2back_plot <- function(df,
                                                       col_y_primary = NULL,
                                                       col_y_secondary = NULL,
                                                       sankey.remove_axes = FALSE)) & 
-    theme(legend.position = legend.position,
+    ggplot2::theme(legend.position = legend.position,
           legend.justification = "center",
           legend.direction = "horizontal")
   

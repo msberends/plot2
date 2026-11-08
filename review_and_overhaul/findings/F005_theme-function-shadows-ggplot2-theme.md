@@ -4,7 +4,7 @@ title: theme argument given as a function shadows ggplot2::theme() and crashes
 severity: critical
 type: bug
 area: theme
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F032]
 origin: R01 §1.5
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F005 theme argument as a function crashes
@@ -47,3 +47,4 @@ Use `ggplot2::theme(...)` explicitly in all internal calls (cheap, robust). Alte
 
 - 2026-11-07: filed in R01, reproduced.
 - 2026-11-07: R03 found the same pattern in `back2back_plot()` (`theme(...)` calls after the halves and for the patchwork), reproduced with `type = "b2b", theme = ggplot2::theme_bw`.
+- 2026-11-08: fixed and verified (Phase 1). Internal calls now use `ggplot2::theme()`; regression test in E08 (back-to-back with `theme = theme_bw`) and the reproduction.
