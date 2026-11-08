@@ -28,11 +28,11 @@ library(ggplot2)
 
 `plot2` is a single-function wrapper around `ggplot2` that handles the routine work — grouping, aggregating, sorting, facetting, labelling — so you do not have to. It returns a standard `ggplot` object, so every `ggplot2` extension and layer works as usual.
 
-Install from CRAN or r-universe:
+`plot2` is not on CRAN yet. Install it from r-universe:
 
 ```{r, eval = FALSE}
-install.packages("plot2", repos = c("https://cran.r-project.org",
-                                    "https://msberends.r-universe.dev"))
+install.packages("plot2", repos = c("https://msberends.r-universe.dev",
+                                    "https://cloud.r-project.org"))
 ```
 
 ---
@@ -65,7 +65,7 @@ library(plot2)
 mpg |> plot2(x = class, y = n(), x.sort = "freq-asc")
 ```
 
-Both produce the same chart. The difference is in how much you write.
+Both produce a sorted column chart with data labels; `plot2` also chooses the axis titles, theme and axis expansion by itself. The difference is in how much you write.
 
 ---
 
@@ -134,7 +134,7 @@ iris |> plot2(x = Sepal.Width, y = Sepal.Length, category = Species,
 When you need to distinguish the stroke from the fill (e.g. bars with a coloured border), `colour` controls the stroke and `colour_fill` controls the interior:
 
 ```{r, eval = FALSE}
-iris |> plot2(x = Species, y = mean(Sepal.Length),
+iris |> plot2(x = Species, y = mean(Sepal.Length), category = Species,
               colour = "black",
               colour_fill = c(setosa = "#3F681C", versicolor = "#375E97", virginica = "#FFBB00"))
 ```
@@ -163,8 +163,8 @@ mpg |> plot2(
 ### Special plot types
 
 ```{r, eval = FALSE}
-# Dumbbell: compare two groups side by side
-mpg |> plot2(x = manufacturer, y = mean(hwy), category = drv,
+# Dumbbell: compare two groups side by side (the category needs two values)
+mpg |> plot2(x = manufacturer, y = mean(hwy), category = year,
              type = "dumbbell",
              x.sort = "freq-desc")
 

@@ -4,7 +4,7 @@ title: README examples that are not evaluated are broken or misleading
 severity: medium
 type: docs
 area: housekeeping
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -53,3 +53,4 @@ Evaluate all README chunks (render with `eval = TRUE`, or keep the test A10.02 t
 
 - 2026-11-08: filed in R05; test A10.02 parked.
 - 2026-11-08: added the CRAN installation claim (the package is not on CRAN).
+- 2026-11-08: fixed and verified (Phase 1). Dumbbell example uses year (two values); the colour_fill example sets category = Species; 'the same chart' qualified; install text says plot2 is not on CRAN yet. A10.02 unparked. Tone rewrite left to I005.

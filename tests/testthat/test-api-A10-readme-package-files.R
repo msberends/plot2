@@ -25,7 +25,6 @@ test_that("A10.01 the evaluated README chunks run without error or warning", {
 })
 
 test_that("A10.02 the README chunks marked eval = FALSE run without error or warning too", {
-  skip_open_finding("F100")
   withr::local_pdf(NULL)
   res <- eval_chunks(source_file("README.Rmd"), exclude = "opts_chunk|install.packages|create_interactively")
   expect_identical(res$code[!is.na(res$error)], character(0))
