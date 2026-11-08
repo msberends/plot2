@@ -42,3 +42,4 @@ Always return character; tokenise the format string (only recognised tokens, all
 
 - 2026-11-07: filed in R01, reproduced.
 - 2026-11-08: R06 (sheet T02): the `d` format code gives space-padded days (`%e`), so date labels start with a space (" 5 February 2024") in every locale.
+- 2026-11-08: maintainer decided: format2() always returns character for dates (API change consented).

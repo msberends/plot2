@@ -4,7 +4,7 @@ title: Fonts downloaded without consent and showtext enabled globally
 severity: high
 type: design
 area: fonts
-status: needs-decision
+status: open
 verification: reading
 effort: M
 api_change: possible
@@ -13,7 +13,7 @@ related: []
 origin: R01 §2.4
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F011 Font download and global showtext
@@ -48,3 +48,4 @@ Make downloading opt-in (option `plot2.download_fonts`, or an exported `install_
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: maintainer decided: automatic download, scoped, if CRAN allows it, otherwise opt-in. CRAN Repository Policy (revision 6985, read 2026-11-08) allows user cache files in tools::R_user_dir() for R >= 4.0 if sizes are kept small and contents are actively managed (removing outdated material), and requires Internet use to fail gracefully; writing into the installed showtextdb folder is not allowed. So: automatic download into R_user_dir("plot2", "cache") with automatic pruning, graceful fallback, showtext switched on only while plot2 output is drawn.

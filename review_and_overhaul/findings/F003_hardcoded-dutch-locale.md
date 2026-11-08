@@ -4,7 +4,7 @@ title: Dates formatted in Dutch by default and locale handling is global and inc
 severity: critical
 type: i18n
 area: i18n
-status: needs-decision
+status: open
 verification: verified
 effort: M
 api_change: possible
@@ -13,7 +13,7 @@ related: [F029]
 origin: R01 §1.3
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F003 Dates formatted in Dutch by default; locale handling global and inconsistent
@@ -51,3 +51,4 @@ Default `locale = NULL` (system locale) everywhere; restore any locale change wi
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: maintainer decided: dates use the system locale everywhere (locale = NULL), any locale change restored with on.exit(); generated text in English by default; new option plot2.language = "nl" switches the generated words (titles, y.24h, y.age) and the date locale to Dutch.

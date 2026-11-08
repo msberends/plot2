@@ -55,3 +55,4 @@ Move `broom` to Suggests (use it only for model objects, with `check_installed()
 ## History
 
 - 2026-11-08: filed in R06 (sheet T06).
+- 2026-11-08: maintainer decided: broom to Suggests, replace cleaner by an internal formatter (plot2.freq stays), drop crayon in favour of cli, font packages (showtext, showtextdb, sysfonts) to Suggests with an install hint.
