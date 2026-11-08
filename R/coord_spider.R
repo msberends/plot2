@@ -384,19 +384,25 @@ CoordSpider <- ggproto(
       
       rr <- r_to_unit(panel_params$r_breaks)
       
-      x_base <- grid::unit(0.5, "npc") + grid::unit(self$r_label_pad_mm, "mm")
       aligned <- ifelse(self$r_label_pad_mm == 0,
                         "center",
                         ifelse(self$r_label_pad_mm > 0, "left", "right"))
+      # place the labels along the first spoke, which starts at angle `start` (F086)
+      x_pos  <- (rr * sin(panel_params$start) + 1) / 2
       y_pos  <- (rr * cos(panel_params$start) + 1) / 2
+      # font family and colour follow the theme
+      txt <- tryCatch(calc_element("axis.text", theme), error = function(e) NULL)
+      txt_family <- if (is.null(txt$family) || identical(txt$family, "")) NULL else txt$family
+      txt_colour <- txt$colour %or% "grey30"
       
       r_label_grobs <- lapply(seq_along(rr), function(i) {
         grid::textGrob(
           label = as.character(panel_params$r_labels[i]),
-          x = x_base,
+          x = grid::unit(x_pos[i], "npc") + grid::unit(self$r_label_pad_mm, "mm"),
           y = grid::unit(y_pos[i], "npc"),
           just = aligned,
-          gp = grid::gpar(fontsize = self$r_label_size)
+          gp = do.call(grid::gpar, c(list(fontsize = self$r_label_size, col = txt_colour),
+                                     list(fontfamily = txt_family)[!is.null(txt_family)]))
         )
       })
     }

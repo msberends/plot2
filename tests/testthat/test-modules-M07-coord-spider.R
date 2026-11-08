@@ -70,7 +70,6 @@ test_that("M07.07 facets work in plain ggplot2 (I003)", {
 })
 
 test_that("M07.08 radial labels follow start (F086)", {
-  skip_open_finding("F086")
   b <- built(radar(start = pi / 2))
   bg <- b$layout$coord$render_bg(b$layout$panel_params[[1]], ggplot2::theme_grey())
   txt <- Filter(function(k) inherits(k, "text"), bg$children)

@@ -4,7 +4,7 @@ title: coord_spider() radial labels ignore start and pile up at the centre
 severity: low
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -42,3 +42,4 @@ Place label i at `x = (r_i * sin(start) + 1) / 2`, `y = (r_i * cos(start) + 1) /
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; radial labels are placed along the first spoke at angle start, with font family and colour from the theme's axis.text (size still from r_label_size). Checked visually with start = pi / 2.
