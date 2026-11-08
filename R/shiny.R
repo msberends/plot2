@@ -51,7 +51,6 @@ create_interactively <- function(data = NULL,
   }
   
   rlang::check_installed("shiny")
-  rlang::check_installed("clipr")
   rlang::check_installed("pillar")
   rlang::check_installed("rio")
   if (isTRUE(upload_tab)) {
@@ -479,7 +478,8 @@ create_interactively <- function(data = NULL,
                             shiny::p("Generated code:"),
                             shiny::tags$div(
                               class = "copy-container",
-                              shiny::actionButton("copy_btn", "Copy", class = "copy-button"),
+                              # copied in the browser, not on the server (F117)
+                              shiny::actionButton("copy_btn", "Copy", class = "copy-button", onclick = shiny_copy_js()),
                               shiny::verbatimTextOutput("code"),
                               shiny::uiOutput("plot2_msgs")
                             ),
@@ -873,18 +873,35 @@ create_interactively <- function(data = NULL,
       }
     })
 
-    shiny::observeEvent(input$copy_btn, {
-      clipr::write_clip(paste0(call_string(), "\n"), object_type = "character")
-      shiny::showNotification("Code copied to clipboard.", duration = 2, closeButton = FALSE, type = "message")
+    shiny::observeEvent(input$copy_result, {
+      if (identical(input$copy_result, "ok")) {
+        shiny::showNotification("Code copied to clipboard.", duration = 2, closeButton = FALSE, type = "message")
+      } else {
+        shiny::showNotification("The browser did not allow copying. Select the code and copy it by hand.", duration = 5, type = "warning")
+      }
     })
 
     # the plot of this session (F112)
     export_plot <- function() {
       p <- plot_result()$plot
       if (is.null(p)) {
-        stop("There is no plot to export.", call. = FALSE)
+        export_refuse("There is no plot to export.")
       }
       p
+    }
+    # the size of an export, checked on the server (F122): the limits of the inputs
+    # in the browser can be bypassed, and a raster image must stay within a budget
+    export_refuse <- function(msg) {
+      shiny::showNotification(msg, type = "error", duration = 8)
+      stop(msg, call. = FALSE)
+    }
+    export_size <- function(raster) {
+      size <- shiny_export_size(input$export_width_cm, input$export_height_cm,
+                                if (raster) input$export_dpi else NULL)
+      if (!is.null(size$problem)) {
+        export_refuse(size$problem)
+      }
+      size
     }
     output$export_pdf <- shiny::downloadHandler(
       filename = function() paste0("plot_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".pdf"),
@@ -893,8 +910,8 @@ create_interactively <- function(data = NULL,
                         plot   = export_plot(),
                         device = "pdf",
                         units  = "cm",
-                        width  = input$export_width_cm,
-                        height = input$export_height_cm)
+                        width  = export_size(FALSE)$width,
+                        height = export_size(FALSE)$height)
       }
     )
     output$export_svg <- shiny::downloadHandler(
@@ -904,8 +921,8 @@ create_interactively <- function(data = NULL,
                         plot   = export_plot(),
                         device = "svg",
                         units  = "cm",
-                        width  = input$export_width_cm,
-                        height = input$export_height_cm)
+                        width  = export_size(FALSE)$width,
+                        height = export_size(FALSE)$height)
       }
     )
     output$export_png <- shiny::downloadHandler(
@@ -917,9 +934,9 @@ create_interactively <- function(data = NULL,
                         plot   = export_plot(),
                         device = "png",
                         units  = "cm",
-                        dpi    = as.integer(input$export_dpi),
-                        width  = input$export_width_cm,
-                        height = input$export_height_cm)
+                        dpi    = export_size(TRUE)$dpi,
+                        width  = export_size(TRUE)$width,
+                        height = export_size(TRUE)$height)
       }
     )
     output$export_jpg <- shiny::downloadHandler(
@@ -929,9 +946,9 @@ create_interactively <- function(data = NULL,
                         plot   = export_plot(),
                         device = "jpeg",
                         units  = "cm",
-                        dpi    = as.integer(input$export_dpi),
-                        width  = input$export_width_cm,
-                        height = input$export_height_cm)
+                        dpi    = export_size(TRUE)$dpi,
+                        width  = export_size(TRUE)$width,
+                        height = export_size(TRUE)$height)
       }
     )
 
@@ -943,14 +960,14 @@ create_interactively <- function(data = NULL,
     # always knows exactly how large the raster file will be.
     output$export_px_preview <- shiny::renderUI({
       shiny::req(input$export_width_cm, input$export_height_cm, input$export_dpi)
-      dpi  <- as.numeric(input$export_dpi)
-      w_px <- floor(input$export_width_cm  / 2.54 * dpi)
-      h_px <- floor(input$export_height_cm / 2.54 * dpi)
+      size <- shiny_export_size(input$export_width_cm, input$export_height_cm, input$export_dpi)
       shiny::p(
-        shiny::HTML(paste0(
-          "PDF and SVG are lossless formats. For JPG and PNG, the image size will be ",
-          format(w_px, big.mark = ","), " × ", format(h_px, big.mark = ","), " px."
-        )),
+        if (!is.null(size$problem)) {
+          size$problem
+        } else {
+          paste0("PDF and SVG are lossless formats. For JPG and PNG, the image size will be ",
+                 format(size$px[1], big.mark = ","), " \u00d7 ", format(size$px[2], big.mark = ","), " px.")
+        },
         style = "color: var(--bs-secondary); font-size: 0.82rem; margin-top: -6px; margin-bottom: 6px; width: 100%;"
       )
     })
@@ -1491,6 +1508,60 @@ shiny_code_text <- function(data_code, args) {
   }
 }
 
+# The size of an export in cm, and for raster images the DPI and pixels. Returns
+# list(width, height, dpi, px, problem); problem is set when a value is outside the
+# limits of the inputs or a raster image would exceed the pixel budget (F122).
+shiny_export_size <- function(width, height, dpi = NULL, max_pixels = 40e6) {
+  number <- function(x) {
+    x <- suppressWarnings(as.numeric(x))
+    if (length(x) == 1 && is.finite(x)) x else NA_real_
+  }
+  width <- number(width)
+  height <- number(height)
+  out <- list(width = width, height = height, dpi = NULL, px = NULL, problem = NULL)
+  if (is.na(width) || is.na(height) || width < 1 || width > 100 || height < 1 || height > 100) {
+    out$problem <- "Width and height must be between 1 and 100 cm."
+    return(out)
+  }
+  if (!is.null(dpi)) {
+    dpi <- number(dpi)
+    if (is.na(dpi) || dpi < 1 || dpi > 1200) {
+      out$problem <- "DPI must be between 1 and 1200."
+      return(out)
+    }
+    out$dpi <- round(dpi)
+    out$px <- floor(c(width, height) / 2.54 * out$dpi)
+    if (prod(out$px) > max_pixels) {
+      out$problem <- paste0("At ", format(out$px[1], big.mark = ","), " \u00d7 ", format(out$px[2], big.mark = ","),
+                            " px, the image would exceed the maximum of ", max_pixels / 1e6,
+                            " megapixels. Lower the size or the DPI.")
+    }
+  }
+  out
+}
+
+# JavaScript of the copy button: copies the generated code in the browser and reports
+# to the server whether that worked (F117)
+shiny_copy_js <- function() {
+  paste0(
+    "(function() {",
+    "  var text = document.getElementById('code').innerText;",
+    "  var report = function(ok) { Shiny.setInputValue('copy_result', ok ? 'ok' : 'failed', {priority: 'event'}); };",
+    "  var fallback = function() {",
+    "    var area = document.createElement('textarea');",
+    "    area.value = text; area.style.position = 'fixed'; area.style.opacity = '0';",
+    "    document.body.appendChild(area); area.select();",
+    "    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}",
+    "    document.body.removeChild(area); return ok;",
+    "  };",
+    "  if (navigator.clipboard && window.isSecureContext) {",
+    "    navigator.clipboard.writeText(text).then(function() { report(true); }, function() { report(fallback()); });",
+    "  } else {",
+    "    report(fallback());",
+    "  }",
+    "})();")
+}
+
 # how the column selectors show items: the type of each column as a coloured label
 shiny_selectize_render <- function() {
   selectize_style <- "
@@ -1571,9 +1642,7 @@ install_shiny_deps <- function() {
   rlang::check_installed(c(
     # Core Shiny app
     "bslib",
-    "clipr",
     "DT",
-    "fansi",
     "pillar",
     "rio",
     "shiny",

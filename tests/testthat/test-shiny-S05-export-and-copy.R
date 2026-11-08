@@ -51,25 +51,36 @@ test_that("S05.03 the pixel size of raster exports is shown", {
 })
 
 test_that("S05.04 an export size beyond what the server should render is refused", {
-  skip_open_finding("F122")
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session)
     shiny_change(session, x = "Species", y = "Sepal.Width")
     invisible(output$plot)
-    # the maxima of the app's own inputs: 47,244 x 47,244 px, several GB of memory;
-    # remove the skip only together with the fix
+    # the maxima of the app's own inputs: 47,244 x 47,244 px, several GB of memory
     session$setInputs(export_width_cm = 100, export_height_cm = 100, export_dpi = 1200)
-    expect_error(output$export_png)
+    expect_error(output$export_png, "megapixels")
+    expect_match(output$export_px_preview$html, "megapixels")
+    # beyond the limits of the inputs, which a client can bypass
+    session$setInputs(export_width_cm = 1e6, export_dpi = 300)
+    expect_error(output$export_pdf, "between 1 and 100 cm")
   })
 })
 
 test_that("S05.05 the copy button works when the app runs on a server", {
-  skip_open_finding("F117")
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session)
     session$setInputs(copy_btn = 1)
     expect_false(session$isClosed())
+    # the browser copies the code and reports the result
+    session$setInputs(copy_result = "ok")
+    expect_false(session$isClosed())
   })
+})
+
+test_that("S05.06 the copy button copies in the browser, not on the server", {
+  app <- shiny_app()
+  html <- as.character(shiny_app_env(app)$ui)
+  expect_match(html, "navigator.clipboard", fixed = TRUE)
+  expect_false(any(grepl("clipr", deparse(shiny_app_env(app)$server), fixed = TRUE)))
 })

@@ -543,7 +543,7 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
 #' create_interactively() returns the app instead of running it. The served
 #' logo folder is removed when the calling test ends.
 shiny_app <- function(..., .env = parent.frame()) {
-  for (p in c("shiny", "shinyjs", "bslib", "DT", "clipr", "pillar", "rio", "fansi")) {
+  for (p in c("shiny", "shinyjs", "bslib", "DT", "pillar", "rio")) {
     testthat::skip_if_not_installed(p)
   }
   withr::defer({

@@ -4,7 +4,7 @@ title: The copy button writes to the clipboard of the R process, not of the user
 severity: medium
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -50,3 +50,4 @@ Copy in the browser with `navigator.clipboard.writeText()` (a few lines of JavaS
 ## History
 
 - 2026-11-08: filed in R07 (verified).
+- 2026-11-08: fixed: the copy button copies in the browser (navigator.clipboard, with a fallback for non-secure origins) and reports the result to the server for a notification; clipr (and the no longer used fansi) removed from the app and from Suggests. Tests S05.05 (unparked), S05.06; verified in headless Chromium (clipboard holds the code).

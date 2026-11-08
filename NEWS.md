@@ -1,5 +1,7 @@
 # plot2 1.99.0.9000
 
+* create_interactively() refuses exports above 40 megapixels, and checks export sizes on the server
+* The copy button of create_interactively() copies in the browser, so it also works when the app runs on a server; the app no longer needs the clipr and fansi packages
 * create_interactively() shows plot2's messages also on a server, and shows the actual error message
 * create_interactively() has inputs for the secondary axis
 * create_interactively(): vectors such as y.limits = c(0, 10), formulas and label functions can be entered, and text that looks like a number stays text

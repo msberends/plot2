@@ -4,8 +4,8 @@ title: Export width, height and DPI are not checked on the server; the app's own
 severity: critical
 type: security
 area: shiny
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: S
 api_change: no
 locations: [R/shiny.R:566, R/shiny.R:572, R/shiny.R:1058]
@@ -48,3 +48,4 @@ Validate on the server with `shiny::validate()`/`req()`: positive finite numbers
 
 - 2026-11-08: filed in R07 (by reading, with a probe of ragg's limit).
 - 2026-11-08: severity set to critical by the maintainer (all security findings are critical).
+- 2026-11-08: fixed: shiny_export_size() checks width and height (1 to 100 cm) and DPI (1 to 1200) on the server, and raster exports against a budget of 40 megapixels; refusals give a notification, and the size preview states the problem. Test S05.04 unparked and extended.
