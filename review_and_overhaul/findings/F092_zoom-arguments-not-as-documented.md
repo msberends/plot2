@@ -4,7 +4,7 @@ title: x.zoom, y.zoom and zoom do not set the expansion to 0 as documented, and 
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -57,3 +57,4 @@ Decide the intended expansion for zoomed axes (the code comment says "set defaul
 
 - 2026-11-08: filed in R05 (sheet A03); tests A03.01 to A03.03 parked.
 - 2026-11-08: maintainer decided: zoomed axes cover the data range with ggplot2's usual small expansion (5% on continuous axes); `zoom = TRUE` equals `x.zoom = TRUE, y.zoom = TRUE` and respects `y.limits`; documentation to match.
+- 2026-11-08: fixed and verified (Phase 1). x.zoom and y.zoom cover the data range with a 5% expansion unless an expansion is set; zoom = TRUE only sets both, so it equals x.zoom + y.zoom and respects y.limits. A03.01 to A03.03 and 05.14 updated to the decision and unparked.

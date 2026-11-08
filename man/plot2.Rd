@@ -283,7 +283,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.mic}{\link{logical} to indicate whether the X-axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
 
-\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the X-axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the Y-axis.}
+\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
 
 \item{y.24h}{A \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences.}
 
@@ -401,7 +401,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{sankey.remove_axes}{Logical to indicate whether all axes must be removed in a Sankey plot.}
 
-\item{zoom}{A \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
+\item{zoom}{A \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This is identical to setting \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
 
 \item{sep}{Separator character to use if multiple columns are given to either of the three directions: \code{x}, \code{category} and \code{facet}, e.g. \code{facet = c(column1, column2)}.}
 

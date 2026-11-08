@@ -101,8 +101,8 @@ test_that("05.14 x.zoom = TRUE makes the axis follow the data", {
   d <- data.frame(x = c(5, 6, 9), y = 1:3)
   p <- expect_plot2(plot2(d, x, y, x.zoom = TRUE))
   expect_false(0 %in% axis_breaks(p, "x"))
-  skip_open_finding("F092")
-  expect_equal(axis_range(p, "x"), c(5, 9))
+  # 5% expansion on both sides (F092)
+  expect_equal(axis_range(p, "x"), c(4.8, 9.2))
 })
 
 test_that("05.15 x.breaks and an x.labels function are honoured", {

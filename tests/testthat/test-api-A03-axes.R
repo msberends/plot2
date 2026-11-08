@@ -18,20 +18,20 @@
 x_range <- function(p) axis_range(p, "x")
 y_range <- function(p) axis_range(p, "y")
 
-test_that("A03.01 x.zoom sets x.limits = c(NA, NA) and x.expand = 0, as documented", {
-  skip_open_finding("F092")
+# F092 (maintainer's decision): zoomed axes cover the data with ggplot2's usual 5% expansion
+expand5 <- function(x) range(x) + c(-1, 1) * 0.05 * diff(range(x))
+
+test_that("A03.01 x.zoom covers the data range with a 5% expansion, as documented", {
   p <- plot2(iris, Sepal.Length, Sepal.Width, x.zoom = TRUE)
-  expect_equal(x_range(p), range(iris$Sepal.Length))
+  expect_equal(x_range(p), expand5(iris$Sepal.Length))
 })
 
-test_that("A03.02 y.zoom sets y.limits = c(NA, NA) and y.expand = 0, as documented", {
-  skip_open_finding("F092")
+test_that("A03.02 y.zoom covers the data range with a 5% expansion, as documented", {
   p <- plot2(iris, Sepal.Length, Sepal.Width, y.zoom = TRUE)
-  expect_equal(y_range(p), range(iris$Sepal.Width))
+  expect_equal(y_range(p), expand5(iris$Sepal.Width))
 })
 
 test_that("A03.03 zoom = TRUE equals x.zoom = TRUE plus y.zoom = TRUE", {
-  skip_open_finding("F092")
   a <- plot2(iris, Sepal.Length, Sepal.Width, zoom = TRUE)
   b <- plot2(iris, Sepal.Length, Sepal.Width, x.zoom = TRUE, y.zoom = TRUE)
   expect_equal(x_range(a), x_range(b))

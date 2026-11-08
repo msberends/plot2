@@ -756,8 +756,8 @@ validate_x_scale <- function(df,
     x.limits <- c(NA_real_, NA_real_)
     plot2_env$x_lim <- x.limits
     if (is.null(x.expand)) {
-      # set default value to 0.5
-      x.expand <- 0.5
+      # zoom to the data with ggplot2's usual 5% expansion (F092)
+      x.expand <- c(0.05, 0.05)
     }
   }
   
@@ -1005,7 +1005,8 @@ validate_y_scale <- function(df,
     y.limits <- c(NA_real_, NA_real_)
     plot2_env$y_lim <- y.limits
     if (is.null(y.expand)) {
-      y.expand <- c(0.25, 0.25)
+      # zoom to the data with ggplot2's usual 5% expansion (F092)
+      y.expand <- c(0.05, 0.05)
     }
   }
   if (is.null(y.transform)) {

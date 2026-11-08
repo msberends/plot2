@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `x.zoom`, `y.zoom` and `zoom` now zoom to the data with ggplot2's usual 5% expansion (previously 50% for x and 25% for y), `zoom = TRUE` is identical to `x.zoom = TRUE, y.zoom = TRUE`, and it no longer expands beyond `y.limits`
 * The help pages of `legend.position` and of the package options (`?plot2-options`) now state the actual defaults
 * Main vignette: corrected several explanations that did not match their example code
 * README: corrected the installation instructions (not on CRAN yet) and two examples that failed or did not do what the text said

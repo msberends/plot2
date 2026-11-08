@@ -114,7 +114,7 @@
 #' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. `x.expand` defaults to 0.5 and `y.expand` defaults to `0.25`, except for sf objects (then both default to 0).
 #' @param x.transform,y.transform,category.transform A transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position Position of the axis.
-#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, by setting `x.limits = c(NA, NA)` and `x.expand = 0` for the X-axis, or `y.limits = c(NA, NA)` and `y.expand = 0` for the Y-axis.
+#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. This sets `x.limits = c(NA, NA)` (or `y.limits`) and, unless `x.expand` (or `y.expand`) is set, a 5% expansion on both sides, like `ggplot2` does. It has no effect if `x.limits` (or `y.limits`) is set.
 #' @param category.type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint Settings for the plotting direction `category`.
 #' @param category.limits Limits to use for a numeric category, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero.
@@ -176,7 +176,7 @@
 #' @param sankey.node_whitespace Whitespace between the nodes in a Sankey plot.
 #' @param sankey.alpha Alpha of the flows in a Sankey plot.
 #' @param sankey.remove_axes Logical to indicate whether all axes must be removed in a Sankey plot.
-#' @param zoom A [logical] to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set `x.zoom = TRUE` and `y.zoom = TRUE`.
+#' @param zoom A [logical] to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This is identical to setting `x.zoom = TRUE` and `y.zoom = TRUE`.
 #' @param sep Separator character to use if multiple columns are given to either of the three directions: `x`, `category` and `facet`, e.g. `facet = c(column1, column2)`.
 #' @param print A [logical] to indicate if the result should be [printed][print()] instead of just returned.
 #' @param text_factor Text factor to use, which will apply to all texts shown in the plot.
@@ -1397,14 +1397,9 @@ plot2_exec <- function(.data,
   }
   
   if (isTRUE(zoom)) {
+    # exactly the same as x.zoom = TRUE and y.zoom = TRUE (F092)
     x.zoom <- TRUE
     y.zoom <- TRUE
-    if (is.null(x.expand)) {
-      x.expand <- c(0.15, 0.15)
-    }
-    if (is.null(y.expand)) {
-      y.expand <- c(0.15, 0.15)
-    }
   }
   
   # check if markdown is required
