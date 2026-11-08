@@ -12,7 +12,9 @@ Newest entry first. One entry per working session: what was done, what changed s
 - Tone rewrite of README and vignettes left to I005 (draft for the maintainer); F100 and F101 corrected facts only.
 - Question from the maintainer: how finding IDs in tests stay traceable. Proposed (awaiting decision): keep `review_and_overhaul/` permanently, let `skip_open_finding()` print the finding title, optionally move open findings to GitHub issues at the end.
 - Full suite (NOT_CRAN=true): 543 tests, 0 failures, 0 warnings, 75 skips. Without NOT_CRAN the suite skips 35 more tests; earlier totals in this journal used NOT_CRAN.
-- Next: Phase 1 remainder needs decisions (F092, F094 with I004/D001, F134); then Phase 2 per roadmap.
+- Maintainer decided (AskUserQuestion): F094 NULL means automatic (API change consented; stays in Phase 5 with F035/I004 unless pulled forward); F092 5% expansion, fixed (50bd256); F134 documentation only (wontfix, T07.02b now tests the cairo_pdf advice); traceability: open findings move to GitHub issues at the end of the overhaul (roadmap).
+- Full suite after F092: 543 tests, 0 failures, 0 warnings, 70 skips.
+- Next: Phase 2 per roadmap; F093 points 1, 2, 4 and 6 with F094.
 
 ## 2026-11-08 (session 6, continued: Phase 1, second part)
 
