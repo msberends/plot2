@@ -74,7 +74,7 @@ test_that("F014 diagnostics come grouped at the end of the call, in order of occ
   types <- character(0)
   texts <- character(0)
   withCallingHandlers(
-    invisible(plot2(data.frame(x = c("b", "a", "c"), y = c(1, NA, 3)), x, y, colour = "#12:4;6")),
+    invisible(plot2(data.frame(x = c("b", "a", "c"), y = c(1, NA, 3)), x, y, colour = "#12:4;6", type = "step")),
     message = function(m) {
       if (inherits(m, "plot2_message")) {
         types <<- c(types, if (inherits(m, "plot2_caution")) "caution" else "info")

@@ -65,14 +65,12 @@ test_that("M09.06 registered colours survive the internal clean-up", {
 })
 
 test_that("M09.07 one invalid colour does not replace the valid ones (F088)", {
-  skip_open_finding("F088")
-  x <- get_colour(c(a = "red", b = "nope", c = "blue"))
+  expect_warning(x <- get_colour(c(a = "red", b = "nope", c = "blue")), "nope", class = "plot2_warning")
   expect_length(x, 3)
   expect_identical(as.character(unname(x[c(1, 3)])), c("#FF0000", "#0000FF"))
 })
 
 test_that("M09.08 registering an invalid colour errors (F088)", {
-  skip_open_finding("F088")
   expect_error(register_colour(test_bad = "notacolour"))
 })
 

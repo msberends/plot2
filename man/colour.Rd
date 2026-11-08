@@ -32,8 +32,10 @@ add_white(x, white)
 \item \code{"ggplot2"}, which gives the colours that ggplot2 itself would use, i.e. the same as not setting a colour
 \item One of the built-in \R palettes from \code{\link[grDevices:palette.pals]{grDevices::palette.pals()}}, such as \code{"R4"}, \code{"Okabe-Ito"} or \code{"Tableau 10"}, or one of \code{"topo"}, \code{"heatmap"}, \code{"rainbow"}, \code{"terrain"}, \code{"greyscale"}, \code{"grayscale"}
 \item One of the built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"bisque"}, \code{"cornsilk4"}, \code{"lightcoral"}, \code{"salmon2"}, \code{"slateblue"}
-\item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
-}}
+\item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}} (case-insensitive)
+}
+
+An invalid colour gives a warning and is replaced by grey, while valid colours and names are kept. A single unknown name, such as a mistyped palette, is replaced by the default colours. \code{\link[=register_colour]{register_colour()}} gives an error for invalid colours.}
 
 \item{length}{Size of the vector to be returned.}
 

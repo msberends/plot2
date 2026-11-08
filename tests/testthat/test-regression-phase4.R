@@ -202,3 +202,13 @@ test_that("F040 add_type() adds a layer when data is given, and warns when there
   p3 <- add_type(plot2(iris, Species, Sepal.Length, type = "boxplot"), type = "beeswarm")
   expect_s3_class(p3$layers[[length(p3$layers)]]$position, "PositionBeeswarm")
 })
+
+test_that("F088 invalid colours are replaced one by one with a warning; registration is strict and names are case-insensitive", {
+  expect_warning(x <- get_colour(c(a = "red", b = "nope", c = "blue")), "nope", class = "plot2_warning")
+  expect_identical(names(x), c("a", "b", "c"))
+  expect_identical(as.character(unname(x)), c("#FF0000", "#595959", "#0000FF"))
+  expect_error(register_colour(test_bad = "notacolour"), "test_bad")
+  suppressMessages(register_colour(test_red = "#AA0000"))
+  withr::defer(suppressMessages(unregister_colour("^test_red$")))
+  expect_identical(as.character(get_colour("TEST_RED")), "#AA0000")
+})

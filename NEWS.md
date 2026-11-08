@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* An invalid colour in `colour` now gives a warning and is replaced by grey on its own, keeping the other colours and their names (previously the whole vector became one grey); `register_colour()` gives an error for invalid colours, and registered colour names are matched case-insensitively
 * `add_type()` now adds the layer when `data` is given to a plot without top-level data, warns when there is no data at all (instead of silently returning the plot unchanged), and supports beeswarm types
 * Plot types without dedicated support (such as `"step"`) no longer receive arguments they do not accept, so ggplot2 no longer warns about unknown parameters; the notice that such a type is 'only loosely supported' is now a message instead of a warning
 * `text_factor` now scales every text element by exactly that factor, also in themes with relative sizes such as `theme_bw()`

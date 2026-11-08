@@ -22,7 +22,9 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' * `"ggplot2"`, which gives the colours that ggplot2 itself would use, i.e. the same as not setting a colour
 #' * One of the built-in \R palettes from [grDevices::palette.pals()], such as `"R4"`, `"Okabe-Ito"` or `"Tableau 10"`, or one of `"topo"`, `"heatmap"`, `"rainbow"`, `"terrain"`, `"greyscale"`, `"grayscale"`
 #' * One of the built-in [colours()] in \R (even case-insensitive), such as `"bisque"`, `"cornsilk4"`, `"lightcoral"`, `"salmon2"`, `"slateblue"`
-#' * One of the pre-registered colours using [register_colour()]
+#' * One of the pre-registered colours using [register_colour()] (case-insensitive)
+#' 
+#' An invalid colour gives a warning and is replaced by grey, while valid colours and names are kept. A single unknown name, such as a mistyped palette, is replaced by the default colours. [register_colour()] gives an error for invalid colours.
 #' @param length Size of the vector to be returned.
 #' @param opacity Amount of opacity (0 = solid, 1 = transparent).
 #' @details 
@@ -76,8 +78,9 @@ get_colour <- function(x, length = 1, opacity = 0) {
   
   if (length(x) == 1) {
     
-    if (x %in% names(plot2_env$reg_cols)) {
-      x <- plot2_env$reg_cols[names(plot2_env$reg_cols) == x][[1]]
+    # registered names are matched case-insensitively, like R's colour names (F088)
+    if (tolower(x) %in% tolower(names(plot2_env$reg_cols))) {
+      x <- plot2_env$reg_cols[[match(tolower(x), tolower(names(plot2_env$reg_cols)))]]
       if (length(x) < length) {
         x <- grDevices::colorRampPalette(x)(length)
         # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
@@ -137,8 +140,10 @@ get_colour <- function(x, length = 1, opacity = 0) {
                                            function(rgb) rgb(red = rgb[1], green = rgb[2], blue = rgb[3], maxColorValue = 255))
   }
   # replace pre-registered colour names with HTML code
-  if (any(x %in% names(plot2_env$reg_cols))) {
-    x[x %in% names(plot2_env$reg_cols)] <- unlist(plot2_env$reg_cols[match(x[x %in% names(plot2_env$reg_cols)], names(plot2_env$reg_cols))], use.names = FALSE)
+  reg <- tolower(x) %in% tolower(names(plot2_env$reg_cols))
+  if (any(reg)) {
+    x[reg] <- vapply(plot2_env$reg_cols[match(tolower(x[reg]), tolower(names(plot2_env$reg_cols)))],
+                     function(cols) cols[1L], FUN.VALUE = character(1))
   }
   
   # support #ffa -> #ffffaa
@@ -161,8 +166,15 @@ get_colour <- function(x, length = 1, opacity = 0) {
   invalid <- !grepl("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$", x, perl = TRUE)
   if (any(invalid)) {
     inv <- unique(x[invalid])
-    plot2_caution("Invalid colour", ifelse(length(inv) != 1, "s", ""), " set (", toString(paste0('"', inv, '"')), "), replacing with default ggplot2 colour", ifelse(length(inv) != 1, "s", ""))
-    return(get_colour("ggplot2", length = length))
+    if (length(inv) == 1 && all(invalid) && length(x_names) == 0) {
+      # one unknown name, such as a mistyped palette: use the default colours
+      plot2_warning("Invalid colour (\"", inv, "\") replaced with the default colours")
+      x <- unname(as.character(get_colour("ggplot2", length = length(x))))
+    } else {
+      # replace only the invalid colours, keeping the valid ones, the names and the length (F088)
+      plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), " (", toString(paste0('"', inv, '"')), ") replaced with grey")
+      x[invalid] <- "#595959"
+    }
   }
   
   if (length > length(x)) {
@@ -287,10 +299,15 @@ register_colour <- function(...) {
       stop("Input must be named", call. = FALSE)
     }
     
-    out <- as.character(suppressWarnings(suppressMessages(get_colour(dots[[i]]))))
-    if (anyNA(out)) {
+    if (anyNA(dots[[i]])) {
       stop("Input must not be NA, and must be known, valid colours", call. = FALSE)
     }
+    # an invalid colour is an error here, not a grey replacement (F088)
+    out <- tryCatch(as.character(suppressMessages(get_colour(dots[[i]]))),
+                    plot2_warning = function(w) {
+                      stop("`", name, "` must contain known, valid colours, not: ",
+                           toString(paste0('"', dots[[i]], '"')), call. = FALSE)
+                    })
     
     if (length(out) == 1) {
       n_colours <- n_colours + 1

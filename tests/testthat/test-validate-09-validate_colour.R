@@ -79,6 +79,6 @@ test_that("09.10 category.focus colours the focused category and greys the other
 })
 
 test_that("09.11 an invalid colour name is reported and replaced by the default colours", {
-  p <- expect_plot2_message(plot2(fx_cat, x, y, category, colour = "notacolourxyz"), "Invalid colour set")
+  expect_warning(p <- plot2(fx_cat, x, y, category, colour = "notacolourxyz"), "Invalid colour", class = "plot2_warning")
   expect_identical(length(unique(scale_values(p, "fill"))), 2L)
 })

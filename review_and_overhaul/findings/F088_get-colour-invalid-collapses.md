@@ -4,7 +4,7 @@ title: One invalid colour replaces the whole colour vector by a single grey; reg
 severity: medium
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -37,3 +37,4 @@ Replace only the invalid elements (keep names and length), raise a real warning 
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed: get_colour() replaces only invalid elements with grey (#595959), keeping valid colours, names and length, with a real warning; a single unknown unnamed name (likely a mistyped palette) still falls back to the default palette, now with a warning; register_colour() errors on invalid colours; registered names are matched case-insensitively. Documented under x. Tests: M09.07 and M09.08 unparked, 09.11 and the F016 regression test now expect a warning, the F014 ordering test uses type = 'step' as its caution source, test-regression-phase4.R (F088).
