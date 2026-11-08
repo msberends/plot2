@@ -4,7 +4,7 @@ title: Back-to-back halves assign category colours independently, so colours do 
 severity: high
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Determine the category levels and colours once from the full data and pass a nam
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: Fixed: colours are named by all category levels before the halves are built (b2b_named_colours()), both halves get the full levels in their discrete colour and fill scales (b2b_all_levels()) and show.legend = TRUE, so colours match and patchwork merges one legend. Tests E08.05 and E08.08.

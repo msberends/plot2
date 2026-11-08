@@ -186,9 +186,6 @@ back2back_plot <- function(df,
     y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
   }
   
-  if (isTRUE(facet.fixed_x) || isTRUE(facet.fixed_y)) {
-    plot2_caution("For fixed scales, set `y.limits` when using back-to-back plots")
-  }
   
   # legend
   if (is.null(legend.position)) {
@@ -200,8 +197,18 @@ back2back_plot <- function(df,
   }
   legend.position <- validate_legend.position(legend.position)
   
-  suppressMessages(
-    left_plot <- df_left |>
+  # one colour per category for both halves, from all data, so that a category has
+  # the same colour on both sides also when it is missing on one side (F066)
+  if (has_category(df) && !data_is_numeric(get_category(df))) {
+    category_levels <- levels(as.factor(get_category(df)))
+    colour <- b2b_named_colours(colour, category_levels, colour_transparency)
+    if (!is.null(colour_fill) && !isTRUE(colour_fill)) {
+      colour_fill <- b2b_named_colours(colour_fill, category_levels, colour_transparency)
+    }
+  }
+
+  make_left <- function(y.limits) suppressMessages(
+    df_left |>
       select(-starts_with("_var_")) |>
       plot2(x = !!rlang::sym(get_x_name(df)),
             y = !!get_y(df_left),
@@ -327,14 +334,16 @@ back2back_plot <- function(df,
             font = font,
             theme = theme,
             background = background,
-            markdown = markdown
+            markdown = markdown,
+            # keys for all categories, also those missing in this half (F066)
+            show.legend = if (has_category(df)) TRUE else NA
       ) +
       ggplot2::theme(axis.text.y = element_blank(),
             plot.margin = margin(5,5,5,5))
   )
   
-  suppressMessages(
-    right_plot <- df_right |>
+  make_right <- function(y.limits) suppressMessages(
+    df_right |>
       select(-starts_with("_var_")) |>
       plot2(x = !!rlang::sym(get_x_name(df)),
             y = !!get_y(df_right),
@@ -459,12 +468,30 @@ back2back_plot <- function(df,
             font = font,
             theme = theme,
             background = background,
-            markdown = markdown
+            markdown = markdown,
+            # keys for all categories, also those missing in this half (F066)
+            show.legend = if (has_category(df)) TRUE else NA
       ) +
       ggplot2::theme(axis.text.y = element_text(hjust = 0.5,
                                        margin = margin(l = 10, r = 10)),
             plot.margin = margin(5, 5, 5, 0))
   )
+
+  left_plot <- make_left(y.limits)
+  right_plot <- make_right(y.limits)
+  category_levels <- if (has_category(df) && !data_is_numeric(get_category(df))) levels(as.factor(get_category(df))) else NULL
+  if (is.null(y.limits)) {
+    # one value scale for both halves, so that equal lengths mean equal values (F064)
+    y_max <- max(b2b_max_value(left_plot), b2b_max_value(right_plot))
+    if (is.finite(y_max) && y_max > 0) {
+      left_plot <- make_left(c(0, y_max))
+      right_plot <- make_right(c(0, y_max))
+    }
+  }
+  if (!is.null(category_levels)) {
+    left_plot <- b2b_all_levels(left_plot, category_levels)
+    right_plot <- b2b_all_levels(right_plot, category_levels)
+  }
 
   p <- patchwork::wrap_plots(left_plot,
                              right_plot,
@@ -509,4 +536,47 @@ back2back_plot <- function(df,
   } else {
     p
   }
+}
+
+# colours named by category level, unless they are named already
+b2b_named_colours <- function(colour, levels, transparency) {
+  if (!is.null(names(colour)) || length(levels) == 0) {
+    return(colour)
+  }
+  cols <- if (length(colour) == 1) {
+    get_colour(colour, length = length(levels), transparency = transparency)
+  } else {
+    get_colour(colour, transparency = transparency)
+  }
+  if (length(cols) < length(levels)) {
+    cols <- rep_len(cols, length(levels))
+  }
+  cols <- as.character(cols)[seq_along(levels)]
+  stats::setNames(cols, levels)
+}
+
+# the largest absolute value of the value axis of one half, including the room
+# that plot2 leaves for datalabels
+b2b_max_value <- function(p) {
+  built <- ggplot2::ggplot_build(p)
+  params <- built$layout$panel_params[[1]]
+  # the halves are horizontal: the value axis is drawn as x
+  range <- params$x.range
+  if (is.null(range)) range <- params$x$continuous_range
+  range <- abs(suppressWarnings(as.numeric(range)))
+  if (any(is.finite(range))) max(range[is.finite(range)]) else -Inf
+}
+
+# the same categories in the legend of both halves, so that patchwork collects one
+# legend (F066): a copy of each discrete colour scale with all levels as limits
+b2b_all_levels <- function(p, levels) {
+  for (aes in c("colour", "fill")) {
+    sc <- p$scales$get_scales(aes)
+    if (!is.null(sc) && inherits(sc, "ScaleDiscrete")) {
+      sc <- sc$clone()
+      sc$limits <- levels
+      p <- suppressMessages(p + sc)
+    }
+  }
+  p
 }

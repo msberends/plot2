@@ -4,7 +4,7 @@ title: Back-to-back plots draw both halves on independent value scales
 severity: high
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -44,3 +44,4 @@ Compute the common maximum over both halves (after summarising) and pass it as `
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: Fixed: both halves are built twice, the second time with shared limits c(0, max) taken from the first build (b2b_max_value()), unless the user sets y.limits. The caution about fixed scales is removed. Test E08.03 and E08.08.

@@ -38,7 +38,6 @@ test_that("E08.02 title and subtitle are placed on the combined plot", {
 })
 
 test_that("E08.03 both halves share the same value range (F064)", {
-  skip_open_finding("F064")
   p <- plot2(fx_pop, age, n, facet = sex, type = "b2b")
   expect_equal(abs(rev(axis_range(p[[1]], "x"))), axis_range(p[[2]], "x"))
 })
@@ -48,7 +47,6 @@ test_that("E08.04 small counts with a category (F065)", {
 })
 
 test_that("E08.05 category colours are equal on both sides (F066)", {
-  skip_open_finding("F066")
   d <- transform(fx_pop_cat, n = n * 100)
   p <- plot2(d, age, n, grp, facet = sex, type = "b2b")
   expect_identical(scale_values(p[[1]], "fill")[["b"]], scale_values(p[[2]], "fill")[["b"]])
@@ -69,4 +67,17 @@ test_that("E08.08 a facet with three values errors", {
 
 test_that("E08.09 no internal state left behind", {
   expect_clean_state(plot2(fx_pop, age, n, facet = sex, type = "b2b"))
+})
+
+test_that("E08.08 one legend for both halves, also when a category is missing on one side (F066)", {
+  pop3 <- data.frame(age = rep(c("0-9", "10-19"), 2), sex = rep(c("M", "F"), each = 2),
+                     grp = c("a", "b", "b", "b"), n = c(100, 200, 300, 400))
+  p <- expect_plot2(plot2(pop3, age, n, grp, facet = sex, type = "b2b"))
+  g <- patchwork::patchworkGrob(p)
+  expect_identical(sum(grepl("^guide-box", g$layout$name) & g$layout$name != "guide-box-inside" &
+                         vapply(g$grobs, function(x) !inherits(x, "zeroGrob"), logical(1))), 1L)
+  # a value range set by the user is kept
+  pop <- data.frame(age = rep(c("0-9", "10-19"), 2), sex = rep(c("M", "F"), each = 2), n = 1:4)
+  p <- plot2(pop, age, n, facet = sex, type = "b2b", y.limits = c(0, 100))
+  expect_identical(axis_range(p[[2]], "x"), c(0, 100))
 })
