@@ -1532,25 +1532,9 @@ validate_category_scale <- function(values,
       # for dates, take the outer range
       c(min(values, na.rm = TRUE) - 1, max(values, na.rm = TRUE) + 1)
     } else {
-      # now determine if we should start at zero:
-      # x will be the lower and upper limit - if zero under lower minus fifth of upper then start at zero
-      upper <- max(values, na.rm = TRUE)
-      lower <- min(values, na.rm = TRUE)
-      # round upper to significance of lower
-      new_upper <- max(upper, round(upper, digits = nchar(lower) * -1))
-      # but only if within a 5th of the scale
-      if (isTRUE(upper / new_upper >= 0.8)) {
-        upper <- new_upper
-      }
-      # and set lower to 0 if need be
-      if (lower >= 0 && lower - (upper / 5) < 0) {
-        lower <- 0
-      }
-      # check if negative lower should be equal to upper
-      if (lower < 0 && isTRUE(lower / (upper * -1) >= 0.8)) {
-        lower <- upper * -1
-      }
-      c(lower, upper)
+      # the data range, rounded outwards to pretty values, e.g. 12 to 87 gives 0 to 100 (F059)
+      rng <- range(values, na.rm = TRUE, finite = TRUE)
+      range(pretty(rng))
     }
   }
   
@@ -1652,6 +1636,12 @@ validate_category_scale <- function(values,
     # 3 colours, so low, mid (set as vector name) and high
     if (!is.null(category.midpoint)) {
       mid_point <- as.double(category.midpoint)
+      if (is.null(category.limits) && is.numeric(args$limits) && !anyNA(args$limits)) {
+        # a diverging scale is symmetric around its midpoint, so that equal distances to the
+        # midpoint get equally strong colours (F059)
+        half <- max(abs(args$limits - mid_point))
+        args$limits <- mid_point + c(-half, half)
+      }
     } else {
       # default to the middle of the set limits
       if (is.function(args$limits)) {

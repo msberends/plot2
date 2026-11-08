@@ -212,3 +212,12 @@ test_that("F088 invalid colours are replaced one by one with a warning; registra
   withr::defer(suppressMessages(unregister_colour("^test_red$")))
   expect_identical(as.character(get_colour("TEST_RED")), "#AA0000")
 })
+
+test_that("F059 numeric category limits are the data range rounded to pretty values; diverging scales are symmetric", {
+  lim <- function(...) scale_of(plot2(...), "colour")$get_limits()
+  d <- function(v) data.frame(x = seq_along(v), y = 1, c = v)
+  expect_equal(lim(d(c(12, 50, 87)), x, y, c, type = "point"), c(0, 100))
+  expect_equal(lim(d(c(-0.37, 0.2, 0.5)), x, y, c, type = "point"), c(-0.4, 0.6))
+  expect_equal(lim(d(c(-0.37, 0.2, 0.5)), x, y, c, type = "point",
+                   colour = c("blue", "white", "red"), category.midpoint = 0), c(-0.6, 0.6))
+})

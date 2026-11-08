@@ -28,27 +28,27 @@ test_that("07.01 a numeric category with default colours gives a colour bar on t
 
 test_that("07.02 one colour gives a gradient from white", {
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = "red"))
-  cols <- cat_cols(p, at = c(0.1, 0.9))
+  # limits are 0 to 1, the data range rounded to pretty values (F059)
+  cols <- cat_cols(p, at = c(0.1, 1))
   expect_identical(cols[2], "#FF0000")
   expect_gt(sum(grDevices::col2rgb(cols[1])), sum(grDevices::col2rgb(cols[2])))
 })
 
 test_that("07.03 two colours give a low and a high colour", {
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = c("red", "blue")))
-  expect_identical(cat_cols(p)[3], "#0000FF")
-  expect_identical(substr(cat_cols(p)[1], 1, 3), "#F5")
+  expect_identical(cat_cols(p, at = c(0, 1)), c("#FF0000", "#0000FF"))
 })
 
 test_that("07.04 three colours diverge around the centre, with a message; category.midpoint is honoured", {
-  p <- expect_plot2_message(plot2(fx_numcat, x, y, value, colour = c("red", "white", "blue")), "category.midpoint = 0.45", type = "info")
-  expect_identical(cat_cols(p, at = 0.45), "#FFFFFF")
+  p <- expect_plot2_message(plot2(fx_numcat, x, y, value, colour = c("red", "white", "blue")), "category.midpoint = 0.5", type = "info")
+  expect_identical(cat_cols(p, at = 0.5), "#FFFFFF")
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = c("red", "white", "blue"), category.midpoint = 0.1))
   expect_identical(cat_cols(p, at = 0.1), "#FFFFFF")
 })
 
 test_that("07.05 a viridis option name gives the viridis gradient", {
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = "viridis"))
-  expect_identical(cat_cols(p, at = 0.9), "#FDE725")
+  expect_identical(cat_cols(p, at = 1), "#FDE725")
 })
 
 test_that("07.06 category.percent = TRUE gives percent labels", {
