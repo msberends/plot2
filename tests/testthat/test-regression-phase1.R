@@ -72,3 +72,11 @@ test_that("F054 x.limits on a discrete x selects and orders the items, also hori
   expect_setequal(axis_labels(p, "y"), c("a", "b"))
   expect_plot2_message(plot2(fx_cat_unique, x, y, category, x.limits = c("a", "z")), "not found", type = "warning")
 })
+
+test_that("F056 titles with non-ASCII characters are wrapped like ASCII titles", {
+  expect_identical(validate_title("Résumé ééééé ééééé ééééé ééééé", markdown = FALSE, max_length = 20),
+                   "Résumé ééééé ééééé\nééééé ééééé")
+  expect_identical(validate_title("Resume eeeee eeeee eeeee eeeee", markdown = FALSE, max_length = 20),
+                   "Resume eeeee eeeee\neeeee eeeee")
+  expect_identical(validate_title("αβγ δεζ", markdown = FALSE, max_length = 20), "αβγ δεζ")
+})

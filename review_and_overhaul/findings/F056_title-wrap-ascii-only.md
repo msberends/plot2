@@ -4,7 +4,7 @@ title: Title wrapping counts only ASCII characters, so accented or non-Latin tit
 severity: low
 type: bug
 area: i18n
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R02 sheet 14
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F056 Title wrapping counts only ASCII
@@ -37,3 +37,4 @@ Strip only markup characters (`*`, `_`, `^`, `{`, `}`, `$`, HTML tags) and count
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; validate_title() strips only markup before counting, with nchar(type = 'width'). Regression test F056.

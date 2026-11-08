@@ -2072,7 +2072,8 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   }
   
   out <- gsub("<br>", "\n", out, fixed = TRUE)
-  out_plain <- gsub("[^a-zA-Z0-9,. .-]", "", out)
+  # strip only markup, so that accented, Greek, Cyrillic or CJK characters still count (F056)
+  out_plain <- gsub("<[^>]+>|[*_^{}$]", "", out)
   
   if (isTRUE(markdown)) {
     # support mathematical characters
@@ -2094,7 +2095,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   }
   
   # support overly lengthy titles
-  if (!is.null(max_length) && isTRUE(nchar(out_plain) > as.double(max_length))) {
+  if (!is.null(max_length) && isTRUE(nchar(out_plain, type = "width") > as.double(max_length))) {
     if (is.expression(out)) {
       x_deparsed <- trimws(deparse(substitute(x)))
       x_deparsed <- x_deparsed[!x_deparsed %in% c("{", "}")]
