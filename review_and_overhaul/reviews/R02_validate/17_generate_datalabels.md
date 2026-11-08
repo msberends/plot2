@@ -30,14 +30,14 @@ F055 (background label aes captures an external vector; fragile when data change
 
 ## End-to-end test cases
 
-- [ ] 17.01 Columns with up to 25 bars: text and label layers present, labels equal formatted y.
-- [ ] 17.02 26 bars: no labels, caution; `datalabels = TRUE` forces them.
-- [ ] 17.03 `stacked = TRUE`: labels centred in segments (position stack, vjust 0.5).
-- [ ] 17.04 `stacked_fill = TRUE`: labels centred.
-- [ ] 17.05 `horizontal = TRUE`: labels to the right of the bars.
-- [ ] 17.06 `datalabels.angle = 90` and `270` (both vertical, desired).
-- [ ] 17.07 `datalabels.colour`, `datalabels.colour_fill`, `datalabels.size`, `datalabels.lineheight`.
-- [ ] 17.08 Tile plot: labels from the category, centred.
-- [ ] 17.09 Background label layer is drawn first (layer order).
-- [ ] 17.10 Replacing the plot data afterwards (`p %+% new_data`) does not error (F055).
-- [ ] 17.11 sf plot: labels at centroids; `datalabels.centroid = FALSE` uses point on surface (skip without sf).
+- [x] 17.01 Columns with up to 25 bars: text and label layers present, labels equal formatted y.
+- [x] 17.02 26 bars: no labels, caution; `datalabels = TRUE` forces them.
+- [x] 17.03 `stacked = TRUE`: labels centred in segments (position stack, vjust 0.5).
+- [x] 17.04 `stacked_fill = TRUE`: labels centred.
+- [x] 17.05 `horizontal = TRUE`: labels to the right of the bars.
+- [x] 17.06 `datalabels.angle = 90` and `270` (both vertical, desired).
+- [x] 17.07 `datalabels.colour`, `datalabels.colour_fill`, `datalabels.size`, `datalabels.lineheight`.
+- [x] 17.08 Tile plot: labels from the category, centred.
+- [x] 17.09 Background label layer is drawn first (layer order).
+- [x] 17.10 Replacing the plot data afterwards does not error and the labels follow (F055); coded with a modified `p$data` and `p + new`, since `%+%` is deprecated in ggplot2 4.0 and a raw user data frame lacks the columns plot2 maps (updated 2026-11-08).
+- [x] 17.11 sf plot: labels at centroids; `datalabels.centroid = FALSE` uses point on surface (skip without sf).

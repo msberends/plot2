@@ -2539,6 +2539,16 @@ generate_datalabels <- function(p,
       text_horizontal <- text_horizontal + 1.5
       label_horizontal <- label_horizontal + 1.2
     }
+  } else if (datalabels.angle == 270) {
+    # text reads downwards, so its end is at the bar (F140)
+    text_horizontal <- 1.25
+    text_vertical <- 0.5
+    label_horizontal <- 1.1
+    label_vertical <- 0.5
+    if (transform_name(y.transform) == "reverse") {
+      text_horizontal <- text_horizontal - 1.5
+      label_horizontal <- label_horizontal - 1.2
+    }
   }
   
   # set positioning function

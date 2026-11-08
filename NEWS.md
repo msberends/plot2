@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `datalabels.angle = 270` now places the labels beyond the end of the bars, as `datalabels.angle = 90` does.
 * `size`, `width` and `linewidth` now give a clear error when they are not a non-negative number, instead of failing only when the plot is printed.
 * `type` with more than one value now warns that only the first is used, instead of silently using it.
 * In back-to-back plots, each category has the same colour on both sides, also when a category is missing on one side, and the legend is shown once.
