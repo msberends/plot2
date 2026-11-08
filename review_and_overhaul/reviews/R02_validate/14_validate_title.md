@@ -26,14 +26,14 @@ F018 (apostrophes, `$`), F025 (evaluates every title over the full data with `as
 
 ## End-to-end test cases
 
-- [ ] 14.01 Literal title, subtitle, caption, tag set in `get_labs()`.
-- [ ] 14.02 `title = paste("n =", n())` evaluated on the data.
-- [ ] 14.03 `title = FALSE`, `x.title = NULL`, `x.title = ""` remove the title.
-- [ ] 14.04 `x.title = TRUE`: column name; for `y = n()` the surrogate name.
-- [ ] 14.05 "a >= b" becomes "a ≥ b" with markdown; unchanged without.
-- [ ] 14.06 Long title wrapped at `title.linelength`; accented title wrapped at the same length (F056).
-- [ ] 14.07 Markdown title longer than the limit: warning, not wrapped.
-- [ ] 14.08 Title with an apostrophe and markdown (F018).
-- [ ] 14.09 `<br>` gives a line break.
-- [ ] 14.10 Title referring to a non-existent column: warning that can be caught, plot still produced.
-- [ ] 14.11 Expression title (`expression(alpha^2)`) passed through.
+- [x] 14.01 Literal title, subtitle, caption, tag set in `get_labs()`.
+- [x] 14.02 `title = paste("n =", n())` evaluated on the data.
+- [x] 14.03 `title = FALSE`, `x.title = NULL`, `x.title = ""` remove the title.
+- [x] 14.04 `x.title = TRUE`: column name; for `y = n()` the surrogate name.
+- [x] 14.05 "a >= b" becomes "a ≥ b" with markdown; unchanged without.
+- [x] 14.06 Long title wrapped at `title.linelength`; accented title wrapped at the same length (F056).
+- [x] 14.07 Markdown title longer than the limit: warning, not wrapped.
+- [x] 14.08 Title with an apostrophe and markdown (F018).
+- [x] 14.09 `<br>` gives a line break.
+- [x] 14.10 Title referring to a non-existent column: warning that can be caught, plot still produced.
+- [x] 14.11 Expression title (`expression(alpha^2)`) passed through.

@@ -32,15 +32,15 @@ F005 (theme as a function crashes later in `plot2_exec()`), F032 (partial themes
 
 ## End-to-end test cases
 
-- [ ] 15.01 Default theme is `theme_minimal2()`; `theme = "theme_bw"`, `"theme_bw()"`, `theme_bw`, `theme_bw()` all work (F005).
-- [ ] 15.02 `theme = NULL`: grey theme.
-- [ ] 15.03 Invalid string: error "unknown theme"; invalid object: warning.
-- [ ] 15.04 Partial theme object (F032).
-- [ ] 15.05 `background = "lightyellow"` on panel and plot.
-- [ ] 15.06 `x.remove`, `y.remove`, `x.lbl_italic` in both orientations.
-- [ ] 15.07 `x.lbl_angle = 45`: category labels rotated with `hjust = 1`; with `horizontal = TRUE` still the category labels (F051).
-- [ ] 15.08 `title.colour`, `subtitle.colour`.
-- [ ] 15.09 `facet.fill`, `facet.bold`, `facet.italic`, `facet.size`, `facet.margin` in the strip element.
-- [ ] 15.10 `text_factor = 2`: all text sizes doubled, including rel-sized elements of `theme_bw` (F057).
-- [ ] 15.11 Horizontal: major grid lines on the other axis.
-- [ ] 15.12 Secondary y-axis: axis titles coloured.
+- [x] 15.01 Default theme is `theme_minimal2()`; `theme = "theme_bw"`, `"theme_bw()"`, `theme_bw`, `theme_bw()` all work (F005).
+- [x] 15.02 `theme = NULL`: grey theme.
+- [x] 15.03 Invalid string: error "unknown theme"; invalid object: warning.
+- [x] 15.04 Partial theme object (F032).
+- [x] 15.05 `background = "lightyellow"` on panel and plot.
+- [x] 15.06 `x.remove`, `y.remove`, `x.lbl_italic` in both orientations.
+- [x] 15.07 `x.lbl_angle = 45`: category labels rotated with `hjust = 1`; with `horizontal = TRUE` still the category labels (F051).
+- [x] 15.08 `title.colour`, `subtitle.colour`.
+- [x] 15.09 `facet.fill`, `facet.bold`, `facet.italic`, `facet.size`, `facet.margin` in the strip element.
+- [x] 15.10 `text_factor = 2`: all text sizes doubled, including rel-sized elements of `theme_bw` (F057).
+- [x] 15.11 Horizontal: major grid lines on the other axis.
+- [x] 15.12 Secondary y-axis: axis titles coloured.
