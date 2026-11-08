@@ -26,21 +26,21 @@ csv_inputs <- function(session, ...) {
   do.call(session$setInputs, utils::modifyList(vals, list(...)))
 }
 
-test_that("S02.01 data passed to the app is offered as 'Provided' and plotted", {
+test_that("S02.01 data passed to the app is offered as 'Provided', referred to by its name and plotted", {
   s02_unique_name <- data.frame(g = c("a", "b", "c"), v = 1:3)
   app <- shiny_app(data = s02_unique_name)
   shiny::testServer(app, {
     shiny_init(session, dataset = "Provided")
-    expect_match(call_string(), "your_df |>", fixed = TRUE)
+    expect_match(call_string(), "s02_unique_name |>", fixed = TRUE)
     invisible(output$plot)
-    expect_identical(nrow(plot2_env$last_shiny_plot$data), 3L)
+    expect_identical(nrow(plot_result()$plot$data), 3L)
   })
 })
 
 test_that("S02.02 a global data frame with a non-syntactic name can be selected", {
-  skip_open_finding("F114")
   assign("my data", data.frame(a = 1:3), envir = globalenv())
   withr::defer(rm("my data", envir = globalenv()))
+  withr::local_options(rlang_interactive = TRUE) # global data frames are only offered interactively
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session, dataset = "my data")
@@ -50,7 +50,6 @@ test_that("S02.02 a global data frame with a non-syntactic name can be selected"
 })
 
 test_that("S02.03 a value of the data set selector that is not one of its choices is not evaluated", {
-  skip_open_finding("F006")
   marker <- tempfile()
   app <- shiny_app()
   shiny::testServer(app, {
@@ -152,14 +151,14 @@ test_that("S02.10 a missing reader package gives a notification and keeps the se
 })
 
 test_that("S02.11 data passed under a name that is also a function is still the data", {
-  skip_open_finding("F114")
   df <- data.frame(g = c("a", "b", "c"), v = 1:3)
   app <- shiny_app(data = df)
   value <- unname(shiny_app_env(app)$data_sets[[1]][1])
   shiny::testServer(app, {
     shiny_init(session, dataset = value)
     invisible(output$plot)
-    expect_identical(nrow(plot2_env$last_shiny_plot$data), 3L)
+    expect_identical(nrow(plot_result()$plot$data), 3L)
+    expect_match(call_string(), "df |>", fixed = TRUE)
   })
 })
 

@@ -15,7 +15,7 @@ create_interactively(
 )
 }
 \arguments{
-\item{data}{A data set to load. Not strictly required, since all data sets in the global environment will be shown.}
+\item{data}{A data set to load, offered as 'Provided' in the data set selector. The generated code refers to it by its name, e.g. \code{df |> plot2()} for \code{create_interactively(data = df)}. Not strictly required: in an interactive session, all data frames in the global environment are offered as well, together with the data sets of base R, plot2, ggplot2 and dplyr. Outside an interactive session (such as on a server), data frames in the global environment are not offered, so that the app does not expose what the hosting script has loaded.}
 
 \item{css_code}{Additional CSS code to load in the app.}
 

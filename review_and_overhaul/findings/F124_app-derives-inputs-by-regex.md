@@ -4,8 +4,8 @@ title: The app derives tabs, widgets and labels from argument names and defaults
 severity: medium
 type: maintainability
 area: shiny
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: M
 api_change: no
 locations: [R/shiny.R:146, R/shiny.R:1140, R/shiny.R:1199]
@@ -49,3 +49,4 @@ One explicit specification of the app's inputs (argument, tab, widget, kind of v
 ## History
 
 - 2026-11-08: filed in R07 (by reading).
+- 2026-11-08: fixed: shiny_input_spec(), one row per argument (tab, widget, label, range or choices), checked against formals(plot2) by test S07.05.

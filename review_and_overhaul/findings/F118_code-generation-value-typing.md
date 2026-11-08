@@ -4,7 +4,7 @@ title: Generated code types input values by guesswork: vectors and expressions c
 severity: medium
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -56,3 +56,4 @@ Give every argument an explicit kind (string, number, logical, numeric vector, c
 ## History
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
+- 2026-11-08: fixed: every argument has a widget kind in shiny_input_spec() and is converted by kind: constants and vectors parsed without evaluation, labels as constants or a whitelisted function, formulas checked, numbers within a range, text as text; deparse() writes the code. Tests S03.07, S03.08 unparked; S03.13, S03.14, S07.06 added.

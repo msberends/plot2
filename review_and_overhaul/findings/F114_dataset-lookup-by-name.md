@@ -4,7 +4,7 @@ title: Data sets are looked up by name with get() and eval(parse()), which picks
 severity: critical
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: possible
@@ -59,3 +59,4 @@ Collect data sets into a named list of objects once (`list(Provided = data, iris
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
 - 2026-11-08: severity set to critical by the maintainer (security aspect: global data frames of the host offered to visitors).
+- 2026-11-08: fixed: a registry of data set objects looked up by key with [[; provided data under 'Provided', referred to by its own name in the code; global data frames only when rlang::is_interactive() (maintainer's decision: 'Only interactively'); non-syntactic names in backticks. Tests S02.02, S02.11, S06.02 unparked; S07.03 rewritten.

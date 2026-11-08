@@ -4,7 +4,7 @@ title: The app keeps its state in plot2_env, shared by all sessions and wiped by
 severity: critical
 type: security
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -59,3 +59,4 @@ Keep the defaults in a local list in `create_interactively()` (returned by the i
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
 - 2026-11-08: severity set to critical by the maintainer (all security findings are critical).
+- 2026-11-08: fixed: no app state in plot2_env any more; the starting values of the inputs are local to the app, the plot is per session (plot_result()); tests S03.04 (now with y.zoom, since x.zoom is automatic since F094), S06.01, S06.04 unparked.

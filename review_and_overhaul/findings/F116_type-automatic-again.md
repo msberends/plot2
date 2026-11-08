@@ -4,7 +4,7 @@ title: Choosing 'Automatic' as plot type after another type breaks the generated
 severity: medium
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -50,3 +50,4 @@ Return `""` right away for `type == "auto"`, and test with `isTRUE(...)`/`length
 ## History
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
+- 2026-11-08: fixed with the new call builder; test S03.05 unparked.

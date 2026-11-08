@@ -16,7 +16,6 @@
 # review_and_overhaul/reviews/R07_shiny/S06_sessions-and-deployment.md
 
 test_that("S06.01 a session never sees the plot of another session", {
-  skip_open_finding("F112")
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session)
@@ -29,7 +28,6 @@ test_that("S06.01 a session never sees the plot of another session", {
 })
 
 test_that("S06.02 outside an interactive session, global data frames are only offered when passed", {
-  skip_open_finding("F114")
   assign("private_records", data.frame(a = 1:3), envir = globalenv())
   withr::defer(rm("private_records", envir = globalenv()))
   app <- shiny_app()
@@ -37,9 +35,9 @@ test_that("S06.02 outside an interactive session, global data frames are only of
 })
 
 test_that("S06.03 errors in the server code do not end the session", {
-  skip_open_finding("F115")
   assign("my data", data.frame(a = 1:3), envir = globalenv())
   withr::defer(rm("my data", envir = globalenv()))
+  withr::local_options(rlang_interactive = TRUE)
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session, dataset = "my data")
@@ -48,7 +46,6 @@ test_that("S06.03 errors in the server code do not end the session", {
 })
 
 test_that("S06.04 an app instance leaves the global state of plot2 alone", {
-  skip_open_finding("F112")
   clear_plot2_env()
   app <- shiny_app()
   expect_identical(setdiff(ls(plot2_env), "reg_cols"), character(0))

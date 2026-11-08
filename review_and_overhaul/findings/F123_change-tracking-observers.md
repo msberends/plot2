@@ -4,7 +4,7 @@ title: Change tracking creates new observers for all inputs whenever the set of 
 severity: low
 type: maintainability
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -49,3 +49,4 @@ Create the observers once for the known argument inputs (they are known when the
 ## History
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
+- 2026-11-08: fixed: no observers; an argument is in the code when its input differs from its starting value, so code and inputs always agree. Tests S03.11, S03.12 added.

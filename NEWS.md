@@ -1,5 +1,10 @@
 # plot2 1.99.0.9000
 
+* create_interactively() shows plot2's messages also on a server, and shows the actual error message
+* create_interactively() has inputs for the secondary axis
+* create_interactively(): vectors such as y.limits = c(0, 10), formulas and label functions can be entered, and text that looks like a number stays text
+* create_interactively() refers to passed data by its name in the generated code, handles data frames with non-syntactic names, and offers data frames from the global environment only in an interactive session
+* create_interactively() no longer runs text from the browser as R code: the plot2() call is built from checked values, and evaluated apart from the global environment
 * Uploading in create_interactively(): the encoding is chosen from a list of valid values, and .txt files are read with the chosen delimiter
 * create_interactively() no longer accepts R serialisation files (.rds, .rda) for upload, since reading them can run code; pass such data with the data argument. With upload_tab = FALSE (the default) the app offers no way to upload files at all
 * create_interactively() serves only a copy of the logo, no longer the whole folder that contains it

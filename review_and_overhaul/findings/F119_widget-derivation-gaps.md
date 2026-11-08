@@ -4,7 +4,7 @@ title: Inputs derived from defaults: secondary-axis arguments missing, sliders w
 severity: low
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -50,3 +50,4 @@ Part of the explicit input specification proposed in F124.
 ## History
 
 - 2026-11-08: filed in R07 (verified).
+- 2026-11-08: fixed: all eight y_secondary arguments are in the Y-axis tab; sliders have explicit ranges; defaults that depend on other arguments start empty. Tests S01.02, S01.03 unparked; S03.15 and S07.01 added.

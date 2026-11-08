@@ -21,7 +21,6 @@ test_that("S01.01 create_interactively() returns an app object outside an intera
 })
 
 test_that("S01.02 every plot2() argument has an input in the app", {
-  skip_open_finding("F119")
   app <- shiny_app()
   html <- as.character(shiny_app_env(app)$ui)
   ids <- gsub('id=|"', "", regmatches(html, gregexpr('id="[^"]+"', html))[[1]])
@@ -31,7 +30,6 @@ test_that("S01.02 every plot2() argument has an input in the app", {
 })
 
 test_that("S01.03 every slider has a range that can be used", {
-  skip_open_finding("F119")
   app <- shiny_app()
   html <- as.character(shiny_app_env(app)$ui)
   sliders <- regmatches(html, gregexpr('<input class="js-range-slider"[^>]*>', html))[[1]]

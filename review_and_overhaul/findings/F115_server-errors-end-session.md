@@ -4,7 +4,7 @@ title: Errors in the app's server code end the session instead of showing a mess
 severity: medium
 type: bug
 area: shiny
-status: in-progress
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -55,3 +55,4 @@ Check optional packages when the app is built (or disable formats whose reader i
 
 - 2026-11-08: filed in R07 (verified with `shiny::testServer()`).
 - 2026-11-08: partly fixed with F111: a missing reader package, a failing read and an unknown file type give a notification and keep the session (test S02.10 unparked; skipped here because readODS is installed).
+- 2026-11-08: fixed: column selector updates and reading errors are caught and shown as notifications, plot errors in the error panel; input$dataset is checked before use; the copy button follows in F117. Test S06.03 unparked.

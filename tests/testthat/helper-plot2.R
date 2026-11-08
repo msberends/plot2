@@ -540,14 +540,13 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
 
 #' The app object of create_interactively() for shiny::testServer(). Skips
 #' when a package of the app is missing. Outside an interactive session
-#' create_interactively() returns the app instead of running it. The plot
-#' that the app stores in plot2_env is cleared when the calling test ends.
+#' create_interactively() returns the app instead of running it. The served
+#' logo folder is removed when the calling test ends.
 shiny_app <- function(..., .env = parent.frame()) {
   for (p in c("shiny", "shinyjs", "bslib", "DT", "clipr", "pillar", "rio", "fansi")) {
     testthat::skip_if_not_installed(p)
   }
   withr::defer({
-    plot2_env$last_shiny_plot <- NULL
     if ("plot2res" %in% names(shiny::resourcePaths())) shiny::removeResourcePath("plot2res")
   }, envir = .env)
   create_interactively(...)
@@ -564,13 +563,9 @@ shiny_init <- function(session, dataset = "iris") {
                     export_width_cm = 15, export_height_cm = 10, export_dpi = 300)
 }
 
-#' Change inputs as a user would. The app records an input as changed only
-#' from the second value it receives (its observer ignores the first, F123),
-#' so every input first receives NA.
+#' Change inputs as a user would.
 shiny_change <- function(session, ...) {
-  vals <- list(...)
-  do.call(session$setInputs, lapply(vals, function(v) NA))
-  do.call(session$setInputs, vals)
+  do.call(session$setInputs, list(...))
 }
 
 #' A file in the shape of shiny::fileInput()'s value.

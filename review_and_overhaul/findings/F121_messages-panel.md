@@ -4,7 +4,7 @@ title: The messages panel is empty on a server, shows messages as unescaped HTML
 severity: critical
 type: bug
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -55,3 +55,4 @@ Collect plot2's messages independently of `interactive()` (e.g. an option or arg
 
 - 2026-11-08: filed in R07 (verified).
 - 2026-11-08: severity set to critical by the maintainer (security aspect: HTML injection through column names).
+- 2026-11-08: fixed: messages and warnings are collected from their conditions (also when not interactive, also at build time) and shown as escaped text; errors show their own message. Tests S04.02, S04.03, S04.04 unparked.

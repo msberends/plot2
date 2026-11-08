@@ -4,7 +4,7 @@ title: create_interactively() builds code from unescaped inputs and evaluates it
 severity: critical
 type: security
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -60,3 +60,4 @@ Build the call as a language object (`rlang::call2("plot2", !!!args)` with symbo
 
 - 2026-11-07: filed in R01 (by reading).
 - 2026-11-08: R07 verified all four routes with `shiny::testServer()` and replaced the manual reproduction; related findings F111 to F121 cover further server-deployment risks.
+- 2026-11-08: fixed: the call is built as a language object from checked values: columns become names, typed calculations are parsed and accepted only with functions from shiny_safe_functions(), fixed choices are checked against their sets, typed values are parsed as constants only; the call is evaluated in an environment with base R as parent (not the global environment); data sets are looked up by key. All four routes are closed: tests S02.03, S03.06, S04.05, S04.06, S04.07 unparked; new S03.14, S04.08, S04.09, S07.06. Verified in headless Chromium.
