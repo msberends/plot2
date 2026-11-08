@@ -203,6 +203,13 @@ throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "
   }
 }
 
+# a sequence of breaks that are multiples of `by` (anchored at zero), also when
+# `from` is negative and not a multiple of `by`
+seq_anchored <- function(from, to, by) {
+  out <- seq(floor(from / by + 1e-8) * by, to, by = by)
+  round(out / by) * by
+}
+
 # breaks for whole numbers with a small range: pretty breaks without decimals,
 # also below zero (used for the x, y and category scales)
 breaks_whole_numbers <- function(x, ...) {

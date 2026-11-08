@@ -32,7 +32,6 @@ test_that("06.03 y.percent = TRUE gives percent labels every 10%, aligned also w
   p <- expect_plot2(plot2(fx_pct, x, y, y.percent = TRUE))
   expect_axis_breaks(p, "y", seq(0, 1, 0.1))
   expect_true(all(endsWith(axis_labels(p, "y"), "%")))
-  skip_open_finding("F042")
   p <- expect_plot2(plot2(data.frame(x = c("a", "b", "c"), y = c(-0.13, 0.27, 0.61)), x, y, y.percent = TRUE))
   expect_true(all(abs(axis_breaks(p, "y") * 10 - round(axis_breaks(p, "y") * 10)) < 1e-8))
 })

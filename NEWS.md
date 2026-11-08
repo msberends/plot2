@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: percentage axes (and age and 24-hour axes) with negative values had breaks at odd values such as -28%, -18%, -8%
 * Fixed: axes and colour bars for small whole numbers had no breaks below zero
 * Error messages no longer show internal function calls
 * Fixed: several short hex colours (such as `"#f0a"`) were all replaced by the first one, and invalid hex codes could pass validation

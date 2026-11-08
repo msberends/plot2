@@ -1051,20 +1051,20 @@ validate_y_scale <- function(df,
     } else if (isTRUE(y.age)) {
       # no decimal numbers, generate max 12 labels
       function(x, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = min(120, max(x, na.rm = TRUE), na.rm = TRUE),
             by = 10)
       }
     } else if (isTRUE(y.24h)) {
       function(x, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = max(x, na.rm = TRUE),
             by = 24)
       }
     } else if (isTRUE(stacked_fill)) {
       # special case of y.percent, where the y scale is always 0 to 1
       function(x, y_percent_break = y.percent_break, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = max(x, na.rm = TRUE),
             by = y_percent_break)
       }
@@ -1093,7 +1093,7 @@ validate_y_scale <- function(df,
                       " would yield too few labels")
       }
       function(x, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = max(x, na.rm = TRUE),
             by = y.percent_break)
       }
