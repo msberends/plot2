@@ -22,11 +22,11 @@ F025 (row-wise `mapply(gsub)` on raw data is the main performance cost), F028 (`
 
 ## End-to-end test cases
 
-- [ ] 24.01 Default "%n": rounded to 1 decimal, decimal mark honoured (`decimal.mark = ","`).
-- [ ] 24.02 `datalabels.format = "%n (%p)"`: both parts correct.
-- [ ] 24.03 `y.percent = TRUE`: percent labels, `datalabels.round` honoured; other formats ignored with message.
-- [ ] 24.04 `datalabels.format = function(x) paste0("~", x)`.
-- [ ] 24.05 Zero values not labelled.
-- [ ] 24.06 `big.mark` in labels of large values.
-- [ ] 24.07 Character datalabels (`datalabels = name`) unchanged.
-- [ ] 24.08 Performance: labels formatted only for drawn rows (F025).
+- [x] 24.01 Default "%n": rounded to 1 decimal, decimal mark honoured (`decimal.mark = ","`).
+- [x] 24.02 `datalabels.format = "%n (%p)"`: both parts correct.
+- [x] 24.03 `y.percent = TRUE`: percent labels, `datalabels.round` honoured; other formats ignored with message.
+- [x] 24.04 `datalabels.format = function(x) paste0("~", x)`.
+- [x] 24.05 Zero values not labelled.
+- [x] 24.06 `big.mark` in labels of large values.
+- [x] 24.07 Character datalabels (`datalabels = name`) unchanged.
+- [x] 24.08 Performance: labels formatted only for drawn rows (F025).

@@ -22,10 +22,10 @@ F062 (re-summarising condition reads inverted; `%p` is the share of rows, not of
 
 ## End-to-end test cases
 
-- [ ] 22.01 Five values, `x.max_items = 3`: two values plus "(rest, x3)".
-- [ ] 22.02 The rest item's y equals the summed y of the merged values.
-- [ ] 22.03 `x.max_txt = "Other (%n, %p)"`: count and percentage correct.
-- [ ] 22.04 `horizontal = TRUE`: rest item at the bottom.
-- [ ] 22.05 `category.max_items` and `facet.max_items`.
-- [ ] 22.06 Numeric x with `x.max_items`: warning.
-- [ ] 22.07 `type = "barpercent"` defaults to 10 items.
+- [x] 22.01 Five values, `x.max_items = 3`: two values plus "(rest, x3)".
+- [x] 22.02 The rest item's y equals the summed y of the merged values.
+- [x] 22.03 `x.max_txt = "Other (%n, %p)"`: count and percentage correct.
+- [x] 22.04 `horizontal = TRUE`: rest item at the bottom.
+- [x] 22.05 `category.max_items` and `facet.max_items`.
+- [x] 22.06 Numeric x with `x.max_items`: warning.
+- [x] 22.07 `type = "barpercent"` defaults to 10 items.
