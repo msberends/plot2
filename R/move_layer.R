@@ -14,12 +14,22 @@
 
 #' Move a `ggplot` Layer
 #' 
-#' Use this function to move a certain plot layer up or down. This function returns a `ggplot` object.
+#' Use this function to move a certain plot layer up or down.
 #' @param plot A `ggplot` object.
-#' @param move Number of layers to move `layer` up or down.
-#' @param layer The layer to affect, defaults to top layer.
+#' @param move Number of layers to move `layer`: a negative value moves it down (drawn earlier, so below other layers), a positive value moves it up. The new position is limited to the existing layers. Defaults to `-1`, one layer down.
+#' @param layer The number of the layer to move, defaults to the top layer.
+#' @return A `ggplot` object with the layers in the new order.
 #' @importFrom ggplot2 is_ggplot
 #' @export
+#' @examples
+#' p <- plot2(iris, Sepal.Length, Sepal.Width, colour = "grey75") |>
+#'   add_line(y = mean(Sepal.Width), colour = "red", linewidth = 2)
+#' 
+#' # the line is drawn on top of the points
+#' p
+#' 
+#' # move the line one layer down, below the points
+#' move_layer(p)
 move_layer <- function(plot, move = -1, layer = length(plot$layers)) {
   
   if (!is_ggplot(plot)) {

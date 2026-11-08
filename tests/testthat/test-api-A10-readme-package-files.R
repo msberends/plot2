@@ -40,7 +40,6 @@ test_that("A10.03 the pkgdown reference index lists every topic", {
 })
 
 test_that("A10.04 NEWS.md mentions the user-visible features added since 1.0.0", {
-  skip_open_finding("F104")
   news <- paste(readLines(source_file("NEWS.md")), collapse = " ")
   expect_true(all(vapply(c("spider", "coord_spider", "beeswarm"), grepl, logical(1), x = news, ignore.case = TRUE)))
 })

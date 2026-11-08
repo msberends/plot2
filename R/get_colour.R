@@ -28,7 +28,7 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' @details 
 #' ### Limitless Palette Length
 #' A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
-#' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
+#' @return [get_colour()] returns a [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`. [register_colour()] and [unregister_colour()] are called for their side effect and return `NULL` invisibly.
 #' @rdname colour
 #' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
 #' @export
@@ -268,6 +268,10 @@ get_colour <- function(x, length = 1, opacity = 0) {
 #' 
 #' # reset option again
 #' options(plot2.colour = NULL)
+#' 
+#' # unregister colours with a regular expression on their names
+#' unregister_colour("^red")
+#' unregister_colour("^my_organisation$")
 register_colour <- function(...) {
   dots <- list(...)
   if (length(dots) == 1 && is.null(names(dots)) && !is.null(names(dots[[1]]))) {

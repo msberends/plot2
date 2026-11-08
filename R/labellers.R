@@ -22,7 +22,6 @@
 #' @rdname labellers
 #' @export
 #' @examples
-#' \dontrun{
 #' profit <- data.frame(group = LETTERS[1:4],
 #'                      profit = runif(4, 10000, 25000))
 #' 
@@ -33,7 +32,8 @@
 #' profit |>
 #'   plot2(y.labels = euros,
 #'         datalabels.format = euros)
-#' }
+#' 
+#' dollars(c(1500, 2499.5))
 euros <- function(x,
                   big.mark = big_mark(),
                   decimal.mark = dec_mark(),

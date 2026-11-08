@@ -4,7 +4,7 @@ title: Some exported functions lack examples or return values, and NEWS misses f
 severity: low
 type: docs
 area: housekeeping
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -49,3 +49,4 @@ Add the missing roxygen sections, move the labeller examples out of `\dontrun{}`
 ## History
 
 - 2026-11-08: filed in R05; tests A01.04 and A10.04 parked.
+- 2026-11-08: fixed and verified (Phase 1). move_layer() has examples, a return value and its sign convention; plot2-methods has an overview of method defaults, examples and a return value; register_colour()/unregister_colour() return value and example; euros() examples run; NEWS lists features added since 1.0.0 (December 2021). A01.04 and A10.04 unparked.

@@ -44,7 +44,6 @@ test_that("A01.03 methods use the defaults shown in the generic's usage", {
 })
 
 test_that("A01.04 every exported function has a help page with examples", {
-  skip_open_finding("F104")
   db <- tools::Rd_db(dir = source_file())
   has_ex <- vapply(db, function(rd) any(vapply(rd, attr, "", "Rd_tag") == "\\examples"), logical(1))
   aliases <- lapply(db, function(rd) unlist(rd[vapply(rd, attr, "", "Rd_tag") == "\\alias"]))

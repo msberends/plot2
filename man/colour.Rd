@@ -46,7 +46,7 @@ add_white(x, white)
 \item{white}{A number between \verb{[0, 1]} to add white to \code{x}.}
 }
 \value{
-\link{character} vector in HTML format (i.e., \code{"#AABBCC"}) with new class \code{colour}
+\code{\link[=get_colour]{get_colour()}} returns a \link{character} vector in HTML format (i.e., \code{"#AABBCC"}) with new class \code{colour}. \code{\link[=register_colour]{register_colour()}} and \code{\link[=unregister_colour]{unregister_colour()}} are called for their side effect and return \code{NULL} invisibly.
 }
 \description{
 Retrieves, expands, and prints colours or palettes from \R, \code{viridisLite}, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
@@ -147,6 +147,10 @@ iris |>
 
 # reset option again
 options(plot2.colour = NULL)
+
+# unregister colours with a regular expression on their names
+unregister_colour("^red")
+unregister_colour("^my_organisation$")
 
 
 # Use add_white() to add white to existing colours:

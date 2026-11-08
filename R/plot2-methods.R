@@ -15,11 +15,37 @@
 #' Methods for [plot2()]
 #' 
 #' These are the implemented methods for different S3 classes to be used in [plot2()]. Since they have an extensive list of arguments, they are placed here on a separate manual page.
+#' @details
+#' The methods differ from the data frame method as follows:
+#' 
+#' - **Vectors and other objects** (`plot2.default()`): the input is converted to a data frame first. Character and factor values are counted. A single character value that is the name of a data frame is replaced by that data frame.
+#' - **Formulas** (`plot2.formula()`): `y ~ x` takes the variables from `data`, e.g. `plot2(Sepal.Length ~ Species, data = iris)`.
+#' - **Frequency tables** (`plot2.freq()`, from [cleaner::freq()]): `x` and `y` default to the items and their counts, the axis titles to "Item" and "Count", and `x.sort` to `"freq-desc"`.
+#' - **Spatial data** (`plot2.sf()`, from the `sf` package): plots a map, without axis titles, axis expansion, grid or axes; the borders use the `plot2.colour_sf` option (default `"grey50"`), the fill uses `plot2.colour_sf_fill`, and the legend is on the right. The extra arguments `crs` and `datalabels.centroid` apply only here.
+#' - **Matrices** (`plot2.matrix()`): the row names become `x`. A matrix with identical row and column names, such as the outcome of [cor()], is plotted as a heatmap (`type = "tile"`). The axis titles are left out.
+#' @return A [`ggplot`][ggplot2::ggplot()] object.
 #' @rdname plot2-methods
 #' @name plot2-methods
 #' @inheritParams plot2
 #' @importFrom dplyr count filter
 #' @export
+#' @examples
+#' # vectors: character values are counted
+#' plot2(c("a", "b", "b", "c", "c", "c"))
+#' 
+#' # formulas
+#' plot2(Sepal.Length ~ Species, data = iris)
+#' 
+#' # frequency tables
+#' plot2(cleaner::freq(iris$Species))
+#' 
+#' # correlation matrices become a heatmap
+#' plot2(cor(mtcars[, 1:5]))
+#' 
+#' # spatial data
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#'   plot2(netherlands)
+#' }
 plot2.default <- function(.data,
                           x = NULL,
                           y = NULL,

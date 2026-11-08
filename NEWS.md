@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Help pages of `move_layer()`, the `plot2()` methods, `register_colour()` and `unregister_colour()` now have examples and return values; the `plot2()` methods page lists how each method changes the defaults
 * `type = "beeswarm"` without the ggbeeswarm package now gives an install hint instead of 'geom_beeswarm() does not exist', and all type aliases and sorting values are documented
 * Corrected typos and factual errors in the help pages of plot2(), add_type(), md_to_expression(), the package options and the netherlands data set
 * The vignettes build when suggested packages (ggplot2movies, ggbeeswarm, ggforce, sf, patchwork, viridisLite) are not installed; the affected examples are then skipped.
@@ -73,6 +74,10 @@
 * Support `y.transform = "reverse"`
 * Support `legend.nrow`
 * Support back-to-back (= tornado, = butterfly) plots
+* Support spider (= radar) plots with `type = "spider"`, using the new coordinate system `coord_spider()`
+* Support beeswarm plots with `type = "beeswarm"` (requires the ggbeeswarm package)
+* Added `add_point()`, `add_errorbar()`, `add_smooth()`, `add_sf()` and `add_mapping()`; `add_type()` and the other `add_*()` functions support facets
+* Added `colour_opacity` to set the opacity of the colours
 
 # plot2 1.0.0
 

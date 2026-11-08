@@ -1210,9 +1210,39 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{datalabels.centroid}{A \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:st_centroid]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:st_point_on_surface]{sf::st_point_on_surface()}}).}
 }
+\value{
+A \code{\link[ggplot2:ggplot]{ggplot}} object.
+}
 \description{
 These are the implemented methods for different S3 classes to be used in \code{\link[=plot2]{plot2()}}. Since they have an extensive list of arguments, they are placed here on a separate manual page.
 }
 \details{
+The methods differ from the data frame method as follows:
+\itemize{
+\item \strong{Vectors and other objects} (\code{plot2.default()}): the input is converted to a data frame first. Character and factor values are counted. A single character value that is the name of a data frame is replaced by that data frame.
+\item \strong{Formulas} (\code{plot2.formula()}): \code{y ~ x} takes the variables from \code{data}, e.g. \code{plot2(Sepal.Length ~ Species, data = iris)}.
+\item \strong{Frequency tables} (\code{plot2.freq()}, from \code{\link[cleaner:freq]{cleaner::freq()}}): \code{x} and \code{y} default to the items and their counts, the axis titles to "Item" and "Count", and \code{x.sort} to \code{"freq-desc"}.
+\item \strong{Spatial data} (\code{plot2.sf()}, from the \code{sf} package): plots a map, without axis titles, axis expansion, grid or axes; the borders use the \code{plot2.colour_sf} option (default \code{"grey50"}), the fill uses \code{plot2.colour_sf_fill}, and the legend is on the right. The extra arguments \code{crs} and \code{datalabels.centroid} apply only here.
+\item \strong{Matrices} (\code{plot2.matrix()}): the row names become \code{x}. A matrix with identical row and column names, such as the outcome of \code{\link[=cor]{cor()}}, is plotted as a heatmap (\code{type = "tile"}). The axis titles are left out.
+}
+
 For geographic information system (GIS) analysis, use the \code{sf} package with a data set containing geometries. The result can be used as input for \code{\link[=plot2]{plot2()}}.
+}
+\examples{
+# vectors: character values are counted
+plot2(c("a", "b", "b", "c", "c", "c"))
+
+# formulas
+plot2(Sepal.Length ~ Species, data = iris)
+
+# frequency tables
+plot2(cleaner::freq(iris$Species))
+
+# correlation matrices become a heatmap
+plot2(cor(mtcars[, 1:5]))
+
+# spatial data
+if (requireNamespace("sf", quietly = TRUE)) {
+  plot2(netherlands)
+}
 }
