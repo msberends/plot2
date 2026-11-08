@@ -152,3 +152,9 @@ test_that("F050 legend.position accepts FALSE, \"inside\" and coordinates", {
   expect_identical(legend_position(p), "inside")
   expect_error(plot2(d, g, v, c, legend.position = c(2, 1)), "between 0 and 1")
 })
+
+test_that("F052 the data-dependent choice of facet scales is reported", {
+  expect_plot2_message(plot2(admitted_patients, hospital, n(), facet = ward), "Using free y scales per facet", type = "info")
+  d <- data.frame(x = rep(c("a", "b"), 2), f = rep(c("p", "q"), each = 2), y = c(10, 11, 10, 12))
+  expect_plot2_message(plot2(d, x, y, facet = f), "facet.fixed_y = TRUE", type = "info")
+})

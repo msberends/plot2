@@ -4,7 +4,7 @@ title: Facets use free x and y scales by default, fixed only when a 25% heuristi
 severity: medium
 type: design
 area: scales
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: possible
@@ -45,3 +45,4 @@ Make fixed y the default (ggplot2's default) and keep free scales opt-in, or kee
 
 - 2026-11-07: filed in R02, reproduced.
 - 2026-11-08: maintainer decided (AskUserQuestion): keep the 25% heuristic, but report the chosen facet scales in a message and document it.
+- 2026-11-08: fixed as decided: the 25% heuristic is kept; when it leaves the scales free, a message now says so and names facet.fixed_y (or facet.fixed_x) = TRUE; the fixed outcome already had a message. facet.fixed_y, facet.fixed_x and facet.repeat_lbls_x/y document the rule and its data dependence. Tests: test-regression-phase4.R (F052).

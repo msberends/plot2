@@ -230,11 +230,11 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{na.rm}{Remove \code{NA} values from showing in the plot.}
 
-\item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}.}
+\item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}. \code{facet.repeat_lbls_x} and \code{facet.repeat_lbls_y} repeat the axis labels in every facet, which also makes the scales of that axis free (unless \code{facet.fixed_x} or \code{facet.fixed_y} is \code{TRUE}).}
 
-\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25\%.}
+\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. If not set, this depends on the data: \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25\%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set \code{facet.fixed_y = TRUE} when panels must be compared.}
 
-\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
+\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}. If not set and x is numeric, the same rule as for \code{facet.fixed_y} applies to the maximum x values per facet.}
 
 \item{x.date_breaks}{Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
 

@@ -849,6 +849,12 @@ validate_x_scale <- function(df,
                       " since the ", digit_to_text(nrow(x_maxima)), " ",
                       font_blue("x"), " scales differ by less than 25%")
         facet.fixed_x <- TRUE
+      } else if (isTRUE(coeff_of_variation >= 0.25)) {
+        # report the data-dependent choice, so that readers know panels are not comparable (F052)
+        plot2_message("Using free ", font_blue("x"), " scales per facet since the ",
+                      digit_to_text(nrow(x_maxima)), " ", font_blue("x"),
+                      " scales differ by 25% or more (use ", font_blue("facet.fixed_x = TRUE"),
+                      " for the same scale in all facets)")
       }
     }
   }
@@ -1104,6 +1110,12 @@ validate_y_scale <- function(df,
                       font_blue("y"), " scales differ by less than 25%")
         facet.fixed_y <- TRUE
         plot2_env$facet.fixed_y <- TRUE
+      } else if (isTRUE(coeff_of_variation >= 0.25)) {
+        # report the data-dependent choice, so that readers know panels are not comparable (F052)
+        plot2_message("Using free ", font_blue("y"), " scales per facet since the ",
+                      digit_to_text(nrow(y_maxima)), " ", font_blue("y"),
+                      " scales differ by 25% or more (use ", font_blue("facet.fixed_y = TRUE"),
+                      " for the same scale in all facets)")
       }
     }
   }
