@@ -4,7 +4,7 @@ title: Core functionality depends on packages listed only in Suggests
 severity: high
 type: dependency
 area: dependencies
-status: in-progress
+status: verified
 verification: reading
 effort: S
 api_change: no
@@ -50,3 +50,4 @@ Move `cli`, `rlang`, `scales` to Imports (they are already hard dependencies of 
 - 2026-11-07: filed in R01 (by reading).
 - 2026-11-08: R06 (sheet T06), measured in a library with only the Imports and their dependencies (43 packages, site library disabled): `cli`, `rlang`, `scales`, `stringr`, `viridisLite` and `vctrs` are all present transitively, so 12 default-path calls (sorting, dates, scales, viridis, percentages, scientific labels, spider) work. Only `lubridate` is missing: `format2(x, "mmm")` stops with 'The package "lubridate" is required.' The practical risk is therefore lower than this finding suggested, but it rests on other packages' Imports, which can change at any time; declaring them remains the fix.
 - 2026-11-08: cli, rlang, scales, grid and grDevices moved to Imports (grid without the impossible >= 4.5.0); stringr replaced by an internal natural_sort() that matches str_sort(numeric = TRUE) (T06.02b); T06.02 unparked. lubridate follows with F029 (format2 for dates).
+- 2026-11-08: completed: lubridate is no longer used (month names via strftime, quarters via POSIXlt) and was removed from Suggests; T05.03 unparked.

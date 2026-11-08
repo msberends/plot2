@@ -237,7 +237,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.date_breaks}{Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
 
-\item{x.date_labels}{Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
+\item{x.date_labels}{Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}: \code{d}/\code{dd} (day), \code{ddd}/\code{dddd} (weekday name), \code{mm} (month number), \code{mmm}/\code{mmmm} (month name), \code{yy}/\code{yyyy} (year), \code{q}/\code{qq} (quarter: \code{1} or \code{Q1}), \code{w}/\code{ww} (ISO week), \code{h}/\code{hh} (hour), \code{MM} (minutes), \code{ss} (seconds). Other words are kept as they are (e.g. \code{"Week ww"}), and text in single quotes is always kept literally (e.g. \code{"'d' d"}). A format containing \verb{\%} is used as a \code{\link[=strftime]{strftime()}} format. Month and weekday names follow the \link[=options]{option} \code{plot2.language} if set, and the system locale otherwise.}
 
 \item{x.date_remove_years}{A \link{logical} to indicate whether the years of all \code{x} values must be unified. This will set the years of all \code{x} values \href{https://en.wikipedia.org/wiki/Unix_time}{to 1970} if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the \code{category} while maintaining a date range on \code{x}. The default is \code{FALSE}, unless \code{category} contains all years present in \code{x}.}
 

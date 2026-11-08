@@ -98,7 +98,7 @@ get_default_title <- function(plot, default) {
   val <- unname(mapp[names(mapp) == "y"])
   
   # generate txt of Y-axis
-  is_dutch <- Sys.getlocale() %like% "nl|dutch|nederlands"
+  is_dutch <- plot2_language() == "nl"
   txt_per <- ifelse(is_dutch, "per", "per")
   txt_sep <- ifelse(is_dutch, "en", "and")
   

@@ -31,6 +31,8 @@ Default colour of the area fills in sf plots, defaults to the option \code{plot2
 Default plot type when \code{type} is left blank and cannot be determined from the data, defaults to \code{"col"}. Any value of \code{type} can be used, such as \code{"line"} or \code{"l"}
 \item \code{plot2.font}\cr
 Default plot font family, defaults to the font of the graphics device. See the \code{font} argument of \code{\link[=plot2]{plot2()}}
+\item \code{plot2.language}\cr
+Language of the words that plot2 generates (such as automatic titles and the labels of \code{y.24h} and \code{y.age}) and of month and weekday names in date labels: \code{"en"} (default) or \code{"nl"} (Dutch). If not set, date labels follow the system locale.
 \item \code{plot2.silent}\cr
 A \link{logical} to hide the console messages when plotting (\code{TRUE}), default is \code{FALSE}. Messages are printed only in interactive sessions (and pkgdown builds), at the end of the \code{\link[=plot2]{plot2()}} call. They are signalled as R conditions of class \code{plot2_message} (and \code{plot2_caution} for cautions), so they can also be caught with \code{\link[=withCallingHandlers]{withCallingHandlers()}} or hidden with \code{\link[=suppressMessages]{suppressMessages()}}. Warnings are R warnings of class \code{plot2_warning} and are not hidden by this option.
 \item \code{plot2.text_factor}\cr

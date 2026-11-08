@@ -23,7 +23,6 @@ test_that("T02.01 plot2 leaves the session locale unchanged, also with date form
 })
 
 test_that("T02.02 date category labels follow the session locale, not Dutch", {
-  skip_open_finding("F003")
   withr::local_locale(LC_TIME = "C")
   expect_false(any(grepl("mrt|mei|okt", format2(as.Date(c("2024-03-01", "2024-05-01", "2024-10-01")), "d mmm"))))
 })
@@ -47,7 +46,6 @@ test_that("T02.05 non-ASCII column names and titles are kept", {
 })
 
 test_that("T02.06 y.age and y.24h labels do not depend on LC_COLLATE", {
-  skip_open_finding("F003")
   d <- data.frame(x = c("a", "b"), y = c(5, 20))
   a <- withr::with_locale(c(LC_COLLATE = "C"), axis_labels(plot2(d, x, y, y.age = TRUE), "y"))
   b <- withr::with_locale(c(LC_COLLATE = "nl_NL.UTF-8"), axis_labels(plot2(d, x, y, y.age = TRUE), "y"))
@@ -61,13 +59,11 @@ test_that("T02.07 date-times in a non-UTC time zone are labelled in their own ti
 })
 
 test_that("T02.08 date labels have no leading space", {
-  skip_open_finding("F029")
   d <- data.frame(dt = as.Date(c("2024-01-05", "2024-03-15")), v = 1:2)
   expect_false(any(grepl("^ ", axis_labels(plot2(d, dt, v, x.date_labels = "d mmm"), "x"))))
 })
 
 test_that("T02.09 a date category gives no operating-system locale warning", {
-  skip_open_finding("F003")
   withr::local_locale(c(LC_TIME = "C"))
   expect_no_warning(ggplot2::ggplot_build(plot2(fx_two_dates, x, v, dt)))
 })

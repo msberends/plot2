@@ -619,7 +619,10 @@ unify_years <- function(x, as_leap_year = NULL) {
   if (inherits(x, "Date")) {
     as.Date(paste0(ifelse(as_leap_year, "1972", "1970"), x |> format() |> substr(5, 10)))
   } else {
-    as.POSIXct(paste0(ifelse(as_leap_year, "1972", "1970"), x |> format() |> substr(5, 99)))
+    # keep the time zone (F029)
+    tz <- attr(as.POSIXct(x), "tzone")
+    tz <- if (is.null(tz)) "" else tz[1]
+    as.POSIXct(paste0(ifelse(as_leap_year, "1972", "1970"), format(x, tz = tz) |> substr(5, 99)), tz = tz)
   }
 }
 
@@ -967,4 +970,16 @@ natural_sort <- function(x, decreasing = FALSE) {
   ord <- do.call(order, keys)
   if (isTRUE(decreasing)) ord <- rev(ord)
   c(x[ord], nas)
+}
+
+# The language of the words that plot2 generates (titles, y.24h, y.age) and of
+# date labels: option plot2.language, "en" (default) or "nl" (F003)
+plot2_language <- function() {
+  lang <- getOption("plot2.language", default = "en")
+  lang <- tolower(substr(trimws(as.character(lang)[1L]), 1, 2))
+  if (!isTRUE(lang %in% c("en", "nl"))) {
+    plot2_warning("Option plot2.language must be \"en\" or \"nl\", using \"en\"")
+    lang <- "en"
+  }
+  lang
 }

@@ -868,19 +868,18 @@ validate_x_scale <- function(df,
   }
   plot2_env$x_lim <- x.limits
   if (inherits(values, "Date")) {
+    # format2() formats the labels, so that plot2's tokens (e.g. quarters) and plot2.language apply (F003)
     scale_x_date(position = x.position,
                  date_breaks = x.date_breaks,
-                 date_labels = posix_date_format(x.date_labels),
                  expand = x.expand,
                  limits = x.limits, 
-                 labels = if (is.null(x.labels)) waiver() else x.labels)
+                 labels = if (is.null(x.labels)) function(v) format2(v, format = x.date_labels) else x.labels)
   } else if (inherits(values, "POSIXt")) {
     scale_x_datetime(position = x.position,
                      date_breaks = x.date_breaks,
-                     date_labels = posix_date_format(x.date_labels),
                      expand = x.expand,
                      limits = x.limits, 
-                     labels = if (is.null(x.labels)) waiver() else x.labels)
+                     labels = if (is.null(x.labels)) function(v) format2(v, format = x.date_labels) else x.labels)
   } else {
     if (!is.numeric(values)) {
       scale_x_discrete(position = x.position,
@@ -1147,14 +1146,14 @@ validate_y_scale <- function(df,
     } else if (isTRUE(y.24h)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         paste0(format2(x, decimal.mark = dec, big.mark = big),
-               ifelse(Sys.getlocale("LC_COLLATE") %like% "nl|dutch", "u (", "h ("),
+               ifelse(plot2_language() == "nl", "u (", "h ("),
                x / 24,
                "d)")
       }
     } else if (isTRUE(y.age)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         paste0(format2(x, decimal.mark = dec, big.mark = big, round = 0),
-               ifelse(Sys.getlocale("LC_COLLATE") %like% "nl|dutch", " jr", " yrs"))
+               ifelse(plot2_language() == "nl", " jr", " yrs"))
       }
     } else if (isTRUE(y.percent) || isTRUE(stacked_fill)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {

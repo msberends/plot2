@@ -1,5 +1,8 @@
 # plot2 1.99.0.9000
 
+* Dates in legends and on the x axis now follow the system locale instead of Dutch; the new option `plot2.language` (`"en"` or `"nl"`) sets the language of month names and of the words plot2 generates (automatic titles, `y.24h`, `y.age`), which no longer depend on the machine's locale. Changes of the time locale are always restored
+* Date formats such as `x.date_labels = "Week ww"` keep words intact (previously "%Veek"), text in single quotes is kept literally, quarters (`q`, `qq`) also work on the x axis, month formats return text like all other formats, and time zones are kept when years are unified
+* `lubridate` is no longer needed
 * Fewer hard dependencies: `broom` and `cleaner` moved to Suggests (`broom` is needed only to plot model objects that `ggplot2::fortify()` cannot handle) and `crayon` was dropped in favour of `cli`
 * `cli`, `rlang`, `scales`, `grid` and `grDevices` are now listed in Imports, as plot2 always uses them; `stringr` is no longer needed for sorting
 * Messages and warnings of `plot2()` are now R conditions. Messages (class `plot2_message`, and `plot2_caution` for cautions) are still printed only in interactive sessions, now grouped at the end of the call in the order they occurred, and can be caught or hidden with `suppressMessages()`; `options(plot2.silent = TRUE)` now works. Warnings (such as "No observations" or values that could not be plotted) are now R warnings of class `plot2_warning`, also in scripts, R Markdown and Quarto

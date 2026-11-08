@@ -40,7 +40,6 @@ test_that("T05.02 the declared minimum R version is at least what the hard depen
 })
 
 test_that("T05.03 no suggested package requires a newer R than the declared minimum", {
-  skip_open_finding("F008")
   desc <- read.dcf(source_file("DESCRIPTION"))
   expect_false(grepl("grid \\(>= 4\\.5", desc[, "Suggests"]))
 })

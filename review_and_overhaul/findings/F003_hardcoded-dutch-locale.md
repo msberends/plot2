@@ -4,7 +4,7 @@ title: Dates formatted in Dutch by default and locale handling is global and inc
 severity: critical
 type: i18n
 area: i18n
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: possible
@@ -52,3 +52,4 @@ Default `locale = NULL` (system locale) everywhere; restore any locale change wi
 
 - 2026-11-07: filed in R01, reproduced.
 - 2026-11-08: maintainer decided: dates use the system locale everywhere (locale = NULL), any locale change restored with on.exit(); generated text in English by default; new option plot2.language = "nl" switches the generated words (titles, y.24h, y.age) and the date locale to Dutch.
+- 2026-11-08: fixed and verified (Phase 3, with F029). format2() for dates defaults to locale = NULL (plot2.language if set, otherwise the system locale); LC_TIME changes go through local_time_locale() and are restored on exit, with fallback and a caution if the locale is not installed; generated titles, y.24h and y.age follow the new option plot2.language ("en" default, "nl"); the x axis formats dates with format2(), so tokens and the language apply there too. T02.02, T02.06 and T02.09 unparked; tests in test-regression-phase3.R.
