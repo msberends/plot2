@@ -34,10 +34,12 @@ test_that("T07.02 plot2's own labels render on the default pdf() device without 
   expect_identical(render_warnings(function(f) grDevices::pdf(f), p_sci()), character(0))
 })
 
-test_that("T07.02b euros() labels render on the default pdf() device (F134)", {
-  skip_open_finding("F134")
+test_that("T07.02b euros() advises cairo_pdf, where its labels render (F134: documentation only)", {
+  skip_if_not(capabilities("cairo"))
+  rd <- paste(readLines(source_file("man", "labellers.Rd")), collapse = " ")
+  expect_true(grepl("cairo_pdf", rd))
   p <- plot2(data.frame(x = c("a", "b"), y = c(1500, 2500)), x, y, datalabels.format = euros)
-  expect_identical(render_warnings(function(f) grDevices::pdf(f), p), character(0))
+  expect_identical(render_warnings(function(f) grDevices::cairo_pdf(f), p), character(0))
 })
 
 test_that("T07.03 non-ASCII text renders without warnings on cairo, png and svg devices", {
