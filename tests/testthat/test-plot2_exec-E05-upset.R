@@ -79,7 +79,6 @@ test_that("E05.09 x.sort as a vector (F071)", {
 })
 
 test_that("E05.10 print = TRUE returns the plot invisibly (F010)", {
-  skip_open_finding("F010")
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
   expect_s3_class(plot2(fx_upset, x = c(a, b, c), type = "upset", print = TRUE), "patchwork")

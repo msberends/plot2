@@ -4,7 +4,7 @@ title: UpSet plot with print = TRUE continues execution and errors
 severity: high
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F001]
 origin: R01 §2.3
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F010 UpSet with print = TRUE falls through
@@ -48,3 +48,4 @@ print(res)
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). UpSet branch returns after printing; all `print = TRUE` paths now return `invisible(p)`; regression tests in E01 and E05.

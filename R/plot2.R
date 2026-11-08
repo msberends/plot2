@@ -590,7 +590,7 @@ plot2 <- function(.data,
     if (!missing(caption)) p <- p + labs(caption = validate_title(caption, markdown = markdown))
     if (isTRUE(print)) {
       print(p)
-      return(invisible())
+      return(invisible(p))
     } else {
       return(p)
     }
@@ -1317,6 +1317,7 @@ plot2_exec <- function(.data,
     
     if (isTRUE(print)) {
       print(out)
+      return(invisible(out))
     } else {
       return(out)
     }
@@ -2264,6 +2265,7 @@ plot2_exec <- function(.data,
   # return plot ----
   if (isTRUE(print)) {
     print(p)
+    invisible(p)
   } else {
     p
   }

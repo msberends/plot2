@@ -38,7 +38,6 @@ test_that("E01.04 empty data: axis titles only when given", {
 })
 
 test_that("E01.05 empty data with print = TRUE returns the plot invisibly (F010)", {
-  skip_open_finding("F010")
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
   expect_s3_class(plot2(fx_xy[0, ], x, y, print = TRUE), "gg")

@@ -510,6 +510,7 @@ back2back_plot <- function(df,
   # return plot ----
   if (isTRUE(print)) {
     print(p)
+    invisible(p)
   } else {
     p
   }
