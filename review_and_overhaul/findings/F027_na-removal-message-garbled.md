@@ -4,7 +4,7 @@ title: "Removed n rows" message uses a vector condition and is garbled
 severity: medium
 type: bug
 area: messaging
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F014]
 origin: R01 §3.3
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F027 Garbled NA removal message
@@ -40,3 +40,4 @@ Use `length(rows_with_NA) > 1`.
 ## History
 
 - 2026-11-07: filed in R01 (by reading); reproduced the same day ("rowss").
+- 2026-11-08: fixed and verified (Phase 1). Count used instead of the row indices; regression test 03.17.

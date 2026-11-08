@@ -484,7 +484,7 @@ validate_data <- function(df,
     # so some are NAs
     if (isTRUE(dots$na.rm)) {
       plot2_message("Removed ", length(rows_with_NA),
-                    " row", ifelse(rows_with_NA > 1, "s", ""),
+                    " row", ifelse(length(rows_with_NA) > 1, "s", ""),
                     " since ", font_blue("na.rm = TRUE"))
       df <- df[-rows_with_NA, , drop = FALSE]
     } else {

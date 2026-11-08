@@ -121,7 +121,6 @@ test_that("03.16 an integer64 y is converted", {
 })
 
 test_that("03.17 na.rm = TRUE removes rows with NA in x, category or facet and counts them correctly", {
-  skip_open_finding("F027")
   p <- expect_plot2_message(plot2(fx_na, x, y, category, facet, na.rm = TRUE),
                             "^Removed 3 rows since na.rm = TRUE$", type = "info")
   expect_false(anyNA(plot_data(p)$x))

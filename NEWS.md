@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: the message about rows removed with `na.rm = TRUE` was garbled ("rowss")
 * Fixed: date-time (POSIXct) columns could be chosen as the automatic y variable, which crashed `plot2()`
 * Support for ggplot2 4.0.0
 * Support for dplyr 1.2.0
