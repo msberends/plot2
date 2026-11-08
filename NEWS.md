@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* The help pages of `legend.position` and of the package options (`?plot2-options`) now state the actual defaults
 * Main vignette: corrected several explanations that did not match their example code
 * README: corrected the installation instructions (not on CRAN yet) and two examples that failed or did not do what the text said
 * Help pages of `move_layer()`, the `plot2()` methods, `register_colour()` and `unregister_colour()` now have examples and return values; the `plot2()` methods page lists how each method changes the defaults

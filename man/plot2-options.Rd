@@ -10,33 +10,33 @@ These are the package options for usage in \code{\link[=plot2]{plot2()}}. These 
 
 \itemize{
 \item \code{big_mark}\cr
-Default character for a thousands separator
+Default character for a thousands separator: \code{","}, \code{"."}, \code{" "} or \code{""}. Defaults to \code{"."} if the decimal mark is a comma, and \code{" "} otherwise
 \item \code{dec_mark}\cr
-Default character for a decimal separator
+Default character for a decimal separator: \code{","} or \code{"."}. Defaults to the \link[=options]{option} \code{OutDec}, which is \code{"."} in a standard R session
 \item \code{plot2.colour}\cr
-Default colour to use in plots
+Default colour to use in plots, defaults to \code{"ggplot2"} (the colours of \code{ggplot2} itself)
 \item \code{plot2.colour_background}\cr
-Default background colour to use in plots
+Default background colour to use in plots, defaults to \code{"white"}
 \item \code{plot2.colour_font_axis}\cr
-Default colour of the axis text (\code{axis.title.x} and \code{axis.title.y})
+Default colour of the axis text (\code{axis.title.x} and \code{axis.title.y}), defaults to \code{"grey25"}
 \item \code{plot2.colour_font_primary}\cr
-Default colour of the plot title and plot tag
+Default colour of the plot title and plot tag, defaults to \code{"black"}
 \item \code{plot2.colour_font_secondary}\cr
-Default colour of the plot subtitle and caption
+Default colour of the plot subtitle and caption, defaults to \code{"grey35"}
 \item \code{plot2.colour_sf}\cr
-Default colour of the borders in sf plots
+Default colour of the borders in sf plots, defaults to \code{"grey50"}
 \item \code{plot2.colour_sf_fill}\cr
-Default colour of the area fills in sf plots
+Default colour of the area fills in sf plots, defaults to the option \code{plot2.colour}
 \item \code{plot2.default_type}\cr
-Default plot type
+Default plot type when \code{type} is left blank and cannot be determined from the data, defaults to \code{"col"}. Any value of \code{type} can be used, such as \code{"line"} or \code{"l"}
 \item \code{plot2.font}\cr
-Default plot font family
+Default plot font family, defaults to the font of the graphics device. See the \code{font} argument of \code{\link[=plot2]{plot2()}}
 \item \code{plot2.silent}\cr
 A \link{logical} to hide the console messages when plotting (\code{TRUE}), default is \code{FALSE}
 \item \code{plot2.text_factor}\cr
-Default text factor to use in plots
+Default factor to multiply all text sizes with, defaults to \code{1}
 \item \code{plot2.theme}\cr
-Default plot theme
+Default plot theme, defaults to \code{"theme_minimal2"} (\code{\link[=theme_minimal2]{theme_minimal2()}})
 }
 }
 

@@ -55,3 +55,4 @@ Correct the texts; for 1 and 4 the cleaner fix is to stop using visible values a
 ## History
 
 - 2026-11-08: filed in R05; tests A03.05 and A03.08b parked; A04.03 records the actual `legend.position = NULL` behaviour.
+- 2026-11-08: points 3 (legend.position) and 5 (option defaults) corrected; point 7 fixed with F079. Points 1, 2, 4 and 6 describe defaults that depend on missing() and wait for F094.
