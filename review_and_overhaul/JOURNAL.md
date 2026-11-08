@@ -2,6 +2,25 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 4)
+
+- Maintainer decided (AskUserQuestion): F020 `data` only in plot2.formula; F013 year/month guess only for discrete geoms, and only when `type` is unset; F028 percentages per x through a new argument `datalabels.percent_by`; F068 secondary axis as line plus points when the primary is a column/bar type; F050 legend.position accepts FALSE, numeric and "inside"; F052 heuristic kept, with a message; F063 scientific notation only at 1e9 or above, or below 1e-4; F030 lookup in the caller's environment, documented; F130 limits must have length 2 (error).
+- Fixed and verified: F017, F018, F019+F081, F020, F030, F031, F013, F028, F022, F068, F032+F057, F040, F050, F052, F055, F059, F060, F063, F084, F088, F089, F130, I003.
+- Notes on how decisions were implemented:
+  - F020: the generic keeps a `data` formal, so a formula call still dispatches; any other use gives a clear error.
+  - F028: `datalabels.percent_by = "x"` uses the facet as the group when there is no category.
+  - F060: the "loosely supported" notice is now a caution.
+  - F130: the length rule applies to category.limits as well.
+  - F089: titles are taken from dimnames only when those are named.
+- Pre-existing bugs found on the way:
+  - The secondary series was never drawn rescaled (F022).
+  - Spider coordinates were replaced by Cartesian coordinates when datalabels were on (I003).
+  - A partial theme was overridden by `background` (F032).
+- Rplots.pdf was committed by mistake and removed again in c5e84ea.
+- plotly and the other suggested packages are now installed on this server, so examples and tests that need them run as well.
+- Checks: full suite (NOT_CRAN=true) 586 tests, 0 failures, 0 warnings, 43 skips; both vignettes render; all examples run (the colour example warns on purpose about the unregistered name "red123", F088).
+- Next: Phase 5 (structure and performance), awaiting the maintainer's go-ahead.
+
 ## 2026-11-08 (session 6, continued: Phase 3)
 
 - Maintainer decided (AskUserQuestion): F003 system locale plus a `plot2.language` option; F011 automatic download, scoped, if CRAN allows it, otherwise opt-in; F108 broom to Suggests, cleaner replaced, crayon dropped for cli, font packages to Suggests; F029 month formats always character.
