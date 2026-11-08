@@ -121,3 +121,11 @@ test_that("F082 add_errorbar() works without a category and keeps the facets", {
   expect_identical(nrow(eb), 4L)
   expect_identical(sort(unique(as.integer(eb$PANEL))), 1:2)
 })
+
+test_that("F083 move_layer() reorders by index and clamps the new position", {
+  p <- ggplot2::ggplot(data.frame(x = 1:3, y = 1:3), ggplot2::aes(x, y)) +
+    ggplot2::geom_point() + ggplot2::geom_line() + ggplot2::geom_rug()
+  expect_identical(geoms(move_layer(p, layer = 1, move = 2)), c("GeomLine", "GeomRug", "GeomPoint"))
+  expect_identical(geoms(move_layer(p, layer = 1, move = 10)), c("GeomLine", "GeomRug", "GeomPoint"))
+  expect_identical(geoms(move_layer(p, layer = 2, move = 0)), c("GeomPoint", "GeomLine", "GeomRug"))
+})

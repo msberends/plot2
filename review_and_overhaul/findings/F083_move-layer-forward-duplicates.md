@@ -4,7 +4,7 @@ title: move_layer() with a positive move duplicates a layer and drops another
 severity: medium
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -38,3 +38,4 @@ Reorder by index: `ord <- append(setdiff(seq_along(layers), layer_old), layer_ol
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; move_layer() reorders by index and clamps the new position to the existing layers (a too large move no longer errors). Regression test F083.

@@ -27,24 +27,18 @@ move_layer <- function(plot, move = -1, layer = length(plot$layers)) {
   }
   
   layers <- plot$layers
-  layers_backup <- layers
   layer_old <- layer
-  layer_new <- max(1, layer + move)
   
   if (!layer_old %in% seq_len(length(layers))) {
     stop("This plot contains only ", length(layers), " layers. Layer ",
          layer_old, " does not exist.", call. = FALSE)
   }
-  if (!layer_new %in% seq_len(length(layers))) {
-    stop("This plot contains only ", length(layers), " layers; layer ",
-         layer_old, " cannot be moved to position ", layer_new, ".", call. = FALSE)
-  }
+  # clamp the new position to the existing layers
+  layer_new <- min(length(layers), max(1, layer + move))
   
-  # new order - layer_old becomes layer_new and the rest moves along
-  layers[[layer_new]] <- layers[[layer_old]]
-  for (i in (layer_new + 1):length(layers)) {
-    layers[[i]] <- layers_backup[[i - 1]]
-  }
+  # new order by index: take out layer_old and insert it at layer_new (F083)
+  ord <- append(setdiff(seq_along(layers), layer_old), layer_old, after = layer_new - 1)
+  layers <- layers[ord]
   plot$layers <- layers
   
   plot

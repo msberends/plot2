@@ -33,7 +33,6 @@ test_that("M06.03 a non-existing layer errors", {
 })
 
 test_that("M06.04 a positive move keeps all layers (F083)", {
-  skip_open_finding("F083")
   expect_identical(geoms(move_layer(fx_two_layers(), layer = 1, move = 1)), c("GeomLine", "GeomPoint"))
 })
 
