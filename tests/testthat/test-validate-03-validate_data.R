@@ -98,7 +98,6 @@ test_that("03.13 datalabels = TRUE shows y; on tiles it shows the category", {
 })
 
 test_that("03.14 the years heuristic only applies to discrete geoms", {
-  skip_open_finding("F013")
   d <- data.frame(year = c(2001, 2002, 2005), v = c(1, 3, 2))
   p <- expect_plot2(plot2(d, year, v, type = "point"))
   expect_identical(axis_class(p, "x"), "continuous")

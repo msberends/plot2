@@ -4,7 +4,7 @@ title: Numeric x of 2000-2050 or exactly 1:12 silently converted to character, a
 severity: high
 type: design
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -50,3 +50,4 @@ Apply the heuristics only for discrete geoms and integer-valued data, or only wh
 
 - 2026-11-07: filed in R01, reproduced.
 - 2026-11-08: maintainer decided (AskUserQuestion): keep the year (2000-2050) and month (1:12) heuristics only for discrete types and integer values; continuous geoms keep numeric x; the conversion is reported in a message.
+- 2026-11-08: fixed as decided (with the follow-up answer: the guess also applies when type is not set): looks_like_years() and looks_like_months() require whole numbers; for x the guess is skipped for continuous-x types (point, line, area, ribbon, path, step, smooth, histogram, density, polygon, rect, sf); the messages say how to prevent it; x.character and category.character documented. Category keeps the guess regardless of type (whole numbers only). Tests: 03.14 unparked, test-regression-phase4.R (F013).

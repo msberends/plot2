@@ -86,3 +86,14 @@ test_that("F031 types match exactly or by an unambiguous start, otherwise error 
   # a part of a name in the middle is not a match ("line" is not "hline")
   expect_error(plot2:::validate_type("ine"), "invalid")
 })
+
+test_that("F013 years and months become discrete only for discrete or automatic types and whole numbers", {
+  years <- data.frame(year = 2015:2024, n = 1:10)
+  expect_identical(axis_class(plot2(years, year, n), "x"), "discrete")
+  expect_identical(axis_class(plot2(years, year, n, type = "col"), "x"), "discrete")
+  expect_identical(axis_class(plot2(years, year, n, type = "line"), "x"), "continuous")
+  expect_identical(axis_class(plot2(data.frame(m = 1:12, v = 12:1), m, v, type = "point"), "x"), "continuous")
+  expect_identical(axis_class(plot2(years, year, n, x.character = FALSE), "x"), "continuous")
+  expect_false(plot2:::looks_like_years(c(2001.5, 2010)))
+  expect_true(plot2:::looks_like_months(c(1:12, NA)))
+})

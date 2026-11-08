@@ -1063,7 +1063,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.labels, y.labels, y_secondary.labels}{A labels function or character vector to use for the axis.}
 
-\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when \code{type} is not set or is a discrete type such as \code{"col"} or \code{"boxplot"}, with a message; for continuous types such as \code{"point"}, \code{"line"} and \code{"area"} they stay numeric. Numeric values also become character for other discrete types. Use \code{x.character = FALSE} to keep numeric values.}
 
 \item{x.drop}{\link{logical} to indicate whether factor levels should be dropped.}
 
@@ -1097,7 +1097,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.date_labels}{Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
 
-\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use \code{category.character = FALSE} to keep numeric values.}
 
 \item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the X-axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
 \itemize{

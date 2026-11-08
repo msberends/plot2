@@ -384,21 +384,25 @@ validate_data <- function(df,
                                                    y.percent = dots$y.percent))
   }
   
-  # turn x to character if data seems to suggest so
+  # turn x to character if data seems to suggest so; years and months are only guessed for
+  # whole numbers and for discrete or automatic types, so that e.g. a scatter plot of
+  # weights from 2000 to 2050 keeps a numeric x (F013)
+  guess_discrete <- !type %in% c("geom_point", "geom_line", "geom_area", "geom_ribbon", "geom_path", "geom_step",
+                                "geom_smooth", "geom_histogram", "geom_density", "geom_polygon", "geom_rect", "geom_sf")
   if (has_x(df) &&!isTRUE(dots$x.character)) {
     if (is.null(dots$x.character) &&
-        is.numeric(get_x(df)) &&
-        all(get_x(df, na.rm = TRUE) >= 2000) &&
-        all(get_x(df, na.rm = TRUE) <= 2050)) {
+        guess_discrete &&
+        looks_like_years(get_x(df))) {
       plot2_message("Assuming ", font_blue("x.character = TRUE"),
-                    " since the ", font_blue("x"), " labels seem to be years")
+                    " since the ", font_blue("x"), " labels seem to be years (use ",
+                    font_blue("x.character = FALSE"), " to prevent this)")
       dots$x.character <- TRUE
     } else if (is.null(dots$x.character) &&
-               is.numeric(get_x(df)) &&
-               (identical(sort(unique(get_x(df))), seq_len(12)) ||
-                identical(sort(unique(get_x(df))), as.double(seq_len(12))))) {
+               guess_discrete &&
+               looks_like_months(get_x(df))) {
       plot2_message("Assuming ", font_blue("x.character = TRUE"),
-                    " since the ", font_blue("x"), " labels seem to be months")
+                    " since the ", font_blue("x"), " labels seem to be months (use ",
+                    font_blue("x.character = FALSE"), " to prevent this)")
       dots$x.character <- TRUE
     } else if (is.numeric(get_x(df)) &&
                !type %in% c("", "geom_blank") &&
@@ -421,18 +425,16 @@ validate_data <- function(df,
   # turn category to character if data seems to suggest so
   if (has_category(df) &&!isTRUE(dots$category.character)) {
     if (is.null(dots$category.character) &&
-        is.numeric(get_category(df)) &&
-        all(get_category(df, na.rm = TRUE) >= 2000) &&
-        all(get_category(df, na.rm = TRUE) <= 2050)) {
+        looks_like_years(get_category(df))) {
       plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                    " since ", font_blue("category"), " seems to be years")
+                    " since ", font_blue("category"), " seems to be years (use ",
+                    font_blue("category.character = FALSE"), " to prevent this)")
       dots$category.character <- TRUE
     } else if (is.null(dots$category.character) &&
-               is.numeric(get_category(df)) &&
-               (identical(sort(unique(get_category(df))), seq_len(12)) ||
-                identical(sort(unique(get_category(df))), as.double(seq_len(12))))) {
+               looks_like_months(get_category(df))) {
       plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                    " since ", font_blue("category"), " seems to be months")
+                    " since ", font_blue("category"), " seems to be months (use ",
+                    font_blue("category.character = FALSE"), " to prevent this)")
       dots$category.character <- TRUE
       # } else if (is.numeric(get_category(df)) &&
       #            is.null(dots$category.character) &&
@@ -3078,4 +3080,15 @@ format_datalabels <- function(datalabels,
     }
   }
   datalabels_out
+}
+
+# whole numbers from 2000 to 2050 (F013)
+looks_like_years <- function(x) {
+  x <- x[!is.na(x)]
+  is.numeric(x) && length(x) > 0 && all(x == round(x)) && all(x >= 2000 & x <= 2050)
+}
+
+# exactly the whole numbers 1 to 12 (F013)
+looks_like_months <- function(x) {
+  is.numeric(x) && isTRUE(all.equal(sort(unique(as.double(x[!is.na(x)]))), as.double(seq_len(12))))
 }
