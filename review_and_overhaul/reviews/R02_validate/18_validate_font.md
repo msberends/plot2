@@ -22,9 +22,9 @@ F011 (download without consent, global showtext), F001 (the font cache lives in 
 
 ## End-to-end test cases
 
-- [ ] 18.01 `font = NULL`: family "" in all text elements.
-- [ ] 18.02 Installed system font (e.g. "DejaVu Sans" if present): family set, no download (skip if absent).
-- [ ] 18.03 Unknown font with downloads disabled: warning, default font (desired, F011).
-- [ ] 18.04 In knitr without `fig.showtext`: informative error.
-- [ ] 18.05 After the call, showtext is not left enabled globally (desired, F011).
-- [ ] 18.06 Font family reaches datalabel layers.
+- [x] 18.01 `font = NULL`: family "" in all text elements.
+- [x] 18.02 Installed system font (e.g. "DejaVu Sans" if present): family set, no download (skip if absent).
+- [x] 18.03 Unknown font with downloads disabled: warning, default font (desired, F011).
+- [x] 18.04 In knitr without `fig.showtext`: informative error.
+- [x] 18.05 After the call, showtext is not left enabled globally (desired, F011).
+- [x] 18.06 Font family reaches datalabel layers.
