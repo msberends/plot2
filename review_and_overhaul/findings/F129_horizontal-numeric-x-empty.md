@@ -4,7 +4,7 @@ title: horizontal = TRUE with a numeric x removes all data: reversed scale with 
 severity: high
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -41,3 +41,4 @@ Set the default limits in the order of the reversed scale (`c(NA, 0)`), or apply
 ## History
 
 - 2026-11-08: filed while coding the I002 tests (case 05.11).
+- 2026-11-08: fixed and verified (Phase 1). Limits are put in reversed order when the x scale is reversed for `horizontal = TRUE` (also user limits); regression test 05.11.

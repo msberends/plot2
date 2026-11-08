@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: `horizontal = TRUE` with a numeric x removed all data points
 * Fixed: `x.limits` on a numeric x announced `x.expand = 0` but still padded the axis, so it did not end at the given limits
 * Fixed: an explicit 0 in `y.limits` was silently replaced by the lowest (negative) data value
 * Fixed: percentage axes (and age and 24-hour axes) with negative values had breaks at odd values such as -28%, -18%, -8%

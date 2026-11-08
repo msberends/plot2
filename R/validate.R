@@ -876,11 +876,18 @@ validate_x_scale <- function(df,
                        labels = if (is.null(x.labels)) waiver() else x.labels,
                        expand = if (set_x.expand) x.expand else waiver())
     } else {
+      x_reversed <- FALSE
       if (x.transform == "identity" && isTRUE(horizontal)) {
         x.transform <- scales::reverse_trans()
+        x_reversed <- TRUE
       }
       if (is.null(x.limits)) {
         x.limits <- c(ifelse(min(values) < 0, NA_real_, 0), NA_real_)
+        plot2_env$x_lim <- x.limits
+      }
+      if (isTRUE(x_reversed) && length(x.limits) == 2) {
+        # a reversed scale expects its limits in reversed order
+        x.limits <- rev(x.limits)
         plot2_env$x_lim <- x.limits
       }
       if (tryCatch(length(x.transform) == 1 && x.transform != "identity", error = function(x) FALSE)) {

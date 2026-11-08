@@ -80,7 +80,6 @@ test_that("05.10 x.transform = 'log10' drops the zero lower limit and gives loga
 })
 
 test_that("05.11 horizontal = TRUE with a numeric x reverses the scale", {
-  skip_open_finding("F129")
   p <- expect_plot2(plot2(fx_xy, x, y, horizontal = TRUE, type = "point"))
   expect_identical(scale_of(p, "x")$trans$name, "reverse")
   expect_identical(coord_class(p), "CoordFlip")
