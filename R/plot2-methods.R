@@ -550,7 +550,7 @@ plot2.formula <- function(.data = NULL,
                           data = NULL,
                           ...) {
   if (is.null(data)) {
-    stop("Formula notation requires the `data` argument to be set")
+    stop("Formula notation requires the `data` argument to be set", call. = FALSE)
   }
   form <- .data
   .data <- data

@@ -49,7 +49,7 @@ create_interactively <- function(data = NULL,
     logo_path
   }, error = function(e) NULL)
   if (!is.null(logo_path) && !file.exists(logo_path)) {
-    stop("Logo file does not exist or is not of type SVG, JPG, PNG, GIF: ", logo_path, ". Use `logo_path = NULL` to remove the logo.")
+    stop("Logo file does not exist or is not of type SVG, JPG, PNG, GIF: ", logo_path, ". Use `logo_path = NULL` to remove the logo.", call. = FALSE)
   }
   
   rlang::check_installed("shiny")

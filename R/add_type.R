@@ -239,7 +239,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   } else if ("y" %in% colnames(y_part)) {
     new_df <- y_part
   } else {
-    stop("Something went wrong - plot data could not be determined")
+    stop("Something went wrong - plot data could not be determined", call. = FALSE)
   }
   
   has_category <- !is.null(category_name) && !isFALSE(inherit.aes)

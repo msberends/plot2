@@ -28,3 +28,19 @@ test_that("F016 short hex colours are expanded each on their own; invalid hex co
   expect_identical(toupper(as.character(get_colour("#AbCdEf"))), "#ABCDEF")
   expect_plot2_message(plot2(fx_cat, x, y, colour = "#12:4;6"), "Invalid colour", type = "caution")
 })
+
+test_that("F033 every stop() and warning() in R/ uses call. = FALSE", {
+  files <- list.files(source_file("R"), pattern = "\\.R$", full.names = TRUE)
+  offenders <- character(0)
+  walk <- function(e, file) {
+    if (is.call(e)) {
+      fn <- e[[1]]
+      if (is.symbol(fn) && as.character(fn) %in% c("stop", "warning") && !"call." %in% names(as.list(e))) {
+        offenders <<- c(offenders, paste0(basename(file), ": ", paste(deparse(e, width.cutoff = 60L)[1], collapse = "")))
+      }
+      for (el in as.list(e)[-1]) if (!missing(el) && !is.null(el)) walk(el, file)
+    }
+  }
+  for (f in files) for (e in parse(f, keep.source = FALSE)) walk(e, f)
+  expect_identical(offenders, character(0))
+})

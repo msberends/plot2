@@ -819,7 +819,7 @@ plot2_exec <- function(.data,
     summarise_function <- function(x) x
     dots$`_summarise_fn_name` <- "function(x) x"
   } else if (!is.function(summarise_function)) {
-    stop("'summarise_function' must be a function")
+    stop("'summarise_function' must be a function", call. = FALSE)
   }
   dots$`_summarise_fn_name` <- gsub("^base::", "", dots$`_summarise_fn_name`)
   

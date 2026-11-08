@@ -4,7 +4,7 @@ title: Eight stop() calls lack call. = FALSE
 severity: low
 type: maintainability
 area: housekeeping
-status: open
+status: verified
 verification: reading
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F014]
 origin: R01 §3.9
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F033 stop() without call. = FALSE
@@ -36,3 +36,4 @@ Add `call. = FALSE`, or switch to `cli::cli_abort()` as part of F014.
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: fixed and verified (Phase 1). Added `call. = FALSE` to the remaining calls; regression test "F033" walks all of `R/`.

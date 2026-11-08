@@ -59,11 +59,11 @@ get_colour <- function(x, length = 1, opacity = 0) {
   opacity <- as.double(opacity)
   length <- as.double(length)
   if (all(is.na(length))) {
-    stop("length must be a numeric value")
+    stop("length must be a numeric value", call. = FALSE)
   }
   
   if ((length(x) > 1 && length != 1) | (length > 1 && length(x) != 1)) {
-    stop("Either the length of `x`, or `length` must be 1")
+    stop("Either the length of `x`, or `length` must be 1", call. = FALSE)
   }
   
   x_names <- names(x) # required for named colour vectors such as in ggplot2 and plot2
@@ -148,9 +148,9 @@ get_colour <- function(x, length = 1, opacity = 0) {
   # support #ffa -> #ffffaa
   shorts <- grepl("^#?[0-9A-Fa-f]{3}$", x, perl = TRUE)
   if (any(shorts)) {
-    x[shorts] <- paste0(sapply(strsplit(x[shorts], "")[[1]],
-                               function(x) ifelse(x == "#", "", paste0(x, x))),
-                        collapse = "")
+    x[shorts] <- vapply(strsplit(sub("^#", "", x[shorts]), ""),
+                        function(ch) paste0("#", paste0(ch, ch, collapse = "")),
+                        FUN.VALUE = character(1))
   }
   
   # support fffaa -> #fffaa
@@ -284,12 +284,12 @@ register_colour <- function(...) {
   for (i in seq_along(dots)) {
     name <- names(dots)[i]
     if (is.null(name) || name == "") {
-      stop("Input must be named")
+      stop("Input must be named", call. = FALSE)
     }
     
     out <- as.character(suppressWarnings(suppressMessages(get_colour(dots[[i]]))))
     if (anyNA(out)) {
-      stop("Input must not be NA, and must be known, valid colours")
+      stop("Input must not be NA, and must be known, valid colours", call. = FALSE)
     }
     
     if (length(out) == 1) {
@@ -354,7 +354,7 @@ add_white <- function(x, white) {
 get_registered_colour <- function(name) {
   name <- name[1L]
   if (!name %in% names(plot2_env$reg_cols)) {
-    stop("colour not registered: ", name)
+    stop("colour not registered: ", name, call. = FALSE)
   }
   get_colour(plot2_env$reg_cols[[which(names(plot2_env$reg_cols) == name)]])
 }

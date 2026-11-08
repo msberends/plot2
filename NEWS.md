@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Error messages no longer show internal function calls
 * Fixed: several short hex colours (such as `"#f0a"`) were all replaced by the first one, and invalid hex codes could pass validation
 * Fixed: an invalid `dec_mark` or `big_mark` option no longer becomes the decimal or big mark; it gives an R warning and falls back to the default
 * Fixed: UpSet plots with `print = TRUE` raised an error after printing; `print = TRUE` now always returns the plot invisibly
