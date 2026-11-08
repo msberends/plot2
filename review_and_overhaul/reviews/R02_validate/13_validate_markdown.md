@@ -25,7 +25,7 @@ F018 (detection concatenates titles, so patterns can span titles; any `$` counts
 
 ## End-to-end test cases
 
-- [ ] 13.01 `markdown = FALSE`: "*text*" stays literal in the title.
-- [ ] 13.02 Default: "*E. coli*" in the title becomes italic (expression).
-- [ ] 13.03 `markdown = NULL` with a superscript in the y name: guessed TRUE, message.
-- [ ] 13.04 `markdown = NULL` with two titles each containing one underscore: not guessed TRUE (F018).
+- [x] 13.01 `markdown = FALSE`: "*text*" stays literal in the title.
+- [x] 13.02 Default: "*E. coli*" in the title becomes italic (expression).
+- [x] 13.03 `markdown = NULL` with a superscript in the y name: guessed TRUE, message.
+- [x] 13.04 `markdown = NULL` with two titles each containing one underscore: not guessed TRUE (F018).

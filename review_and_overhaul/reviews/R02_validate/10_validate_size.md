@@ -20,8 +20,8 @@ None specific. By reading: in line and area plots, `size` is converted to `linew
 
 ## End-to-end test cases
 
-- [ ] 10.01 Point default size 2 in layer data.
-- [ ] 10.02 Dumbbell default 5; UpSet dots 4.
-- [ ] 10.03 `size = 4` on points honoured.
-- [ ] 10.04 `size` on a line plot: warning and used as linewidth.
-- [ ] 10.05 Negative or character `size`: clear error (desired).
+- [x] 10.01 Point default size 2 in layer data.
+- [x] 10.02 Dumbbell default 5; UpSet dots 4.
+- [x] 10.03 `size = 4` on points honoured.
+- [x] 10.04 `size` on a line plot: warning and used as linewidth.
+- [x] 10.05 Negative or character `size`: clear error (desired).

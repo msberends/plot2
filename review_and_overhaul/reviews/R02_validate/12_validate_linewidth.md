@@ -20,7 +20,7 @@ None specific. By reading: boxplot median thickness is derived from `linewidth` 
 
 ## End-to-end test cases
 
-- [ ] 12.01 Line default 0.5; area 0.25; sf 0.1.
-- [ ] 12.02 Dumbbell segment and spider polygon 1.
-- [ ] 12.03 `linewidth = 2` honoured.
-- [ ] 12.04 Boxplot median thicker than the box outline.
+- [x] 12.01 Line default 0.5; area 0.25; sf 0.1.
+- [x] 12.02 Dumbbell segment and spider polygon 1.
+- [x] 12.03 `linewidth = 2` honoured.
+- [x] 12.04 Boxplot median thicker than the box outline.

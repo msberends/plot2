@@ -1966,7 +1966,16 @@ validate_colour <- function(df,
        colour_fill = get_colour(colour_fill))
 }
 
+# a clear error for sizes that ggplot2 would only reject when drawing (F138)
+check_non_negative <- function(x, name) {
+  if (!is.null(x) && (!is.numeric(x) || length(x) == 0 || anyNA(x) || any(x < 0))) {
+    stop("`", name, "` must be a non-negative number", call. = FALSE)
+  }
+  invisible(x)
+}
+
 validate_size <- function(size, type, type_backup) {
+  check_non_negative(size, "size")
   if (is.null(size)) {
     if (type_backup == "dumbbell") {
       size <- 5
@@ -1982,6 +1991,7 @@ validate_size <- function(size, type, type_backup) {
 }
 
 validate_width <- function(width, type) {
+  check_non_negative(width, "width")
   if (is.null(width)) {
     if (type %in% c("geom_boxplot", "geom_violin", "geom_jitter", "geom_beeswarm")) {
       width <- 0.66
@@ -1993,6 +2003,7 @@ validate_width <- function(width, type) {
 }
 
 validate_linewidth <- function(linewidth, type, type_backup) {
+  check_non_negative(linewidth, "linewidth")
   if (is.null(linewidth)) {
     if (type == "geom_sf") {
       linewidth <- 0.1

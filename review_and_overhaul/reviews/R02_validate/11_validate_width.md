@@ -20,7 +20,7 @@ None specific.
 
 ## End-to-end test cases
 
-- [ ] 11.01 Column width 0.5 (xmax - xmin in layer data).
-- [ ] 11.02 Boxplot width 0.66.
-- [ ] 11.03 `width = 0.9` honoured; whisker width follows.
-- [ ] 11.04 Datalabels dodge width equals the bar width with categories.
+- [x] 11.01 Column width 0.5 (xmax - xmin in layer data).
+- [x] 11.02 Boxplot width 0.66.
+- [x] 11.03 `width = 0.9` honoured; whisker width follows.
+- [x] 11.04 Datalabels dodge width equals the bar width with categories.
