@@ -2,6 +2,15 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 0 and Phase 1)
+
+- Maintainer decided: I002 Phase 1 sheets first; same branch; one commit per finding; autonomous.
+- Phase 0 done (9430884): 103 I002 cases for sheets 03, 05 to 09, 23; new findings F126 to F131.
+- Phase 1 fixed and verified so far (one commit each): F002, F005, F009, F010, F012, F015, F016, F023, F024, F027, F033, F041, F042, F043, F126, F127, F128, F129, and F132 (new, found while fixing F043). Part of the F016 change landed in the F033 commit.
+- Deferred for a maintainer decision: F092 (intended zoom expansion; documentation says 0, code uses 0.5).
+- Last full suite run (after F041): 521 tests, 0 failures. Not rerun after the later fixes; per-file tests pass.
+- Next: remaining Phase 1 findings in roadmap order (F004, F007, F021, F026, F044 onwards); run the full suite first.
+
 ## 2026-11-08 (session 6, continued: R07)
 
 - Maintainer decided R07: sheets plus `shiny::testServer()` tests; review only (F006 too); current code reviewed with D001 dependencies noted; server deployment in scope, every input treated as untrusted.
