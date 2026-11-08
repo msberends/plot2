@@ -4,7 +4,7 @@ title: Datalabel background layer maps a vector captured from the environment in
 severity: medium
 type: design
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Store the padded text as a data column (for example `_var_datalabels_bg`, rename
 
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: reproduced via `tools/run_repro.R` ("Aesthetics must be either length 1 or the same as the data").
+- 2026-11-08: fixed: the background geom_label() computes its padded label from the _var_datalabels column (renamed with the layer mappings by restore_mapping()), not from a vector of the function, so it follows the layer data. The reproduction above replaces the data without a label column, which no label layer can draw; the test uses new data with the datalabels column (failed before with 'Aesthetics must be either length 1 or the same as the data', now builds). The font-dependent dash padding is unchanged. Tests: test-regression-phase4.R (F055).

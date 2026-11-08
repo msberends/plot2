@@ -184,3 +184,10 @@ test_that("F057 text_factor multiplies every text size exactly", {
                  stats::setNames(rep(2, length(els)), els))
   }
 })
+
+test_that("F055 the datalabel background follows the layer data", {
+  p <- plot2(data.frame(g = c("a", "b", "c"), v = 1:3), g, v)
+  p$data <- data.frame(g = c("a", "b"), v = 4:5, datalabels = c("4", "5"))
+  b <- ggplot2::ggplot_build(p)
+  expect_identical(b$data[[1]]$label, c("4-", "5-"))
+})

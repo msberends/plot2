@@ -2610,10 +2610,12 @@ generate_datalabels <- function(p,
   p <- p +
     # set background label
     do.call(geom_label_fn,
-            args = c(list(mapping = aes(label = ifelse(is.na(original_values),
+            # the padded label is computed from the data column, not from a vector of this
+            # function, so that it follows the layer data (F055)
+            args = c(list(mapping = aes(label = ifelse(is.na(`_var_datalabels`),
                                                        NA_character_,
-                                                       paste0(original_values,
-                                                              strrep("-", ceiling(nchar(as.character(original_values)) * 0.33))))),
+                                                       paste0(`_var_datalabels`,
+                                                              strrep("-", ceiling(nchar(as.character(`_var_datalabels`)) * 0.33))))),
                           colour = NA,
                           fill = datalabels.colour_fill,
                           size = datalabels.size,
