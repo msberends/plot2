@@ -26,7 +26,7 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' 
 #' An invalid colour gives a warning and is replaced by grey, while valid colours and names are kept. A single unknown name, such as a mistyped palette, is replaced by the default colours. [register_colour()] gives an error for invalid colours.
 #' @param length Size of the vector to be returned.
-#' @param opacity Amount of opacity (0 = solid, 1 = transparent).
+#' @param transparency Amount of transparency (0 = solid, 1 = fully transparent).
 #' @details 
 #' ### Limitless Palette Length
 #' A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
@@ -51,7 +51,7 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' barplot(20:1,
 #'         col = get_colour("R4", 20),
 #'         main = "Not anymore!")
-get_colour <- function(x, length = 1, opacity = 0) {
+get_colour <- function(x, length = 1, transparency = 0) {
   
   if (is.null(x)) {
     # transparent white
@@ -59,7 +59,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
                      class = c("colour", "character")))
   }
   
-  opacity <- as.double(opacity)
+  transparency <- as.double(transparency)
   length <- as.double(length)
   if (all(is.na(length))) {
     stop("length must be a numeric value", call. = FALSE)
@@ -86,7 +86,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
         # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
       }
       x <- x[seq_len(length)]
-      # no early return: opacity and NA handling below apply to every branch (F096)
+      # no early return: transparency and NA handling below apply to every branch (F096)
       
     } else if (x %in% viridisLite_colours) {
       rlang::check_installed("viridisLite")
@@ -113,7 +113,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
           # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
         }
       }
-      # no early return: opacity and NA handling below apply to every branch (F096)
+      # no early return: transparency and NA handling below apply to every branch (F096)
       x <- unname(new_cols)
       
     } else if (x == "topo") {
@@ -160,7 +160,7 @@ get_colour <- function(x, length = 1, opacity = 0) {
     x[missing_hastag] <- paste0("#", x[missing_hastag])
   }
   
-  # some colours add FF as opacity to HTML colour - remove them
+  # some colours add FF as transparency to HTML colour - remove them
   x[which(nchar(x) > 7 & x %like% "FF$")] <- substr(x[which(nchar(x) > 7 & x %like% "FF$")], 1, 7)
   
   invalid <- !grepl("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$", x, perl = TRUE)
@@ -184,13 +184,13 @@ get_colour <- function(x, length = 1, opacity = 0) {
            grey.colors(length - length(x), start = 0.7, end = 0.95))
   }
   
-  # so everything is now hexadecimal; paste alpha (opacity) to it
-  if (opacity > 0 & any(nchar(x) == 7)) {
-    opacity <- toupper(as.hexmode(round((1 - opacity) * 255)))
-    if (nchar(opacity) == 1) {
-      opacity <- paste0("0", opacity)
+  # so everything is now hexadecimal; paste alpha (transparency) to it
+  if (transparency > 0 & any(nchar(x) == 7)) {
+    transparency <- toupper(as.hexmode(round((1 - transparency) * 255)))
+    if (nchar(transparency) == 1) {
+      transparency <- paste0("0", transparency)
     }
-    x[nchar(x) == 7] <- paste0(x[nchar(x) == 7], opacity)
+    x[nchar(x) == 7] <- paste0(x[nchar(x) == 7], transparency)
   }
   
   # support NA - make them white and transparent
@@ -389,7 +389,7 @@ as.character.colour <- function(x, ...) {
 print.colour <- function(x, ...) {
   tryCatch({
     if (any(nchar(as.character(x)) == 9)) {
-      # some have opacity as last 2 characters
+      # some have transparency as last 2 characters
       str_length <- 9
     } else {
       str_length <- 7

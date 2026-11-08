@@ -7,7 +7,7 @@
 \alias{add_white}
 \title{Get (and Register) Colours from \R, Viridis and More}
 \usage{
-get_colour(x, length = 1, opacity = 0)
+get_colour(x, length = 1, transparency = 0)
 
 register_colour(...)
 
@@ -39,7 +39,7 @@ An invalid colour gives a warning and is replaced by grey, while valid colours a
 
 \item{length}{Size of the vector to be returned.}
 
-\item{opacity}{Amount of opacity (0 = solid, 1 = transparent).}
+\item{transparency}{Amount of transparency (0 = solid, 1 = fully transparent).}
 
 \item{...}{Named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
 

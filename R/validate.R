@@ -726,63 +726,6 @@ validate_data <- function(df,
   df
 }
 
-#' @importFrom dplyr mutate across
-validate_taxonomy <- function(df) {
-  if (!has_x(df)) {
-    return(df)
-  }
-  suppressWarnings(requireNamespace("AMR", quietly = TRUE))
-  taxonomic_nms <- unique(c(AMR::microorganisms$family,
-                            AMR::microorganisms$genus,
-                            AMR::microorganisms$species,
-                            AMR::microorganisms$subspecies))
-  make_taxonomy <- function(x, nms = taxonomic_nms) {
-    if (is.null(x)) {
-      return(NULL)
-    }
-    out <- vapply(FUN.VALUE = character(1),
-                  X = strsplit(x, " "),
-                  FUN = function(nm) {
-                    if (!all(is.na(nm))) {
-                      nm[nm %in% nms] <- paste0("*", nm[nm %in% nms], "*")
-                      nm <- paste0(nm, collapse = " ")
-                      nm <- gsub("(.*)([A-Z][.]) [*]([a-z]+)[*](.*)", "\\1*\\2 \\3*\\4", nm, perl = TRUE)
-                    } else if (length(nm) == 0) {
-                      # this is because of `strsplit("", " ")`
-                      nm <- ""
-                    }
-                    nm
-                  },
-                  USE.NAMES = FALSE)
-    out <- gsub("* *", " ", out, fixed = TRUE)
-    out
-  }
-  taxonomy_to_chr_expression <- function(x) {
-    with_taxonomy <- make_taxonomy(as.character(x))
-    if (any(with_taxonomy %like% "[*].+[*]", na.rm = TRUE)) {
-      out <- vapply(with_taxonomy,
-                    FUN.VALUE = character(1),
-                    function(y) {
-                      as.character(md_to_expression(y))
-                    },
-                    USE.NAMES = FALSE)
-      if (is.factor(x)) {
-        # take order of levels from original sorting, since e.g. `x.sort = "freq-desc"` may have been applied
-        factor(out, levels = out[match(levels(x), x)], ordered = is.ordered(x))
-      } else {
-        out
-      }
-    } else {
-      # no taxonomic values found
-      x
-    }
-  }
-  df <- df |>
-    mutate(across(get_x_name(df), taxonomy_to_chr_expression))
-  df$`_var_x` <- df[, get_x_name(df), drop = TRUE]
-  df
-}
-
 #' @importFrom dplyr across group_by summarise
 #' @importFrom ggplot2 expansion scale_x_continuous scale_x_date scale_x_datetime scale_x_discrete waiver
 validate_x_scale <- function(df,
@@ -1889,7 +1832,7 @@ validate_colour <- function(df,
                             type_backup,
                             colour,
                             colour_fill,
-                            colour_opacity,
+                            colour_transparency,
                             misses_colour_fill,
                             horizontal) {
 
@@ -1898,15 +1841,15 @@ validate_colour <- function(df,
     # this is for validate_category_scale()
     if (length(colour) == 1 && !is.na(colour)) {
       if (colour %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour)) > 1) {
-        colour <- get_colour(colour, 4, opacity = colour_opacity)
+        colour <- get_colour(colour, 4, transparency = colour_transparency)
       } else if (colour %in% viridisLite_colours) {
         # generate viridis colour
-        colour <- get_colour(colour, 5, opacity = colour_opacity)
+        colour <- get_colour(colour, 5, transparency = colour_transparency)
       } else {
-        colour <- get_colour(colour, opacity = colour_opacity)
+        colour <- get_colour(colour, transparency = colour_transparency)
       }
     } else {
-      colour <- get_colour(colour, opacity = colour_opacity)
+      colour <- get_colour(colour, transparency = colour_transparency)
     }
     
     if (is.null(colour_fill) || identical(colour.bak, colour_fill)) {
@@ -1914,15 +1857,15 @@ validate_colour <- function(df,
     } else {
       if (length(colour_fill) == 1 && !is.na(colour_fill)) {
         if (colour_fill %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour_fill)) > 1) {
-          colour_fill <- get_colour(colour_fill, 4, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, 4, transparency = colour_transparency)
         } else if (colour_fill %in% viridisLite_colours) {
           # generate viridis colour
-          colour_fill <- get_colour(colour_fill, 5, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, 5, transparency = colour_transparency)
         } else {
-          colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, transparency = colour_transparency)
         }
       } else {
-        colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
+        colour_fill <- get_colour(colour_fill, transparency = colour_transparency)
       }
     }
     return(list(colour = colour,
@@ -1940,12 +1883,12 @@ validate_colour <- function(df,
       colour <- colour[1]
       colour_fill <- colour_fill[1]
     }
-    colour <- get_colour(colour, opacity = colour_opacity)
+    colour <- get_colour(colour, transparency = colour_transparency)
     if (geom_is_continuous(type) && is.null(colour_fill)) {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
       colour_fill <- add_white(colour, white = 0.75)
     } else {
-      colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
+      colour_fill <- get_colour(colour_fill, transparency = colour_transparency)
     }
     
   } else {
@@ -1953,19 +1896,19 @@ validate_colour <- function(df,
     n_unique <- length(unique(get_category(df)))
     colour <- get_colour(colour,
                          length = ifelse(length(colour) == 1, n_unique, 1),
-                         opacity = colour_opacity)
+                         transparency = colour_transparency)
     
     if (isTRUE(colour_fill)) {
       colour_fill <- colour
     }
     if (geom_is_continuous(type) && is.null(colour_fill) && type_backup != "sankey") {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
-      # but not for Sankey plots - they have sankey.alpha
+      # but not for Sankey plots - they have sankey_alpha
       colour_fill <- add_white(colour, white = 0.75)
     } else {
       colour_fill <- get_colour(colour_fill,
                                 length = ifelse(length(colour_fill) == 1, n_unique, 1),
-                                opacity = colour_opacity)
+                                transparency = colour_transparency)
     }
     
     # fewer colours than categories: recycle them, with a warning
@@ -2187,10 +2130,10 @@ validate_theme <- function(theme,
                            horizontal,
                            x.remove,
                            y.remove,
-                           x.lbl_angle,
-                           x.lbl_align,
-                           x.lbl_italic,
-                           facet.fill,
+                           x.label_angle,
+                           x.label_align,
+                           x.label_italic,
+                           facet.colour_fill,
                            facet.bold,
                            facet.italic,
                            facet.size,
@@ -2202,7 +2145,7 @@ validate_theme <- function(theme,
                            has_category,
                            col_y_primary,
                            col_y_secondary,
-                           sankey.remove_axes) {
+                           sankey_remove_axes) {
   
   if (!is.null(theme)) {
     if (is.character(theme)) {
@@ -2242,7 +2185,7 @@ validate_theme <- function(theme,
   orginally_empty <- is_empty(theme)
   if (isTRUE(orginally_empty)) {
     # turn to default ggplot2 theme, so we can at least
-    # add all theme options set as arguments, like x.lbl_angle
+    # add all theme options set as arguments, like x.label_angle
     theme <- theme_grey()
   }
   
@@ -2258,7 +2201,7 @@ validate_theme <- function(theme,
                                           linetype = theme$plot.background$linetype)
   }
   if (isTRUE(horizontal)) {
-    if (isTRUE(x.lbl_italic)) {
+    if (isTRUE(x.label_italic)) {
       theme$axis.text.y$face <- "italic"
     }
     if (isTRUE(x.remove)) {
@@ -2268,7 +2211,7 @@ validate_theme <- function(theme,
       theme$axis.text.x <- element_blank()
     }
   } else {
-    if (isTRUE(x.lbl_italic)) {
+    if (isTRUE(x.label_italic)) {
       theme$axis.text.x$face <- "italic"
     }
     if (isTRUE(x.remove)) {
@@ -2289,26 +2232,26 @@ validate_theme <- function(theme,
   
   # the x axis labels are on the vertical axis after coord_flip() (F051)
   x_text <- ifelse(isTRUE(horizontal), "axis.text.y", "axis.text.x")
-  if (x.lbl_angle != 0) {
-    theme[[x_text]]$angle <- x.lbl_angle
+  if (x.label_angle != 0) {
+    theme[[x_text]]$angle <- x.label_angle
   }
-  if (is.null(x.lbl_align) && x.lbl_angle != 0) {
+  if (is.null(x.label_align) && x.label_angle != 0) {
     # determine the better alignment
-    if (abs(x.lbl_angle) %in% c(0:10, 171:190, 351:360)) {
-      x.lbl_align <- 0.5 # centre
+    if (abs(x.label_angle) %in% c(0:10, 171:190, 351:360)) {
+      x.label_align <- 0.5 # centre
     }
-    if (abs(x.lbl_angle) %in% 191:350) {
-      x.lbl_align <- 0 # left
+    if (abs(x.label_angle) %in% 191:350) {
+      x.label_align <- 0 # left
     }
-    if (abs(x.lbl_angle) %in% 11:170) {
-      x.lbl_align <- 1 # right
+    if (abs(x.label_angle) %in% 11:170) {
+      x.label_align <- 1 # right
     }
-    if (x.lbl_angle < 0) {
-      x.lbl_align <- 1 - x.lbl_align
+    if (x.label_angle < 0) {
+      x.label_align <- 1 - x.label_align
     }
   }
-  if (!is.null(x.lbl_align)) {
-    theme[[x_text]]$hjust <- x.lbl_align
+  if (!is.null(x.label_align)) {
+    theme[[x_text]]$hjust <- x.label_align
   }
   
   if (isTRUE(legend.italic)) {
@@ -2322,7 +2265,7 @@ validate_theme <- function(theme,
     theme$plot.subtitle$colour <- get_colour(subtitle.colour)
   }
   # facet
-  theme$strip.background$fill <- facet.fill
+  theme$strip.background$fill <- facet.colour_fill
   if (isTRUE(facet.bold) && isTRUE(facet.italic)) {
     theme$strip.text$face <- "bold.italic"
   } else if (isTRUE(facet.bold)) {
@@ -2372,7 +2315,7 @@ validate_theme <- function(theme,
   }
   
   # for Sankey plots, remove axes if indicated
-  if (isTRUE(sankey.remove_axes)) {
+  if (isTRUE(sankey_remove_axes)) {
     theme$axis.line <- element_blank()
     theme$panel.grid.major <- element_blank()
     theme$panel.grid.minor <- element_blank()
@@ -2397,8 +2340,8 @@ validate_theme <- function(theme,
 #' @importFrom ggplot2 facet_grid facet_wrap
 validate_facet <- function(df,
                            type,
-                           facet.repeat_lbls_x,
-                           facet.repeat_lbls_y,
+                           facet.repeat_labels_x,
+                           facet.repeat_labels_y,
                            facet.fixed_y,
                            facet.relative,
                            facet.drop,
@@ -2406,25 +2349,25 @@ validate_facet <- function(df,
                            facet.position,
                            horizontal) {
   
-  if (is.null(facet.repeat_lbls_y)) {
+  if (is.null(facet.repeat_labels_y)) {
     if (isTRUE(facet.fixed_y)) {
-      plot2_message("Assuming ", font_blue("facet.repeat_lbls_y = FALSE"),
+      plot2_message("Assuming ", font_blue("facet.repeat_labels_y = FALSE"),
                     " since ", font_blue("y"), " has fixed scales")
-      facet.repeat_lbls_y <- FALSE
+      facet.repeat_labels_y <- FALSE
     } else {
-      facet.repeat_lbls_y <- TRUE
+      facet.repeat_labels_y <- TRUE
     }
   }
   
   scales <- "fixed"
-  if (isTRUE(facet.repeat_lbls_x) && isTRUE(facet.repeat_lbls_y)) {
+  if (isTRUE(facet.repeat_labels_x) && isTRUE(facet.repeat_labels_y)) {
     scales <- "free"
-  } else if (isTRUE(facet.repeat_lbls_y)) {
+  } else if (isTRUE(facet.repeat_labels_y)) {
     scales <- "free_y"
     if (isTRUE(horizontal)) {
       scales <- "free_x"
     }
-  } else if (isTRUE(facet.repeat_lbls_x)) {
+  } else if (isTRUE(facet.repeat_labels_x)) {
     scales <- "free_x"
     if (isTRUE(horizontal)) {
       scales <- "free_y"
@@ -2524,9 +2467,9 @@ generate_datalabels <- function(p,
   }
   
   if (!isTRUE(stacked) && !isTRUE(stacked_fill) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
-    datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.4) # 40% transparency
+    datalabels.colour_fill <- get_colour(datalabels.colour_fill, transparency = 0.4) # 40% transparency
   } else {
-    datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.75) # 75% transparency
+    datalabels.colour_fill <- get_colour(datalabels.colour_fill, transparency = 0.75) # 75% transparency
   }
   datalabels.colour <- get_colour(datalabels.colour)
   

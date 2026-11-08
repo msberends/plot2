@@ -22,11 +22,11 @@ test_that("A07.01 md_to_expression() converts every element, as its return value
 })
 
 test_that("A07.02 big_mark() is a full stop if dec_mark() is a comma, a space otherwise", {
-  withr::local_options(dec_mark = ",", big_mark = NULL)
+  withr::local_options(plot2.decimal.mark = ",", plot2.big.mark = NULL)
   expect_identical(big_mark(), ".")
-  withr::local_options(dec_mark = ".", big_mark = NULL)
+  withr::local_options(plot2.decimal.mark = ".", plot2.big.mark = NULL)
   expect_identical(big_mark(), " ")
-  withr::local_options(big_mark = "")
+  withr::local_options(plot2.big.mark = "")
   expect_identical(big_mark(), "")
 })
 

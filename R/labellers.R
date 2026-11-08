@@ -59,3 +59,51 @@ dollars <- function(x,
     trimws(paste0("$", trimws(format(round(x, 2), decimal.mark = decimal.mark, big.mark = big.mark, nsmall = 2, scientific = FALSE))))
   }
 }
+
+#' Label Taxonomic Names in Italics
+#' 
+#' Format the names of microorganisms in axis or legend labels in italics, as is the convention in microbiology. Every word that is a family, genus, species or subspecies name in the [microorganisms][AMR::microorganisms] data set of the `AMR` package is italicised; other words are kept as they are.
+#' @param x Values, such as the breaks of an axis.
+#' @param ... Not used, allows this function to be used as a labeller.
+#' @details Use this function for the labels of any plotting direction, e.g. `x.labels = label_taxonomy` or `category.labels = label_taxonomy`. It requires the `AMR` package.
+#' @return An [expression] vector if any taxonomic name was found, otherwise `x` as character.
+#' @export
+#' @examples
+#' if (requireNamespace("AMR", quietly = TRUE)) {
+#'   label_taxonomy(c("Escherichia coli", "Other", "S. aureus"))
+#'   
+#'   bacteria <- data.frame(name = c("Escherichia coli", "Staphylococcus aureus", "Other"),
+#'                          n = c(25, 18, 6))
+#'   bacteria |>
+#'     plot2(name, n, x.labels = label_taxonomy)
+#' }
+label_taxonomy <- function(x, ...) {
+  rlang::check_installed("AMR", reason = "for `label_taxonomy()`.")
+  if (is.null(plot2_session$taxonomic_names)) {
+    plot2_session$taxonomic_names <- unique(c(AMR::microorganisms$family,
+                                              AMR::microorganisms$genus,
+                                              AMR::microorganisms$species,
+                                              AMR::microorganisms$subspecies))
+  }
+  nms <- plot2_session$taxonomic_names
+  x <- as.character(x)
+  marked <- vapply(FUN.VALUE = character(1),
+                   X = strsplit(x, " "),
+                   FUN = function(words) {
+                     if (length(words) == 0 || all(is.na(words))) {
+                       return(if (length(words) == 0) "" else NA_character_)
+                     }
+                     words[words %in% nms] <- paste0("*", words[words %in% nms], "*")
+                     out <- paste0(words, collapse = " ")
+                     # abbreviated genus followed by a species, e.g. "S. aureus"
+                     gsub("(.*)([A-Z][.]) [*]([a-z]+)[*](.*)", "\\1*\\2 \\3*\\4", out, perl = TRUE)
+                   },
+                   USE.NAMES = FALSE)
+  marked <- gsub("* *", " ", marked, fixed = TRUE)
+  if (!any(marked %like% "[*].+[*]", na.rm = TRUE)) {
+    return(x)
+  }
+  do.call(expression, lapply(marked, function(m) {
+    if (is.na(m)) NA_character_ else md_to_expression(m)[[1]]
+  }))
+}

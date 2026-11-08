@@ -50,10 +50,10 @@ test_that("09.06 fewer colours than categories are recycled or give a clear warn
   expect_plot2_message(plot2(d_three, x, y, k, colour = c("red", "blue")), "recycled", type = "warning")
 })
 
-test_that("09.07 colour_opacity adds transparency, also for palette names", {
-  p <- expect_plot2(plot2(fx_cat, x, y, category, colour = c("red", "blue"), colour_opacity = 0.5))
+test_that("09.07 colour_transparency adds transparency, also for palette names", {
+  p <- expect_plot2(plot2(fx_cat, x, y, category, colour = c("red", "blue"), colour_transparency = 0.5))
   expect_true(all(nchar(scale_values(p, "fill")) == 9))
-  p <- expect_plot2(plot2(fx_cat, x, y, category, colour_opacity = 0.5))
+  p <- expect_plot2(plot2(fx_cat, x, y, category, colour_transparency = 0.5))
   expect_true(all(nchar(scale_values(p, "fill")) == 9))
 })
 

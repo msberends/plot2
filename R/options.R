@@ -16,10 +16,8 @@
 #' 
 #' These are the package options for usage in [plot2()]. These can all be set using [options()], and their values can be retrieved using [getOption()].
 #' @section Package Options: 
-#' * `big_mark`\cr
+#' * `plot2.big.mark`\cr
 #'   Default character for a thousands separator: `","`, `"."`, `" "` or `""`. Defaults to `"."` if the decimal mark is a comma, and `" "` otherwise
-#' * `dec_mark`\cr
-#'   Default character for a decimal separator: `","` or `"."`. Defaults to the [option][options()] `OutDec`, which is `"."` in a standard R session
 #' * `plot2.colour`\cr
 #'   Default colour to use in plots, defaults to `"ggplot2"` (the colours of `ggplot2` itself)
 #' * `plot2.colour_background`\cr
@@ -34,6 +32,8 @@
 #'   Default colour of the borders in sf plots, defaults to `"grey50"`
 #' * `plot2.colour_sf_fill`\cr
 #'   Default colour of the area fills in sf plots, defaults to the option `plot2.colour`
+#' * `plot2.decimal.mark`\cr
+#'   Default character for a decimal separator: `","` or `"."`. Defaults to the [option][options()] `OutDec`, which is `"."` in a standard R session
 #' * `plot2.default_type`\cr
 #'   Default plot type when `type` is left blank and cannot be determined from the data, defaults to `"col"`. Any value of `type` can be used, such as `"line"` or `"l"`
 #' * `plot2.font`\cr

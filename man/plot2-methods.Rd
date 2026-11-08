@@ -31,13 +31,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -49,11 +49,10 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
   x.max_items = NULL,
@@ -70,7 +69,6 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
   x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
@@ -143,6 +141,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -151,10 +150,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -187,13 +186,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -205,11 +204,10 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
   x.max_items = NULL,
@@ -226,7 +224,6 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
   x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
@@ -299,6 +296,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -307,10 +305,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -344,13 +342,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -362,11 +360,10 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
   x.max_items = NULL,
@@ -383,7 +380,6 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
   x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
@@ -456,6 +452,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -464,10 +461,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -500,13 +497,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -518,11 +515,10 @@
   category.focus = NULL,
   colour = getOption("plot2.colour_sf", "grey50"),
   colour_fill = getOption("plot2.colour_sf_fill", getOption("plot2.colour", "ggplot2")),
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
   x.max_items = NULL,
@@ -539,7 +535,6 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
   x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
@@ -612,6 +607,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = "right",
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -620,10 +616,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -661,13 +657,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -679,11 +675,10 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
   x.max_items = NULL,
@@ -700,7 +695,6 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
   x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
@@ -773,6 +767,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -781,10 +776,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -817,13 +812,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -835,11 +830,10 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
   x.max_items = NULL,
@@ -856,7 +850,6 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
   x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
@@ -929,6 +922,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -937,10 +931,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -994,7 +988,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item \code{"linedot"} or \code{"line-point"} (short: \code{"ld"} or \code{"lp"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
 \item \code{"back-to-back"} (short: \code{"b2b"}, or \code{"butterfly"}, \code{"tornado"} or \code{"population"}) creates a back-to-back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a butterfly plot, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} to distinguish the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
 \item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. It is also possible to provide \code{y}, on which then \code{summarise_function} will be applied.
-\item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
+\item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey_alpha}, and the width of the nodes can be set using \code{sankey_node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
 \item \code{"spider"} or \code{"radar"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system. Facets are supported, always with the same scale in all facets.
 }
 \item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}, and accepts any value of \code{type}, such as \code{"line"} or \code{"l"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
@@ -1007,7 +1001,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item An \link{expression}, e.g. using \code{parse(text = "...")}
 }
 
-The \code{category.title} defaults to \code{TRUE} if the legend items are numeric.}
+The \code{category.title} defaults to \code{TRUE} if the legend items are numeric. \code{category.title} and \code{legend.title} are the same setting; use one of them.}
 
 \item{title.linelength}{Maximum number of characters per line in the title, before a linebreak occurs.}
 
@@ -1021,7 +1015,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{na.rm}{Remove \code{NA} values from showing in the plot.}
 
-\item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}. \code{facet.repeat_lbls_x} and \code{facet.repeat_lbls_y} repeat the axis labels in every facet, which also makes the scales of that axis free (unless \code{facet.fixed_x} or \code{facet.fixed_y} is \code{TRUE}).}
+\item{facet.position, facet.colour_fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_labels_x, facet.repeat_labels_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}. \code{facet.repeat_labels_x} and \code{facet.repeat_labels_y} repeat the axis labels in every facet, which also makes the scales of that axis free (unless \code{facet.fixed_x} or \code{facet.fixed_y} is \code{TRUE}).}
 
 \item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. If not set, this depends on the data: \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25\%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set \code{facet.fixed_y = TRUE} when panels must be compared.}
 
@@ -1039,15 +1033,13 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{colour_fill}{Colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{colour_opacity}{Amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent).}
+\item{colour_transparency}{Amount of transparency for \code{colour}/\code{colour_fill} (0 = solid, 1 = fully transparent).}
 
-\item{x.lbl_angle}{Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
+\item{x.label_angle}{Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
 
-\item{x.lbl_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned).}
+\item{x.label_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned).}
 
-\item{x.lbl_italic}{\link{logical} to indicate whether the x labels should be in \emph{italics}.}
-
-\item{x.lbl_taxonomy}{A \link{logical} to transform all words of the \code{x} labels into italics that are in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package. This uses \code{\link[=md_to_expression]{md_to_expression()}} internally and will set \code{x.labels} to parse expressions.}
+\item{x.label_italic}{\link{logical} to indicate whether the x labels should be in \emph{italics}.}
 
 \item{x.remove, y.remove}{A \link{logical} to indicate whether the axis labels and title should be removed.}
 
@@ -1072,8 +1064,6 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 \item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when \code{type} is not set or is a discrete type such as \code{"col"} or \code{"boxplot"}, with a message; for continuous types such as \code{"point"}, \code{"line"} and \code{"area"} they stay numeric. Numeric values also become character for other discrete types. Use \code{x.character = FALSE} to keep numeric values.}
 
 \item{x.drop}{\link{logical} to indicate whether factor levels should be dropped.}
-
-\item{x.mic}{\link{logical} to indicate whether the X-axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
 
 \item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left \code{NULL} (default for \code{x.zoom}), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
 
@@ -1147,11 +1137,11 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{summarise_function}{A \link{function} to use if the data has to be summarised, see \emph{Examples}. Left \code{NULL} (default), this is \code{\link[=sum]{sum()}}, except when \code{y} contains several columns (then the values are not summarised). Use \code{FALSE} to not summarise the data at all.}
 
-\item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}.}
+\item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}, or \code{"fill"} to stack them to 100\% (the same as \code{stacked_fill = TRUE}).}
 
-\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_fill]{filled} (i.e., stacked to 100\%).}
+\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_fill]{filled} (i.e., stacked to 100\%). If \code{TRUE}, this takes precedence over \code{stacked}.}
 
-\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original X-axis.}
+\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.label_italic} will still apply to the original X-axis.}
 
 \item{reverse}{A \link{logical} to reverse the \emph{values} of \code{category}. Use \code{legend.reverse} to reverse the \emph{legend} of \code{category}.}
 
@@ -1189,6 +1179,8 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{violin_scale}{Scale to be set when using \code{type = "violin"}, can also be set to \code{"area"}.}
 
+\item{legend}{A \link{logical} to show (\code{TRUE}) or hide (\code{FALSE}) the legend, i.e. the box explaining the values of \code{category}. The default \code{NULL} shows it when the plot has a \code{category}.}
+
 \item{legend.position}{Position of the legend. This can be:
 \itemize{
 \item \code{"top"}, \code{"right"}, \code{"bottom"} or \code{"left"}, can be abbreviated
@@ -1201,13 +1193,13 @@ The default \code{NULL} sets it automatically: \code{"right"} for numeric \code{
 
 \item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic, legend.nrow}{Other settings for the legend.}
 
-\item{sankey.node_width}{Width of the vertical nodes in a Sankey plot.}
+\item{sankey_node_width}{Width of the vertical nodes in a Sankey plot.}
 
-\item{sankey.node_whitespace}{Whitespace between the nodes in a Sankey plot.}
+\item{sankey_node_whitespace}{Whitespace between the nodes in a Sankey plot.}
 
-\item{sankey.alpha}{Alpha of the flows in a Sankey plot.}
+\item{sankey_alpha}{Alpha of the flows in a Sankey plot.}
 
-\item{sankey.remove_axes}{Logical to indicate whether all axes must be removed in a Sankey plot.}
+\item{sankey_remove_axes}{Logical to indicate whether all axes must be removed in a Sankey plot.}
 
 \item{zoom}{A \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This is identical to setting \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
 

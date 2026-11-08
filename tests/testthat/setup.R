@@ -19,8 +19,8 @@
 withr::local_options(
   list(
     OutDec = ".",
-    dec_mark = NULL,
-    big_mark = NULL,
+    plot2.decimal.mark = NULL,
+    plot2.big.mark = NULL,
     plot2.colour = NULL,
     plot2.colour_font_primary = NULL,
     plot2.colour_font_secondary = NULL,

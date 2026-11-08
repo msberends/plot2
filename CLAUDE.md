@@ -236,7 +236,11 @@ plot2.formula      – formula interface
 | `facet.` | facet settings (`facet.nrow`, `facet.position`, …) |
 | `datalabels.` | data-label settings (`datalabels.size`, `datalabels.colour`, …) |
 | `smooth.` | smoothing settings |
-| `sankey.` | Sankey-specific settings |
+| `y_secondary.`, `title.`, `subtitle.`, `legend.` | settings of these elements |
+
+Naming rule (decision D001.R): `<argument>.<setting>` only where the part before the dot is itself a `plot2()` argument, with the setting in snake case (`x.label_angle`, `facet.repeat_labels_x`); everything else is plain snake case (`colour_fill`, `sankey_node_width`, `jitter_seed`). Exceptions: base-R names `na.rm`, `na.replace`, `decimal.mark`, `big.mark`; and `legend.value` in the `add_*()` functions. Automatic defaults are `NULL` in the usage (F094); explicit values mean what they say. Options are prefixed `plot2.` (e.g. `plot2.decimal.mark`).
+
+Single argument definition (F035): the arguments are defined once, in the generic `plot2()` in `R/plot2.R`. The methods and `plot2_exec()` get their formals in `R/zzz.R` (`plot2_method_formals()`), and forward everything with `eval(plot2_exec_call())`. A new argument is added only to the generic (plus its `@param`), and used in `plot2_exec()`.
 
 ### validate_*() Functions
 All argument validation happens in dedicated `validate_*()` functions in `R/validate.R` (e.g., `validate_type()`, `validate_legend.position()`). Keep validation out of the main function body.

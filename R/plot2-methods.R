@@ -142,6 +142,10 @@ plot2.freq <- function(.data, ...) {
   # per-call state and diagnostics, restored or emitted on exit (F001, F014)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
+  # legend.title replaces the method's default category.title (D001.12)
+  if (missing(category.title) && !missing(legend.title)) {
+    category.title <- NULL
+  }
   eval(plot2_exec_call(.data = quote(as.data.frame(.data, stringsAsFactors = FALSE)[, 1:2, drop = FALSE]),
                        x = quote(x),
                        y = quote(y),

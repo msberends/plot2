@@ -9,10 +9,8 @@ These are the package options for usage in \code{\link[=plot2]{plot2()}}. These 
 \section{Package Options}{
 
 \itemize{
-\item \code{big_mark}\cr
+\item \code{plot2.big.mark}\cr
 Default character for a thousands separator: \code{","}, \code{"."}, \code{" "} or \code{""}. Defaults to \code{"."} if the decimal mark is a comma, and \code{" "} otherwise
-\item \code{dec_mark}\cr
-Default character for a decimal separator: \code{","} or \code{"."}. Defaults to the \link[=options]{option} \code{OutDec}, which is \code{"."} in a standard R session
 \item \code{plot2.colour}\cr
 Default colour to use in plots, defaults to \code{"ggplot2"} (the colours of \code{ggplot2} itself)
 \item \code{plot2.colour_background}\cr
@@ -27,6 +25,8 @@ Default colour of the plot subtitle and caption, defaults to \code{"grey35"}
 Default colour of the borders in sf plots, defaults to \code{"grey50"}
 \item \code{plot2.colour_sf_fill}\cr
 Default colour of the area fills in sf plots, defaults to the option \code{plot2.colour}
+\item \code{plot2.decimal.mark}\cr
+Default character for a decimal separator: \code{","} or \code{"."}. Defaults to the \link[=options]{option} \code{OutDec}, which is \code{"."} in a standard R session
 \item \code{plot2.default_type}\cr
 Default plot type when \code{type} is left blank and cannot be determined from the data, defaults to \code{"col"}. Any value of \code{type} can be used, such as \code{"line"} or \code{"l"}
 \item \code{plot2.font}\cr

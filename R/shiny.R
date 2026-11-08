@@ -1137,11 +1137,15 @@ make_input <- function(name, default, pretty_labels) {
     default <- NULL
   }
   
+  if (name == "legend") {
+    # NULL is automatic, TRUE shows, FALSE hides (D001.10)
+    return(create_field(shiny::selectInput(name, NULL, selected = "NULL", choices = c("Automatic" = "NULL", "Show" = "TRUE", "Hide" = "FALSE"), width = "100%"), name, NULL, pretty_labels))
+  }
   if (name == "datalabels") {
     # NULL is automatic, TRUE always, FALSE never (F094)
     return(create_field(shiny::selectInput(name, NULL, selected = "NULL", choices = c("Automatic" = "NULL", "Always" = "TRUE", "Never" = "FALSE"), width = "100%"), name, NULL, pretty_labels))
   }
-  if ((is.logical(default) && !is.na(default) && name %unlike% "title$") || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_lbls_x|repeat_lbls_y|date_remove_years)$" || name == "smooth") {
+  if ((is.logical(default) && !is.na(default) && name %unlike% "title$") || name %like% "[.](complete|character|zoom|drop|scientific|percent|fixed_y|fixed_x|repeat_labels_x|repeat_labels_y|date_remove_years)$" || name == "smooth") {
     if (is.null(default)) default <- FALSE
     create_field(bslib::input_switch(name, NULL, value = default), name, default, pretty_labels)
   } else if (is.numeric(default) && is.null(default)) {

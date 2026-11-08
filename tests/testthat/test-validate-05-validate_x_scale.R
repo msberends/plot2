@@ -112,9 +112,9 @@ test_that("05.15 x.breaks and an x.labels function are honoured", {
   expect_axis_labels(p, "x", c("1!", "3!", "5!"))
 })
 
-test_that("05.16 x.mic = TRUE uses the MIC scale of the AMR package", {
+test_that("05.16 the MIC scale of the AMR package can be added to a plot (D001.3)", {
   skip_if_not_installed("AMR")
   d <- data.frame(mic = AMR::as.mic(c("0.25", "1", "4", "1")), n = c(2, 5, 3, 1))
-  p <- expect_plot2(plot2(d, mic, n, x.mic = TRUE))
+  p <- expect_plot2(suppressMessages(plot2(d, mic, n) + AMR::scale_x_mic()))
   expect_identical(axis_labels(p, "x"), c("<=0.25", "0.5", "1", "2", ">=4")) # MIC steps, with operators at the edges
 })

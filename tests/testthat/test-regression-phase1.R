@@ -16,11 +16,11 @@
 # Each test_that() starts with the finding ID; see review_and_overhaul/findings/.
 
 test_that("F015 an invalid dec_mark or big_mark option warns and falls back", {
-  withr::local_options(dec_mark = "x", big_mark = "y", OutDec = ".")
-  expect_warning(expect_identical(dec_mark(), "."), "dec_mark")
+  withr::local_options(plot2.decimal.mark = "x", plot2.big.mark = "y", OutDec = ".")
+  expect_warning(expect_identical(dec_mark(), "."), "plot2.decimal.mark")
   expect_warning(expect_identical(suppressWarnings(dec_mark()), "."), NA)
-  withr::local_options(dec_mark = NULL)
-  expect_warning(bm <- big_mark(), "big_mark")
+  withr::local_options(plot2.decimal.mark = NULL)
+  expect_warning(bm <- big_mark(), "plot2.big.mark")
   expect_identical(bm, " ")
 })
 
@@ -57,14 +57,14 @@ test_that("F043 transformation objects are accepted for x, y and category", {
   expect_plot2(plot2(d, x, y, v, category.transform = scales::transform_log10()))
 })
 
-test_that("F051 x.lbl_angle and x.lbl_align apply to the category labels of horizontal plots", {
+test_that("F051 x.label_angle and x.label_align apply to the category labels of horizontal plots", {
   d <- data.frame(g = c("a", "b"), v = 1:2)
-  p <- expect_plot2(plot2(d, g, v, horizontal = TRUE, x.lbl_angle = 45))
+  p <- expect_plot2(plot2(d, g, v, horizontal = TRUE, x.label_angle = 45))
   expect_identical(theme_el(p, "axis.text.y")$angle, 45)
   expect_null(p$theme$axis.text.x$angle)
-  p <- plot2(d, g, v, horizontal = TRUE, x.lbl_align = 0)
+  p <- plot2(d, g, v, horizontal = TRUE, x.label_align = 0)
   expect_identical(theme_el(p, "axis.text.y")$hjust, 0)
-  p <- plot2(d, g, v, x.lbl_angle = 45)
+  p <- plot2(d, g, v, x.label_angle = 45)
   expect_identical(theme_el(p, "axis.text.x")$angle, 45)
 })
 
@@ -166,7 +166,7 @@ test_that("F096 the 'ggplot2' palette gives ggplot2's own colours, also with an 
   for (n in 2:5) expect_identical(unname(as.character(get_colour("ggplot2", n))), toupper(scales::hue_pal()(n)))
   d <- data.frame(x = rep(c("a", "b"), 2), y = 1:4, k = rep(c("u", "v"), each = 2))
   plain <- layer_df(expect_plot2(plot2(d, x, y, k)), "bar")$fill
-  transparent <- layer_df(expect_plot2(plot2(d, x, y, k, colour_opacity = 0.5)), "bar")$fill
+  transparent <- layer_df(expect_plot2(plot2(d, x, y, k, colour_transparency = 0.5)), "bar")$fill
   expect_identical(unname(substr(as.character(transparent), 1, 7)), toupper(plain))
 })
 

@@ -1,5 +1,9 @@
 # plot2 1.99.0.9000
 
+* Arguments renamed to follow one naming rule (see 'Argument names' in `?plot2`): `colour_opacity` is now `colour_transparency` (and `get_colour(opacity)` is `transparency`), `x.lbl_angle`, `x.lbl_align` and `x.lbl_italic` are `x.label_*`, `facet.repeat_lbls_*` are `facet.repeat_labels_*`, `facet.fill` is `facet.colour_fill`, `sankey.*` are `sankey_*`, and the options `dec_mark` and `big_mark` are `plot2.decimal.mark` and `plot2.big.mark`. The old argument names give an error that names the new one
+* New: `legend = FALSE` hides the legend; `stacked = "fill"` stacks to 100%; `label_taxonomy()` italicises microorganism names in any labels, e.g. `x.labels = label_taxonomy` (replacing `x.lbl_taxonomy`)
+* `x.mic` was removed; add `+ AMR::scale_x_mic()` to the plot instead
+* Giving both `category.title` and `legend.title` is now an error, since they are the same setting
 * Automatic defaults are now `NULL` in the usage, and explicit values mean what they say: e.g. `datalabels = TRUE` always shows all labels, while the default `NULL` shows at most 25; `summarise_function = FALSE` (no longer `NULL`) turns off summarising; an explicit `y.percent_break` is kept as given
 * `plot2()` on a matrix now says that `x`, `y` and `category` are ignored, instead of ignoring them silently
 * In functions and loops, default titles show the column name instead of code such as `{{ col }}` or `.data[[v]]`

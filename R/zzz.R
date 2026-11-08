@@ -167,3 +167,25 @@ formals(plot2.data.frame) <- plot2_method_formals()
 formals(plot2.matrix) <- plot2_method_formals(x.title = FALSE,
                                               y.title = FALSE)
 formals(plot2_exec) <- plot2_method_formals()
+
+# arguments renamed or removed before the first CRAN release (D001) ----
+plot2_old_args <- c(colour_opacity = "was renamed to `colour_transparency`",
+                    x.lbl_angle = "was renamed to `x.label_angle`",
+                    x.lbl_align = "was renamed to `x.label_align`",
+                    x.lbl_italic = "was renamed to `x.label_italic`",
+                    facet.repeat_lbls_x = "was renamed to `facet.repeat_labels_x`",
+                    facet.repeat_lbls_y = "was renamed to `facet.repeat_labels_y`",
+                    facet.fill = "was renamed to `facet.colour_fill`",
+                    sankey.node_width = "was renamed to `sankey_node_width`",
+                    sankey.node_whitespace = "was renamed to `sankey_node_whitespace`",
+                    sankey.alpha = "was renamed to `sankey_alpha`",
+                    sankey.remove_axes = "was renamed to `sankey_remove_axes`",
+                    x.lbl_taxonomy = "was removed; use `x.labels = label_taxonomy` instead",
+                    x.mic = "was removed; add `+ AMR::scale_x_mic()` to the plot instead")
+
+check_old_args <- function(arg_names) {
+  old <- intersect(arg_names, names(plot2_old_args))
+  if (length(old) > 0) {
+    stop(paste0("`", old, "` ", plot2_old_args[old], collapse = "; "), call. = FALSE)
+  }
+}

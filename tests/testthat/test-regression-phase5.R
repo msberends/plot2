@@ -71,3 +71,47 @@ test_that("F094 automatic defaults are NULL, and explicit values mean what they 
             "y_secondary.colour", "y_secondary.colour_fill", "x.expand", "y.expand", "x.sort", "facet.fixed_x")
   expect_true(all(vapply(formals(plot2)[auto], is.null, logical(1))))
 })
+
+test_that("D001 renamed and removed arguments give a clear error", {
+  expect_error(plot2(iris, colour_opacity = 0.5), "renamed to `colour_transparency`")
+  expect_error(plot2(iris, x.lbl_angle = 90), "renamed to `x.label_angle`")
+  expect_error(plot2(iris, facet.fill = "red"), "renamed to `facet.colour_fill`")
+  expect_error(plot2(iris, x.mic = TRUE), "AMR::scale_x_mic")
+  expect_error(plot2(iris, x.lbl_taxonomy = TRUE), "label_taxonomy")
+  expect_identical(get_colour("red", transparency = 0.5), get_colour("#FF000080"))
+  expect_identical(names(formals(get_colour)), c("x", "length", "transparency"))
+})
+
+test_that("D001 options plot2.decimal.mark and plot2.big.mark", {
+  withr::local_options(plot2.decimal.mark = ",", plot2.big.mark = ".")
+  expect_identical(c(dec_mark(), big_mark()), c(",", "."))
+})
+
+test_that("D001.10 legend = FALSE hides the legend, TRUE conflicts with legend.position = 'none'", {
+  expect_identical(theme_el(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = FALSE), "legend.position"), "none")
+  expect_identical(theme_el(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = TRUE), "legend.position"), "top")
+  expect_error(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = TRUE, legend.position = "none"), "legend = TRUE")
+  expect_error(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = "yes"), "NULL, TRUE or FALSE")
+})
+
+test_that("D001.15 stacked = 'fill' equals stacked_fill = TRUE", {
+  d <- data.frame(x = rep(c("a", "b"), each = 2), y = c(1, 3, 2, 2), g = rep(c("p", "q"), 2))
+  expect_identical(layer_df(plot2(d, x, y, g, stacked = "fill"), 1)$ymax,
+                   layer_df(plot2(d, x, y, g, stacked_fill = TRUE), 1)$ymax)
+  expect_error(plot2(d, x, y, g, stacked = "yes"), "TRUE, FALSE or")
+})
+
+test_that("D001.12 category.title and legend.title cannot both be given", {
+  expect_error(plot2(iris, Sepal.Length, Sepal.Width, Species, category.title = "A", legend.title = "B"), "same setting")
+  expect_labels(plot2(iris, Sepal.Length, Sepal.Width, Species, legend.title = "B"), colour = "B")
+})
+
+test_that("D001.3 label_taxonomy() italicises taxonomic names", {
+  skip_if_not_installed("AMR")
+  out <- label_taxonomy(c("Escherichia coli", "Other", "S. aureus"))
+  expect_true(is.expression(out))
+  expect_match(as.character(out[[1]]), "italic", all = FALSE)
+  expect_identical(label_taxonomy(c("a", "b")), c("a", "b"))
+  d <- data.frame(name = c("Escherichia coli", "Other"), n = c(2, 3))
+  expect_plot2(plot2(d, name, n, x.labels = label_taxonomy))
+})

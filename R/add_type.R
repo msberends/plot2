@@ -145,9 +145,9 @@
 #' netherlands |> 
 #'   plot2()
 #' netherlands |> 
-#'   plot2(colour_fill = "viridis", colour_opacity = 0.75)
+#'   plot2(colour_fill = "viridis", colour_transparency = 0.75)
 #' netherlands |> 
-#'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+#'   plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
 #'   # add the same sf object, but now with empty fill and other options
 #'   add_sf(netherlands,
 #'          colour = "black",

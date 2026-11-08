@@ -33,13 +33,13 @@ test_that("A04.03 legend.position = NULL means the automatic default (documentat
   expect_identical(legend_position(plot2(admitted_patients, hospital, n(), gender, legend.position = NULL)), "top")
 })
 
-test_that("A04.04 colour_opacity applies with an explicit colour", {
-  expect_identical(unname(as.character(bar_fill(plot2(fx_counts, group, n, colour = "red", colour_opacity = 0.5))[1])), "#FF000080")
+test_that("A04.04 colour_transparency applies with an explicit colour", {
+  expect_identical(unname(as.character(bar_fill(plot2(fx_counts, group, n, colour = "red", colour_transparency = 0.5))[1])), "#FF000080")
 })
 
-test_that("A04.05 colour_opacity applies with the default colours", {
-  expect_true(all(substr(bar_fill(plot2(fx_counts, group, n, colour_opacity = 0.5)), 8, 9) == "80"))
-  expect_true(all(substr(bar_fill(plot2(fx_cat, x, y, category, colour_opacity = 0.5)), 8, 9) == "80"))
+test_that("A04.05 colour_transparency applies with the default colours", {
+  expect_true(all(substr(bar_fill(plot2(fx_counts, group, n, colour_transparency = 0.5)), 8, 9) == "80"))
+  expect_true(all(substr(bar_fill(plot2(fx_cat, x, y, category, colour_transparency = 0.5)), 8, 9) == "80"))
 })
 
 test_that("A04.06 category.focus accepts a value and a position", {

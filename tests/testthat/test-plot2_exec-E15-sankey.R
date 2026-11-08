@@ -39,7 +39,7 @@ test_that("E15.03 a missing category errors with a clear message", {
 
 test_that("E15.04 axes are removed by default, with a message", {
   skip_if_not_installed("ggforce")
-  expect_plot2_message(plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey"), "sankey.remove_axes")
+  expect_plot2_message(plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey"), "sankey_remove_axes")
 })
 
 test_that("E15.05 facets are supported", {
@@ -53,9 +53,9 @@ test_that("E15.06 horizontal = TRUE flips the coordinates", {
   expect_identical(coord_class(plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey", horizontal = TRUE)), "CoordFlip")
 })
 
-test_that("E15.07 sankey.alpha reaches the flow layer", {
+test_that("E15.07 sankey_alpha reaches the flow layer", {
   skip_if_not_installed("ggforce")
-  p <- plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey", sankey.alpha = 0.3)
+  p <- plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey", sankey_alpha = 0.3)
   expect_identical(unique(layer_df(p, "GeomShape")$alpha), 0.3)
 })
 

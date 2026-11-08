@@ -2,7 +2,7 @@
 id: I004
 title: Consolidated proposal for argument names, defaults and conventions of plot2()
 area: architecture
-status: open
+status: verified
 effort: L
 api_change: yes
 related: [D001, F094, F093, F035, F034, F020, F098, F050]
@@ -60,3 +60,4 @@ The dot-prefix scheme (`x.`, `y.`, `category.`, `facet.`, ...) works well and is
 - 2026-11-08: filed in R05 as the consolidated API proposal decided at the start of the round; decision in D001.
 - 2026-11-08: maintainer: not on CRAN, beta, no known public users, so breaking changes are allowed until (not later than) the first CRAN release. Deprecation path replaced by direct renames.
 - 2026-11-08: decided item by item in D001 (verified); D001's Consequences section is the binding list of changes. Status set to open (to be implemented before the first CRAN release).
+- 2026-11-08: implemented per D001: renames (`colour_transparency`, `get_colour(transparency)`, `x.label_*`, `facet.repeat_labels_*`, `sankey_*`, `facet.colour_fill`, options `plot2.decimal.mark`/`plot2.big.mark`), new `legend` argument, `stacked = "fill"`, error when both `category.title` and `legend.title` are given, `x.mic` removed (use `AMR::scale_x_mic()`), `x.lbl_taxonomy` replaced by the labeller `label_taxonomy()` (maintainer, AskUserQuestion), `NULL` defaults (F094), naming rule documented in `?plot2` and CLAUDE.md. Old argument names give an error that names the replacement. Status verified.

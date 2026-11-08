@@ -272,8 +272,8 @@ test_that("x scale works", {
   expect_s3_class(plotdata |> plot2(type = "barpercent"), "gg")
   expect_s3_class(plotdata |> plot2(type = "linedot", category = NULL), "gg")
   expect_s3_class(plotdata |> plot2(x.transform = "log2"), "gg")
-  expect_s3_class(mtcars |> plot2(mpg, hp, x.lbl_angle = 40), "gg")
-  expect_s3_class(mtcars |> plot2(mpg, hp, x.lbl_angle = 200), "gg")
+  expect_s3_class(mtcars |> plot2(mpg, hp, x.label_angle = 40), "gg")
+  expect_s3_class(mtcars |> plot2(mpg, hp, x.label_angle = 200), "gg")
   expect_s3_class(runif(n = 100, min = 2.0004, max = 2.0006) |> plot2(type = "h"), "gg")
   expect_s3_class(suppressWarnings(mtcars |> plot2(mpg, hp, x.limits = c(10, 20))), "gg")
   
@@ -401,13 +401,13 @@ test_that("facet scale works", {
   expect_s3_class(p, "gg")
   expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
                                 Species,
-                                facet.repeat_lbls_x = TRUE,
-                                facet.repeat_lbls_y = FALSE), "gg")
+                                facet.repeat_labels_x = TRUE,
+                                facet.repeat_labels_y = FALSE), "gg")
   
   expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
                                 Species,
-                                facet.repeat_lbls_x = FALSE,
-                                facet.repeat_lbls_y = TRUE), "gg")
+                                facet.repeat_labels_x = FALSE,
+                                facet.repeat_labels_y = TRUE), "gg")
   expect_s3_class(admitted_patients |> plot2(hospital,
                                              n(),
                                              ward,
@@ -432,11 +432,11 @@ test_that("blank plot works", {
 
 test_that("misc elements works", {
   skip_on_cran()
-  expect_s3_class(plotdata |> plot2(x_char, x.lbl_taxonomy = TRUE), "gg")
+  expect_s3_class(plotdata |> plot2(x_char, x.labels = label_taxonomy), "gg")
   skip_if_not_installed("cleaner")
   expect_s3_class(AMR::example_isolates |>
                     cleaner::freq(AMR::mo_name(mo, "nl")) |>
-                    plot2(type = "barpercent", x.lbl_taxonomy = TRUE), "gg")
+                    plot2(type = "barpercent", x.labels = label_taxonomy), "gg")
 })
 
 test_that("completing data works", {
