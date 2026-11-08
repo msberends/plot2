@@ -197,7 +197,7 @@ test_that("shiny_app(), shiny_init() and shiny_change() drive the app's server",
     shiny_init(session)
     expect_identical(input$dataset, "iris")
     shiny_change(session, title = "a")
-    expect_true("title" %in% changed_inputs$names)
+    expect_match(call_string(), "title = \"a\"", fixed = TRUE)
   })
   f <- tempfile(fileext = ".csv")
   writeLines("a", f)

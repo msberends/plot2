@@ -2,6 +2,31 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 6, the Shiny app)
+
+- Maintainer decided (AskUserQuestion):
+  - F111: R serialisation formats are removed from the uploads altogether; `upload_tab = FALSE` means no upload at all.
+  - F114: global data frames are offered only in an interactive session (no new argument).
+  - F125: new argument `run = interactive()`; `run = FALSE` returns the app object for deployment.
+- New finding, fixed: F136 (cff2c60), critical: column names were parsed as R code in back-to-back and UpSet plots and in `setup_aes()`, so a data set with a column named like an R call ran that call (verified with a marker file). Non-syntactic names failed in back-to-back plots. Fixed with `rlang::sym()` and `column_selection_expr()`.
+- Fixed and verified:
+  - F113 (479a78b): only a copy of the logo is served.
+  - F111, F120 (3175610): uploads; part of F115.
+  - F006, F112, F114, F115, F116, F118, F119, F121, F123, F124 (7329e26): the call is built from `shiny_input_spec()` (one row per argument of plot2(), checked against its formals) as a language object; typed values are parsed as constants, calculations only with `shiny_safe_functions()`, and the call is evaluated in an environment with base R as parent. Data sets are a registry looked up by key. No app state in `plot2_env`; "changed" means different from the starting value, without observers.
+  - F117, F122 (1358c18): copying in the browser; export size checked on the server, raster exports up to 40 megapixels. clipr and fansi left Suggests.
+  - F125 (bc7930e): dead code removed, `run`, `@return`, section 'Deployment'.
+  - Also: `man/label_taxonomy.Rd` had not been regenerated with F058 (56ad573).
+- Verified in headless Chromium (chromote) besides `shiny::testServer()`: plot, code, messages, a title with quotes and markup, and the copy button (the clipboard held the code). That run found a bug the server tests could not: the colour selector selected its first choice without a starting value, adding `colour_fill = "viridis"` to the code; fixed before the commit.
+- Behaviour changes worth knowing:
+  - With the default `upload_tab = FALSE` the app has no upload any more (before, the selector item revealed the hidden tab).
+  - Passed data is referred to by its own name in the code (`df |> plot2()`) instead of `your_df`.
+  - Calculations typed in the column selectors are limited to the safe functions; other calls are reported and left out.
+  - Settings with an automatic default (e.g. `x.zoom`, `datalabels`) are Automatic/Yes/No selectors instead of switches.
+- Residual risk, documented in 'Deployment': a visitor can still ask for plots that take long to compute (large data, a very small `binwidth`). Not fixed: this needs limits of the hosting platform.
+- Mistake on my side: twice a `pgrep -f` pattern matched my own shell command; the first time I stopped a leftover launcher shell instead of the app, the second time my own command. No other processes were affected. I now select PIDs by process name (`ps -o comm=`).
+- Checks: full suite 625 tests, 0 failed, 0 warnings, 9 skipped (was 36: the Shiny tests are unparked); one error in the self-test of the Shiny helpers (it read the removed `changed_inputs`), fixed and rerun on its own; both vignettes and all examples run (only the intended "red123" warning).
+- Next: Phase 6 is done; all Shiny findings are closed. Still open: F038, F039, F061, F062, F064, F066, F110 (in progress), I001, I002, I005; then the move of open findings to GitHub issues.
+
 ## 2026-11-08 (session 6, continued: Phase 5)
 
 - Maintainer decided (AskUserQuestion):
