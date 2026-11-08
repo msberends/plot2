@@ -74,10 +74,10 @@ test_that("E04.10 numeric y values are not taken as column positions (F065)", {
 })
 
 test_that("E04.11 column names with regex characters in y = c(...) (F017)", {
-  skip_open_finding("F017")
   df <- data.frame(g = c("a", "b"), `a.b` = c(1, 2), `a+b` = c(3, 4), check.names = FALSE)
   p <- expect_plot2(plot2(df, g, c(`a.b`, `a+b`)))
-  expect_identical(as.character(scale_breaks(p, "fill")), c("a.b", "a+b"))
+  # both columns are found; category.sort = TRUE sorts them ("+" before ".")
+  expect_identical(as.character(scale_breaks(p, "fill")), c("a+b", "a.b"))
 })
 
 test_that("E04.12 numeric x and y with identical values give points, not a histogram (F074)", {

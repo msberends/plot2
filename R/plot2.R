@@ -1012,7 +1012,8 @@ plot2_exec <- function(.data,
                                ""))
         }
         
-        if (!any(plot2_env$mapping_y %like% new_df$category)) {
+        # category values are data, not patterns (F017)
+        if (!any(vapply(unique(as.character(new_df$category)), grepl, logical(1), x = plot2_env$mapping_y, fixed = TRUE))) {
           plot2_message("Using ", font_blue("y = c(", paste(unique(new_df$category), collapse = ", "), ")", collapse = NULL))
         }
         plot2_env$mapping_y <- "y"

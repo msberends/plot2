@@ -75,11 +75,11 @@ globalVariables(c(".",
                   "ymin"))
 
 like <- function(x, pattern) {
-  x <- tolower(x)
-  pattern <- tolower(pattern)
+  # case-insensitive with ignore.case: lowercasing the pattern would change its meaning,
+  # e.g. "\\D" would become "\\d" (F017)
   if (length(pattern) == 1) {
     # only one pattern
-    grepl(pattern, x, ignore.case = FALSE, fixed = FALSE,  perl = TRUE)
+    grepl(pattern, x, ignore.case = TRUE, fixed = FALSE,  perl = TRUE)
   } else {
     # multiple patterns
     if (length(x) == 1) {
@@ -88,7 +88,7 @@ like <- function(x, pattern) {
       stop("'x' and 'pattern' must be of equal length", call. = FALSE)
     }
     unlist(mapply(FUN = grepl, x = x, pattern = pattern, 
-                  fixed = FALSE, perl = TRUE, MoreArgs = list(ignore.case = FALSE), 
+                  fixed = FALSE, perl = TRUE, MoreArgs = list(ignore.case = TRUE), 
                   SIMPLIFY = FALSE, USE.NAMES = FALSE))
   }
 }
@@ -317,7 +317,8 @@ summarise_variable <- function(df, var, sep) {
   # combined with add_direction(), this will add support for multiple vars in one direction:
   # e.g., `category = c(col1, col2)`
   cols <- colnames(df)
-  old_vars <- cols[cols %like% paste0(var, "_")]
+  # column names are data, not patterns (F017)
+  old_vars <- cols[grepl(paste0(var, "_"), cols, fixed = TRUE)]
   if (length(old_vars) == 0) {
     return(df)
   } else if (length(old_vars) > 1) {
@@ -339,7 +340,7 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
       select({{ direction }}) |> 
       colnames()
     selected_cols <- selected_cols[selected_cols %unlike% "^_var_"]
-    if (length(selected_cols) > 1 && is.character(selected_cols) && !all(var_label %like% selected_cols)) {
+    if (length(selected_cols) > 1 && is.character(selected_cols) && !all(vapply(selected_cols, grepl, logical(1), x = var_label, fixed = TRUE))) {
       # replace e.g. `facet = where(is.character)` with `facet = c(var1, var2, var3)`
       # in labels for columns, but also in mapping
       new_var_name <- paste0("c(", paste0(selected_cols, collapse = ", "), ")")

@@ -4,7 +4,7 @@ title: like() lowercases regex patterns, and data values are used as regex patte
 severity: high
 type: bug
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -49,3 +49,4 @@ Crashes on perfectly valid column names; subtle wrong matches across the package
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed: like() uses ignore.case instead of lowercasing; data-derived patterns (column names in summarise_variable() and add_direction(), category values in plot2_exec) use fixed matching. The type pattern in validate_type() follows with F031. Tests: E04.11 unparked (expectation corrected to the sorted order), test-regression-phase4.R (F017).
