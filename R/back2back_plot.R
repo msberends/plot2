@@ -203,9 +203,9 @@ back2back_plot <- function(df,
   suppressMessages(
     left_plot <- df_left |>
       select(-starts_with("_var_")) |>
-      plot2(x = !!str2lang(get_x_name(df)),
+      plot2(x = !!rlang::sym(get_x_name(df)),
             y = !!get_y(df_left),
-            category = !!(if (has_category(df)) str2lang(get_category_name(df)) else NULL),
+            category = !!(if (has_category(df)) rlang::sym(get_category_name(df)) else NULL),
             facet = !!facet_values[1],
             type = "col",
             horizontal = TRUE,
@@ -336,9 +336,9 @@ back2back_plot <- function(df,
   suppressMessages(
     right_plot <- df_right |>
       select(-starts_with("_var_")) |>
-      plot2(x = !!str2lang(get_x_name(df)),
+      plot2(x = !!rlang::sym(get_x_name(df)),
             y = !!get_y(df_right),
-            category = !!(if (has_category(df)) str2lang(get_category_name(df)) else NULL),
+            category = !!(if (has_category(df)) rlang::sym(get_category_name(df)) else NULL),
             facet = !!facet_values[2],
             type = "col",
             horizontal = TRUE,

@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Column names are no longer parsed as R code in back-to-back and UpSet plots, so data with unusual column names (such as `my col`) work, and column names can never run code
 * `label_taxonomy()` italicises species names only after a genus or an abbreviated genus, so ordinary words stay upright
 * `?plot2` has a new section 'Automatic choices' that lists every decision plot2 makes by itself, its rule and the argument that overrides it
 * Much faster on large data: datalabels are formatted only for the rows that are drawn, e.g. 200,000 rows now take about 0.2 s instead of 1.5 to 3 s

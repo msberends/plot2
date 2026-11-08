@@ -1070,7 +1070,7 @@ plot2_exec <- function(.data, ...) {
     if (!has_x(df)) {
       stop("`x` must be multiple columns for `type = \"upset\"`", call. = FALSE)
     }
-    df_x <- df |> select(!!str2lang(get_x_name(df)))
+    df_x <- df |> select(!!column_selection_expr(get_x_name(df)))
     if (NCOL(df_x) < 2) {
       stop("`x` must be multiple columns for `type = \"upset\"`", call. = FALSE)
     }
@@ -1160,7 +1160,7 @@ plot2_exec <- function(.data, ...) {
     upper_right <- df_count_total |>
       plot2(x = x,
             y = out,
-            category = if (has_category(df)) str2lang(get_category_name(df)) else NULL,
+            category = if (has_category(df)) rlang::sym(get_category_name(df)) else NULL,
             type = "col",
             stacked = TRUE,
             x.title = NULL,

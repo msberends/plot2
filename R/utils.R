@@ -654,6 +654,19 @@ group_sizes <- function(df) {
   }
 }
 
+# The expression for a column name, or for the label of a selection of several
+# columns such as "c(a, b)". Only names, and c() of names, are parsed; anything
+# else is taken as one name, so that names from data are never run as code (F136).
+column_selection_expr <- function(x) {
+  e <- tryCatch(str2lang(x), error = function(e) NULL)
+  if (is.symbol(e) ||
+      (is.call(e) && identical(e[[1]], as.name("c")) && all(vapply(as.list(e)[-1], is.symbol, logical(1))))) {
+    e
+  } else {
+    rlang::sym(x)
+  }
+}
+
 # this replaces ggplot2::aes_string(), which was deprecated in 3.4.0
 #' @importFrom ggplot2 aes
 setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
@@ -672,12 +685,17 @@ setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
       # this is required for restore_mapping()
       x <- as.symbol(x)
     } else {
-      # use str2lang() to get a `call` type, but not if it's already in backticks or if it's a number:
+      # a column name becomes a symbol and a number a constant; text is never
+      # parsed as code, since column names can come from data (F136)
       x <- as.character(x)
-      if (x != make.names(x) && substr(x, 1, 1) != "`" && x %unlike% "^[0-9.]+$") {
-        x <- paste0("`", x, "`")
+      if (x %like% "^[0-9.]+$" && !is.na(suppressWarnings(as.numeric(x)))) {
+        x <- as.numeric(x)
+      } else if (x %like% "^`.+`$" && is.symbol(tryCatch(str2lang(x), error = function(e) NULL))) {
+        # a name in backticks, such as from rlang::as_label()
+        x <- str2lang(x)
+      } else {
+        x <- as.symbol(x)
       }
-      x <- str2lang(x)
     }
     rlang::new_quosure(x, env = caller_env)
   })
