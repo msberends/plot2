@@ -73,7 +73,6 @@ test_that("09.09 a registered colour set with a numeric category gives a gradien
 })
 
 test_that("09.10 category.focus colours the focused category and greys the others", {
-  skip_open_finding("F067")
   p <- expect_plot2(plot2(d_three, x, y, k, category.focus = "b"))
   v <- scale_values(p, "fill")
   expect_identical(unname(col_hex(v[c("a", "c")])), rep(unname(col_hex("grey85")), 2))

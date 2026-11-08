@@ -35,7 +35,6 @@ test_that("E07.03 category.focus with an explicit colour greys out the rest", {
 })
 
 test_that("E07.04 category.focus with default colours (F067)", {
-  skip_open_finding("F067")
   v <- scale_values(plot2(fx_focus, x, y, category, category.focus = "a"), "fill")
   expect_true(all(col_hex(v[c("b", "c")]) == col_hex("grey85")))
   expect_false(col_hex(v[["a"]]) == col_hex("grey85"))

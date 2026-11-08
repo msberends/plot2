@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `category.focus` now also works with the default colours; the focused category keeps its own colour
 * Long titles with accented, Greek, Cyrillic or CJK characters are now wrapped like other titles
 * `x.limits` now works for a discrete x axis: `x.limits = c("b", "a")` shows only these items, in this order
 * `x.lbl_angle` and `x.lbl_align` now also apply to horizontal plots, where the x axis labels are on the vertical axis

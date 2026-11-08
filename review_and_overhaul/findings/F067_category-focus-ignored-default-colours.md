@@ -4,7 +4,7 @@ title: category.focus has no effect with the default colours
 severity: medium
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F047]
 origin: R03 sheet E07
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F067 category.focus ignored with default colours
@@ -40,3 +40,4 @@ Process `category.focus` before deciding `original_colours`, or set `original_co
 ## History
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; a focus sets original_colours to FALSE when category drives colour or fill, and the focused category keeps the colour it has without focus (for example its ggplot2 or viridis colour). Regression test F067.

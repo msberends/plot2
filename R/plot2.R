@@ -1466,8 +1466,15 @@ plot2_exec <- function(.data,
       }
       cols <- rep(as.character(get_colour("grey85")), length(category_unique))
       nms <- as.character(category_unique)
-      cols[which(nms == category.focus)] <- get_colour(colour[1L])
+      if (length(colour) == 1) {
+        # keep the colour this category has without focus, e.g. its ggplot2 or viridis colour (F067)
+        cols[which(nms == category.focus)] <- get_colour(colour, length(category_unique))[which(nms == category.focus)]
+      } else {
+        cols[which(nms == category.focus)] <- get_colour(colour[1L])
+      }
       colour <- stats::setNames(cols, nms)
+      # the focus colours must be used, also with the default colours (F067)
+      original_colours <- !any(c("colour", "fill") %in% category.type)
     }
   }
   if (has_y_secondary(df)) {

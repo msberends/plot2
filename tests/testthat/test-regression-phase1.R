@@ -80,3 +80,11 @@ test_that("F056 titles with non-ASCII characters are wrapped like ASCII titles",
                    "Resume eeeee eeeee\neeeee eeeee")
   expect_identical(validate_title("αβγ δεζ", markdown = FALSE, max_length = 20), "αβγ δεζ")
 })
+
+test_that("F067 category.focus keeps the focused category's own colour and greys the rest", {
+  d <- data.frame(x = c("a", "b", "c"), y = 1:3, k = c("a", "b", "c"))
+  unfocused <- layer_df(expect_plot2(plot2(d, x, y, k)), "bar")$fill
+  focused <- layer_df(expect_plot2(plot2(d, x, y, k, category.focus = "b")), "bar")$fill
+  expect_identical(focused[2], unfocused[2])
+  expect_identical(col_hex(focused[c(1, 3)]), rep(col_hex("grey85"), 2))
+})
