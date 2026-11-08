@@ -4,7 +4,7 @@ title: legend.position does not support inside placement or FALSE
 severity: medium
 type: design
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -41,3 +41,4 @@ Accept `FALSE` as "none"; accept a numeric vector of length 2 (map to `legend.po
 
 - 2026-11-07: filed in R02, reproduced.
 - 2026-11-08: maintainer decided (AskUserQuestion): accept FALSE (none), a numeric vector of length 2 (inside at those coordinates) and "inside".
+- 2026-11-08: fixed as decided: validate_legend.position() accepts FALSE (none), "inside" (or "i") and two numbers between 0 and 1 (inside at those coordinates, returned as "inside" with an attribute); legend_position_theme() sets legend.position and legend.position.inside. Works for numeric categories and back-to-back plots. Tests: test-regression-phase4.R (F050).

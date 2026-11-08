@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `legend.position` now also accepts `FALSE` (no legend), `"inside"`, and two numbers between 0 and 1 to place the legend inside the plot, e.g. `legend.position = c(0.95, 0.95)`
 * The secondary series of a column plot (`y_secondary`) is now a line with points by default, instead of a second set of bars drawn over the first
 * Secondary y axis: the secondary series is now actually drawn on the scale of its axis (previously it could be drawn with its original values), an all-zero series no longer errors, and negative values are mapped correctly
 * New argument `datalabels.percent_by`: `"%p"` datalabels are now percentages within each x value (so stacked bars sum to 100% per bar), or within each category, facet, or the total; previously they were always relative to the grand total of the plot. Without a category, the default gives percentages within each facet

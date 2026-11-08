@@ -123,19 +123,40 @@ validate_type <- function(type, df = NULL) {
 }
 
 validate_legend.position <- function(legend.position) {
-  if (is.null(legend.position) || is.na(legend.position[1L])) {
+  # FALSE means no legend; numeric coordinates place it inside the plot (F050)
+  if (is.null(legend.position) || isFALSE(legend.position) || is.na(legend.position[1L])) {
     legend.position <- "none"
   }
+  if (is.numeric(legend.position)) {
+    if (length(legend.position) != 2 || any(legend.position < 0 | legend.position > 1)) {
+      stop("A numeric `legend.position` must be two values between 0 and 1, e.g. `legend.position = c(0.9, 0.9)` for the top right inside the plot", call. = FALSE)
+    }
+    return(structure("inside", inside = as.double(legend.position)))
+  }
+  inside <- attr(legend.position, "inside")
   legend.position <- trimws(tolower(legend.position[1L]))
   legend.position <- gsub("^t$", "top", legend.position)
   legend.position <- gsub("^r$", "right", legend.position)
   legend.position <- gsub("^b$", "bottom", legend.position)
   legend.position <- gsub("^l$", "left", legend.position)
+  legend.position <- gsub("^i$", "inside", legend.position)
   
-  if (!legend.position %in% c("top", "right", "bottom", "left", "none")) {
-    stop("`legend.position` must be 'top', 'right', 'bottom', 'left' or 'none'", call. = FALSE)
+  if (!legend.position %in% c("top", "right", "bottom", "left", "inside", "none")) {
+    stop("`legend.position` must be 'top', 'right', 'bottom', 'left', 'inside', 'none', FALSE, or two numbers between 0 and 1", call. = FALSE)
+  }
+  if (legend.position == "inside") {
+    legend.position <- structure("inside", inside = inside)
   }
   legend.position
+}
+
+# theme elements for a validated legend.position (F050)
+legend_position_theme <- function(legend.position) {
+  if (!is.null(attr(legend.position, "inside"))) {
+    ggplot2::theme(legend.position = "inside", legend.position.inside = attr(legend.position, "inside"))
+  } else {
+    ggplot2::theme(legend.position = as.character(legend.position))
+  }
 }
 
 #' @importFrom dplyr across arrange bind_rows cur_column distinct filter group_by mutate pull select summarise

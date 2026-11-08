@@ -175,7 +175,13 @@
 #' @param width Width of the geom. Defaults to `0.66` for geoms [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()] and [jitter][ggplot2::geom_jitter()], and to `0.5` otherwise.
 #' @param jitter_seed Seed (randomisation factor) to be set when using `type = "jitter"`.
 #' @param violin_scale Scale to be set when using `type = "violin"`, can also be set to `"area"`.
-#' @param legend.position Position of the legend, must be `"top"`, `"right"`, `"bottom"`, `"left"` or `"none"` (or `NA`, to remove the legend), can be abbreviated. The default `NULL` sets it automatically: `"right"` for numeric `category` values and 'sf' plots, and `"top"` otherwise.
+#' @param legend.position Position of the legend. This can be:
+#' - `"top"`, `"right"`, `"bottom"` or `"left"`, can be abbreviated
+#' - `"inside"`, to place the legend inside the plot area at ggplot2's default position
+#' - Two numbers between 0 and 1, to place the legend inside the plot area at these relative coordinates, e.g. `c(0.95, 0.95)` for the top right
+#' - `"none"`, `FALSE` or `NA` to remove the legend
+#' 
+#' The default `NULL` sets it automatically: `"right"` for numeric `category` values and 'sf' plots, and `"top"` otherwise.
 #' @param legend.reverse,legend.barheight,legend.barwidth,legend.nbin,legend.italic,legend.nrow Other settings for the legend.
 #' @param sankey.node_width Width of the vertical nodes in a Sankey plot.
 #' @param sankey.node_whitespace Whitespace between the nodes in a Sankey plot.
@@ -2200,7 +2206,7 @@ plot2_exec <- function(.data,
     }
   }
   legend.position <- validate_legend.position(legend.position)
-  p <- p + ggplot2::theme(legend.position = legend.position)
+  p <- p + legend_position_theme(legend.position)
   
   if (!(has_category(df) && is.numeric(get_category(df)))) {
     # only change this when there is no guide_colourbar(), see validate_category_scale()

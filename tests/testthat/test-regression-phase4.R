@@ -140,3 +140,15 @@ test_that("F068 the secondary series of a column plot is a line with points in t
   # other primary types keep their type
   expect_geoms(plot2(df, x, y, y_secondary = z, type = "point"), c("point", "point"), exact = TRUE)
 })
+
+test_that("F050 legend.position accepts FALSE, \"inside\" and coordinates", {
+  d <- data.frame(g = c("a", "b"), v = 1:2, c = c("x", "y"))
+  expect_identical(legend_position(expect_plot2(plot2(d, g, v, c, legend.position = FALSE))), "none")
+  p <- expect_plot2(plot2(d, g, v, c, legend.position = c(0.9, 0.8)))
+  expect_identical(legend_position(p), "inside")
+  expect_equal(theme_of(p)$legend.position.inside, c(0.9, 0.8))
+  expect_identical(legend_position(expect_plot2(plot2(d, g, v, c, legend.position = "inside"))), "inside")
+  p <- expect_plot2(plot2(iris, Sepal.Length, Sepal.Width, Petal.Length, legend.position = c(0.9, 0.9)))
+  expect_identical(legend_position(p), "inside")
+  expect_error(plot2(d, g, v, c, legend.position = c(2, 1)), "between 0 and 1")
+})

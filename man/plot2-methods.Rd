@@ -1189,7 +1189,15 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{violin_scale}{Scale to be set when using \code{type = "violin"}, can also be set to \code{"area"}.}
 
-\item{legend.position}{Position of the legend, must be \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"} or \code{"none"} (or \code{NA}, to remove the legend), can be abbreviated. The default \code{NULL} sets it automatically: \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
+\item{legend.position}{Position of the legend. This can be:
+\itemize{
+\item \code{"top"}, \code{"right"}, \code{"bottom"} or \code{"left"}, can be abbreviated
+\item \code{"inside"}, to place the legend inside the plot area at ggplot2's default position
+\item Two numbers between 0 and 1, to place the legend inside the plot area at these relative coordinates, e.g. \code{c(0.95, 0.95)} for the top right
+\item \code{"none"}, \code{FALSE} or \code{NA} to remove the legend
+}
+
+The default \code{NULL} sets it automatically: \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
 
 \item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic, legend.nrow}{Other settings for the legend.}
 
