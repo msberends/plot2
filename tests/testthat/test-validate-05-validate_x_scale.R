@@ -89,12 +89,12 @@ test_that("05.12 x.position = 'top' puts the axis on top", {
   expect_identical(scale_of(p, "x")$position, "top")
 })
 
-test_that("05.13 facets with similar x ranges share the x range, with a message; dissimilar ones do not", {
+test_that("05.13 facets with similar x ranges share the x range, dissimilar ones do not; both with a message (F052)", {
   d <- data.frame(x = rep(1:3, 2), y = 1:6, f = rep(c("a", "b"), each = 3))
   p <- expect_plot2_message(plot2(d, x, y, facet = f, type = "point"), "facet.fixed_x = TRUE", type = "info")
   expect_identical(axis_range(p, "x", panel = 1), axis_range(p, "x", panel = 2))
   d$x <- c(1:3, 100:102)
-  p <- expect_no_plot2_message(plot2(d, x, y, facet = f, type = "point"), "facet.fixed_x")
+  p <- expect_plot2_message(plot2(d, x, y, facet = f, type = "point"), "Using free x scales", type = "info")
   expect_false(identical(axis_range(p, "x", panel = 1), axis_range(p, "x", panel = 2)))
 })
 
