@@ -2200,8 +2200,10 @@ validate_theme <- function(theme,
     theme$axis.title.y.right$face <- "bold"
   }
   
+  # the x axis labels are on the vertical axis after coord_flip() (F051)
+  x_text <- ifelse(isTRUE(horizontal), "axis.text.y", "axis.text.x")
   if (x.lbl_angle != 0) {
-    theme$axis.text.x$angle <- x.lbl_angle
+    theme[[x_text]]$angle <- x.lbl_angle
   }
   if (is.null(x.lbl_align) && x.lbl_angle != 0) {
     # determine the better alignment
@@ -2219,7 +2221,7 @@ validate_theme <- function(theme,
     }
   }
   if (!is.null(x.lbl_align)) {
-    theme$axis.text.x$hjust <- x.lbl_align
+    theme[[x_text]]$hjust <- x.lbl_align
   }
   
   if (isTRUE(legend.italic)) {

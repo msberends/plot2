@@ -4,7 +4,7 @@ title: With horizontal = TRUE, x.lbl_angle rotates the value axis instead of the
 severity: medium
 type: bug
 area: theme
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F032]
 origin: R02 sheet 15
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F051 x.lbl_angle on the wrong axis when horizontal
@@ -33,3 +33,4 @@ cat("axis.text.x angle:", p$theme$axis.text.x$angle, " axis.text.y angle:", if (
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; validate_theme() sets angle and hjust on axis.text.y when horizontal = TRUE. Regression test F051 in test-regression-phase1.R.

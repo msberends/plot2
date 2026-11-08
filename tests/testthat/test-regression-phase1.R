@@ -53,3 +53,14 @@ test_that("F043 transformation objects are accepted for x, y and category", {
   expect_plot2(plot2(fx_cat, x, y, y.transform = scales::transform_reverse()))
   expect_plot2(plot2(d, x, y, v, category.transform = scales::transform_log10()))
 })
+
+test_that("F051 x.lbl_angle and x.lbl_align apply to the category labels of horizontal plots", {
+  d <- data.frame(g = c("a", "b"), v = 1:2)
+  p <- expect_plot2(plot2(d, g, v, horizontal = TRUE, x.lbl_angle = 45))
+  expect_identical(theme_el(p, "axis.text.y")$angle, 45)
+  expect_null(p$theme$axis.text.x$angle)
+  p <- plot2(d, g, v, horizontal = TRUE, x.lbl_align = 0)
+  expect_identical(theme_el(p, "axis.text.y")$hjust, 0)
+  p <- plot2(d, g, v, x.lbl_angle = 45)
+  expect_identical(theme_el(p, "axis.text.x")$angle, 45)
+})

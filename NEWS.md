@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `x.lbl_angle` and `x.lbl_align` now also apply to horizontal plots, where the x axis labels are on the vertical axis
 * `summarise_function = NULL` now keeps all values instead of failing for duplicate x values, as documented
 * `summarise_function` must now return a single value per group, with a clear error otherwise; groups whose summary is `NA` are no longer dropped silently
 * A column named `n` in `x`, `category` or `facet` no longer breaks the summarising of `y`
