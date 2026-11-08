@@ -4,7 +4,7 @@ title: Every plot2() call costs about 0.1 s regardless of data size, a third of 
 severity: low
 type: performance
 area: performance
-status: in-progress
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -44,3 +44,4 @@ Cache the completed default theme per combination of the options it depends on (
 
 - 2026-11-08: filed in R06 (sheet T03).
 - 2026-11-08: partly fixed: the complete theme_minimal2() theme is built once per session per colour set, validate_theme() is memoised on its arguments, the registered colours and the plot2 options (only for character or NULL themes, so validation messages of theme objects still appear), and the list of geoms is cached. Installed build, five rows: 0.058 s per call (was 0.11 s; ggplot2 itself 0.0024 s). The remaining profile is flat (dplyr verbs on tiny data, ggplot2 layer construction, group_sizes() through dplyr::group_by()); the target of well below 0.05 s is not reached.
+- 2026-11-08: closed as accepted (maintainer decision): the gain from 0.11 s to 0.058 s per small call (installed build) is kept, and the target is adjusted to "no regression of the fixed overhead". Guards: T03.06 (the complete theme is built once per session) and T03.07 (local timing guard, below 0.25 s per call after warm-up, skipped on CRAN and CI). The remaining profile is flat and further gains would need restructuring of plot2_exec().

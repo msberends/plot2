@@ -48,3 +48,26 @@ test_that("T03.05 a Sankey diagram can be drawn from raw rows", {
   p <- expect_plot2(plot2(d, x = c(h, k), category = h, type = "sankey"))
   expect_true(nrow(layer_df(p, 1)) > 0)
 })
+
+test_that("T03.06 the complete default theme is built once per session (F110)", {
+  tiny <- data.frame(g = letters[1:5], v = 1:5)
+  invisible(plot2(tiny, g, v))
+  n <- 0L
+  trace("theme_minimal2_build", tracer = function() n <<- n + 1L, print = FALSE, where = asNamespace("plot2"))
+  withr::defer(untrace("theme_minimal2_build", where = asNamespace("plot2")))
+  for (i in 1:3) plot2(tiny, g, v)
+  expect_identical(n, 0L)
+})
+
+test_that("T03.07 the fixed overhead per call stays bounded (F110 benchmark guard)", {
+  # timing guard: local runs only, with a generous bound (0.058 s per call on the
+  # installed build in 2026-11, 0.11 s before F110); it catches regressions of a
+  # different order, such as rebuilding the complete theme on every call
+  skip_on_cran()
+  skip_on_ci()
+  tiny <- data.frame(g = letters[1:5], v = 1:5)
+  # warm up: the JIT compiler compiles the functions during the first calls
+  for (i in 1:10) plot2(tiny, g, v)
+  per_call <- system.time(for (i in 1:10) plot2(tiny, g, v))[["elapsed"]] / 10
+  expect_lt(per_call, 0.25)
+})
