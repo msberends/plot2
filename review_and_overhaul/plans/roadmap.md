@@ -64,6 +64,23 @@ Goal: stop wrong figures and crashes with minimal code movement.
 - F087 theme_minimal2(...) replaces elements
 - F090 colour class lost on subsetting
 - F091 theme sizes as grid units
+- F092 zoom arguments
+- F095 plot2.default_type aliases
+- F096 colour_opacity with palettes (with F067)
+- F097 barpercent without y
+
+## Documentation pass (with or after the related Phase 1 fixes)
+
+Goal: help pages, examples, vignettes and README that match the behaviour. Correct texts only after the behaviour they describe is settled (for example F093 after F094 and D001).
+
+- F093 argument descriptions versus behaviour
+- F098 type and sorting values
+- F099 typos and small errors
+- F100 README examples
+- F101 vignette prose
+- F102 vignettes and Suggests
+- F103 reproducible help pages
+- F104 missing examples, return values, NEWS
 
 ## Phase 2: state and messaging redesign
 
@@ -113,6 +130,8 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 - F037 ggplot2 internals
 - F025 performance
 - F034 documented defaults
+- F094 visible defaults acting as sentinels (with F035; scope set by D001)
+- I004 consolidated API proposal (decision D001)
 - F058 taxonomy performance and scope
 - F061 validate_colour hack
 - F062 set_max_items details

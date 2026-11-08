@@ -13,7 +13,7 @@ related: [F068, F022]
 origin: R03 sheet E07
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F077 Secondary-axis colours depend on the primary colour argument
@@ -40,3 +40,4 @@ Decide `original_colours` separately for the secondary layer (an explicit `y_sec
 ## History
 
 - 2026-11-07: found by an R03 end-to-end test (E07.07), reproduced.
+- 2026-11-08: R05 (sheet A02): `?y_secondary` says "Setting the secondary Y-axis will set the colour to the axis titles". With default colours the right axis title gets the primary colour (#F8766D) while both point layers stay black, so the title colours do not identify the series.

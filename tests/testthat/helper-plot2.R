@@ -488,3 +488,53 @@ local_known_deprecation <- function(id, .env = parent.frame()) {
 skip_open_finding <- function(id) {
   testthat::skip(paste0("open finding ", id, " (review_and_overhaul/findings)"))
 }
+
+# Package sources (R05) -------------------------------------------------------
+
+#' Path to a file in the package source tree (README.Rmd, vignettes/, man/,
+#' R/). Skips the test when the source tree is not available, e.g. during
+#' R CMD check on an installed package.
+source_file <- function(...) {
+  p <- file.path(testthat::test_path(), "..", "..", ...)
+  if (!file.exists(p)) testthat::skip(paste("source file not available:", file.path(...)))
+  normalizePath(p)
+}
+
+#' Evaluate the R code chunks of an R Markdown file, expression by expression,
+#' in a fresh environment. Chunks marked eval = FALSE are evaluated too unless
+#' `include_unevaluated = FALSE`; chunks whose code matches `exclude` are left
+#' out. ggplot results are built, so build errors and warnings are caught.
+#' Returns a data frame with one row per expression: line of the chunk, code,
+#' error message (NA if none) and warnings (collapsed, NA if none).
+eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
+  lines <- readLines(file, warn = FALSE)
+  starts <- grep("^```\\{r", lines)
+  ends <- grep("^```\\s*$", lines)
+  env <- new.env(parent = globalenv())
+  out <- list()
+  for (s in starts) {
+    header <- lines[s]
+    if (!include_unevaluated && grepl("eval\\s*=\\s*FALSE", header)) next
+    e <- min(ends[ends > s])
+    code <- lines[seq_len(e - s - 1) + s]
+    if (!is.null(exclude) && any(grepl(exclude, code))) next
+    for (x in parse(text = code, keep.source = FALSE)) {
+      w <- character(0)
+      err <- tryCatch({
+        withCallingHandlers({
+          v <- eval(x, env)
+          if (ggplot2::is_ggplot(v)) invisible(ggplot2::ggplot_build(v))
+        },
+        warning = function(c) { w <<- c(w, conditionMessage(c)); invokeRestart("muffleWarning") },
+        message = function(c) invokeRestart("muffleMessage"))
+        NA_character_
+      }, error = function(e) conditionMessage(e))
+      out[[length(out) + 1]] <- data.frame(line = s,
+                                           code = paste(deparse(x), collapse = " "),
+                                           error = err,
+                                           warnings = if (length(w)) paste(unique(w), collapse = "; ") else NA_character_,
+                                           stringsAsFactors = FALSE)
+    }
+  }
+  do.call(rbind, out)
+}

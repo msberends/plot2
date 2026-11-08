@@ -173,3 +173,17 @@ test_that("setup.R makes the environment deterministic", {
   expect_identical(getOption("OutDec"), ".")
   expect_null(getOption("plot2.colour"))
 })
+
+test_that("source_file() and eval_chunks() read and run R Markdown chunks", {
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c("text", "```{r}", "x <- 1", "stop('boom')", "```",
+               "```{r, eval = FALSE}", "warning('careful')", "```",
+               "```{r}", "x + 1", "```"), f)
+  res <- eval_chunks(f)
+  expect_identical(nrow(res), 4L)
+  expect_identical(res$error[2], "boom")
+  expect_identical(res$warnings[3], "careful")
+  expect_identical(nrow(eval_chunks(f, include_unevaluated = FALSE)), 3L)
+  expect_identical(nrow(eval_chunks(f, exclude = "boom")), 2L)
+  expect_true(file.exists(source_file("DESCRIPTION")))
+})

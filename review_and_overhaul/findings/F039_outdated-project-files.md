@@ -13,7 +13,7 @@ related: []
 origin: R01 §5.2
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F039 Outdated project files
@@ -39,3 +39,4 @@ Update CLAUDE.md and codecov.yml; add `^Rplots\.pdf$` and `^\.claude$` to `.Rbui
 ## History
 
 - 2026-11-07: filed in R01.
+- 2026-11-08: extended in R05 (sheets A01, A06, A10): CLAUDE.md lists an S3 method `plot2.lm` that does not exist (lm objects go through `plot2.default` and `fortify()`), describes `format2()` as if exported (it is internal), and gives version 1.99.0.9028 (DESCRIPTION: 1.99.0.9031).

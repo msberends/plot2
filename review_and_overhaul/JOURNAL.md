@@ -2,6 +2,18 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6)
+
+- Maintainer decided R05: format "Inventory + sheets + tests"; review only, also no documentation fixes; API changes collected in one idea plus one decision file (`plans/review_rounds.md`).
+- New tool `tools/argument_inventory.R` generates `reviews/R05_api/A00_argument-inventory.md` and `.csv` (153 arguments; 76 never used in a test, 123 never shown in vignettes or README).
+- Ran R05: review file `reviews/R05_api-and-documentation.md`, 10 sheets A01 to A10 in `reviews/R05_api/`, 10 test files `tests/testthat/test-api-A*.R`. New test helpers `source_file()` and `eval_chunks()` with a self-test.
+- All examples, both vignettes and README run in detached processes; README `eval = FALSE` chunks run one by one. `ggplot2movies`, `ggbeeswarm` and `plotly` were installed only in a temporary library in the session scratchpad to render the supported types vignette; the user library is unchanged.
+- Filed F092 to F104 (7 medium, 6 low), idea I004 (consolidated API proposal, needs-decision) and the first decision file D001 (scope and timing of renames and default changes). Extended F039 (CLAUDE.md lists a non-existent `plot2.lm` and an exported `format2()`) and F077. All 13 new reproductions run in fresh processes.
+- Updated roadmap (new "Documentation pass" section; F092, F095 to F097 in Phase 1; F094 and I004 in Phase 5), coverage (roxygen, vignettes, README, NEWS now full), review README (tools), INDEX rebuilt.
+- Full test suite: 329 tests, no failures, no warnings, 65 skips (62 parked findings; plotly, ggbeeswarm and ggplot2movies not installed). Two new tests needed `local_known_deprecation("F078")` for the boxplot `fatten` deprecation.
+- Maintainer: plot2 is not on CRAN, is beta and has no known public users; breaking changes are allowed until (not later than) the first CRAN release. I004 and D001 revised (no deprecation path), F094 and F100 extended (README claims CRAN availability).
+- Next: maintainer decision D001 (it may change the API that R06 reviews); then R06 (cross-cutting themes), format to be decided at its start.
+
 ## 2026-11-08 (session 5)
 
 - Project CLAUDE.md updated: testing section rewritten for the new infrastructure, new section "Review and Overhaul" so that every session starts from README, JOURNAL and INDEX; layout tree updated. Memory note refreshed.

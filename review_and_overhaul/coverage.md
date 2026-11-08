@@ -6,7 +6,7 @@ Depth: **full** (every function body read), **partial** (main paths read, rest s
 
 | File | Lines (d09e04d) | Depth | Round | Notes |
 |---|---|---|---|---|
-| R/plot2.R | 2270 | full (bodies), per stage for `plot2_exec()` and the generic, skim (roxygen) | R01, R03 | roxygen text not checked against behaviour (R05); end-to-end tests per stage in `test-plot2_exec-E*.R` |
+| R/plot2.R | 2270 | full (bodies and roxygen) | R01, R03, R05 | roxygen checked claim by claim in R05 (sheets A02 to A06); end-to-end tests per stage in `test-plot2_exec-E*.R`, per argument group in `test-api-A*.R` |
 | R/plot2-methods.R | 2167 | full | R01, R04 | method bodies in R04 (sheets M01 to M04, M10) |
 | R/validate.R | 2977 | full, per function | R01, R02 | R02: every function reviewed in depth, sheets in `reviews/R02_validate/` |
 | R/utils.R | 826 | full | R01 | |
@@ -30,5 +30,7 @@ Depth: **full** (every function body read), **partial** (main paths read, rest s
 | R/aa_pkg.R | 16 | full | R04 | |
 | tests/testthat/test_plot2.R | 600 | partial | R01 | run in full; content sampled |
 | DESCRIPTION, NAMESPACE | | full | R01 | |
-| vignettes/, README.Rmd, NEWS.md | | none | | |
+| vignettes/, README.Rmd, NEWS.md | | full | R05 | all chunks run, including README `eval = FALSE` chunks (sheets A08 to A10) |
+| man/ (generated), _pkgdown.yml | | full | R05 | R documentation checks, pkgdown check, aspell |
+| roxygen of all other files | | full | R05 | sheet A07; Shiny help text only |
 | .github/workflows/ | | none | | |

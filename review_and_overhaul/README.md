@@ -15,7 +15,7 @@ This folder is the working system for scrutinising and overhauling `plot2`. It i
 | `plans/` | Roadmap (`roadmap.md`), planned review rounds (`review_rounds.md`) and work packages | free names |
 | `repro/` | Longer reproduction and benchmark scripts (short ones live inside the finding) | free names |
 | `templates/` | Templates for each item type; copy, never edit in place | |
-| `tools/` | Base-R helper scripts (no extra dependencies) | |
+| `tools/` | Helper scripts: `build_index.R` and `run_repro.R` (base R only), `argument_inventory.R` (needs devtools and roxygen2; regenerates the R05 argument inventory) | |
 | `coverage.md` | Per source file: how deeply it has been reviewed, and when | |
 | `JOURNAL.md` | Dated log of every session working in this folder, newest first | |
 | `INDEX.md` | **Generated**, never edit by hand | |
