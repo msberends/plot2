@@ -2,6 +2,17 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-09 (session 7: F061, F139, label alignment)
+
+- Maintainer asked for F061 and F139, and for rotated datalabels to keep a small, equal gap to the bars ("no large gaps"), and the same for `x.label_angle`.
+- F140 extended (3545324): rotated datalabels (any angle) and the labels of horizontal plots are anchored exactly at the bar end, with a fixed two-space padding inside the label on the side of the bar; before, the gap was a share of the label's own length. Unrotated labels above vertical bars are unchanged. Snapshots bar-horizontal and back-to-back updated; `datalabels_of()` trims the padding.
+- F142, new and fixed (3545324): rotated x labels used fixed angle rules for `hjust` only; at 90 and 270 degrees they were not centred on their ticks, and in horizontal plots they overlapped or shifted. Now `guide_axis(angle = )` (position `y` after `coord_flip()`), unless `x.label_align` is set. New test helper `axis_guide_angle()`.
+- F143, new, needs-decision: long rotated datalabels can run beyond the panel, since the default `y.expand` assumes one line of text. The room needed depends on the device size; three options are listed in the finding.
+- F139 fixed (c6de987): the remaining warning is ggplot2's own (factor x, `drop = FALSE`, free x scales, empty panel). plot2 now shares a discrete x scale, with a message, when `facet.drop = FALSE` leaves empty panels.
+- F061 fixed: the only layer that needed the colour expansion was the boxplot whisker layer, which got the colours as fixed parameters; it now uses the colour scale with a category. The expansion block is removed. Besides the full check, the drawn groups and colours of 30 plots are identical before and after (compared from a temporary worktree of HEAD).
+- Checks: full suite 764 tests, 0 failed, 7 skipped, 0 warnings; both vignettes and all examples run (only the intended "red123" warning); T09 import audit rerun after removing an unused import tag.
+- Next: F143 (maintainer's choice); then the move of open findings to GitHub issues.
+
 ## 2026-11-08 (session 6, continued: the remaining open items)
 
 - Maintainer decided (AskUserQuestion): F062 `%p` is the share of y and `x.max_items` counts the rest item; F110 is accepted and closed with a guard; I005 is written directly, in a separate commit.

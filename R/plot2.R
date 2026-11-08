@@ -1658,11 +1658,13 @@ plot2_exec <- function(.data, ...) {
                      linewidth = linewidth)
     } else {
       p <- p +
-        stat_boxplot(geom = "errorbar",
-                     coef = 1.5, # 1.5 * IQR
-                     width = width * ifelse(has_category(df), 1, 0.75),
-                     linewidth = linewidth,
-                     colour = cols$colour)
+        do.call(stat_boxplot,
+                c(list(geom = "errorbar",
+                       coef = 1.5, # 1.5 * IQR
+                       width = width * ifelse(has_category(df), 1, 0.75),
+                       linewidth = linewidth),
+                  # with a category, the colours come from the colour scale, otherwise one fixed colour (F061)
+                  list(colour = cols$colour[1L])[!(has_category(df) && "colour" %in% names(mapping))]))
     }
   }
   if (type_backup == "sankey") {

@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* The whiskers of boxplots with a category now get their colours from the colour scale, which removes an internal workaround that repeated colour vectors.
 * With `facet.drop = FALSE`, empty panels no longer cause R warnings when drawing: bars without a category are no longer dodged, and a discrete x axis is shared between the panels (with a message).
 * Rotated x-axis labels (`x.label_angle`) are now anchored at their ticks for every angle, also in horizontal plots, using `ggplot2::guide_axis(angle = )`; setting `x.label_align` still uses your own alignment.
 * In horizontal plots, the values now always read from top to bottom in the order of `x.sort`, as they read from left to right in vertical plots. Previously, factors (such as age groups), `x.sort = "alpha"` and `x.sort = FALSE` read in reverse.

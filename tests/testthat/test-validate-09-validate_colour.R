@@ -83,3 +83,16 @@ test_that("09.11 an invalid colour name is reported and replaced by the default 
   expect_warning(p <- plot2(fx_cat, x, y, category, colour = "notacolourxyz"), "Invalid colour", class = "plot2_warning")
   expect_identical(length(unique(scale_values(p, "fill"))), 2L)
 })
+
+test_that("09.12 boxplot whiskers take their colours from the scale, without expanding colour vectors (F061)", {
+  p <- expect_plot2(plot2(admitted_patients, hospital, age, gender,
+                          colour = c(F = "#3F681C", M = "#375E97"), colour_fill = "#FFBB00AA"))
+  whiskers <- layer_df(p, layer_index(p, "GeomErrorbar"))
+  expect_setequal(unique(col_hex(whiskers$colour)), c("#3F681C", "#375E97"))
+  # several y columns become the category
+  p <- expect_plot2(plot2(iris, Species, where(is.double), colour = c("red", "blue", "green", "orange")))
+  expect_length(unique(layer_df(p, layer_index(p, "GeomErrorbar"))$colour), 4)
+  # without a category: one fixed colour
+  p <- expect_plot2(plot2(iris, Species, Sepal.Length, type = "boxplot", colour = "red"))
+  expect_identical(unique(col_hex(layer_df(p, layer_index(p, "GeomErrorbar"))$colour)), "#FF0000")
+})

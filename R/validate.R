@@ -1823,7 +1823,6 @@ generate_geom <- function(type,
   }
 }
 
-#' @importFrom dplyr n_distinct
 validate_colour <- function(df,
                             type,
                             type_backup,
@@ -1928,36 +1927,6 @@ validate_colour <- function(df,
     
     if (length(colour) > 1 && length(colour_fill) == 1) {
       colour_fill <- colour
-    }
-    
-    # expand the range
-    df_nonempty <- df |> 
-      filter(!is.na(`_var_category`) & !is.na(`_var_y`))
-    if (has_x(df)) {
-      df_nonempty <- df_nonempty |> 
-        filter(!is.na(`_var_x`))
-    }
-    if (has_facet(df)) {
-      df_nonempty <- df_nonempty |> 
-        filter(!is.na(`_var_facet`))
-    }
-    # Some layers get their colours as fixed geom parameters instead of through a scale (e.g. a
-    # boxplot with a category, named `colour` and a single `colour_fill`, or a registered colour set
-    # with several y columns). ggplot2 then needs one value per drawn group, so the colours are
-    # repeated up to the number of x-category-facet groups (F061). Mapping these colours through
-    # the scale would make this block unnecessary.
-    grp_sizes <- group_sizes(df_nonempty)
-    grp_sizes <- grp_sizes[grp_sizes != 0]
-    n_categories <- length(grp_sizes)
-    if (any(grp_sizes > 1, na.rm = TRUE) && n_categories * n_distinct(get_category(df)) < nrow(df)) {
-      if (length(colour) < n_categories) {
-        # expand colour for all categories, except when all colours were named
-        colour <- c(colour, rep(colour, n_categories)[seq_len(n_categories - length(colour))])
-      }
-      if (length(colour_fill) < n_categories) {
-        # expand colour_fill for all categories, except when all colours were named
-        colour_fill <- c(colour_fill, rep(colour_fill, n_categories)[seq_len(n_categories - length(colour_fill))])
-      }
     }
   }
   
