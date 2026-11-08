@@ -64,3 +64,11 @@ test_that("F051 x.lbl_angle and x.lbl_align apply to the category labels of hori
   p <- plot2(d, g, v, x.lbl_angle = 45)
   expect_identical(theme_el(p, "axis.text.x")$angle, 45)
 })
+
+test_that("F054 x.limits on a discrete x selects and orders the items, also horizontally", {
+  p <- expect_plot2(plot2(fx_cat_unique, x, y, category, x.limits = c("c", "a")))
+  expect_identical(axis_labels(p, "x"), c("c", "a"))
+  p <- expect_plot2(plot2(fx_cat_unique, x, y, category, x.limits = c("a", "b"), horizontal = TRUE))
+  expect_setequal(axis_labels(p, "y"), c("a", "b"))
+  expect_plot2_message(plot2(fx_cat_unique, x, y, category, x.limits = c("a", "z")), "not found", type = "warning")
+})

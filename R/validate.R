@@ -800,7 +800,16 @@ validate_x_scale <- function(df,
     }
   }
   
-  if (!is.null(x.limits)) {
+  x_discrete <- !is.numeric(values) && !inherits(values, c("Date", "POSIXt"))
+  if (!is.null(x.limits) && x_discrete && (is.character(x.limits) || is.factor(x.limits))) {
+    # discrete x: the limits are the items to show, in this order (F054)
+    x.limits <- as.character(x.limits)
+    not_in_x <- setdiff(x.limits, as.character(values))
+    if (length(not_in_x) > 0) {
+      plot2_warning("Value", ifelse(length(not_in_x) > 1, "s", ""), " in ", font_blue("x.limits"), " not found in ", font_blue("x"), ": ",
+                    paste0(not_in_x, collapse = ", "))
+    }
+  } else if (!is.null(x.limits)) {
     if (is.integer(values) && is.numeric(x.limits) && !is.integer(x.limits)) {
       x.limits <- as.integer(x.limits)
     }
@@ -874,6 +883,7 @@ validate_x_scale <- function(df,
     if (!is.numeric(values)) {
       scale_x_discrete(position = x.position,
                        drop = x.drop, 
+                       limits = if (is.character(x.limits)) x.limits else NULL,
                        labels = if (is.null(x.labels)) waiver() else x.labels,
                        expand = if (set_x.expand) x.expand else waiver())
     } else {

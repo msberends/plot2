@@ -1368,6 +1368,12 @@ plot2_exec <- function(.data,
   
   # various cleaning steps ----
   
+  if ((is.character(x.limits) || is.factor(x.limits)) && has_x(df) &&
+      !is.numeric(get_x(df)) && !inherits(get_x(df), c("Date", "POSIXt"))) {
+    # discrete x.limits select the items to show; drop the others here instead of letting ggplot2 warn (F054)
+    df <- df[as.character(get_x(df)) %in% as.character(x.limits), , drop = FALSE]
+  }
+  
   if (isTRUE(zoom)) {
     x.zoom <- TRUE
     y.zoom <- TRUE
@@ -2190,6 +2196,10 @@ plot2_exec <- function(.data,
   # such as switching some x and Y-axis properties of the theme
   if (type != "geom_sf" && (isTRUE(horizontal) || has_datalabels(df))) {
     x.limits <- x.limits %or% plot2_env$x_lim
+    if (is.character(x.limits) || is.factor(x.limits)) {
+      # discrete limits are set in the scale, not in the coordinates (F054)
+      x.limits <- NULL
+    }
     y.limits <- y.limits %or% plot2_env$y_lim
     put_clip_off <- has_datalabels(df) && type != "geom_sf" && (!is.null(p$labels$title) || !is.null(p$labels$subtitle) || has_facet(df))
     if (isTRUE(horizontal)) {

@@ -36,14 +36,13 @@ test_that("05.03 x.limits on a numeric x sets the panel range, with a message ab
 })
 
 test_that("05.04 x.limits on a discrete x is applied or gives a clear warning", {
-  skip_open_finding("F054")
   p <- expect_plot2(plot2(fx_cat_unique, x, y, category, x.limits = c("a", "b")))
   expect_identical(axis_labels(p, "x"), c("a", "b"))
 })
 
 test_that("05.05 x.limits of the wrong class is reported", {
   expect_error(plot2(fx_xy, x, y, x.limits = c("a", "b")), "limits")
-  expect_plot2_message(plot2(fx_cat_unique, x, y, x.limits = c("a", "b")), "x.limits.*class", type = "warning")
+  expect_plot2_message(plot2(fx_cat_unique, x, y, x.limits = c(1, 2)), "x.limits.*class", type = "warning")
 })
 
 test_that("05.06 x.limits of length 3 is an error", {
