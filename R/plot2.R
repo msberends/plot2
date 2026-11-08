@@ -144,7 +144,7 @@
 #' - `"category"`: within each category and facet
 #' - `"facet"`: within each facet
 #' - `"total"`: over all data in the plot
-#' @param datalabels.colour,datalabels.colour_fill,datalabels.size,datalabels.angle,datalabels.lineheight Settings for the datalabels.
+#' @param datalabels.colour,datalabels.colour_fill,datalabels.size,datalabels.angle,datalabels.lineheight Settings for the datalabels. Rotated datalabels (`datalabels.angle`) start or end at their bar with a small fixed gap; if `y.expand` and `y.limits` are not set, the value axis gets extra room for long rotated labels, estimated for a figure of about 6 by 4 inches.
 #' @param decimal.mark Decimal mark, defaults to [dec_mark()].
 #' @param big.mark Thousands separator, defaults to [big_mark()].
 #' @param summarise_function A [function] to use if the data has to be summarised, see *Examples*. Left `NULL` (default), this is [sum()], except when `y` contains several columns (then the values are not summarised). Use `FALSE` to not summarise the data at all.
@@ -2192,6 +2192,16 @@ plot2_exec <- function(.data, ...) {
                         decimal.mark = decimal.mark,
                         big.mark = big.mark,
                         y.percent = y.percent)
+    # rotated labels need room for their length, not for one line of text (F143)
+    if (is.null(y.expand) && is.null(y.limits)) {
+      p <- fit_rotated_datalabels(p,
+                                  type = type,
+                                  angle = datalabels.angle,
+                                  size = datalabels.size,
+                                  horizontal = horizontal,
+                                  stacked = isTRUE(stacked) || isTRUE(stacked_fill),
+                                  y.transform = y.transform)
+    }
   }
   
   # turn plot horizontal if required ----

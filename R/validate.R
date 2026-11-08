@@ -3189,3 +3189,52 @@ datalabels_pad <- function(x, side, pad = "  ") {
          NA_character_,
          if (side == "start") paste0(pad, x) else paste0(x, pad))
 }
+
+# Enlarge the upper expansion of the value axis so that rotated datalabels fit (F143). The
+# length of a label on the page is estimated from its number of characters and the label size,
+# for a typical panel height; the room is only ever increased.
+fit_rotated_datalabels <- function(p, type, angle, size, horizontal, stacked, y.transform,
+                                   panel_mm = 65, char_width = 0.6) {
+  angle <- angle %% 360
+  if (isTRUE(horizontal) || isTRUE(stacked) || angle == 0 || angle == 180 ||
+      !type %in% c("geom_col", "geom_bar") || !transform_name(y.transform) %in% c("identity", "reverse")) {
+    return(p)
+  }
+  d <- p$data
+  if (!all(c("_var_y", "_var_datalabels") %in% colnames(d)) || !is.numeric(d$`_var_y`)) {
+    return(p)
+  }
+  y <- abs(d$`_var_y`)
+  labels <- as.character(d$`_var_datalabels`)
+  keep <- !is.na(labels) & is.finite(y)
+  if (!any(keep) || any(d$`_var_y`[keep] < 0)) {
+    return(p)
+  }
+  # share of the panel height taken by each label, including the padding of two spaces;
+  # the vertical extent of rotated text is its length times |sin(angle)|
+  share <- (nchar(labels[keep]) + 2) * char_width * size * abs(sin(angle * pi / 180)) / panel_mm
+  share <- pmin(share, 0.8)
+  if ("_var_facet" %in% colnames(d)) {
+    panel <- as.character(d$`_var_facet`[keep])
+  } else {
+    panel <- rep("", sum(keep))
+  }
+  y <- y[keep]
+  # per panel: the axis must reach y / (1 - share) for every bar; relative to the highest bar
+  needed <- vapply(split(seq_along(y), panel), function(i) {
+    top <- max(y[i])
+    if (top <= 0) return(0)
+    max(y[i] / (1 - share[i])) / top - 1
+  }, numeric(1))
+  mult <- max(needed)
+  sc <- p$scales$get_scales("y")
+  if (is.null(sc) || !is.numeric(sc$expand) || length(sc$expand) != 4) {
+    return(p)
+  }
+  # the side of the axis where the labels are: the upper side, or the lower for a reversed axis
+  side <- if (transform_name(y.transform) == "reverse") 1L else 3L
+  if (mult > sc$expand[side]) {
+    sc$expand[side] <- mult
+  }
+  p
+}

@@ -335,7 +335,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{datalabels.format}{Format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage (see \code{datalabels.percent_by}). Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
 
-\item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{Settings for the datalabels.}
+\item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{Settings for the datalabels. Rotated datalabels (\code{datalabels.angle}) start or end at their bar with a small fixed gap; if \code{y.expand} and \code{y.limits} are not set, the value axis gets extra room for long rotated labels, estimated for a figure of about 6 by 4 inches.}
 
 \item{datalabels.percent_by}{Group within which the \code{"\%p"} percentages of \code{datalabels.format} sum to 100\%. This can be:
 \itemize{

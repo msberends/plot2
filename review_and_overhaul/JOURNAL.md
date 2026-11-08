@@ -11,7 +11,8 @@ Newest entry first. One entry per working session: what was done, what changed s
 - F139 fixed (c6de987): the remaining warning is ggplot2's own (factor x, `drop = FALSE`, free x scales, empty panel). plot2 now shares a discrete x scale, with a message, when `facet.drop = FALSE` leaves empty panels.
 - F061 fixed: the only layer that needed the colour expansion was the boxplot whisker layer, which got the colours as fixed parameters; it now uses the colour scale with a category. The expansion block is removed. Besides the full check, the drawn groups and colours of 30 plots are identical before and after (compared from a temporary worktree of HEAD).
 - Checks: full suite 764 tests, 0 failed, 7 skipped, 0 warnings; both vignettes and all examples run (only the intended "red123" warning); T09 import audit rerun after removing an unused import tag.
-- Next: F143 (maintainer's choice); then the move of open findings to GitHub issues.
+- F143: maintainer chose the build-time heuristic; fixed (`fit_rotated_datalabels()`, assumed panel height 65 mm, room only increased, per facet). Checked visually in small and large figures. Test 17.12.
+- Next: the move of open findings to GitHub issues.
 
 ## 2026-11-08 (session 6, continued: the remaining open items)
 

@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Long rotated datalabels no longer run beyond the plot: unless `y.expand` or `y.limits` is set, the value axis gets extra room for them, estimated for a typical figure size.
 * The whiskers of boxplots with a category now get their colours from the colour scale, which removes an internal workaround that repeated colour vectors.
 * With `facet.drop = FALSE`, empty panels no longer cause R warnings when drawing: bars without a category are no longer dodged, and a discrete x axis is shared between the panels (with a message).
 * Rotated x-axis labels (`x.label_angle`) are now anchored at their ticks for every angle, also in horizontal plots, using `ggplot2::guide_axis(angle = )`; setting `x.label_align` still uses your own alignment.

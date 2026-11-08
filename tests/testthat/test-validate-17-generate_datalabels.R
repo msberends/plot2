@@ -110,3 +110,15 @@ test_that("17.11 sf: labels at centroids, or on the surface with datalabels.cent
   expect_match(fun_text(plot2(netherlands)), "st_centroid")
   expect_match(fun_text(plot2(netherlands, datalabels.centroid = FALSE)), "st_point_on_surface")
 })
+
+test_that("17.12 rotated datalabels get room for their length on the value axis (F143)", {
+  d <- data.frame(g = c("a", "b", "c"), n = c(1, 4567, 1234567))
+  upper <- function(p) scale_of(p, "y")$expand[3]
+  expect_gt(upper(plot2(d, g, n, datalabels.angle = 90)), upper(plot2(d, g, n)))
+  expect_equal(upper(plot2(d, g, n, datalabels.angle = 90)), upper(plot2(d, g, n, datalabels.angle = 270)))
+  # a reversed axis gets the room on its other side
+  expect_gt(scale_of(plot2(d, g, n, datalabels.angle = 270, y.transform = "reverse"), "y")$expand[1], 0.25)
+  # short labels keep the default room; a set y.expand is respected
+  expect_equal(upper(plot2(data.frame(g = c("a", "b"), n = c(1, 2)), g, n, datalabels.angle = 90)), 0.25)
+  expect_equal(upper(plot2(d, g, n, datalabels.angle = 90, y.expand = 0.1)), 0.1)
+})
