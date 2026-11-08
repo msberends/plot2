@@ -235,18 +235,17 @@ validate_data <- function(df,
     df[, get_x_name(df)] <- df$`_var_x`
   }
   
-  if (misses_x && !has_x(df) && ncol(df) > 1) {
-    eligible_cols <- colnames(df)[colnames(df) %unlike% "^(y|_var_(x|y|category|facet|datalabels))$"]
-    # take first column if it's not used for y
-    if (identical(pull(df, 1), get_y(df))) {
-      x_col <- eligible_cols[2L]
-    } else {
+  if (misses_x && !has_x(df)) {
+    # only the user's columns are eligible, and not the column used for y; compare names, not values (F079)
+    eligible_cols <- colnames(df)[!startsWith(colnames(df), "_")]
+    eligible_cols <- setdiff(eligible_cols, c(get_y_name(df), get_category_name(df), get_facet_name(df)))
+    if (length(eligible_cols) > 0) {
       x_col <- eligible_cols[1L]
+      plot2_message("Using ", font_blue("x = ", x_col, collapse = NULL))
+      df <- df |> 
+        mutate(`_var_x` = df |> pull(x_col))
+      set_plot2_env(x = x_col)
     }
-    plot2_message("Using ", font_blue("x = ", x_col, collapse = NULL))
-    df <- df |> 
-      mutate(`_var_x` = df |> pull(x_col))
-    set_plot2_env(x = x_col)
   }
   
   if (misses_x && misses_category && !has_category(df) && ncol(df) > 2 && type != "geom_sf") {

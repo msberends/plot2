@@ -107,3 +107,9 @@ test_that("F074 a histogram is chosen by the arguments, not by identical values"
   expect_geoms(plot2(data.frame(x = 1:4, y = 1:4), x, y), "point", exact = TRUE)
   expect_true("GeomBar" %in% geoms(plot2(data.frame(x = c(1, 2, 2, 3, 3, 3)), x, x)))
 })
+
+test_that("F079 a missing x is guessed by column name, and left empty when no column is left", {
+  expect_geoms(plot2(data.frame(value = c(1, 5, 3, 8, 2)), y = value), c("errorbar", "boxplot"), exact = TRUE)
+  p <- expect_plot2(plot2(data.frame(g = c("a", "b", "a"), value = c(1, 5, 3)), y = value))
+  expect_labels(p, x = "g")
+})

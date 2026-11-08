@@ -41,7 +41,6 @@ test_that("E10.05 category values with markdown are shown as expressions", {
 })
 
 test_that("E10.06 without x, the x-axis has no labels (F079)", {
-  skip_open_finding("F079")
   p <- expect_plot2(plot2(data.frame(v = c(1, 2, 3, 4, 10)), y = v))
   l <- axis_labels(p, "x")
   expect_true(length(l) == 0 || all(is.na(l) | l == ""))

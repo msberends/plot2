@@ -4,7 +4,7 @@ title: plot2(df, y = col) crashes when df has no other column to use as x
 severity: medium
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F007, F074]
 origin: R03 sheet E10
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F079 Guessing x fails for a single-column data frame
@@ -36,3 +36,4 @@ Count only the user's columns (not `_var_*`), compare column names rather than v
 ## History
 
 - 2026-11-07: found by an R03 end-to-end test (E10.06), reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; a missing x is guessed from the user's columns only, excluding the y, category and facet columns by name; x stays empty (box plot without x-axis) when none is left. Regression test F079.
