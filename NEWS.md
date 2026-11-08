@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: a date-time (POSIXct) category produced thousands of nonsense legend breaks; a category with only a few dates now shows one legend entry per date
 * Fixed: a factor y with data labels failed with an `nchar()` error
 * Fixed: a category or datalabels column of only 0s or 1s was mistaken for `FALSE`/`TRUE`, and columns with missing values crashed `plot2()`
 * Fixed: area plots with a category were shifted sideways; unstacked areas are now overlaid at their x values

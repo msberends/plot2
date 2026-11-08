@@ -1366,7 +1366,13 @@ validate_category_scale <- function(values,
       } else {
         lbls <- category.date_labels
       }
-      function(x, format = lbls, ...) format2(as.Date(as.numeric(x), origin = "1970-01-01"), format = format)
+      if (inherits(values, "POSIXt")) {
+        tz <- attr(values, "tzone")
+        if (is.null(tz) || !nzchar(tz[1L])) tz <- ""
+        function(x, format = lbls, tzone = tz, ...) format2(as.POSIXct(as.numeric(x), origin = "1970-01-01", tz = tzone), format = format)
+      } else {
+        function(x, format = lbls, ...) format2(as.Date(as.numeric(x), origin = "1970-01-01"), format = format)
+      }
     } else {
       function(x, dec = decimal.mark, big = big.mark, ...) format2(x, decimal.mark = dec, big.mark = big)
     }
@@ -1390,6 +1396,9 @@ validate_category_scale <- function(values,
         # print 5 labels nicely
         scales::breaks_pretty(n = 5)
       }
+    } else if (is_date(values) && is.null(category.date_breaks) && length(unique(values[!is.na(values)])) <= 3) {
+      # only a few distinct dates: one legend entry per date
+      sort(unique(values[!is.na(values)]))
     } else if (is_date(values)) {
       if (is.null(category.date_breaks)) {
         breaks <- determine_date_breaks_labels(values)$breaks
@@ -1397,9 +1406,15 @@ validate_category_scale <- function(values,
       } else {
         breaks <- category.date_breaks
       }
-      seq.Date(from = min(values, na.rm = TRUE),
-               to = max(values, na.rm = TRUE),
-               by = breaks)
+      if (inherits(values, "POSIXt")) {
+        seq.POSIXt(from = min(values, na.rm = TRUE),
+                   to = max(values, na.rm = TRUE),
+                   by = breaks)
+      } else {
+        seq.Date(from = min(values, na.rm = TRUE),
+                 to = max(values, na.rm = TRUE),
+                 by = breaks)
+      }
       # scales::breaks_pretty(n = 5)(values)
     } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
       # whole numbers - only strip decimal numbers if total y range is low

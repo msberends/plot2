@@ -29,8 +29,7 @@ test_that("T02.02 date category labels follow the session locale, not Dutch", {
 })
 
 test_that("T02.03 a date category with two dates gives two legend entries", {
-  skip_open_finding("F004")
-  expect_length(scale_labels(plot2(fx_two_dates, x, v, dt), "fill"), 2)
+  expect_length(suppressWarnings(scale_labels(plot2(fx_two_dates, x, v, dt), "fill")), 2) # locale warning: F003
 })
 
 test_that("T02.04 OutDec = ',' gives comma decimals and full-stop thousands", {

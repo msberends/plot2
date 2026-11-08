@@ -61,10 +61,9 @@ test_that("07.07 a date category gets sensible breaks; a POSIXct category likewi
   p <- expect_plot2_message(plot2(d, x, y, d), "category.date_breaks = \"2 weeks\"", type = "info")
   b <- suppressWarnings(built(p)) # the Dutch default locale warns on systems without it (F003)
   expect_lte(length(scale_breaks(b, "colour")), 12)
-  skip_open_finding("F004") # without the fix this case takes minutes
   d$d <- as.POSIXct(d$d)
-  p <- expect_plot2(plot2(d, x, y, d))
-  expect_lte(length(scale_breaks(p, "colour")), 12)
+  p <- expect_plot2(plot2(d, x, y, d), allow_warnings = TRUE) # Dutch default locale (F003)
+  expect_lte(length(suppressWarnings(scale_breaks(p, "colour"))), 12)
 })
 
 test_that("07.08 category.transform = 'log10' with a zero in category.limits is reported", {

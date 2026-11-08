@@ -4,7 +4,7 @@ title: Date-time (POSIXct) category produces thousands of nonsense legend breaks
 severity: critical
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -51,3 +51,4 @@ Branch on `inherits(values, "POSIXt")`: use `seq.POSIXt()` for breaks and `as.PO
 
 - 2026-11-07: filed in R01, reproduced.
 - 2026-11-08: R06 (sheet T02): also for `Date` categories. A category with two dates (2024-01-01 and 2024-02-01) gives a legend with 32 daily entries ("1 jan" to "1 feb"); the date labels are Dutch in every locale (F003).
+- 2026-11-08: fixed and verified (Phase 1). POSIXct categories use `seq.POSIXt()` breaks and date-time labels in the data's time zone; up to three distinct dates get one legend entry each; regression tests 07.07 and T02.03.
