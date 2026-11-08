@@ -37,7 +37,6 @@ test_that("A06.01 every example of ?plot2 runs without error or warning (font ex
 })
 
 test_that("A06.02 the details state the actual number of arguments", {
-  skip_open_finding("F099")
   rd <- paste(readLines(source_file("man", "plot2.Rd")), collapse = " ")
   n <- as.integer(sub(".*currently has ([0-9]+) arguments.*", "\\1", rd))
   expect_identical(n, length(formals(plot2)))

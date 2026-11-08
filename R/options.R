@@ -25,11 +25,11 @@
 #' * `plot2.colour_background`\cr
 #'   Default background colour to use in plots
 #' * `plot2.colour_font_axis`\cr
-#'   Default colour of the axis text (`axis.title.x` and `axis.title.x`)
+#'   Default colour of the axis text (`axis.title.x` and `axis.title.y`)
 #' * `plot2.colour_font_primary`\cr
 #'   Default colour of the plot title and plot tag
 #' * `plot2.colour_font_secondary`\cr
-#'   Default colour of the plot subtitle
+#'   Default colour of the plot subtitle and caption
 #' * `plot2.colour_sf`\cr
 #'   Default colour of the borders in sf plots
 #' * `plot2.colour_sf_fill`\cr
@@ -39,7 +39,7 @@
 #' * `plot2.font`\cr
 #'   Default plot font family
 #' * `plot2.silent`\cr
-#'   Default value to show console messages when plotting
+#'   A [logical] to hide the console messages when plotting (`TRUE`), default is `FALSE`
 #' * `plot2.text_factor`\cr
 #'   Default text factor to use in plots
 #' * `plot2.theme`\cr

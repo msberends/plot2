@@ -27,7 +27,7 @@
 
 #' Example Geography Data Set: the Netherlands
 #'
-#' A data set containing the geometies of the twelve provinces of the Netherlands, according to Statistics Netherlands (2021).
+#' A data set containing the geometries of the twelve provinces of the Netherlands, according to Statistics Netherlands (2021).
 #' @format A [data.frame] with `r format(nrow(netherlands), big.mark = ",")` observations and `r ncol(netherlands)` variables:
 #' - `province`\cr name of the Dutch province
 #' - `area_km2`\cr area in square kilometres

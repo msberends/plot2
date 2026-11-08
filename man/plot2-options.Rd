@@ -18,11 +18,11 @@ Default colour to use in plots
 \item \code{plot2.colour_background}\cr
 Default background colour to use in plots
 \item \code{plot2.colour_font_axis}\cr
-Default colour of the axis text (\code{axis.title.x} and \code{axis.title.x})
+Default colour of the axis text (\code{axis.title.x} and \code{axis.title.y})
 \item \code{plot2.colour_font_primary}\cr
 Default colour of the plot title and plot tag
 \item \code{plot2.colour_font_secondary}\cr
-Default colour of the plot subtitle
+Default colour of the plot subtitle and caption
 \item \code{plot2.colour_sf}\cr
 Default colour of the borders in sf plots
 \item \code{plot2.colour_sf_fill}\cr
@@ -32,7 +32,7 @@ Default plot type
 \item \code{plot2.font}\cr
 Default plot font family
 \item \code{plot2.silent}\cr
-Default value to show console messages when plotting
+A \link{logical} to hide the console messages when plotting (\code{TRUE}), default is \code{FALSE}
 \item \code{plot2.text_factor}\cr
 Default text factor to use in plots
 \item \code{plot2.theme}\cr

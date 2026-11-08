@@ -104,7 +104,7 @@ add_sf(
 
 \item{data}{Data to use in mapping.}
 
-\item{move}{Number of layers to move the newly added geom down, e.g., \code{move = 1} will place the newly added geom down 1 layer, thus directly under the highest layer.}
+\item{move}{Number of layers to move the newly added geom down; the sign is ignored. For example, \code{move = 1} (or \code{move = -1}) places the new geom directly below the layer that was on top before it was added. Use \code{\link[=move_layer]{move_layer()}} for other changes in the order of layers.}
 
 \item{x, y}{aesthetic arguments}
 
@@ -149,7 +149,7 @@ model that \code{method = NULL} would use, then set
 
 \item{datalabels.colour, datalabels.size, datalabels.angle, datalabels.font}{properties of \code{datalabels}}
 
-\item{datalabels.nudge_y}{is \code{datalabels} is not \code{NULL}, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)}
+\item{datalabels.nudge_y}{if \code{datalabels} is not \code{NULL}, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)}
 }
 \value{
 a \code{ggplot} object

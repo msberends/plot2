@@ -16,6 +16,6 @@ A \link{data.frame} with 12 observations and 3 variables:
 netherlands
 }
 \description{
-A data set containing the geometies of the twelve provinces of the Netherlands, according to Statistics Netherlands (2021).
+A data set containing the geometries of the twelve provinces of the Netherlands, according to Statistics Netherlands (2021).
 }
 \keyword{datasets}

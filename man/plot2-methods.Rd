@@ -1030,9 +1030,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.focus}{A value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
 
-\item{colour}{Get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
+\item{colour}{Colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
 
-\item{colour_fill}{Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
+\item{colour_fill}{Colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
 \item{colour_opacity}{Amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent).}
 
@@ -1040,7 +1040,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.lbl_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned).}
 
-\item{x.lbl_italic}{\link{logical} to indicate whether the x labels should in in \emph{italics}.}
+\item{x.lbl_italic}{\link{logical} to indicate whether the x labels should be in \emph{italics}.}
 
 \item{x.lbl_taxonomy}{A \link{logical} to transform all words of the \code{x} labels into italics that are in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package. This uses \code{\link[=md_to_expression]{md_to_expression()}} internally and will set \code{x.labels} to parse expressions.}
 
@@ -1054,7 +1054,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.breaks, y.breaks}{A breaks function or numeric vector to use for the axis.}
 
-\item{x.n_breaks, y.n_breaks}{Number of breaks, only useful if \code{x.breaks} cq. \code{y.breaks} is \code{NULL}.}
+\item{x.n_breaks, y.n_breaks}{Number of breaks, only useful if \code{x.breaks} or \code{y.breaks} respectively is \code{NULL}.}
 
 \item{x.transform, y.transform, category.transform}{A transformation function to use, e.g. \code{"log2"}. This can be: \code{"asinh"}, \code{"asn"}, \code{"atanh"}, \code{"boxcox"}, \code{"compose"}, \code{"date"}, \code{"exp"}, \code{"hms"}, \code{"identity"}, \code{"log"}, \code{"log10"}, \code{"log1p"}, \code{"log2"}, \code{"logit"}, \code{"modulus"}, \code{"probability"}, \code{"probit"}, \code{"pseudo_log"}, \code{"reciprocal"}, \code{"reverse"}, \code{"sqrt"}, \code{"time"}, \code{"timespan"}, \code{"yj"}.}
 
@@ -1072,7 +1072,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the X-axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the Y-axis.}
 
-\item{y.24h}{a \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences}
+\item{y.24h}{A \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences.}
 
 \item{y.age}{A \link{logical} to indicate whether the y labels and breaks should be formatted as ages in years.}
 
@@ -1113,7 +1113,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 \item \code{"freq-asc"}: sort ascending according to the frequencies of \code{y} computed by \code{summarise_function} (lowest value first)
 }}
 
-\item{x.complete, category.complete, facet.complete}{A value to complete the data. This makes use of \code{\link[tidyr:full_seq]{tidyr::full_seq()}} and \code{\link[tidyr:complete]{tidyr::complete()}}. For example, using \code{x.complete = 0} will apply \code{data |> complete(full_seq(x, ...), fill = list(x = 0))}. Using value \code{TRUE} (e.g., \code{x.complete = TRUE}) is identical to using value \code{0}.}
+\item{x.complete, category.complete, facet.complete}{A value to complete the data. This makes use of \code{\link[tidyr:full_seq]{tidyr::full_seq()}} and \code{\link[tidyr:complete]{tidyr::complete()}}. For example, using \code{x.complete = 0} will apply \code{data |> complete(x = full_seq(x, ...), fill = list(y = 0))}, crossed with the values of \code{category} and \code{facet} if set. Numeric values and dates are completed with \code{\link[tidyr:full_seq]{tidyr::full_seq()}} at their observed resolution, date-times at their observed interval, and character values and factors with their unique values or levels. Using value \code{TRUE} (e.g., \code{x.complete = TRUE}) is identical to using value \code{0}.}
 
 \item{datalabels}{Values to show as datalabels, see also \code{datalabels.format}. This can be:
 \itemize{
@@ -1163,7 +1163,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 \item{linewidth}{Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 \itemize{
 \item \code{0.10} for \link[ggplot2:geom_sf]{sf}
-\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_area]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
+\item \code{0.25} for geoms that are continuous and have fills (such as \link[ggplot2:geom_area]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
 \item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
 \item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_line]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
 }}

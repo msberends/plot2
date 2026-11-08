@@ -90,25 +90,25 @@
 #' @param x.date_labels Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
 #' @param x.date_remove_years A [logical] to indicate whether the years of all `x` values must be unified. This will set the years of all `x` values [to 1970](https://en.wikipedia.org/wiki/Unix_time) if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the `category` while maintaining a date range on `x`. The default is `FALSE`, unless `category` contains all years present in `x`.
 #' @param category.focus A value of `category` that should be highlighted, meaning that all other values in `category` will be greyed out. This can also be a numeric value between 1 and the length of unique values of `category`, e.g. `category.focus = 2` to focus on the second legend item.
-#' @param colour Get_colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can be a named vector to match values of `category`, see *Examples*. Using a named vector can be used to manually sort the values of `category`.
-#' @param colour_fill Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()].
+#' @param colour Colour(s) to set, will be evaluated with [get_colour()] if set. This can also be one of the viridis colours with automatic implementation for any plot: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` or `"turbo"`. Also, this can be a named vector to match values of `category`, see *Examples*. Using a named vector can be used to manually sort the values of `category`.
+#' @param colour_fill Colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with [get_colour()].
 #' @param colour_opacity Amount of opacity for `colour`/`colour_fill` (0 = solid, 1 = transparent).
 #' @param x.lbl_angle Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom).
 #' @param x.lbl_align Alignment for the X-axis between `0` (left aligned) and `1` (right aligned).
-#' @param x.lbl_italic [logical] to indicate whether the x labels should in in *italics*.
+#' @param x.lbl_italic [logical] to indicate whether the x labels should be in *italics*.
 #' @param x.lbl_taxonomy A [logical] to transform all words of the `x` labels into italics that are in the [microorganisms][AMR::microorganisms] data set of the `AMR` package. This uses [md_to_expression()] internally and will set `x.labels` to parse expressions.
 #' @param x.character A [logical] to indicate whether the values of the X-axis should be forced to [character]. The default is `FALSE`, except for years (values between 2000 and 2050) and months (values from 1 to 12).
 #' @param x.drop [logical] to indicate whether factor levels should be dropped.
-#' @param x.complete,category.complete,facet.complete A value to complete the data. This makes use of [tidyr::full_seq()] and [tidyr::complete()]. For example, using `x.complete = 0` will apply `data |> complete(full_seq(x, ...), fill = list(x = 0))`. Using value `TRUE` (e.g., `x.complete = TRUE`) is identical to using value `0`.
+#' @param x.complete,category.complete,facet.complete A value to complete the data. This makes use of [tidyr::full_seq()] and [tidyr::complete()]. For example, using `x.complete = 0` will apply `data |> complete(x = full_seq(x, ...), fill = list(y = 0))`, crossed with the values of `category` and `facet` if set. Numeric values and dates are completed with [tidyr::full_seq()] at their observed resolution, date-times at their observed interval, and character values and factors with their unique values or levels. Using value `TRUE` (e.g., `x.complete = TRUE`) is identical to using value `0`.
 #' @param x.mic [logical] to indicate whether the X-axis should be formatted as [MIC values][AMR::as.mic()], by dropping all factor levels and adding missing factors of 2.
 #' @param x.remove,y.remove A [logical] to indicate whether the axis labels and title should be removed.
-#' @param y.24h a [logical] to indicate whether the y labels and breaks should be formatted as 24-hour sequences
+#' @param y.24h A [logical] to indicate whether the y labels and breaks should be formatted as 24-hour sequences.
 #' @param y.age A [logical] to indicate whether the y labels and breaks should be formatted as ages in years.
 #' @param y.scientific,y_secondary.scientific A [logical] to indicate whether the y labels should be formatted in scientific notation. Defaults to `TRUE` only if the range of the y values spans more than `10e5`.
 #' @param y.percent,y_secondary.percent A [logical] to indicate whether the y labels should be formatted as percentages.
 #' @param y.percent_break A value on which the Y-axis should have breaks.
 #' @param x.breaks,y.breaks A breaks function or numeric vector to use for the axis.
-#' @param x.n_breaks,y.n_breaks Number of breaks, only useful if `x.breaks` cq. `y.breaks` is `NULL`.
+#' @param x.n_breaks,y.n_breaks Number of breaks, only useful if `x.breaks` or `y.breaks` respectively is `NULL`.
 #' @param x.limits,y.limits Limits to use for the axis, can be length 1 or 2. Use `NA` for the highest or lowest value in the data, e.g. `y.limits = c(0, NA)` to have the y scale start at zero.
 #' @param x.labels,y.labels,y_secondary.labels A labels function or character vector to use for the axis.
 #' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. `x.expand` defaults to 0.5 and `y.expand` defaults to `0.25`, except for sf objects (then both default to 0).
@@ -163,7 +163,7 @@
 #'   Both numbers and text are supported, e.g., `linetype = 2` and `linetype = "dashed"` yield the same results.
 #' @param linewidth Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 #' - `0.10` for [sf][ggplot2::geom_sf()]
-#' - `0.25` for geoms that are continous and have fills (such as [area][ggplot2::geom_area()]), except for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()]
+#' - `0.25` for geoms that are continuous and have fills (such as [area][ggplot2::geom_area()]), except for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()]
 #' - `1.0` for dumbbell plots (using `type = "dumbbell"`) and UpSet plots (using `type = "upset"`)
 #' - `0.5` otherwise (such as geoms [line][ggplot2::geom_line()], [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()], and [histogram][ggplot2::geom_histogram()])
 #' @param binwidth Width of bins (only useful for `geom = "histogram"`), can be specified as a numeric value or as a function that calculates width from `x`, see [`geom_histogram()`][ggplot2::geom_histogram()]. It defaults to approx. `diff(range(x))` divided by 12 to 22 based on the data.
@@ -203,7 +203,7 @@
 #'     - Labels with data values can easily be printed and are automatically determined
 #'   - Support for any `ggplot2` extension based on [ggplot2::fortify()]
 #'   
-#' The `ggplot2` package in conjunction with the `tidyr`, `forcats` and `cleaner` packages can provide above functionalities, but the goal of the [plot2()] function is to generalise this into one function. The generic [plot2()] function currently has `r length(formals(plot2)) - 1` arguments, all with a default value. **Less typing, faster coding.**
+#' The `ggplot2` package in conjunction with the `tidyr`, `forcats` and `cleaner` packages can provide above functionalities, but the goal of the [plot2()] function is to generalise this into one function. The generic [plot2()] function currently has `r length(formals(plot2))` arguments, all with a default value except `.data` and `...`. **Less typing, faster coding.**
 #' @return a `ggplot` object
 #' @importFrom ggplot2 ggplot labs
 #' @export

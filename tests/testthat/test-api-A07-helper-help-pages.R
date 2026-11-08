@@ -72,7 +72,6 @@ test_that("A07.07 the bundled data sets match their documentation", {
 })
 
 test_that("A07.08 the options page describes each option correctly", {
-  skip_open_finding("F099")
   rd <- paste(readLines(source_file("man", "plot2-options.Rd")), collapse = " ")
   expect_false(grepl("axis.title.x} and \\\\code\\{axis.title.x", rd))
 })

@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' Label Euro currencies
+#' Label Currencies
 #' 
 #' Format numbers as currency, rounding values to dollars or cents using a convenient heuristic.
 #' @details The euro sign of [euros()] cannot be encoded by the default [pdf()][grDevices::pdf()] device. To save such plots as PDF, use the Cairo device, e.g. `ggplot2::ggsave("plot.pdf", device = grDevices::cairo_pdf)`, or in R Markdown the chunk option `dev = "cairo_pdf"`.

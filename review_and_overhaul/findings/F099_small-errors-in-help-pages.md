@@ -4,7 +4,7 @@ title: Typos, contradictions and small factual errors in the help pages
 severity: low
 type: docs
 area: housekeeping
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -51,3 +51,4 @@ Correct in one documentation pass; let the argument count be computed with `leng
 ## History
 
 - 2026-11-08: filed in R05; tests A06.02 and A07.08 parked.
+- 2026-11-08: fixed and verified (Phase 1). All listed typos and errors corrected; the x.complete description now matches the per-class completion of F048; tests A06.02 and A07.08 unparked.

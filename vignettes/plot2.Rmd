@@ -36,7 +36,7 @@ reexported <- sort(exported[!exported %in% ls(envir = asNamespace("plot2"))])
 
 If you've been using `ggplot2` for a while, you're likely familiar with its strengths and versatility in creating a wide array of visualisations. However, as powerful as `ggplot2` is, it often requires you to define every single detail yourself. Whether it's specifying aesthetics, selecting geoms, or adjusting scales, you're in control of every element. And that's one of the reasons we love `ggplot2`; it offers immense flexibility and precision.
 
-But what if you could streamline this process for many common tasks? Enter `plot2()`, a friendly companion to `ggplot2` designed to reduce the repetitive aspects of plotting without sacrificing the customizability that `ggplot2` is known for. Think of `plot2()` as your plotting assistant, doing a lot of the heavy lifting automatically so you can focus on the fun parts — like exploring your data and finding insights.
+But what if you could streamline this process for many common tasks? Enter `plot2()`, a friendly companion to `ggplot2` designed to reduce the repetitive aspects of plotting without sacrificing the customisability that `ggplot2` is known for. Think of `plot2()` as your plotting assistant, doing a lot of the heavy lifting automatically so you can focus on the fun parts — like exploring your data and finding insights.
 
 In this vignette, we'll take a deep dive into the `plot2()` function and its companion `add_*()` functions. We'll walk through everything from the basics to some of the more advanced features, helping you unlock the full potential of this powerful tool. Whether you're plotting simple bar charts or complex Sankey diagrams, `plot2()` has got you covered.
 
@@ -332,7 +332,7 @@ mtcars |>
   plot2(carb, y = n(), x.max_items = 5, type = "col")
 ```
 
-This limits the plot to the top 5 most frequent carburetor counts, simplifying the visualisation and making it easier to focus on the most important data.
+This limits the plot to the top 5 most frequent carburettor counts, simplifying the visualisation and making it easier to focus on the most important data.
 
 In `ggplot2`, you might need to filter your data with `top_n()` before plotting. `plot2()` handles this within the plotting function, further reducing the need for external data manipulation.
 

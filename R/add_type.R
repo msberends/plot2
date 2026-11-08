@@ -20,7 +20,7 @@
 #' @param mapping A mapping created with [`aes()`][ggplot2::aes()] to pass on to the geom.
 #' @param linetype,linewidth,shape,size,width,... Arguments passed on to the geom.
 #' @param data Data to use in mapping.
-#' @param move Number of layers to move the newly added geom down, e.g., `move = 1` will place the newly added geom down 1 layer, thus directly under the highest layer.
+#' @param move Number of layers to move the newly added geom down; the sign is ignored. For example, `move = 1` (or `move = -1`) places the new geom directly below the layer that was on top before it was added. Use [move_layer()] for other changes in the order of layers.
 #' @param inherit.aes A [logical] to indicate whether the default aesthetics should be inherited, rather than combining with them.
 #' @param legend.value Text to show in an additional legend that will be created. Since `ggplot2` does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".
 #' @importFrom ggplot2 is_ggplot aes
@@ -624,7 +624,7 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param sf_data an 'sf' [data.frame]
 #' @param datalabels a column of `sf_data` to add as label below the points
 #' @param datalabels.colour,datalabels.size,datalabels.angle,datalabels.font properties of `datalabels`
-#' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
+#' @param datalabels.nudge_y if `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
 #' @importFrom dplyr mutate n_distinct
 #' @importFrom ggplot2 aes geom_sf geom_sf_text is_ggplot
 #' @export

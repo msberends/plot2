@@ -4,7 +4,7 @@
 \alias{labellers}
 \alias{euros}
 \alias{dollars}
-\title{Label Euro currencies}
+\title{Label Currencies}
 \usage{
 euros(x, big.mark = big_mark(), decimal.mark = dec_mark(), ...)
 

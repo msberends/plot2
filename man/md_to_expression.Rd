@@ -7,7 +7,7 @@
 md_to_expression(x)
 }
 \arguments{
-\item{x}{Text to convert, only the first value will be evaluated.}
+\item{x}{Text to convert. Each element is converted separately.}
 }
 \value{
 An \link{expression} if \code{x} is length 1, or a \link{list} of expressions otherwise
