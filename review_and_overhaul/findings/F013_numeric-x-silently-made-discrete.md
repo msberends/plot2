@@ -4,7 +4,7 @@ title: Numeric x of 2000-2050 or exactly 1:12 silently converted to character, a
 severity: high
 type: design
 area: data-validation
-status: needs-decision
+status: open
 verification: verified
 effort: S
 api_change: possible
@@ -49,3 +49,4 @@ Apply the heuristics only for discrete geoms and integer-valued data, or only wh
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: maintainer decided (AskUserQuestion): keep the year (2000-2050) and month (1:12) heuristics only for discrete types and integer values; continuous geoms keep numeric x; the conversion is reported in a message.

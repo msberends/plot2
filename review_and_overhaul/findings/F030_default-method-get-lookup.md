@@ -38,3 +38,4 @@ Look up only in `parent.frame()` and only when explicitly requested (for example
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: maintainer decided (AskUserQuestion): keep the lookup of a character scalar, but only in the caller's environment (not the search path or package namespace) and only for data frames; document it.

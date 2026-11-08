@@ -4,7 +4,7 @@ title: data argument documented on the generic but missing from most methods
 severity: high
 type: bug
 area: methods
-status: needs-decision
+status: open
 verification: verified
 effort: S
 api_change: possible
@@ -46,3 +46,4 @@ Add `data = NULL` to all methods and warn when it is supplied but unused, or rem
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: maintainer decided (AskUserQuestion): only in plot2.formula(): `data` removed from the generic; other methods give a clear error when `data =` is supplied.

@@ -4,7 +4,7 @@ title: "%p" datalabels are relative to the grand total, not per facet or categor
 severity: medium
 type: design
 area: data-validation
-status: needs-decision
+status: open
 verification: reading
 effort: S
 api_change: possible
@@ -39,3 +39,4 @@ Add an argument (for example `datalabels.percent_by = c("total", "facet", "x", "
 ## History
 
 - 2026-11-07: filed in R01 (by reading).
+- 2026-11-08: maintainer decided (AskUserQuestion): new argument (datalabels.percent_by: total, facet, x, category); default per x group within the facet, so stacked bars sum to 100% per bar.

@@ -4,7 +4,7 @@ title: Secondary y-axis defaults to the primary type, so two column layers overl
 severity: medium
 type: design
 area: types
-status: needs-decision
+status: open
 verification: verified
 effort: S
 api_change: possible
@@ -39,3 +39,4 @@ print(geoms(p))
 - 2026-11-07: R03 E07: by default `y_secondary.colour = colour`, so both series also get the same colour (columns `#595959`); together with the overlap the secondary series is hard to distinguish. With `colour = c("red", "blue")` the secondary layer was drawn in `#F8766D` (ggplot2's default hue), not in either given colour; filed separately as F077.
 
 - 2026-11-07: filed in R03, reproduced.
+- 2026-11-08: maintainer decided (AskUserQuestion): secondary series defaults to a line with points when the primary type is col or bar; otherwise the primary type.

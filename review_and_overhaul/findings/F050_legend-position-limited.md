@@ -4,7 +4,7 @@ title: legend.position does not support inside placement or FALSE
 severity: medium
 type: design
 area: scales
-status: needs-decision
+status: open
 verification: verified
 effort: S
 api_change: possible
@@ -40,3 +40,4 @@ Accept `FALSE` as "none"; accept a numeric vector of length 2 (map to `legend.po
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: maintainer decided (AskUserQuestion): accept FALSE (none), a numeric vector of length 2 (inside at those coordinates) and "inside".

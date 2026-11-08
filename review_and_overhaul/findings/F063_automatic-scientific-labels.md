@@ -4,7 +4,7 @@ title: Axis labels switch to scientific notation automatically for ranges above 
 severity: low
 type: design
 area: scales
-status: needs-decision
+status: open
 verification: verified
 effort: S
 api_change: possible
@@ -36,3 +36,4 @@ print(ggplot2::ggplot_build(p)$layout$panel_params[[1]]$y$get_labels())
 
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: reproduced (labels such as "1.5 • 10^6").
+- 2026-11-08: maintainer decided (AskUserQuestion): automatic scientific notation only above a higher threshold (1e9) or for very small values (below 1e-4); otherwise big.mark labels.
