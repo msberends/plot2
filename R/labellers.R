@@ -62,7 +62,7 @@ dollars <- function(x,
 
 #' Label Taxonomic Names in Italics
 #' 
-#' Format the names of microorganisms in axis or legend labels in italics, as is the convention in microbiology. Every word that is a family, genus, species or subspecies name in the [microorganisms][AMR::microorganisms] data set of the `AMR` package is italicised; other words are kept as they are.
+#' Format the names of microorganisms in axis or legend labels in italics, as is the convention in microbiology. Family and genus names in the [microorganisms][AMR::microorganisms] data set of the `AMR` package are italicised, and so are species and subspecies names that follow a genus or an abbreviated genus (such as *S. aureus*); other words are kept as they are.
 #' @param x Values, such as the breaks of an axis.
 #' @param ... Not used, allows this function to be used as a labeller.
 #' @details Use this function for the labels of any plotting direction, e.g. `x.labels = label_taxonomy` or `category.labels = label_taxonomy`. It requires the `AMR` package.
@@ -80,10 +80,10 @@ dollars <- function(x,
 label_taxonomy <- function(x, ...) {
   rlang::check_installed("AMR", reason = "for `label_taxonomy()`.")
   if (is.null(plot2_session$taxonomic_names)) {
-    plot2_session$taxonomic_names <- unique(c(AMR::microorganisms$family,
-                                              AMR::microorganisms$genus,
-                                              AMR::microorganisms$species,
-                                              AMR::microorganisms$subspecies))
+    # cached for the session, the data set has about 78,000 rows (F058)
+    plot2_session$taxonomic_names <- list(
+      higher = unique(c(AMR::microorganisms$family, AMR::microorganisms$genus)),
+      epithets = unique(c(AMR::microorganisms$species, AMR::microorganisms$subspecies)))
   }
   nms <- plot2_session$taxonomic_names
   x <- as.character(x)
@@ -93,7 +93,17 @@ label_taxonomy <- function(x, ...) {
                      if (length(words) == 0 || all(is.na(words))) {
                        return(if (length(words) == 0) "" else NA_character_)
                      }
-                     words[words %in% nms] <- paste0("*", words[words %in% nms], "*")
+                     # families and genera anywhere; species and subspecies only after a genus,
+                     # an abbreviated genus such as "S.", or a species, so that ordinary words that
+                     # are also species names (such as "coli" or "group") stay upright (F058)
+                     italic <- words %in% nms$higher
+                     abbreviated <- grepl("^[A-Z][.]$", words)
+                     for (i in seq_along(words)[-1]) {
+                       if (words[i] %in% nms$epithets && (italic[i - 1] || abbreviated[i - 1])) {
+                         italic[i] <- TRUE
+                       }
+                     }
+                     words[italic] <- paste0("*", words[italic], "*")
                      out <- paste0(words, collapse = " ")
                      # abbreviated genus followed by a species, e.g. "S. aureus"
                      gsub("(.*)([A-Z][.]) [*]([a-z]+)[*](.*)", "\\1*\\2 \\3*\\4", out, perl = TRUE)

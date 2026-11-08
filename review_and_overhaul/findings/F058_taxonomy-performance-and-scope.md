@@ -4,7 +4,7 @@ title: x.lbl_taxonomy rebuilds the name list per call and only applies to x
 severity: low
 type: performance
 area: markdown
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -42,3 +42,4 @@ Cache the name set in the package environment (outside the per-call state); matc
 
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: reproduced; 0.6 s per call with `x.lbl_taxonomy = TRUE`.
+- 2026-11-08: fixed with D001.3: x.lbl_taxonomy is replaced by label_taxonomy(), a labeller for any direction (x.labels, category.labels); the name lists are cached per session; species and subspecies names are only italicised after a genus or an abbreviated genus, so ordinary words such as 'coli' or 'group' stay upright. Facet strips have no labels argument in plot2, so facets are not covered.
