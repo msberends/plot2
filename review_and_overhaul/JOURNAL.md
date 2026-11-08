@@ -2,6 +2,18 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 1, third part)
+
+- Fixed and verified: F048, F109 (CI checks R 4.1 and hard dependencies only), F103 (static colour.Rd), F102 (vignettes guard suggested packages), F099, F098 (plus an install hint for a missing ggbeeswarm), F104, F100, F101. F093 partly (points 3 and 5); points 1, 2, 4 and 6 depend on missing() and wait for F094.
+- The 'ggplot2' palette now equals `scales::hue_pal()(n)` (maintainer: it stands for not setting a colour, so it must follow ggplot2's own colours).
+- New at the maintainer's request: F135, an audit of `@importFrom` tags per function in both directions (unused tags, undeclared non-base calls). 42 missing and 33 unused entries corrected; permanent test `test-themes-T09-imports.R` (T09.01 to T09.04). Follow-up: `format2.percentage()` was never registered as an S3 method (798d526).
+- Test infrastructure: `eval_chunks(exclude =)` now skips matching expressions instead of whole chunks; A10.01 failed when run on its own because the README set-up chunk (with `library(ggplot2)`) was excluded.
+- F134 (euro sign on pdf()) remains needs-decision. `scales` is used unconditionally but is in Suggests: part of F008 (later phase).
+- Tone rewrite of README and vignettes left to I005 (draft for the maintainer); F100 and F101 corrected facts only.
+- Question from the maintainer: how finding IDs in tests stay traceable. Proposed (awaiting decision): keep `review_and_overhaul/` permanently, let `skip_open_finding()` print the finding title, optionally move open findings to GitHub issues at the end.
+- Full suite (NOT_CRAN=true): 543 tests, 0 failures, 0 warnings, 75 skips. Without NOT_CRAN the suite skips 35 more tests; earlier totals in this journal used NOT_CRAN.
+- Next: Phase 1 remainder needs decisions (F092, F094 with I004/D001, F134); then Phase 2 per roadmap.
+
 ## 2026-11-08 (session 6, continued: Phase 1, second part)
 
 - Fixed and verified (one commit per finding; shared code in one commit): F049+F053+F073, F051, F054, F056, F067, F069, F070, F071, F072, F074, F075, F076, F077, F078, F079, F080, F082, F083, F085, F086, F087, F090, F091, F095, F096, F097+F106, F107 (points 1, 2, 4), F131. Earlier in this stretch: F004, F007, F021, F026, F044 to F047, F065.
