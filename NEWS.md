@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Main vignette: corrected several explanations that did not match their example code
 * README: corrected the installation instructions (not on CRAN yet) and two examples that failed or did not do what the text said
 * Help pages of `move_layer()`, the `plot2()` methods, `register_colour()` and `unregister_colour()` now have examples and return values; the `plot2()` methods page lists how each method changes the defaults
 * `type = "beeswarm"` without the ggbeeswarm package now gives an install hint instead of 'geom_beeswarm() does not exist', and all type aliases and sorting values are documented

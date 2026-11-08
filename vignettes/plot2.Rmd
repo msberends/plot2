@@ -202,7 +202,7 @@ One of the standout features of `plot2()` is its ability to perform transformati
 
 ### Aggregations Made Easy
 
-Suppose you want to count the number of patients admitted to each hospital. With `plot2()`, there’s no need to pre-calculate these counts; you can simply use `n_distinct()` to get the unique numbers of patients directly within the function:
+Suppose you want to count the number of unique patients admitted to each hospital. With `plot2()`, there’s no need to pre-calculate these counts; you can simply use `n_distinct()` to get the unique numbers of patients directly within the function:
 
 ```{r}
 admitted_patients |> 
@@ -210,11 +210,11 @@ admitted_patients |>
         y = n_distinct(patient_id))
 ```
 
-This will produce a column plot showing the number of admissions per hospital, calculated directly within `plot2()`.
+This will produce a column plot showing the number of unique patients per hospital, calculated directly within `plot2()`. Use `y = n()` instead to count the admissions (the rows).
 
 ### Combining Data with In-line Transformations
 
-The real power of `plot2()` comes when you start combining these in-line transformations. Want to add another dimension, like the number of unique age groups within each hospital? You can do that just as easily:
+The real power of `plot2()` comes when you start combining these in-line transformations. Want to add more dimensions, like the period of admission and the ward? You can do that just as easily:
 
 ```{r}
 admitted_patients |> 
@@ -262,7 +262,7 @@ This example creates a plot where the X-axis labels combine the text "Hospital" 
 
 ### Combining Everything Together
 
-Let’s put it all together in a more complex example. Suppose you want to examine the distribution of patient ages across hospitals, with each bar split by gender, and you want the X-axis to reflect the hospital name and use facets for the year of admission:
+Let’s put it all together in a more complex example. Suppose you want to examine the median age of patients per gender, with the year of admission as category and a facet per hospital:
 
 ```{r}
 admitted_patients |> 
@@ -325,16 +325,16 @@ In `ggplot2`, this would typically involve setting `levels` manually within a fa
 
 ### Limiting Data
 
-You might not always want to show every single item in your plot. For example, if you’re dealing with a lot of categories, you can limit the display to just the most frequent ones:
+You might not always want to show every single item in your plot. For example, if you’re dealing with a lot of categories, you can limit the number of items shown:
 
 ```{r}
 mtcars |> 
   plot2(carb, y = n(), x.max_items = 5, type = "col")
 ```
 
-This limits the plot to the top 5 most frequent carburettor counts, simplifying the visualisation and making it easier to focus on the most important data.
+This keeps the first four carburettor counts in their sorted order (1 to 4) and combines all others into a fifth column, "(rest, x2)", the number telling how many values were combined. Sorting is applied first, so to show the most frequent values, combine `x.max_items` with `x.sort = "freq-desc"`, as in the next example.
 
-In `ggplot2`, you might need to filter your data with `top_n()` before plotting. `plot2()` handles this within the plotting function, further reducing the need for external data manipulation.
+In `ggplot2`, you might need to filter your data with `slice_max()` before plotting, and summarise the rest yourself. `plot2()` handles this within the plotting function, further reducing the need for external data manipulation.
 
 ### Combining Sorting with Limiting
 
@@ -345,9 +345,9 @@ mtcars |>
   plot2(carb, y = n(), x.sort = "freq-desc", x.max_items = 5, type = "col")
 ```
 
-This plot will show only the top 5 most frequent carburettor counts, sorted in descending order. This combination helps to declutter your visualisation and focus on the most significant parts of your data.
+This plot will show the four most frequent carburettor counts, sorted in descending order, and the rest combined in a fifth column. This combination helps to declutter your visualisation and focus on the most significant parts of your data.
 
-In a `ggplot2` approach, this might involve combining `arrange()`, `top_n()`, and `geom_col()`. `plot2()` consolidates these operations into a single, coherent function call.
+In a `ggplot2` approach, this might involve combining `arrange()`, `slice_max()`, and `geom_col()`. `plot2()` consolidates these operations into a single, coherent function call.
 
 ### Visualising Sorting Options
 
@@ -560,7 +560,7 @@ Another powerful feature of `plot2()` is its flexibility with fonts. Whether you
 
 ### Using System Fonts and Google Fonts
 
-`plot2()` supports all installed system fonts, as well as over 1,400 Google Fonts, giving you an extensive range of choices for your plots. Missing fonts will be downloaded automatically, and the required DPI will be set for you, even in R Markdown outputs.
+`plot2()` supports all installed system fonts, as well as over 1,400 Google Fonts, giving you an extensive range of choices for your plots. Missing fonts will be downloaded automatically, and the required DPI will be set for you. In R Markdown, set the chunk option `fig.showtext = TRUE` in chunks that use another font, as in the examples below.
 
 Here’s how you can apply a custom font from Google Fonts, which will be downloaded automatically:
 

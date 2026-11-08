@@ -4,7 +4,7 @@ title: Main vignette text contradicts its own code in several places
 severity: low
 type: docs
 area: housekeeping
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -50,3 +50,4 @@ Edit the prose; consider showing `x.max_items` only together with `x.sort`.
 ## History
 
 - 2026-11-08: filed in R05.
+- 2026-11-08: fixed and verified (Phase 1). Text corrected to match the code at each listed place (unique patients versus admissions, the dimensions of the combined example, x.max_items without sorting keeps the first values plus a rest column, slice_max() instead of top_n(), fig.showtext = TRUE in R Markdown). The carb examples still rely on F013; tone rewrite left to I005.
