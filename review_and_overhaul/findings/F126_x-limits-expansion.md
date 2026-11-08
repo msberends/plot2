@@ -4,7 +4,7 @@ title: x.limits announces x.expand = 0 but keeps the default expansion
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -41,3 +41,4 @@ Compute `set_x.expand` after the defaults, or set it to `TRUE` together with `x.
 ## History
 
 - 2026-11-08: filed while coding the I002 tests (case 05.03).
+- 2026-11-08: fixed and verified (Phase 1). The announced `x.expand = 0` is now applied for numeric x; regression test 05.03.

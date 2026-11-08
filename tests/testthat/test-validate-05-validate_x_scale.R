@@ -32,7 +32,6 @@ test_that("05.02 numeric x gets pretty breaks, including negative ones for small
 test_that("05.03 x.limits on a numeric x sets the panel range, with a message about x.expand = 0", {
   p <- expect_plot2_message(plot2(fx_xy, x, y, x.limits = c(0, 10)), "x.expand = 0", type = "info")
   expect_identical(scale_limits(p, "x"), c(0, 10))
-  skip_open_finding("F126")
   expect_equal(axis_range(p, "x"), c(0, 10))
 })
 

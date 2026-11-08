@@ -769,6 +769,10 @@ validate_x_scale <- function(df,
       if (!inherits(values, c("Date", "POSIXt"))) {
         plot2_message("Assuming ", font_blue("x.expand = 0"), " since ", font_blue("x.limits"), " is set")
         x.expand <- 0
+        if (is.numeric(values) && !is.factor(values)) {
+          # also apply it, as announced (the continuous scale only uses x.expand when set)
+          set_x.expand <- TRUE
+        }
       } else {
         # dates - no need mention that x.expand is set to 0.5 - it's already the default
         x.expand <- 0.5
