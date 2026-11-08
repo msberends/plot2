@@ -4,8 +4,8 @@ title: Shiny app housekeeping: dead code, discarded checks, no statement on depl
 severity: low
 type: maintainability
 area: shiny
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: S
 api_change: no
 locations: [R/shiny.R:46, R/shiny.R:63, R/shiny.R:844, R/shiny.R:1101, R/shiny.R:1109]
@@ -48,3 +48,4 @@ Remove dead code, fix the typos, add `@return`, and decide (and document) whethe
 ## History
 
 - 2026-11-08: filed in R07 (by reading).
+- 2026-11-08: fixed: dead RStudio viewer and wmic code removed; 'transparant' corrected and data_visible removed (with F006); logo check fixed (with F113); new argument run = interactive() (maintainer's decision), @return, and a section 'Deployment' that states what the app does with untrusted input and the remaining risk (long computations), plus upload_tab documentation (with F120). Test S06.05.

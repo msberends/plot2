@@ -539,7 +539,7 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
 # Shiny app (R07) -------------------------------------------------------------
 
 #' The app object of create_interactively() for shiny::testServer(). Skips
-#' when a package of the app is missing. Outside an interactive session
+#' when a package of the app is missing. With run = FALSE,
 #' create_interactively() returns the app instead of running it. The served
 #' logo folder is removed when the calling test ends.
 shiny_app <- function(..., .env = parent.frame()) {
@@ -549,7 +549,7 @@ shiny_app <- function(..., .env = parent.frame()) {
   withr::defer({
     if ("plot2res" %in% names(shiny::resourcePaths())) shiny::removeResourcePath("plot2res")
   }, envir = .env)
-  create_interactively(...)
+  create_interactively(..., run = FALSE)
 }
 
 #' The environment in which the app was built (holds `ui`, `data_sets`, ...).

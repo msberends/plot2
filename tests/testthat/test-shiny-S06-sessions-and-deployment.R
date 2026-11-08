@@ -50,3 +50,11 @@ test_that("S06.04 an app instance leaves the global state of plot2 alone", {
   app <- shiny_app()
   expect_identical(setdiff(ls(plot2_env), "reg_cols"), character(0))
 })
+
+test_that("S06.05 the app object for deployment is returned with run = FALSE (F125)", {
+  skip_if_not_installed("shiny")
+  app <- create_interactively(run = FALSE)
+  withr::defer(if ("plot2res" %in% names(shiny::resourcePaths())) shiny::removeResourcePath("plot2res"))
+  expect_s3_class(app, "shiny.appobj")
+  expect_identical(formals(create_interactively)$run, quote(interactive()))
+})

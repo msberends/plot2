@@ -21,9 +21,28 @@
 #' @param pretty_labels A logical to switch to pretty, readable labels, instead of argument names in code style.
 #' @param hide_generated_code A logical to hide generated code.
 #' @param hide_export_buttons A logical to hide export buttons and functionality. `TRUE` will hide the elements completely, `NULL` will show a clickable text to expand buttons (default), `FALSE` will show the expanded buttons.
+#' @param run A logical to run the app (default in an interactive session). Use `run = FALSE` to get the app object instead, for example to deploy it on a server, see *Deployment*.
 #' @param upload_tab A logical to allow uploading data files. When `TRUE`, an **Upload** tab is added to the sidebar, with format-specific options for text (CSV, TSV, TXT), spreadsheet (Excel, OpenDocument), statistical software (SPSS, Stata, SAS, Minitab), Parquet, Feather, JSON, YAML, XML and HTML files; the data set selector then also offers "Upload data set...". R serialisation files (`.rds`, `.rda`) are not accepted, since reading them can run code: pass such data with the `data` argument instead. When `FALSE` (default), the app offers no way to upload files. Uploading requires the `readxl` package, and per format the package that reads it; administrators can install all of them with `plot2:::install_shiny_deps()`.
 #' @details
 #' ![Shiny app example](create_interactively.jpg)
+#'
+#' The app builds a [plot2()] call from the chosen settings, shows the plot and the code, and explains in a panel below the code what [plot2()] decided by itself.
+#' @section Deployment:
+#' The app can run on a server for several users (e.g. Shiny Server or Posit Connect), with an `app.R` such as:
+#'
+#' ```r
+#' library(plot2)
+#' create_interactively(run = FALSE)
+#' ```
+#'
+#' On a server, the app treats everything a visitor types or sends as untrusted:
+#' - Settings are converted to values or checked expressions; nothing typed is run as R code. Calculations in the column selectors may only use a fixed list of computing functions (such as `log()`, `mean()` and `n_distinct()`), and the call is evaluated apart from the global environment, so it cannot reach other objects of the R process.
+#' - Data frames in the global environment are offered only in an interactive session; pass data with `data` to offer it on a server.
+#' - Uploads are only possible with `upload_tab = TRUE`; R serialisation files are never accepted. The maximum upload size is Shiny's own (option `shiny.maxRequestSize`, 5 MB by default).
+#' - Each session keeps its own plot, and raster exports are limited to 40 megapixels.
+#'
+#' Each plot is computed in the R process of the app, so a visitor can still ask for plots that take long to compute, e.g. with very large data or a very small `binwidth`. Use the limits of the hosting platform (e.g. timeouts and the number of processes) as for any Shiny app.
+#' @return With `run = TRUE`, nothing (the app runs until it is closed). With `run = FALSE`, an app object of class `shiny.appobj` that can be run with [shiny::runApp()] or deployed.
 #' @export
 #' @examples
 #' \dontrun{
@@ -34,6 +53,9 @@
 #'
 #' # With the upload tab for importing external data files:
 #' create_interactively(upload_tab = TRUE)
+#'
+#' # The app object, e.g. for app.R on a server:
+#' app <- create_interactively(run = FALSE)
 #' }
 create_interactively <- function(data = NULL,
                                  css_code = NULL,
@@ -41,7 +63,8 @@ create_interactively <- function(data = NULL,
                                  pretty_labels = FALSE,
                                  hide_generated_code = FALSE,
                                  hide_export_buttons = NULL,
-                                 upload_tab = FALSE) {
+                                 upload_tab = FALSE,
+                                 run = interactive()) {
   
   if (!is.null(logo_path) &&
       !(is.character(logo_path) && length(logo_path) == 1 && isTRUE(file.exists(logo_path)) &&
@@ -55,16 +78,6 @@ create_interactively <- function(data = NULL,
   rlang::check_installed("rio")
   if (isTRUE(upload_tab)) {
     rlang::check_installed("readxl")
-  }
-  
-  rstudio_viewer <- identical(Sys.getenv("RSTUDIO"), "1") && interactive()
-  rstudio_viewer <- FALSE # turn off for now
-  max_height <- 900
-  if (rstudio_viewer && .Platform$OS.type == "windows") {
-    res <- system("wmic path Win32_VideoController get CurrentHorizontalResolution,CurrentVerticalResolution", intern = TRUE)
-    res <- trimws(unlist(strsplit(res, " ")))
-    res <- as.numeric(res[res %like% "^[0-9]+$"])
-    max_height <- min(res[length(res)] - 400, max_height)
   }
   
   # serve a copy of the logo from a folder of its own, never the folder of the logo (F113)
@@ -221,7 +234,7 @@ create_interactively <- function(data = NULL,
       ".sidebarPanel { height: 100%; overflow-y: auto; }",
       ".mainPanel, .well { height: 100%; overflow-y: auto; }",
       "#settings_tabs a { padding-left: 5px !important; padding-right: 5px !important; }",
-      "#sidebar { overflow-y: auto; ", ifelse(rstudio_viewer, paste0("height: ", max_height, "px; "), ""), "background-color: #f9f4f2; border-radius: 0; border: none; }",
+      "#sidebar { overflow-y: auto; background-color: #f9f4f2; border-radius: 0; border: none; }",
       "#logo-container { position: absolute; bottom: 10px; right: 10px; z-index: -1; }",
       "#error_msg { color: red; }",
       ".container-fluid { overflow-x: hidden; padding-left: 0; }",
@@ -977,20 +990,12 @@ create_interactively <- function(data = NULL,
     })
   }
   
-  if (!interactive()) {
-    shiny::shinyApp(ui, server)
-  } else if (rstudio_viewer) {
-    suppressMessages(
-      shiny::runGadget(
-        app = ui,
-        server = server,
-        viewer = shiny::dialogViewer("Generate plot2", width = 1600, height = max_height),
-        stopOnCancel = FALSE)
-    )
+  app <- shiny::shinyApp(ui, server)
+  if (isTRUE(run)) {
+    suppressMessages(shiny::runApp(app))
+    invisible(NULL)
   } else {
-    suppressMessages(
-      shiny::runApp(list(ui = ui, server = server))
-    )
+    app
   }
 }
 

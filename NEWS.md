@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* create_interactively() has a new argument run: run = FALSE returns the app object, e.g. for deployment on a server; see the new section 'Deployment' in ?create_interactively
 * create_interactively() refuses exports above 40 megapixels, and checks export sizes on the server
 * The copy button of create_interactively() copies in the browser, so it also works when the app runs on a server; the app no longer needs the clipr and fansi packages
 * create_interactively() shows plot2's messages also on a server, and shows the actual error message
