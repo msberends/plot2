@@ -467,8 +467,15 @@ The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \
 \item Support for any \code{ggplot2} extension based on \code{\link[ggplot2:fortify]{ggplot2::fortify()}}
 }
 
-The \code{ggplot2} package in conjunction with the \code{tidyr}, \code{forcats} and \code{cleaner} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 153 arguments, all with a default value except \code{.data} and \code{...}. \strong{Less typing, faster coding.}
+The \code{ggplot2} package in conjunction with the \code{dplyr}, \code{tidyr} and \code{forcats} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 153 arguments, all with a default value except \code{.data} and \code{...}. \strong{Less typing, faster coding.}
 }
+\section{Argument names}{
+
+The arguments follow one naming rule: \verb{<argument>.<setting>}, where the part before the dot is itself an argument of \code{\link[=plot2]{plot2()}} (\code{x}, \code{y}, \code{category}, \code{facet}, \code{y_secondary}, \code{title}, \code{subtitle}, \code{datalabels}, \code{smooth} or \code{legend}) and the setting is written in snake case, e.g. \code{x.label_angle} or \code{facet.repeat_labels_x}. All other arguments are plain snake case, e.g. \code{colour_fill}, \code{sankey_node_width} or \code{jitter_seed}. The exceptions are names known from base R: \code{na.rm}, \code{na.replace}, \code{decimal.mark} and \code{big.mark}.
+
+A default of \code{NULL} means that \code{\link[=plot2]{plot2()}} determines the value automatically, often announced in a message. An explicit value is always used as given.
+}
+
 \examples{
 options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
 

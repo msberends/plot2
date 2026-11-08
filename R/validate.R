@@ -89,14 +89,20 @@ validate_type <- function(type, df = NULL) {
     type <- gsub("s$", "", type)
   }
   
-  valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
-  valid_geoms <- c(valid_geoms, "geom_upset", "geom_spider")
   if (type %in% c("geom_beeswarm", "geom_quasirandom")) {
     rlang::check_installed("ggbeeswarm", reason = paste0("for `type = \"", type.bak, "\"`"))
+    plot2_session$valid_geoms <- NULL
   }
-  if (requireNamespace("ggbeeswarm", quietly = TRUE)) {
-    valid_geoms <- c(valid_geoms, 
-                     ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
+  # the list of geoms is the same for the whole session (F110)
+  valid_geoms <- plot2_session$valid_geoms
+  if (is.null(valid_geoms)) {
+    valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
+    valid_geoms <- c(valid_geoms, "geom_upset", "geom_spider")
+    if (requireNamespace("ggbeeswarm", quietly = TRUE)) {
+      valid_geoms <- c(valid_geoms, 
+                       ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
+    }
+    plot2_session$valid_geoms <- valid_geoms
   }
   if (!type %in% valid_geoms) {
     # an abbreviation must be the start of a geom name, not any part of it, and must be
@@ -259,7 +265,7 @@ validate_data <- function(df,
   # integers and doubles both return FALSE for requires_numeric_coercion()
   if (has_y(df) &&
       (requires_numeric_coercion(get_y(df)) ||
-       "AMR" %in% rownames(utils::installed.packages()) && AMR::is.mic(get_y(df)))) {
+       inherits(get_y(df), "mic"))) {
     plot2_message(paste0("Coercing values of ", font_blue("y"),
                          font_black(" from class "), font_blue(paste(class(get_y(df)), collapse = "/")),
                          font_black(" to class "), font_blue("double")))
@@ -408,14 +414,7 @@ validate_data <- function(df,
       df <- df |> 
         mutate(`_var_datalabels` = as.double(`_var_datalabels`))
     }
-    # %p is relative to the group set in datalabels.percent_by (F028)
-    df$`_var_datalabels` <- format_datalabels(df$`_var_datalabels`,
-                                              datalabels.round = dots$datalabels.round,
-                                              datalabels.format = dots$datalabels.format,
-                                              decimal.mark = dots$decimal.mark,
-                                              big.mark = dots$big.mark,
-                                              y.percent = dots$y.percent,
-                                              group = percent_group(df, dots$datalabels.percent_by))
+    # the labels are formatted in generate_datalabels(), on the final rows and only when drawn (F025)
   }
   
   # turn x to character if data seems to suggest so; years and months are only guessed for
@@ -2063,7 +2062,12 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
     }
   )
   
-  # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`
+  # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`;
+  # a constant, such as a plain text, needs no evaluation over the data (F025)
+  title_quo <- rlang::enquo(x)
+  if (!is.null(df) && !rlang::quo_is_symbol(title_quo) && !rlang::quo_is_call(title_quo)) {
+    df <- NULL
+  }
   if (!is.null(df)) {
     out <- tryCatch(
       suppressWarnings(
@@ -2121,8 +2125,29 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   out
 }
 
+validate_theme <- function(...) {
+  # the theme only depends on its arguments, the registered colours and the plot2 options, so
+  # it is built once per combination and session (F110); a theme object is never cached, so
+  # that its validation messages are always shown
+  args <- list(...)
+  if (!is.null(args$theme) && !is.character(args$theme)) {
+    return(do.call(validate_theme_build, args))
+  }
+  opts <- options()
+  key <- rlang::hash(list(args, plot2_env$reg_cols, opts[startsWith(names(opts), "plot2.")]))
+  out <- plot2_session$validated_themes[[key]]
+  if (is.null(out)) {
+    out <- do.call(validate_theme_build, args)
+    if (length(plot2_session$validated_themes) >= 100) {
+      plot2_session$validated_themes <- NULL
+    }
+    plot2_session$validated_themes[[key]] <- out
+  }
+  out
+}
+
 #' @importFrom ggplot2 element_blank element_rect margin theme_grey
-validate_theme <- function(theme,
+validate_theme_build <- function(theme,
                            type,
                            background,
                            text_factor,
@@ -2437,13 +2462,29 @@ generate_datalabels <- function(p,
                                 y.transform,
                                 horizontal,
                                 misses_datalabels,
-                                markdown) {
+                                markdown,
+                                datalabels.round = 1,
+                                datalabels.format = "%n",
+                                datalabels.percent_by = "x",
+                                decimal.mark = dec_mark(),
+                                big.mark = big_mark(),
+                                y.percent = FALSE) {
   
   if (isTRUE(misses_datalabels) && nrow(df) > 25) {
     plot2_caution("Omitting printing of ", nrow(df), " datalabels - use ",
                   font_blue("datalabels = TRUE"), " to force printing")
     return(p)
   }
+  
+  # format only now: on the final rows, and only when the labels are drawn (F025);
+  # %p is relative to the group set in datalabels.percent_by (F028)
+  p$data$`_var_datalabels` <- format_datalabels(p$data$`_var_datalabels`,
+                                                datalabels.round = datalabels.round,
+                                                datalabels.format = datalabels.format,
+                                                decimal.mark = decimal.mark,
+                                                big.mark = big.mark,
+                                                y.percent = y.percent,
+                                                group = percent_group(p$data, datalabels.percent_by))
   
   if (!has_category(df)) {
     stacked <- FALSE
@@ -3005,13 +3046,8 @@ summarise_data <- function(df,
   if (!is.null(category)) df$`_var_category` <- df[, category, drop = TRUE]
   if (!is.null(facet)) df$`_var_facet` <- df[, facet, drop = TRUE]
   if (isTRUE(has_datalbls)) {
-    df$`_var_datalabels` <- format_datalabels(df$`_var_y`,
-                                              datalabels.round = datalabels.round,
-                                              datalabels.format = datalabels.format,
-                                              decimal.mark = decimal.mark,
-                                              big.mark = big.mark,
-                                              y.percent = y.percent,
-                                              group = percent_group(df, datalabels.percent_by))
+    # formatted in generate_datalabels() (F025)
+    df$`_var_datalabels` <- df$`_var_y`
   }
   df
 }
@@ -3062,33 +3098,28 @@ format_datalabels <- function(datalabels,
              mode(datalabels) == "numeric" &&
              !inherits(datalabels, c("factor", "Date", "POSIXt"))) {
     datalabels <- as.double(datalabels)
-    datalabels_out <- rep(datalabels.format, length(datalabels_out))
-    if (datalabels.format %like% "%p") {
+    # fill in the placeholders of the one format for all labels at once, not row by row (F025)
+    tokens <- regmatches(datalabels.format, gregexpr("%n|%p", datalabels.format), invert = NA)[[1]]
+    values <- list()
+    if ("%p" %in% tokens) {
       if (is.null(group)) group <- rep(1L, length(datalabels))
       denominator <- stats::ave(datalabels, group, FUN = function(v) sum(v, na.rm = TRUE))
-      datalabels_p <- trimws(format2(datalabels / denominator,
-                                     round = datalabels.round,
-                                     decimal.mark = decimal.mark,
-                                     big.mark = big.mark,
-                                     percent = TRUE))
-      datalabels_out <- mapply(gsub,
-                               x = datalabels_out,
-                               pattern = "%p",
-                               replacement = datalabels_p,
-                               USE.NAMES = FALSE)
+      values[["%p"]] <- trimws(format2(datalabels / denominator,
+                                       round = datalabels.round,
+                                       decimal.mark = decimal.mark,
+                                       big.mark = big.mark,
+                                       percent = TRUE))
     }
-    if (datalabels.format %like% "%n") {
-      datalabels_n <- trimws(format2(datalabels,
-                                     decimal.mark = decimal.mark,
-                                     big.mark = big.mark,
-                                     round = datalabels.round,
-                                     force_decimals = FALSE))
-      datalabels_out <- mapply(gsub,
-                               x = datalabels_out,
-                               pattern = "%n",
-                               replacement = datalabels_n,
-                               USE.NAMES = FALSE)
+    if ("%n" %in% tokens) {
+      values[["%n"]] <- trimws(format2(datalabels,
+                                       decimal.mark = decimal.mark,
+                                       big.mark = big.mark,
+                                       round = datalabels.round,
+                                       force_decimals = FALSE))
     }
+    pieces <- lapply(tokens, function(tk) if (tk %in% names(values)) values[[tk]] else rep(tk, length(datalabels)))
+    datalabels_out <- if (length(pieces) == 0) rep("", length(datalabels)) else do.call(paste0, pieces)
+    datalabels_out[is.na(datalabels)] <- NA
   }
   datalabels_out
 }

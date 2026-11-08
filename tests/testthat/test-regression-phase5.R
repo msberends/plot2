@@ -115,3 +115,25 @@ test_that("D001.3 label_taxonomy() italicises taxonomic names", {
   d <- data.frame(name = c("Escherichia coli", "Other"), n = c(2, 3))
   expect_plot2(plot2(d, name, n, x.labels = label_taxonomy))
 })
+
+test_that("F025 datalabels are formatted once, on the final rows, with all placeholders", {
+  d <- data.frame(x = rep(c("a", "b"), each = 50), y = 1:100)
+  counter <- new.env()
+  counter$n <- integer(0)
+  trace("format_datalabels", tracer = bquote(assign("n", c(get("n", envir = .(counter)), length(datalabels)), envir = .(counter))), print = FALSE, where = asNamespace("plot2"))
+  withr::defer(untrace("format_datalabels", where = asNamespace("plot2")))
+  p <- plot2(d, x, y, type = "col", datalabels.format = "%n (%p) of %n")
+  expect_identical(counter$n, 2L)
+  expect_identical(datalabels_of(p), c("1 275 (25.2%) of 1 275", "3 775 (74.8%) of 3 775"))
+})
+
+test_that("F110 the default theme and the list of geoms are built once per session", {
+  invisible(plot2(data.frame(g = "a", v = 1), g, v))
+  expect_true(length(plot2:::plot2_session$theme_cache) >= 1)
+  expect_true(length(plot2:::plot2_session$validated_themes) >= 1)
+  expect_true("geom_col" %in% plot2:::plot2_session$valid_geoms)
+  # a changed option gives another theme, not the cached one
+  withr::local_options(plot2.colour_font_primary = "red")
+  p <- plot2(data.frame(g = "a", v = 1), g, v, title = "t")
+  expect_identical(col_hex(p$theme$plot.title$colour), col_hex("red"))
+})

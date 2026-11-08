@@ -17,7 +17,6 @@
 
 
 test_that("T03.01 datalabels are not formatted for a scatter plot, which never shows them", {
-  skip_open_finding("F025")
   d <- data.frame(v = runif(1000), w = runif(1000))
   n <- 0L
   trace("format_datalabels", tracer = function() n <<- n + 1L, print = FALSE, where = asNamespace("plot2"))

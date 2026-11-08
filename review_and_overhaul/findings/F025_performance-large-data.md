@@ -4,7 +4,7 @@ title: Slow on large data; datalabels formatted row by row before summarising
 severity: medium
 type: performance
 area: performance
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -48,3 +48,4 @@ Format datalabels only after summarising and only when they will be drawn; evalu
 
 - 2026-11-07: filed in R01, profiled. Warm timings at 2e5 rows: default 1.5 to 2.9 s, `datalabels = FALSE` 0.2 s (a cold first call distorts the comparison).
 - 2026-11-08: R06 (sheet T03, `repro/perf_r06.R`, installed build): scatter plots are affected as well. 1e6 rows take 9.5 s for `plot2(d, v, w)`, of which about 70% (profile at 2e5 rows) is `format_datalabels()`, although point plots never show datalabels. Columns: 8.2 s with default datalabels against 0.6 s with `datalabels = FALSE`.
+- 2026-11-08: fixed: datalabels are formatted once, in generate_datalabels(), on the final rows and only when they are drawn; placeholders are filled vectorised instead of mapply(gsub); constant titles are not evaluated over the data; get_column_name() pulls the target once; installed.packages() replaced (is.mic by class, requireNamespace); data_is_numeric() on unique values. Installed build, 2e5 rows: default 0.17 s (was 1.5 to 2.9 s), scatter 0.39 s (was 2.0 s), 1e6 rows boxplot 0.70 s (was 7.4 s).

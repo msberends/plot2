@@ -620,7 +620,7 @@ plot2 <- function(.data,
   if (tryCatch(!inherits(.data, "sf") &&
                ((isTRUE("geometry" %in% colnames(.data)) && suppressWarnings(inherits(.data$geometry, "sfc")))
                 || isTRUE(attributes(.data)$sf_column %in% colnames(.data))) &&
-               "sf" %in% rownames(utils::installed.packages()),
+               requireNamespace("sf", quietly = TRUE),
                error = function(e) FALSE)) {
     # force calling plot2.sf() and its arguments, data will be transformed in that function:
     rlang::check_installed("sf")
@@ -2147,7 +2147,13 @@ plot2_exec <- function(.data, ...) {
                         y.transform = y.transform,
                         horizontal = horizontal,
                         misses_datalabels = misses_datalabels,
-                        markdown = markdown)
+                        markdown = markdown,
+                        datalabels.round = datalabels.round,
+                        datalabels.format = datalabels.format,
+                        datalabels.percent_by = datalabels.percent_by,
+                        decimal.mark = decimal.mark,
+                        big.mark = big.mark,
+                        y.percent = y.percent)
   }
   
   # turn plot horizontal if required ----

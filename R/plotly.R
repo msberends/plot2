@@ -37,7 +37,7 @@ as_plotly <- function(plot, ...) {
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
-  if (!"plotly" %in% rownames(utils::installed.packages())) {
+  if (!requireNamespace("plotly", quietly = TRUE)) {
     stop("This function requires the 'plotly' package - install it with install.packages(\"plotly\")", call. = FALSE)
   }
   

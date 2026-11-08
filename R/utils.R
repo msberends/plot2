@@ -379,16 +379,13 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
 
 #' @importFrom dplyr pull
 get_column_name <- function(df, column_var) {
-  out <- vapply(FUN.VALUE = logical(1), df, function(col) {
-    identical(col,
-              df |> pull({{column_var}}))
-  })
+  # take the target column once, not once per compared column (F025)
+  target <- df |> pull({{column_var}})
+  out <- vapply(FUN.VALUE = logical(1), df, function(col) identical(col, target))
   if (all(out[names(out) %unlike% "^_var_"] == FALSE)) {
     # no column found, probably due to sorting (i.e., factors), try again with character comparison
-    out <- vapply(FUN.VALUE = logical(1), df, function(col) {
-      identical(col |> as.character(),
-                df |> pull({{column_var}}) |> as.character())
-    })
+    target <- as.character(target)
+    out <- vapply(FUN.VALUE = logical(1), df, function(col) identical(as.character(col), target))
   }
   out <- names(out)[out & names(out) %unlike% "^_var_"][1L]
   if (is.na(out)) {
@@ -841,7 +838,8 @@ is_date <- function(x) {
 }
 
 data_is_numeric <- function(x) {
-  all(x %like% "^[0-9.,-]+(e[+][0-9.,-]+)?$", na.rm = TRUE)
+  # the unique values suffice (F025)
+  all(unique(x) %like% "^[0-9.,-]+(e[+][0-9.,-]+)?$", na.rm = TRUE)
 }
 
 digit_to_text <- function(x) {
