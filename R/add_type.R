@@ -520,15 +520,21 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   
   new_df$x <- plot$data[[rlang::as_label(plot$mapping$x)]]
   
-  if (!missing(colour) && is.null(inherit.aes)) {
-    inherit.aes <- FALSE
+  # carry the facet columns, so that the error bars are drawn in the right panels
+  facet_names <- unique(c(names(plot$facet$params$facets), names(plot$facet$params$rows), names(plot$facet$params$cols)))
+  for (facet_name in intersect(facet_names, colnames(plot$data))) {
+    new_df[[facet_name]] <- plot$data[[facet_name]]
+  }
+  
+  # never inherit the plot mapping by default: it refers to columns that new_df lacks, such as `group` (F082)
+  if (isTRUE(inherit.aes)) {
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
-  } else if (!is.null(category_name) && !isFALSE(inherit.aes)) {
+  } else if (!is.null(category_name)) {
     # has category
     inherit.aes <- FALSE
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax", colour = category_name)
   } else {
-    inherit.aes <- TRUE
+    inherit.aes <- FALSE
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
   }
 
@@ -698,4 +704,16 @@ add_sf <- function(plot,
                    })
   }
   p
+}
+
+legend_dummy_x <- function(plot) {
+  # an invisible x value for legend-only layers, of the same class as the x axis (F085)
+  x <- tryCatch(plot$data[[rlang::as_label(plot$mapping$x)]], error = function(e) NULL)
+  if (inherits(x, "Date")) {
+    as.Date(Inf)
+  } else if (inherits(x, "POSIXt")) {
+    as.POSIXct(Inf, origin = "1970-01-01")
+  } else {
+    Inf
+  }
 }

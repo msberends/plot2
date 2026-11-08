@@ -113,3 +113,11 @@ test_that("F079 a missing x is guessed by column name, and left empty when no co
   p <- expect_plot2(plot2(data.frame(g = c("a", "b", "a"), value = c(1, 5, 3)), y = value))
   expect_labels(p, x = "g")
 })
+
+test_that("F082 add_errorbar() works without a category and keeps the facets", {
+  d <- data.frame(g = c("a", "b", "a", "b"), n = c(3, 4, 5, 6), f = c("p", "p", "q", "q"))
+  p <- expect_plot2(add_errorbar(plot2(d, g, n, facet = f), min = n - 1, max = n + 1))
+  eb <- layer_df(p, "errorbar")
+  expect_identical(nrow(eb), 4L)
+  expect_identical(sort(unique(as.integer(eb$PANEL))), 1:2)
+})

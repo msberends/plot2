@@ -4,7 +4,7 @@ title: add_errorbar() fails on any plot2 plot without a category
 severity: high
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -38,3 +38,4 @@ Never inherit the plot mapping here: always use `inherit.aes = FALSE` with an ex
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; add_errorbar() no longer inherits the plot mapping by default (explicit mapping, inherit.aes = TRUE only on request) and carries the facet columns into its data. Regression test F082 (with facets).
