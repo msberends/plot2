@@ -4,7 +4,7 @@ title: Supplying fewer colours than categories errors in the manual scale
 severity: medium
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F061]
 origin: R02 sheet 09
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F047 Fewer colours than categories
@@ -37,3 +37,4 @@ Recycle or extend (`grDevices::colorRampPalette()`) with a warning that names th
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Unnamed colours are recycled to the number of categories with one plot2 warning; regression test 09.06.

@@ -1866,6 +1866,19 @@ validate_colour <- function(df,
                                 opacity = colour_opacity)
     }
     
+    # fewer colours than categories: recycle them, with a warning
+    recycle_colours <- function(cols, n, what, quiet = FALSE) {
+      if (length(cols) > 1 && length(cols) < n && is.null(names(cols))) {
+        if (!isTRUE(quiet)) plot2_warning("Only ", length(cols), " values given in ", font_blue(what), " for ", n,
+                      " categories, so they were recycled")
+        cols <- structure(rep_len(as.character(cols), n), class = class(cols))
+      }
+      cols
+    }
+    fill_is_colour <- identical(as.character(colour_fill), as.character(colour))
+    colour <- recycle_colours(colour, n_unique, "colour")
+    colour_fill <- recycle_colours(colour_fill, n_unique, "colour_fill", quiet = fill_is_colour)
+    
     if (isTRUE(horizontal)) {
       colour <- rev(colour)
       colour_fill <- rev(colour_fill)
