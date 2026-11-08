@@ -1406,7 +1406,7 @@ plot2_exec <- function(.data,
   }
   # check requirements for back-to-back plots
   if (type_backup == "back-to-back") {
-    if (isTRUE(misses_facet) || (.data |> select({{ facet }}) |> pull() |> n_distinct()) != 2) {
+    if (isTRUE(misses_facet) || !has_facet(df) || n_distinct(get_facet(df)) != 2) {
       stop("Back-to-back plots require the facet to be set to two unique values", call. = FALSE)
     }
   }

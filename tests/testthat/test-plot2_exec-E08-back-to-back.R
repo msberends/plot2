@@ -60,7 +60,6 @@ test_that("E08.06 theme given as a function (F005)", {
 })
 
 test_that("E08.07 facet given as an expression (F021)", {
-  skip_open_finding("F021")
   expect_plot2(plot2(fx_pop, age, n, facet = tolower(sex), type = "b2b"))
 })
 
