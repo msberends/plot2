@@ -1638,6 +1638,9 @@ generate_geom <- function(type,
   } else if (type == "geom_area") {
     # areas must stay at their x values: overlay them (dodging shifts them sideways)
     position <- "identity"
+  } else if (!has_category(df)) {
+    # nothing to dodge; position_dodge2() would also warn on empty facet panels (F139)
+    position <- "identity"
   } else {
     # small whitespace between columns:
     position <- position_dodge2(width = width * 1.05, preserve = "single")

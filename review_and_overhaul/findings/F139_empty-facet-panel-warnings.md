@@ -38,3 +38,4 @@ Trace the guide warning; for the dodge warning, consider not using a dodge posit
 ## History
 
 - 2026-11-08: found while coding I002 sheet 16 (case 16.10); test 16.10b is parked on it.
+- 2026-11-08: partly fixed: without a category, bars and other geoms no longer use `position_dodge2()` (there is nothing to dodge), which removes the "no non-missing arguments to max" warning. The guide warning remains: it comes from plot2's discrete x scale on the empty panel (adding a default `scale_x_discrete()` removes it; plain ggplot2 with `scale_x_discrete(drop = FALSE)` does not give it), not yet traced to the setting that causes it. Test 16.10b stays parked.
