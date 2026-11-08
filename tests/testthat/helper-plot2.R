@@ -502,8 +502,8 @@ source_file <- function(...) {
 
 #' Evaluate the R code chunks of an R Markdown file, expression by expression,
 #' in a fresh environment. Chunks marked eval = FALSE are evaluated too unless
-#' `include_unevaluated = FALSE`; chunks whose code matches `exclude` are left
-#' out. ggplot results are built, so build errors and warnings are caught.
+#' `include_unevaluated = FALSE`; expressions whose code matches the regular
+#' expression `exclude` are left out. ggplot results are built, so build errors and warnings are caught.
 #' Returns a data frame with one row per expression: line of the chunk, code,
 #' error message (NA if none) and warnings (collapsed, NA if none).
 eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
@@ -517,8 +517,9 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
     if (!include_unevaluated && grepl("eval\\s*=\\s*FALSE", header)) next
     e <- min(ends[ends > s])
     code <- lines[seq_len(e - s - 1) + s]
-    if (!is.null(exclude) && any(grepl(exclude, code))) next
     for (x in parse(text = code, keep.source = FALSE)) {
+      # skip only the matching expressions, so that e.g. library() calls in a set-up chunk still run
+      if (!is.null(exclude) && grepl(exclude, paste(deparse(x), collapse = " "))) next
       w <- character(0)
       err <- tryCatch({
         withCallingHandlers({

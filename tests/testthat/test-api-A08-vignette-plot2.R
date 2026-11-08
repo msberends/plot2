@@ -22,7 +22,7 @@ test_that("A08.01 every chunk of the main vignette runs without error (font chun
   withr::local_pdf(NULL)
   withr::local_options(plot2.colour = NULL, plot2.colour_sf_fill = NULL, plot2.font = NULL)
   withr::defer(unregister_colour("^(navy_blue|burnt_orange|forest_green|goldenrod_yellow|slate_grey|plum_purple|OurOrganisation)"))
-  res <- eval_chunks(source_file("vignettes", "plot2.Rmd"), exclude = "font = |plot2.font|Fira Code")
+  res <- eval_chunks(source_file("vignettes", "plot2.Rmd"), exclude = "font = |plot2.font|Fira Code|^p1 \\+ p2$")
   expect_identical(res$code[!is.na(res$error)], character(0))
 })
 

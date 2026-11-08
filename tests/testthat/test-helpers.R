@@ -184,7 +184,8 @@ test_that("source_file() and eval_chunks() read and run R Markdown chunks", {
   expect_identical(res$error[2], "boom")
   expect_identical(res$warnings[3], "careful")
   expect_identical(nrow(eval_chunks(f, include_unevaluated = FALSE)), 3L)
-  expect_identical(nrow(eval_chunks(f, exclude = "boom")), 2L)
+  # exclude skips the matching expression only, not the rest of its chunk
+  expect_identical(eval_chunks(f, exclude = "boom")$code, c("x <- 1", "warning(\"careful\")", "x + 1"))
   expect_true(file.exists(source_file("DESCRIPTION")))
 })
 
