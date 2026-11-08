@@ -979,15 +979,15 @@ The \code{category} can also be a date or date/time (class \code{Date} or \code{
 \itemize{
 \item A \code{ggplot2} geom name or their abbreviation such as \code{"col"} and \code{"point"}. All geoms are supported (including \code{\link[ggplot2:geom_blank]{geom_blank()}}).
 
-Full function names can be used (e.g., \code{"geom_histogram"}), but they can also be abbreviated (e.g., \code{"h"}, \code{"hist"}). The following geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), beeswarm (\code{"bs"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), and violin (\code{"v"}).
+Full function names can be used (e.g., \code{"geom_histogram"}), but they can also be abbreviated (e.g., \code{"h"}, \code{"hist"}). The following geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), and violin (\code{"v"}). Beeswarm plots (\code{"beeswarm"}, short: \code{"bs"}) require the \code{ggbeeswarm} package.
 
 Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, \code{type = "bar"} will set \code{type = "col"} and \code{horizontal = TRUE}.
 \item One of these additional types:
 \itemize{
 \item \code{"barpercent"} (short: \code{"bp"}), which is effectively a shortcut to set \code{type = "col"} and \code{horizontal = TRUE} and \code{x.max_items = 10} and \code{x.sort = "freq-desc"} and \code{datalabels.format = "\%n (\%p)"}.
-\item \code{"dumbbell"} (short: \code{"d"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[ggplot2:geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
-\item \code{"linedot"} (short: \code{"ld"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
-\item \code{"back-to-back"} (short: \code{"b2b"}) creates a back-to-back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Butterfly plot}, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} to distinquish the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
+\item \code{"dumbbell"} (short: \code{"d"} or \code{"db"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[ggplot2:geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
+\item \code{"linedot"} or \code{"line-point"} (short: \code{"ld"} or \code{"lp"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
+\item \code{"back-to-back"} (short: \code{"b2b"}, or \code{"butterfly"}, \code{"tornado"} or \code{"population"}) creates a back-to-back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a butterfly plot, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} to distinguish the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
 \item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. It is also possible to provide \code{y}, on which then \code{summarise_function} will be applied.
 \item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
 \item \code{"spider"} or \code{"radar"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system.
@@ -1106,8 +1106,8 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 \item \code{TRUE}: sort \link{factor}s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
 \item \code{FALSE}: sort according to the order in the data
 \item \code{NULL}: do not sort/transform at all
-\item \code{"asc"} or \code{"alpha"}: sort as \code{TRUE}
-\item \code{"desc"}: sort \link{factor}s on their \link[=rev]{reversed} levels, otherwise sort descending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
+\item \code{"asc"}, \code{"alpha"} or \code{"alpha-asc"}: sort as \code{TRUE}
+\item \code{"desc"} or \code{"alpha-desc"}: sort \link{factor}s on their \link[=rev]{reversed} levels, otherwise sort descending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
 \item \code{"order"} or \code{"inorder"}: sort as \code{FALSE}
 \item \code{"freq"} or \code{"freq-desc"}: sort descending according to the frequencies of \code{y} computed by \code{summarise_function} (highest value first)
 \item \code{"freq-asc"}: sort ascending according to the frequencies of \code{y} computed by \code{summarise_function} (lowest value first)
@@ -1146,7 +1146,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{Settings for \code{smooth}.}
 
-\item{size}{Size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for a UpSet plots (using \code{type = "upset"}); \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
+\item{size}{Size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for UpSet plots (using \code{type = "upset"}); \code{5} for dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
 
 \item{linetype}{Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
 \enumerate{
@@ -1168,7 +1168,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 \item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_line]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
 }}
 
-\item{binwidth}{Width of bins (only useful for \code{geom = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
+\item{binwidth}{Width of bins (only useful for \code{type = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
 
 \item{width}{Width of the geom. Defaults to \code{0.66} for geoms \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin} and \link[ggplot2:geom_jitter]{jitter}, and to \code{0.5} otherwise.}
 

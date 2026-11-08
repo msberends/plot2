@@ -91,7 +91,10 @@ validate_type <- function(type, df = NULL) {
   
   valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
   valid_geoms <- c(valid_geoms, "geom_upset", "geom_spider")
-  if ("ggbeeswarm" %in% rownames(utils::installed.packages())) {
+  if (type %in% c("geom_beeswarm", "geom_quasirandom")) {
+    rlang::check_installed("ggbeeswarm", reason = paste0("for `type = \"", type.bak, "\"`"))
+  }
+  if (requireNamespace("ggbeeswarm", quietly = TRUE)) {
     valid_geoms <- c(valid_geoms, 
                      ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
   }

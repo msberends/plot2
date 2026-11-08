@@ -82,7 +82,6 @@ test_that("A02.09 type = 'bs' gives a beeswarm when ggbeeswarm is installed", {
 })
 
 test_that("A02.10 a missing ggbeeswarm gives an install hint, not 'geom_beeswarm() does not exist'", {
-  skip_open_finding("F098")
   skip_if(requireNamespace("ggbeeswarm", quietly = TRUE), "ggbeeswarm installed")
   expect_error(plot2(iris, Species, Sepal.Length, type = "beeswarm"), "ggbeeswarm")
 })

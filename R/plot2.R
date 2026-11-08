@@ -54,16 +54,16 @@
 #' 
 #' - A `ggplot2` geom name or their abbreviation such as `"col"` and `"point"`. All geoms are supported (including [`geom_blank()`][ggplot2::geom_blank()]).
 #' 
-#'   Full function names can be used (e.g., `"geom_histogram"`), but they can also be abbreviated (e.g., `"h"`, `"hist"`). The following geoms can be abbreviated by their first character: area (`"a"`), boxplot (`"b"`), beeswarm (`"bs"`), column (`"c"`), histogram (`"h"`), jitter (`"j"`), line (`"l"`), point (`"p"`), ribbon (`"r"`), and violin (`"v"`).
+#'   Full function names can be used (e.g., `"geom_histogram"`), but they can also be abbreviated (e.g., `"h"`, `"hist"`). The following geoms can be abbreviated by their first character: area (`"a"`), boxplot (`"b"`), column (`"c"`), histogram (`"h"`), jitter (`"j"`), line (`"l"`), point (`"p"`), ribbon (`"r"`), and violin (`"v"`). Beeswarm plots (`"beeswarm"`, short: `"bs"`) require the `ggbeeswarm` package.
 #' 
 #'   Please note: in `ggplot2`, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, `type = "bar"` will set `type = "col"` and `horizontal = TRUE`.
 #' 
 #' - One of these additional types:
 #' 
 #'   - `"barpercent"` (short: `"bp"`), which is effectively a shortcut to set `type = "col"` and `horizontal = TRUE` and `x.max_items = 10` and `x.sort = "freq-desc"` and `datalabels.format = "%n (%p)"`.
-#'   - `"dumbbell"` (short: `"d"`), which sets `type = "point"` and `horizontal = TRUE`, and adds a line between the points (using [`geom_segment()`][ggplot2::geom_segment()]). The line colour cannot be changed. This plot type is only possible when the `category` has two distinct values.
-#'   - `"linedot"` (short: `"ld"`), which sets `type = "line"` and adds two point geoms using [add_point()]; one with large white dots and one with smaller dots using the colours set in `colour`. This is essentially equal to base \R `plot(..., type = "b")` but with closed shapes.
-#'   - `"back-to-back"` (short: `"b2b"`) creates a back-to-back plot, sometimes called a [Tornado diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a [Butterfly plot](https://en.wikipedia.org/wiki/Tornado_diagram), or a [Population Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It uses `facet` to distinquish the left and right plots. Therefore, `facet` must be set to (a column containing) two unique values.
+#'   - `"dumbbell"` (short: `"d"` or `"db"`), which sets `type = "point"` and `horizontal = TRUE`, and adds a line between the points (using [`geom_segment()`][ggplot2::geom_segment()]). The line colour cannot be changed. This plot type is only possible when the `category` has two distinct values.
+#'   - `"linedot"` or `"line-point"` (short: `"ld"` or `"lp"`), which sets `type = "line"` and adds two point geoms using [add_point()]; one with large white dots and one with smaller dots using the colours set in `colour`. This is essentially equal to base \R `plot(..., type = "b")` but with closed shapes.
+#'   - `"back-to-back"` (short: `"b2b"`, or `"butterfly"`, `"tornado"` or `"population"`) creates a back-to-back plot, sometimes called a [Tornado diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a butterfly plot, or a [Population Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It uses `facet` to distinguish the left and right plots. Therefore, `facet` must be set to (a column containing) two unique values.
 #'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`, and the label angles can be set with `datalabels.angle`.
 #'   - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system.
@@ -129,8 +129,8 @@
 #' - `TRUE`: sort [factor]s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (*numeric* sort)
 #' - `FALSE`: sort according to the order in the data
 #' - `NULL`: do not sort/transform at all
-#' - `"asc"` or `"alpha"`: sort as `TRUE`
-#' - `"desc"`: sort [factor]s on their [reversed][rev()] levels, otherwise sort descending on alphabet, while maintaining numbers in the text (*numeric* sort)
+#' - `"asc"`, `"alpha"` or `"alpha-asc"`: sort as `TRUE`
+#' - `"desc"` or `"alpha-desc"`: sort [factor]s on their [reversed][rev()] levels, otherwise sort descending on alphabet, while maintaining numbers in the text (*numeric* sort)
 #' - `"order"` or `"inorder"`: sort as `FALSE`
 #' - `"freq"` or `"freq-desc"`: sort descending according to the frequencies of `y` computed by `summarise_function` (highest value first)
 #' - `"freq-asc"`: sort ascending according to the frequencies of `y` computed by `summarise_function` (lowest value first)
@@ -151,7 +151,7 @@
 #' @param reverse A [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth A [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
 #' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour Settings for `smooth`.
-#' @param size Size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for a UpSet plots (using `type = "upset"`); `5` for a dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
+#' @param size Size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for UpSet plots (using `type = "upset"`); `5` for dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
 #' @param linetype Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
 #'   1. `"solid"` (default)
 #'   2. `"dashed"`
@@ -166,7 +166,7 @@
 #' - `0.25` for geoms that are continuous and have fills (such as [area][ggplot2::geom_area()]), except for geoms [boxplot][ggplot2::geom_boxplot()] and [violin][ggplot2::geom_violin()]
 #' - `1.0` for dumbbell plots (using `type = "dumbbell"`) and UpSet plots (using `type = "upset"`)
 #' - `0.5` otherwise (such as geoms [line][ggplot2::geom_line()], [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()], and [histogram][ggplot2::geom_histogram()])
-#' @param binwidth Width of bins (only useful for `geom = "histogram"`), can be specified as a numeric value or as a function that calculates width from `x`, see [`geom_histogram()`][ggplot2::geom_histogram()]. It defaults to approx. `diff(range(x))` divided by 12 to 22 based on the data.
+#' @param binwidth Width of bins (only useful for `type = "histogram"`), can be specified as a numeric value or as a function that calculates width from `x`, see [`geom_histogram()`][ggplot2::geom_histogram()]. It defaults to approx. `diff(range(x))` divided by 12 to 22 based on the data.
 #' @param width Width of the geom. Defaults to `0.66` for geoms [boxplot][ggplot2::geom_boxplot()], [violin][ggplot2::geom_violin()] and [jitter][ggplot2::geom_jitter()], and to `0.5` otherwise.
 #' @param jitter_seed Seed (randomisation factor) to be set when using `type = "jitter"`.
 #' @param violin_scale Scale to be set when using `type = "violin"`, can also be set to `"area"`.

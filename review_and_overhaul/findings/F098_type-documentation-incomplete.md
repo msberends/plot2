@@ -4,7 +4,7 @@ title: Documentation of type and the sorting values is incomplete or inaccurate
 severity: low
 type: docs
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -46,3 +46,4 @@ Generate the documented alias list from the alias table used by `validate_type()
 ## History
 
 - 2026-11-08: filed in R05; test A02.10 parked.
+- 2026-11-08: fixed and verified (Phase 1). type aliases (line-point, radar, butterfly, tornado, population, db) and sort values (alpha-asc, alpha-desc) documented; beeswarm separated from the one-character abbreviations; a missing ggbeeswarm gives an install hint (A02.10 unparked).

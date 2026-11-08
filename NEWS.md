@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `type = "beeswarm"` without the ggbeeswarm package now gives an install hint instead of 'geom_beeswarm() does not exist', and all type aliases and sorting values are documented
 * Corrected typos and factual errors in the help pages of plot2(), add_type(), md_to_expression(), the package options and the netherlands data set
 * The vignettes build when suggested packages (ggplot2movies, ggbeeswarm, ggforce, sf, patchwork, viridisLite) are not installed; the affected examples are then skipped.
 * CI now also checks R 4.1 (the declared minimum) and a set-up with only the hard dependencies
