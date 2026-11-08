@@ -207,13 +207,13 @@ plot2.default <- function(.data,
     stop("`plot2()` does not yet support functions to be plotted", call. = FALSE)
   }
   
-  # first see if an object was mentioned, also needed for ellmer::tool()
-  from_envir <- NULL
-  if (is.character(.data) && length(.data) == 1) {
-    from_envir <- tryCatch(get(as.character(.data)), error = function(x) NULL)
-    if (!is.null(from_envir) && is.data.frame(from_envir)) {
-      .data <- from_envir
-    }
+  # the name of a data frame in the caller's environment, e.g. plot2("df"), as used by
+  # tool calling (ellmer::tool()); only the caller's own environment is searched, not the
+  # search path or plot2's namespace (F030)
+  if (is.character(.data) && length(.data) == 1 && !is.na(.data) &&
+      exists(.data, envir = parent.frame(), inherits = FALSE) &&
+      is.data.frame(get(.data, envir = parent.frame(), inherits = FALSE))) {
+    .data <- get(.data, envir = parent.frame(), inherits = FALSE)
   }
   
   if (tryCatch(suppressWarnings(is.atomic(.data) && !is.table(.data) && !is.matrix(.data)), error = function(e) FALSE)) {
@@ -223,19 +223,26 @@ plot2.default <- function(.data,
       # fall back to "x", never to the name of the count column "y" (F072)
       y_deparse <- "x"
     }
+    y_given <- !missing(y)
     if (missing(.data)) {
       .data <- y
       y_deparse <- "y"
+      y_given <- FALSE
     }
     if (is.character(.data) || is.factor(.data)) {
       new_df <- as.data.frame(table(.data))
       colnames(new_df) <- c(ifelse(y_deparse == "y", "x", y_deparse), "y")
       new_df <- new_df |> filter(y != 0)
-    } else if (is.numeric(.data) && missing(y)) {
+    } else if (is.numeric(.data) && !y_given) {
       new_df <- data.frame(x = seq_len(length(.data)),
                            y = .data, stringsAsFactors = FALSE)
+    } else if (is.numeric(.data) && missing(x)) {
+      # the vector is x, the values of y are given (F030)
+      new_df <- data.frame(x = .data, stringsAsFactors = FALSE)
     } else if (!is.numeric(.data) && missing(x)) {
       new_df <- data.frame(x = .data, stringsAsFactors = FALSE) |> count(x, name = "y")
+    } else {
+      stop("For a vector, `x` cannot be set; put the values in a data frame instead", call. = FALSE)
     }
     if (is.null(type)) {
       type <- getOption("plot2.default_type", "geom_col")

@@ -61,14 +61,15 @@ test_that("M01.08 a function errors clearly", {
 })
 
 test_that("M01.09 numeric vector with y given (F030)", {
-  skip_open_finding("F030")
   v <- c(3, 1, 2)
   expect_plot2(plot2(v, y = c(1, 2, 3)))
 })
 
-test_that("M01.10 a single string is a value, not an object lookup (F030)", {
-  skip_open_finding("F030")
+test_that("M01.10 a single string names a data frame only in the calling environment (F030)", {
   mydf <- data.frame(x = c("a", "b"), y = 1:2)
-  p <- plot2("mydf")
-  expect_identical(nrow(plot_data(p)), 1L)
+  expect_identical(nrow(plot_data(plot2("mydf"))), 2L)
+  # not found in the calling environment (package data, search path): a value
+  expect_identical(nrow(plot_data(plot2("admitted_patients"))), 1L)
+  f <- function() plot2("mydf")
+  expect_identical(nrow(plot_data(f())), 1L)
 })

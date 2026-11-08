@@ -19,7 +19,7 @@
 #' Moreover, [plot2()] allows for in-place calculation of `y`, all axes, and all axis labels, often preventing the need to use [`group_by()`][dplyr::group_by()], [`count()`][dplyr::count()], [`mutate()`][dplyr::mutate()], or [`summarise()`][dplyr::summarise()].
 #' 
 #' See [plot2-methods] for all implemented methods for different object classes.
-#' @param .data Data to plot.
+#' @param .data Data to plot. A single character value that is the name of a data frame in the calling environment (such as `plot2("df")`, as used in tool calling) plots that data frame; only the calling environment is searched, not the search path.
 #' @param x Plotting 'direction' for the X-axis. This can be:
 #' 
 #' - A single variable from `.data`, such as `x = column1`

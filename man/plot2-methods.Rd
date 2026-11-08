@@ -947,7 +947,7 @@
 )
 }
 \arguments{
-\item{.data, data}{Data to plot.}
+\item{.data, data}{Data to plot. A single character value that is the name of a data frame in the calling environment (such as \code{plot2("df")}, as used in tool calling) plots that data frame; only the calling environment is searched, not the search path.}
 
 \item{x}{Plotting 'direction' for the X-axis. This can be:
 \itemize{

@@ -4,8 +4,8 @@ title: plot2.default looks up character scalars with get() and can leave new_df 
 severity: medium
 type: bug
 area: methods
-status: open
-verification: reading
+status: verified
+verification: verified
 effort: S
 api_change: possible
 locations: [R/plot2-methods.R:180, R/plot2-methods.R:200]
@@ -39,3 +39,4 @@ Look up only in `parent.frame()` and only when explicitly requested (for example
 
 - 2026-11-07: filed in R01 (by reading).
 - 2026-11-08: maintainer decided (AskUserQuestion): keep the lookup of a character scalar, but only in the caller's environment (not the search path or package namespace) and only for data frames; document it.
+- 2026-11-08: fixed as decided: a character scalar is looked up only in the caller's environment (get(inherits = FALSE) on parent.frame()), only data frames are used, and this is documented under .data. The uncovered branch is now handled: a numeric vector with y given is used as x; a vector with x given errors clearly. Tests: M01.09 unparked, M01.10 rewritten to the decided behaviour.
