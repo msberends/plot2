@@ -897,8 +897,19 @@ plot2_exec <- function(.data,
       (isTRUE(misses_x) || tryCatch(NCOL(select(as.data.frame(.data), {{ x }})) < 2, error = function(e) FALSE))) {
     stop("Sankey plots require an X-axis of at least two variables", call. = FALSE)
   }
-  if (type_backup == "sankey" && isTRUE(misses_y)) {
-    stop("Sankey plots require `y`", call. = FALSE)
+  # count rows when y is missing and counting is the only sensible meaning (F097, F106)
+  if (isTRUE(misses_y) && is.data.frame(.data) && type_backup != "back-to-back") {
+    has_numeric <- any(vapply(FUN.VALUE = logical(1), .data,
+                              function(col) mode(col) == "numeric" && !inherits(col, c("Date", "POSIXt", "factor"))))
+    if (type_backup %in% c("barpercent", "sankey") || !has_numeric) {
+      plot2_message("Using ", font_blue("y = n()"), " to count rows, since ",
+                    ifelse(type_backup %in% c("barpercent", "sankey"),
+                           paste0(font_blue(paste0("type = \"", type_backup, "\"")), " shows frequencies"),
+                           "the data have no numeric column"))
+      y <- rlang::quo(n())
+      dots$`_label.y` <- "n()"
+      misses_y <- FALSE
+    }
   }
   
   if (decimal.mark == big.mark) {

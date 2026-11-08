@@ -4,7 +4,7 @@ title: type = "barpercent" without y sums the first numeric column (e.g. an ID) 
 severity: medium
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -43,3 +43,4 @@ When `type` is `"barpercent"` and `y` is missing, set `y` to `n()` before the au
 ## History
 
 - 2026-11-08: filed in R05; test A02.07 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed together with F106; without y, type = 'barpercent' (and 'sankey') uses y = n() with a message.

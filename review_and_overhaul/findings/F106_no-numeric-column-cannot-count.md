@@ -4,7 +4,7 @@ title: Without y and without a numeric column, plot2() stops instead of counting
 severity: medium
 type: bug
 area: data-validation
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -42,3 +42,4 @@ When `y` is missing and no suitable numeric column exists, use `n()`, with an in
 ## History
 
 - 2026-11-08: filed in R06 (sheet T03, found while benchmarking a Sankey diagram); test T03.04 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; when y is missing and the data have no numeric column, or the type is barpercent or sankey, plot2_exec() uses y = n() with a message. This replaces the 'Sankey plots require y' error added for F071 (regression test updated). Not done: a default category for Sankey plots (first x variable) would change the documented error of E06.06 and E15.03; raised to the maintainer. T03.05 now passes category explicitly.

@@ -92,7 +92,8 @@ test_that("F067 category.focus keeps the focused category's own colour and greys
 test_that("F071 type requirements are checked before the data are prepared", {
   d <- data.frame(from = c("A", "A", "B"), to = c("X", "Y", "X"), n = 1:3, grp = c("A", "A", "B"))
   expect_error(plot2(d, x = from, y = n, category = grp, type = "sankey"), "at least two variables")
-  expect_error(plot2(d, x = c(from, to), category = grp, type = "sankey"), "require `y`")
+  # without y, a Sankey plot counts rows (F106)
+  expect_plot2(plot2(d, x = c(from, to), category = grp, type = "sankey"))
   expect_error(plot2(d, x = c(from, to), y = n, type = "sankey"), "require `category`")
 })
 

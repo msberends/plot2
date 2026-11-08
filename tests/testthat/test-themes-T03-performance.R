@@ -39,14 +39,13 @@ test_that("T03.03 a date axis with many rows is aggregated before plotting", {
 })
 
 test_that("T03.04 without y and without a numeric column, rows are counted", {
-  skip_open_finding("F106")
   d <- data.frame(h = c("a", "b", "b"))
   p <- plot2(d, h)
   expect_identical(sort(layer_df(p, layer_index(p, "GeomBar"))$y), c(1, 2))
 })
 
 test_that("T03.05 a Sankey diagram can be drawn from raw rows", {
-  skip_open_finding("F106")
   d <- data.frame(h = c("a", "b", "b"), k = c("x", "y", "y"))
-  expect_no_error(ggplot2::ggplot_build(plot2(d, x = c(h, k), type = "sankey")))
+  p <- expect_plot2(plot2(d, x = c(h, k), category = h, type = "sankey"))
+  expect_true(nrow(layer_df(p, 1)) > 0)
 })
