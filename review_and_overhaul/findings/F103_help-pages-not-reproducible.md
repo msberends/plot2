@@ -4,7 +4,7 @@ title: Help pages change at every documentation run because roxygen calls sample
 severity: low
 type: maintainability
 area: housekeeping
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Use a fixed set of example colours and drop the R version (or say "in the R vers
 ## History
 
 - 2026-11-08: filed in R05; test A01.06 parked.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; the get_colour() documentation is static (no sample(), no R version, no generated palette list); two consecutive document() runs leave man/ unchanged.

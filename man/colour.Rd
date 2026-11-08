@@ -29,32 +29,9 @@ add_white(x, white)
 \item \code{"mako"}
 \item \code{"turbo"}
 }
-\item One of the built-in \R palettes (these are from \R 4.6.2):
-\itemize{
-\item \code{"Accent"}
-\item \code{"Alphabet"}
-\item \code{"Classic Tableau"}
-\item \code{"Dark 2"}
-\item \code{"Okabe-Ito"}
-\item \code{"Paired"}
-\item \code{"Pastel 1"}
-\item \code{"Pastel 2"}
-\item \code{"Polychrome 36"}
-\item \code{"R3"}
-\item \code{"R4"}
-\item \code{"Set 1"}
-\item \code{"Set 2"}
-\item \code{"Set 3"}
-\item \code{"Tableau 10"}
-\item \code{"ggplot2"}
-\item \code{"grayscale"}
-\item \code{"greyscale"}
-\item \code{"heatmap"}
-\item \code{"rainbow"}
-\item \code{"terrain"}
-\item \code{"topo"}
-}
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"chocolate"}, \code{"coral2"}, \code{"gold3"}, \code{"hotpink4"}, \code{"lightyellow1"}
+\item \code{"ggplot2"}, which gives the colours that ggplot2 itself would use, i.e. the same as not setting a colour
+\item One of the built-in \R palettes from \code{\link[grDevices:palette.pals]{grDevices::palette.pals()}}, such as \code{"R4"}, \code{"Okabe-Ito"} or \code{"Tableau 10"}, or one of \code{"topo"}, \code{"heatmap"}, \code{"rainbow"}, \code{"terrain"}, \code{"greyscale"}, \code{"grayscale"}
+\item One of the built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"bisque"}, \code{"cornsilk4"}, \code{"lightcoral"}, \code{"salmon2"}, \code{"slateblue"}
 \item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
 }}
 

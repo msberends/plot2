@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* The help page of `get_colour()` no longer changes at every documentation run
 * Scientific axis labels now use a multiplication sign (×) that renders on every device, instead of a console bullet; `euros()` and `dollars()` no longer use scientific notation for large values
 * Violin plots no longer fail when groups have a single observation
 * Without `y` and without a numeric column, `plot2()` now counts rows (`y = n()`) instead of stopping; Sankey plots can be drawn from raw rows

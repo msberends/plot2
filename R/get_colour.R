@@ -19,8 +19,9 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' Retrieves, expands, and prints colours or palettes from \R, `viridisLite`, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
 #' @param x Colour or colour palette name. Input can be:
 #' * One of the colourblind-safe `viridisLite` palettes: `r paste0('\n  - \u0060"', viridisLite_colours, '"\u0060', collapse = "")`
-#' * One of the built-in \R palettes (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
-#' * One of the `r length(colours())` built-in [colours()] in \R (even case-insensitive), such as `r paste0('\u0060"', sort(sample(colours()[colours() %unlike% "^grey|gray"], 5)), '"\u0060', collapse = ", ")`
+#' * `"ggplot2"`, which gives the colours that ggplot2 itself would use, i.e. the same as not setting a colour
+#' * One of the built-in \R palettes from [grDevices::palette.pals()], such as `"R4"`, `"Okabe-Ito"` or `"Tableau 10"`, or one of `"topo"`, `"heatmap"`, `"rainbow"`, `"terrain"`, `"greyscale"`, `"grayscale"`
+#' * One of the built-in [colours()] in \R (even case-insensitive), such as `"bisque"`, `"cornsilk4"`, `"lightcoral"`, `"salmon2"`, `"slateblue"`
 #' * One of the pre-registered colours using [register_colour()]
 #' @param length Size of the vector to be returned.
 #' @param opacity Amount of opacity (0 = solid, 1 = transparent).
