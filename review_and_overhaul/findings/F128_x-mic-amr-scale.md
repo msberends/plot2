@@ -4,7 +4,7 @@ title: x.mic = TRUE errors with the current AMR package: unused argument drop
 severity: medium
 type: bug
 area: dependencies
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -41,3 +41,4 @@ Stop passing `drop`; pass only arguments that `AMR::scale_x_mic()` documents, an
 ## History
 
 - 2026-11-08: filed while coding the I002 tests (case 05.16). The incompatibility may have been introduced on the AMR side; both packages are maintained by the maintainer.
+- 2026-11-08: fixed and verified (Phase 1). `drop` no longer passed to `AMR::scale_x_mic()`; regression test 05.16 checks the MIC labels.

@@ -1938,7 +1938,7 @@ plot2_exec <- function(.data,
     if (has_x(df)) {
       if (isTRUE(x.mic)) {
         rlang::check_installed("AMR")
-        p <- p + AMR::scale_x_mic(drop = x.drop, mic_range = x.limits)
+        p <- p + AMR::scale_x_mic(mic_range = x.limits)
       } else {
         p <- p + 
           validate_x_scale(df,
