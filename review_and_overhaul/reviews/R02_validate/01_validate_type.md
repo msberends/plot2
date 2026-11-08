@@ -31,15 +31,15 @@ F009 ("bar" handled before this function), F031 (fuzzy matching, whitespace or p
 
 ## End-to-end test cases
 
-- [ ] 01.01 No x, numeric y: boxplot layer and message "since there is no X-axis".
-- [ ] 01.02 Numeric x and y: point layer.
-- [ ] 01.03 Only one numeric variable as x: histogram.
-- [ ] 01.04 Character x, all groups >= 3 rows: boxplot; groups < 3: col.
-- [ ] 01.05 `options(plot2.default_type = "geom_point")` respected.
-- [ ] 01.06 Every alias (a, b, c, h, j, l, p, r, v, bs) maps to the documented geom.
-- [ ] 01.07 "points", "Column", "ggplot2::geom_col()" normalised.
-- [ ] 01.08 Unknown type errors with a message naming the type (desired, F031: suggestions, no silent fuzzy match).
-- [ ] 01.09 `type = " "` and `type = "()"` error (desired, F031; currently `geom_abline`).
-- [ ] 01.10 `type = c("col", "line")` warns and uses col.
-- [ ] 01.11 "beeswarm" with ggbeeswarm installed (skip otherwise); clear error without it.
-- [ ] 01.12 Several x variables and two categories: Sankey hint message.
+- [x] 01.01 No x, numeric y: boxplot layer and message "since there is no X-axis".
+- [x] 01.02 Numeric x and y: point layer.
+- [x] 01.03 Only one numeric variable as x: histogram.
+- [x] 01.04 Character x, all groups >= 3 rows: boxplot; groups < 3: col.
+- [x] 01.05 `options(plot2.default_type = "geom_point")` respected.
+- [x] 01.06 Every alias (a, b, c, h, j, l, p, r, v, bs) maps to the documented geom.
+- [x] 01.07 "points", "Column", "ggplot2::geom_col()" normalised.
+- [x] 01.08 Unknown type errors with a message naming the type (desired, F031: suggestions, no silent fuzzy match).
+- [x] 01.09 `type = " "` and `type = "()"` error (desired, F031; currently `geom_abline`).
+- [x] 01.10 `type = c("col", "line")` warns and uses col.
+- [x] 01.11 "beeswarm" with ggbeeswarm installed (skip otherwise); clear error without it.
+- [x] 01.12 Several x variables and two categories: Sankey hint message.

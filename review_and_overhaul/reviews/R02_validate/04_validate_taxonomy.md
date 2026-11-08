@@ -28,10 +28,12 @@ F058 (rebuilds the name list from about 78,000 rows per call; only x is supporte
 
 All skip without AMR.
 
-- [ ] 04.01 "Escherichia coli" rendered in italics (label is an expression containing `italic`).
-- [ ] 04.02 "E. coli" abbreviation italicised as a whole.
-- [ ] 04.03 Mixed labels ("Other", "Klebsiella pneumoniae"): only the taxonomic part italic.
-- [ ] 04.04 Factor x with sorting (`x.sort = "freq-desc"`) keeps its order after conversion.
-- [ ] 04.05 Factor x with unused levels does not error.
-- [ ] 04.06 Without AMR installed: `x.lbl_taxonomy = TRUE` is ignored with a message.
-- [ ] 04.07 Setting `x.labels` together with `x.lbl_taxonomy = TRUE`: warning, taxonomy wins.
+- [x] 04.01 "Escherichia coli" rendered in italics (label is an expression containing `italic`).
+- [x] 04.02 "E. coli" abbreviation italicised as a whole.
+- [x] 04.03 Mixed labels ("Other", "Klebsiella pneumoniae"): only the taxonomic part italic.
+- [x] 04.04 Factor x with sorting (`x.sort = "freq-desc"`) keeps its order after conversion.
+- [x] 04.05 Factor x with unused levels does not error.
+- [x] 04.06 Without AMR installed: `x.lbl_taxonomy = TRUE` is ignored with a message.
+- [x] 04.07 Setting `x.labels` together with `x.lbl_taxonomy = TRUE`: warning, taxonomy wins.
+
+Note (2026-11-08): `validate_taxonomy()` and `x.lbl_taxonomy` were replaced by the labeller `label_taxonomy()` (F058); the cases are coded against it in `tests/testthat/test-validate-04-label_taxonomy.R`. 04.06 checks that `label_taxonomy()` requires AMR (the message without AMR is `rlang::check_installed()`'s); 04.07 checks that `x.lbl_taxonomy` errors with a pointer to `x.labels = label_taxonomy`.

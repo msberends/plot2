@@ -26,10 +26,10 @@ F050 (no "inside" or numeric positions; `FALSE` errors).
 
 ## End-to-end test cases
 
-- [ ] 02.01 Default: "top" for discrete category, "right" for numeric category.
-- [ ] 02.02 Each of "t", "R ", "bottom", "Left", "none" sets `theme$legend.position` accordingly.
-- [ ] 02.03 `legend.position = NA` and `NULL`: no legend shown.
-- [ ] 02.04 Invalid value errors with the allowed values listed.
-- [ ] 02.05 `legend.position = FALSE` hides the legend (desired, F050).
-- [ ] 02.06 `legend.position = "inside"` with coordinates (desired, F050; depends on decision).
-- [ ] 02.07 Back-to-back plot honours the setting.
+- [x] 02.01 Default: "top" for discrete category, "right" for numeric category.
+- [x] 02.02 Each of "t", "R ", "bottom", "Left", "none" sets `theme$legend.position` accordingly.
+- [x] 02.03 `legend.position = NA`: no legend shown; `NULL` is automatic since F094 (updated 2026-11-08).
+- [x] 02.04 Invalid value errors with the allowed values listed.
+- [x] 02.05 `legend.position = FALSE` hides the legend (desired, F050).
+- [x] 02.06 `legend.position = "inside"` with coordinates (desired, F050; depends on decision).
+- [x] 02.07 Back-to-back plot honours the setting.

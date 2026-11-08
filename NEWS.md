@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `type` with more than one value now warns that only the first is used, instead of silently using it.
 * In back-to-back plots, each category has the same colour on both sides, also when a category is missing on one side, and the legend is shown once.
 * Back-to-back plots now draw both halves on the same value scale, so equal bar lengths mean equal values; a user-set `y.limits` is kept.
 * In `x.max_txt` and friends, `%p` is now the share of the total of `y` in the rest item (it was the share of rows); the documentation now states that `x.max_items` includes the rest item and that `%n` is the number of merged values

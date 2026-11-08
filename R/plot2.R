@@ -770,6 +770,10 @@ plot2_exec <- function(.data, ...) {
     stop("'type' must be a character", call. = FALSE)
   }
   if (!is.null(type)) {
+    if (length(type) > 1) {
+      # warn here, before the type is shortened (F137)
+      plot2_warning(font_blue("type"), " can only be of length 1, using ", font_blue("type = \"", type[1L], "\"", collapse = NULL))
+    }
     type <- tolower(type[1L])
     type_backup <- type
     if (type %like% "^(barpercent|bp)$") {
