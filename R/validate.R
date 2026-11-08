@@ -2382,6 +2382,16 @@ validate_facet <- function(df,
     }
   }
   
+  facet_values <- get_facet(df)
+  if (isTRUE(facet.repeat_labels_x) && !isTRUE(facet.drop) && is.factor(facet_values) &&
+      !all(levels(facet_values) %in% facet_values) && has_x(df) && !is.numeric(get_x(df)) &&
+      !type %in% c("geom_sf", "geom_spider")) {
+    # a free discrete scale on an empty panel makes ggplot2 warn when drawing (F139)
+    plot2_message("Using a shared x scale (", font_blue("facet.repeat_labels_x = FALSE"), ") since ",
+                  font_blue("facet.drop = FALSE"), " leaves empty panels")
+    facet.repeat_labels_x <- FALSE
+  }
+  
   scales <- "fixed"
   if (isTRUE(facet.repeat_labels_x) && isTRUE(facet.repeat_labels_y)) {
     scales <- "free"

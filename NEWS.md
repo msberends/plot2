@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* With `facet.drop = FALSE`, empty panels no longer cause R warnings when drawing: bars without a category are no longer dodged, and a discrete x axis is shared between the panels (with a message).
 * Rotated x-axis labels (`x.label_angle`) are now anchored at their ticks for every angle, also in horizontal plots, using `ggplot2::guide_axis(angle = )`; setting `x.label_align` still uses your own alignment.
 * In horizontal plots, the values now always read from top to bottom in the order of `x.sort`, as they read from left to right in vertical plots. Previously, factors (such as age groups), `x.sort = "alpha"` and `x.sort = FALSE` read in reverse.
 * Rotated datalabels (any `datalabels.angle`) and the datalabels of horizontal plots are now anchored at the end of their bar with the same small gap for every label; before, the gap grew with the length of the label, and at 270 degrees the labels overlapped the bars.

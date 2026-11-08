@@ -69,15 +69,17 @@ test_that("16.10 facet.drop drops empty factor levels", {
   d <- fx_facet
   d$facet <- factor(d$facet, levels = c("f1", "f2", "f3"))
   expect_identical(facet_info(plot2(d, x, y, facet = facet, facet.drop = TRUE))$n_panels, 2L)
-  # the empty panel gives R warnings when built (F139, test 16.10b)
-  expect_identical(suppressWarnings(facet_info(plot2(d, x, y, facet = facet, facet.drop = FALSE)))$n_panels, 3L)
+  expect_identical(facet_info(plot2(d, x, y, facet = facet, facet.drop = FALSE))$n_panels, 3L)
 })
 
-test_that("16.10b an empty panel renders without R warnings (F139)", {
-  skip_open_finding("F139")
+test_that("16.10b an empty panel renders without R warnings, with a shared x scale (F139)", {
   d <- fx_facet
   d$facet <- factor(d$facet, levels = c("f1", "f2", "f3"))
-  expect_plot2(plot2(d, x, y, facet = facet, facet.drop = FALSE))
+  p <- expect_plot2(plot2(d, x, y, facet = facet, facet.drop = FALSE))
+  expect_identical(facet_info(p)$free_x, FALSE)
+  expect_plot2_message(plot2(d, x, y, facet = facet, facet.drop = FALSE), "since facet.drop = FALSE leaves empty panels")
+  # without empty panels, nothing changes
+  expect_identical(facet_info(plot2(fx_facet, x, y, facet = facet, facet.drop = FALSE))$free_x, TRUE)
 })
 
 test_that("16.11 an sf plot with a facet has fixed scales", {
