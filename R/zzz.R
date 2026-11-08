@@ -18,7 +18,8 @@
 # R/plot2-methods.R and plot2_exec() are written as `function(.data, ...)` and receive the
 # generic's arguments here, with their method-specific defaults. Each method forwards all
 # arguments with `eval(plot2_exec_call())`, which builds the call to plot2_exec() and is
-# evaluated in the method's own frame, so that `{{ }}` and missing() refer to the user's call.
+# evaluated in the method's own frame, so that `{{ }}` refers to the user's call. Automatic
+# defaults are NULL (F094), so plot2_exec() needs no record of which arguments were missing.
 #
 # This file is named zzz.R so that it is collated after all other files.
 
@@ -27,12 +28,6 @@ plot2_nse_args <- c("x", "y", "category", "facet",
                     "x.title", "y.title", "category.title", "legend.title",
                     "title", "subtitle", "caption", "tag",
                     "y_secondary", "y_secondary.title", "datalabels")
-
-# arguments whose absence plot2_exec() needs to know
-plot2_misses_args <- c("x", "y", "category", "facet", "datalabels", "colour_fill",
-                       "x.title", "y.title", "title", "subtitle", "tag", "caption",
-                       "y.percent", "y.percent_break", "x.zoom", "x.max_items",
-                       "facet.fixed_x", "summarise_function")
 
 # arguments whose default title is derived from the user's code
 plot2_label_args <- c("x", "y", "category", "facet", "y_secondary")
@@ -72,10 +67,6 @@ plot2_exec_call <- function(...) {
     for (n in plot2_arg_names()) {
       cl[[n]] <- if (n %in% plot2_nse_args) call("{", call("{", as.name(n))) else as.name(n)
     }
-    for (n in plot2_misses_args) {
-      cl[[paste0("_misses.", n)]] <- call("missing", as.name(n))
-    }
-    cl$`_misses.y_secondary.colour` <- quote(missing(y_secondary.colour) && missing(y_secondary.colour_fill))
     for (n in plot2_label_args) {
       cl[[paste0("_label.", n)]] <- bquote(plot2_label(rlang::enquo(.(as.name(n)))))
     }

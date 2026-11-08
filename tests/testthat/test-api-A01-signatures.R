@@ -52,9 +52,8 @@ test_that("A01.04 every exported function has a help page with examples", {
 })
 
 test_that("A01.05 passing the default shown in the usage gives the same plot as omitting it", {
-  skip_open_finding("F094")
   d <- data.frame(x = paste0("v", 1:30), y = 1:30)
-  expect_identical(length(datalabels_of(plot2(d, x, y, datalabels = TRUE))),
+  expect_identical(length(datalabels_of(plot2(d, x, y, datalabels = NULL))),
                    length(datalabels_of(plot2(d, x, y))))
 })
 

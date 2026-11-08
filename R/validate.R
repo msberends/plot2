@@ -1164,7 +1164,8 @@ validate_y_scale <- function(df,
         plot2_message("Using ", font_blue("y.percent_break =", y.percent_break),
                       " (", y.percent_break * 100, "%) to keep a maximum of ~10 labels")
       }
-      if (!all(is.na(y.limits)) && (y.percent_break >= max(y.limits, na.rm = TRUE) || labels_n <= 3)) {
+      # an explicit y.percent_break is kept as given (F094)
+      if (isTRUE(misses_y.percent_break) && !all(is.na(y.limits)) && (y.percent_break >= max(y.limits, na.rm = TRUE) || labels_n <= 3)) {
         y.percent_break.bak <- y.percent_break
         y.percent_break <- max(y.limits, na.rm = TRUE) / 6.5
         allowed <- c(1e6 / 10 ^ c(1:18), 5e6 / 10 ^ c(1:18))
@@ -3077,7 +3078,7 @@ summarise_single <- function(values, fn) {
   out <- fn(values)
   if (length(out) != 1) {
     stop("'summarise_function' must return a single value per group, but returned ", length(out),
-         " values. Use e.g. summarise_function = mean, or summarise_function = NULL to plot all values.",
+         " values. Use e.g. summarise_function = mean, or summarise_function = FALSE to plot all values.",
          call. = FALSE)
   }
   out

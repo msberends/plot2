@@ -4,7 +4,7 @@ title: Several argument descriptions state defaults or effects that differ from 
 severity: medium
 type: docs
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -56,3 +56,4 @@ Correct the texts; for 1 and 4 the cleaner fix is to stop using visible values a
 
 - 2026-11-08: filed in R05; tests A03.05 and A03.08b parked; A04.03 records the actual `legend.position = NULL` behaviour.
 - 2026-11-08: points 3 (legend.position) and 5 (option defaults) corrected; point 7 fixed with F079. Points 1, 2, 4 and 6 describe defaults that depend on missing() and wait for F094.
+- 2026-11-08: points 1, 2, 4 and 6 fixed with F094: documentation of x.expand, x.sort, datalabels and y.percent_break now describes the NULL defaults, and explicit values are used as given.

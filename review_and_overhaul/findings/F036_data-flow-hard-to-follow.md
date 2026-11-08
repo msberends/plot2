@@ -37,3 +37,4 @@ Introduce an explicit per-call context (see F001) holding: original quosures and
 
 - 2026-11-07: filed in R01.
 - 2026-11-08: partly done in Phase 2: per-call context for state and diagnostics (F001). Maintainer's decision: the central guessing step (and any plot2.guess option) moves to Phase 5 with D001/I004; the hidden _misses.*/_label.* dot-arguments go with F035/F094.
+- 2026-11-08: with F094 the hidden `_misses.*` dot-arguments are gone; the `_label.*` and `_summarise_fn_name` ones remain, now built in one place (plot2_exec_call(), F035).

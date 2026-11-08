@@ -49,7 +49,7 @@
 #'  The `category` can also be a date or date/time (class `Date` or `POSIXt`).
 #' 
 #' @param y_secondary Values to use for plotting along the secondary Y-axis. This functionality is poorly supported by `ggplot2` and might give unexpected results. Setting the secondary Y-axis will set the colour to the axis titles.
-#' @param y_secondary.colour,y_secondary.colour_fill Colours to set for the secondary Y-axis, will be evaluated with [get_colour()].
+#' @param y_secondary.colour,y_secondary.colour_fill Colours to set for the secondary Y-axis, will be evaluated with [get_colour()]. Left `NULL` (default), the second colour of the `plot2.colour` option is used.
 #' @param type Type of visualisation to use. This can be:
 #' 
 #' - A `ggplot2` geom name or their abbreviation such as `"col"` and `"point"`. All geoms are supported (including [`geom_blank()`][ggplot2::geom_blank()]).
@@ -105,30 +105,30 @@
 #' @param y.24h A [logical] to indicate whether the y labels and breaks should be formatted as 24-hour sequences.
 #' @param y.age A [logical] to indicate whether the y labels and breaks should be formatted as ages in years.
 #' @param y.scientific,y_secondary.scientific A [logical] to indicate whether the y labels should be formatted in scientific notation. If not set, scientific notation is used only for labels of one billion (`1e9`) or more, or for non-zero labels below `0.0001`; other labels use `big.mark`, e.g. `2 000 000`.
-#' @param y.percent,y_secondary.percent A [logical] to indicate whether the y labels should be formatted as percentages.
-#' @param y.percent_break A value on which the Y-axis should have breaks.
+#' @param y.percent,y_secondary.percent A [logical] to indicate whether the y labels should be formatted as percentages. Left `NULL` (default for `y.percent`), percentages are used for density plots only.
+#' @param y.percent_break A value on which the Y-axis should have breaks if `y.percent = TRUE`. Left `NULL` (default), this is 0.1 (10%), widened to keep about 10 labels and narrowed if that would give three or fewer labels. An explicit value is used as given.
 #' @param x.breaks,y.breaks A breaks function or numeric vector to use for the axis.
 #' @param x.n_breaks,y.n_breaks Number of breaks, only useful if `x.breaks` or `y.breaks` respectively is `NULL`.
 #' @param x.limits,y.limits Limits to use for the axis, must be length 2. Use `NA` for the highest or lowest value in the data, e.g. `y.limits = c(0, NA)` to have the y scale start at zero. For a discrete x axis, `x.limits` are the items to show, in this order.
 #' @param x.labels,y.labels,y_secondary.labels A labels function or character vector to use for the axis.
-#' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. `x.expand` defaults to 0.5 and `y.expand` defaults to `0.25`, except for sf objects (then both default to 0).
+#' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. Left `NULL` (default), they are determined automatically: `x.expand` adds half a category on both sides of a discrete axis and a proportion of the range on a continuous axis, `y.expand` adds 25% above the data; both are 0 for sf objects or when the limits are set. An explicit value is used as given.
 #' @param x.transform,y.transform,category.transform A transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position Position of the axis.
-#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. This sets `x.limits = c(NA, NA)` (or `y.limits`) and, unless `x.expand` (or `y.expand`) is set, a 5% expansion on both sides, like `ggplot2` does. It has no effect if `x.limits` (or `y.limits`) is set.
+#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left `NULL` (default for `x.zoom`), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets `x.limits = c(NA, NA)` (or `y.limits`) and, unless `x.expand` (or `y.expand`) is set, a 5% expansion on both sides, like `ggplot2` does. It has no effect if `x.limits` (or `y.limits`) is set.
 #' @param category.type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint Settings for the plotting direction `category`.
 #' @param category.limits Limits to use for a numeric category, must be length 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero. If not set, the limits are the range of the data, rounded outwards to pretty values with [pretty()] (e.g., values from 12 to 87 give limits 0 to 100). With three colours and `category.midpoint` set, the limits are made symmetric around the midpoint.
 #' @param category.date_breaks Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
 #' @param category.date_labels Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
 #' @param category.character A [logical] to indicate whether the values of the category should be forced to [character]. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use `category.character = FALSE` to keep numeric values.
-#' @param x.max_items,category.max_items,facet.max_items Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, allowing to e.g. plot the top *n* most frequent values of the X-axis by combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
+#' @param x.max_items,category.max_items,facet.max_items Number of maximum items to use, defaults to infinite. Left `NULL` (default for `x.max_items`), this is infinite, except for `type = "barpercent"` and back-to-back plots (10). All other values will be grouped and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, allowing to e.g. plot the top *n* most frequent values of the X-axis by combining `x.sort = "freq-desc"` with `x.max_items =` *n*.
 #' @param x.max_txt,category.max_txt,facet.max_txt The text to use of values not included number of `*.max_items`. The placeholder `%n` will be replaced with the outcome of the `summarise_function` function, the placeholder `%p` will be replaced with the percentage.
-#' @param x.sort,category.sort,facet.sort Sorting of the plotting direction, defaults to `TRUE`, except for continuous values on the X-axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
+#' @param x.sort,category.sort,facet.sort Sorting of the plotting direction. `category.sort` and `facet.sort` default to `TRUE`; `x.sort` defaults to `NULL`, which sorts text and factors as `TRUE` and leaves continuous values (such as dates and numbers) unsorted. Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
 #' 
 #' - A manual vector of values
 #' - `TRUE`: sort [factor]s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (*numeric* sort)
 #' - `FALSE`: sort according to the order in the data
-#' - `NULL`: do not sort/transform at all
+#' - `NULL`: sort automatically, as described above
 #' - `"asc"`, `"alpha"` or `"alpha-asc"`: sort as `TRUE`
 #' - `"desc"` or `"alpha-desc"`: sort [factor]s on their [reversed][rev()] levels, otherwise sort descending on alphabet, while maintaining numbers in the text (*numeric* sort)
 #' - `"order"` or `"inorder"`: sort as `FALSE`
@@ -136,8 +136,8 @@
 #' - `"freq-asc"`: sort ascending according to the frequencies of `y` computed by `summarise_function` (lowest value first)
 #' @param datalabels Values to show as datalabels, see also `datalabels.format`. This can be:
 #' 
-#' - Left blank. This will default to the values of `y` in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless `datalabels = TRUE`.
-#' - `TRUE` or `FALSE` to force or remove datalabels
+#' - `NULL` (default): automatic. This shows the values of `y` in column-type plots, or when plotting spatial 'sf' data, the values of the first column, with a maximum of 25 labels and none for continuous plot types such as lines and points.
+#' - `TRUE` to always show the values of `y`, without the maximum of 25 labels, or `FALSE` to remove datalabels
 #' - A function to calculate over `.data`, such as `datalabels = paste(round(column1), "\n", column2)`
 #' @param datalabels.round Number of digits to round the datalabels, applies to both `"%n"` and `"%p"` for replacement (see `datalabels.format`).
 #' @param datalabels.format Format to use for datalabels. This can be a function (such as [euros()]) or a text. For the text, `"%n"` will be replaced by the count number, and `"%p"` will be replaced by the percentage (see `datalabels.percent_by`). Use `datalabels.format = NULL` to *not* transform the datalabels.
@@ -149,7 +149,7 @@
 #' @param datalabels.colour,datalabels.colour_fill,datalabels.size,datalabels.angle,datalabels.lineheight Settings for the datalabels.
 #' @param decimal.mark Decimal mark, defaults to [dec_mark()].
 #' @param big.mark Thousands separator, defaults to [big_mark()].
-#' @param summarise_function A [function] to use if the data has to be summarised, see *Examples*. This can also be `NULL`, which will be converted to `function(x) x`.
+#' @param summarise_function A [function] to use if the data has to be summarised, see *Examples*. Left `NULL` (default), this is [sum()], except when `y` contains several columns (then the values are not summarised). Use `FALSE` to not summarise the data at all.
 #' @param stacked A [logical] to indicate that values must be [stacked][ggplot2::position_stack()].
 #' @param stacked_fill A [logical] to indicate that values must be [filled][ggplot2::position_fill()] (i.e., stacked to 100%).
 #' @param horizontal A [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.lbl_italic` will still apply to the original X-axis.
@@ -454,7 +454,7 @@ plot2 <- function(.data,
                   x.lbl_taxonomy = FALSE,
                   x.remove = FALSE,
                   x.position = "bottom",
-                  x.max_items = Inf,
+                  x.max_items = NULL,
                   x.max_txt = "(rest, x%n)",
                   category.max_items = Inf,
                   category.max_txt = "(rest, x%n)",
@@ -469,13 +469,13 @@ plot2 <- function(.data,
                   x.character = NULL,
                   x.drop = FALSE,
                   x.mic = FALSE,
-                  x.zoom = FALSE,
+                  x.zoom = NULL,
                   y.remove = FALSE,
                   y.24h = FALSE,
                   y.age = FALSE,
                   y.scientific = NULL,
-                  y.percent = FALSE,
-                  y.percent_break = 0.1,
+                  y.percent = NULL,
+                  y.percent_break = NULL,
                   y.breaks = NULL,
                   y.n_breaks = NULL,
                   y.limits = NULL,
@@ -487,8 +487,8 @@ plot2 <- function(.data,
                   y_secondary = NULL,
                   y_secondary.type = NULL,
                   y_secondary.title = TRUE,
-                  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-                  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+                  y_secondary.colour = NULL,
+                  y_secondary.colour_fill = NULL,
                   y_secondary.scientific = NULL,
                   y_secondary.percent = FALSE,
                   y_secondary.labels = NULL,
@@ -509,8 +509,8 @@ plot2 <- function(.data,
                   x.complete = NULL,
                   category.complete = NULL,
                   facet.complete = NULL,
-                  datalabels = TRUE,
-                  datalabels.round = ifelse(y.percent, 2, 1),
+                  datalabels = NULL,
+                  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
                   datalabels.format = "%n",
                   datalabels.colour = "grey25",
                   datalabels.colour_fill = NULL,
@@ -520,7 +520,7 @@ plot2 <- function(.data,
                   datalabels.percent_by = "x",
                   decimal.mark = dec_mark(),
                   big.mark = big_mark(),
-                  summarise_function = base::sum,
+                  summarise_function = NULL,
                   stacked = FALSE,
                   stacked_fill = FALSE,
                   horizontal = FALSE,
@@ -640,7 +640,7 @@ plot2_exec <- function(.data, ...) {
     on.exit(call_state_exit(), add = TRUE)
   }
   dots <- list(...)
-  dots_geom <- dots[names(dots) %unlike% "^_(label[.]|misses[.]|sf.column|summarise_fn_name|datalabels.centroid)"]
+  dots_geom <- dots[names(dots) %unlike% "^_(label[.]|sf.column|summarise_fn_name|datalabels.centroid)"]
   dots_geom <- dots_geom[!names(dots_geom) %in% names(formals(coord_spider))]
   if (length(dots_geom) > 0) {
     plot2_message(ifelse(length(dots_geom) == 1,
@@ -649,26 +649,46 @@ plot2_exec <- function(.data, ...) {
                   paste0(font_blue(names(dots_geom), collapse = NULL), collapse = font_black(", ")))
   }
   
-  # record missing arguments ----
-  misses_x <- isTRUE(dots$`_misses.x`)
-  misses_y <- isTRUE(dots$`_misses.y`)
-  misses_category <- isTRUE(dots$`_misses.category`)
-  misses_facet <- isTRUE(dots$`_misses.facet`)
-  misses_datalabels <- isTRUE(dots$`_misses.datalabels`)
-  misses_colour_fill <- isTRUE(dots$`_misses.colour_fill`)
-  misses_y_secondary.colour <- !isFALSE(dots$`_misses.y_secondary.colour`)
-  misses_x.title <- isTRUE(dots$`_misses.x.title`)
-  misses_y.title <- isTRUE(dots$`_misses.y.title`)
-  misses_title <- isTRUE(dots$`_misses.title`)
-  misses_subtitle <- isTRUE(dots$`_misses.subtitle`)
-  misses_tag <- isTRUE(dots$`_misses.tag`)
-  misses_caption <- isTRUE(dots$`_misses.caption`)
-  misses_x.zoom <- isTRUE(dots$`_misses.x.zoom`)
-  misses_x.max_items <- isTRUE(dots$`_misses.x.max_items`)
-  misses_y.percent <- isTRUE(dots$`_misses.y.percent`)
-  misses_y.percent_break <- isTRUE(dots$`_misses.y.percent_break`)
-  misses_facet.fixed_x <- isTRUE(dots$`_misses.facet.fixed_x`)
-  misses_summarise_function <- isTRUE(dots$`_misses.summarise_function`)
+  # automatic defaults (F094) ----
+  # NULL means that plot2 decides; explicit values mean what they say
+  misses_x <- rlang::quo_is_null(rlang::enquo(x))
+  misses_y <- rlang::quo_is_null(rlang::enquo(y))
+  misses_category <- rlang::quo_is_null(rlang::enquo(category))
+  misses_facet <- rlang::quo_is_null(rlang::enquo(facet))
+  misses_title <- rlang::quo_is_null(rlang::enquo(title))
+  misses_subtitle <- rlang::quo_is_null(rlang::enquo(subtitle))
+  misses_tag <- rlang::quo_is_null(rlang::enquo(tag))
+  misses_caption <- rlang::quo_is_null(rlang::enquo(caption))
+  misses_datalabels <- rlang::quo_is_null(rlang::enquo(datalabels))
+  if (misses_datalabels) {
+    datalabels <- TRUE
+  }
+  misses_colour_fill <- is.null(colour_fill)
+  misses_y_secondary.colour <- is.null(y_secondary.colour) && is.null(y_secondary.colour_fill)
+  if (is.null(y_secondary.colour)) {
+    y_secondary.colour <- get_colour(getOption("plot2.colour", "ggplot2"), 2)
+  }
+  if (is.null(y_secondary.colour_fill)) {
+    y_secondary.colour_fill <- get_colour(getOption("plot2.colour", "ggplot2"), 2)
+  }
+  misses_x.zoom <- is.null(x.zoom)
+  if (misses_x.zoom) {
+    x.zoom <- FALSE
+  }
+  misses_x.max_items <- is.null(x.max_items)
+  if (misses_x.max_items) {
+    x.max_items <- Inf
+  }
+  misses_y.percent <- is.null(y.percent)
+  if (misses_y.percent) {
+    y.percent <- FALSE
+  }
+  misses_y.percent_break <- is.null(y.percent_break)
+  if (misses_y.percent_break) {
+    y.percent_break <- 0.1
+  }
+  misses_facet.fixed_x <- is.null(facet.fixed_x)
+  misses_summarise_function <- is.null(summarise_function)
   
   if (!misses_facet.fixed_x) {
     x.drop <- !isTRUE(facet.fixed_x)
@@ -691,10 +711,13 @@ plot2_exec <- function(.data, ...) {
   }
   
   if (is.null(summarise_function)) {
+    summarise_function <- base::sum
+    dots$`_summarise_fn_name` <- "sum"
+  } else if (isFALSE(summarise_function)) {
     summarise_function <- function(x) x
     dots$`_summarise_fn_name` <- "function(x) x"
   } else if (!is.function(summarise_function)) {
-    stop("'summarise_function' must be a function", call. = FALSE)
+    stop("'summarise_function' must be a function, or FALSE to not summarise", call. = FALSE)
   }
   dots$`_summarise_fn_name` <- gsub("^base::", "", dots$`_summarise_fn_name`)
   
@@ -875,7 +898,7 @@ plot2_exec <- function(.data, ...) {
           plot2_message("Summarising values using ",
                         font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)),
                         ifelse(isTRUE(misses_summarise_function),
-                               paste0(" (use ", font_blue("summarise_function = NULL"), font_black(" to prevent this)")),
+                               paste0(" (use ", font_blue("summarise_function = FALSE"), font_black(" to prevent this)")),
                                ""))
         }
         
@@ -1021,7 +1044,7 @@ plot2_exec <- function(.data, ...) {
       # we must not yet use tibble here
       as.data.frame()
     
-    if (dots$`_misses.summarise_function` == TRUE) {
+    if (isTRUE(misses_summarise_function)) {
       plot2_message("Using ", font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)), " for UpSet plot")
     }
     df_count <- df_original |>

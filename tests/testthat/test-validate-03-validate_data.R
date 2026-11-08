@@ -148,8 +148,8 @@ test_that("03.21 duplicate rows are summarised; identical rows with an explicit 
   expect_identical(layer_df(p, "bar")$y, c(2, 3))
 })
 
-test_that("03.21b summarise_function = NULL disables summarising", {
-  p <- expect_plot2(plot2(fx_cat, x, y, summarise_function = NULL))
+test_that("03.21b summarise_function = FALSE disables summarising", {
+  p <- expect_plot2(plot2(fx_cat, x, y, summarise_function = FALSE))
   expect_identical(nrow(plot_data(p)), 6L)
 })
 

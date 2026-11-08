@@ -30,9 +30,9 @@ test_that("E02.03 summarise_function must be a function", {
   expect_error(plot2(fx_cat, x, y, summarise_function = "mean"), "summarise_function")
 })
 
-test_that("E02.04 summarise_function = NULL keeps duplicates (F073)", {
+test_that("E02.04 summarise_function = FALSE keeps duplicates (F073)", {
   expect_identical(nrow(plot_data(plot2(fx_cat, x, y))), 3L)
-  expect_identical(nrow(plot_data(plot2(fx_cat, x, y, summarise_function = NULL))), 6L)
+  expect_identical(nrow(plot_data(plot2(fx_cat, x, y, summarise_function = FALSE))), 6L)
 })
 
 test_that("E02.05 a title can be computed from the data", {

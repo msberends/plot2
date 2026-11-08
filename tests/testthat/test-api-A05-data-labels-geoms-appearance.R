@@ -77,6 +77,6 @@ test_that("A05.10 na.replace sets the label of NA values", {
   expect_true("missing" %in% axis_labels(plot2(d, x, y, na.replace = "missing"), "x"))
 })
 
-test_that("A05.11 summarise_function = NULL keeps the values, as documented", {
-  expect_geoms(plot2(admitted_patients, hospital, age, type = "col", summarise_function = NULL), "bar")
+test_that("A05.11 summarise_function = FALSE keeps the values, as documented", {
+  expect_geoms(plot2(admitted_patients, hospital, age, type = "col", summarise_function = FALSE), "bar")
 })

@@ -46,3 +46,28 @@ test_that("F034 the generic shows the defaults the methods use; matrix plots say
   expect_identical(formals(plot2)$y_secondary.colour, formals(plot2:::plot2.data.frame)$y_secondary.colour)
   expect_message(plot2(matrix(1:6, 2), x = 1), class = "plot2_caution")
 })
+
+test_that("F094 automatic defaults are NULL, and explicit values mean what they say", {
+  d <- data.frame(x = paste0("v", 1:30), y = 1:30)
+  n_labels <- function(p) length(datalabels_of(p))
+  expect_identical(n_labels(plot2(d, x, y)), 0L)
+  expect_identical(n_labels(plot2(d, x, y, datalabels = NULL)), 0L)
+  expect_identical(n_labels(plot2(d, x, y, datalabels = TRUE)), 30L)
+  # summarise_function: NULL sums, FALSE does not summarise
+  dup <- data.frame(x = c("a", "a", "b"), y = c(1, 2, 3))
+  expect_identical(nrow(plot_data(plot2(dup, x, y))), 2L)
+  expect_identical(nrow(plot_data(plot2(dup, x, y, summarise_function = sum))), 2L)
+  expect_identical(nrow(plot_data(plot2(dup, x, y, summarise_function = FALSE))), 3L)
+  expect_error(plot2(dup, x, y, summarise_function = "sum"), "must be a function, or FALSE")
+  # several y columns are not summarised automatically
+  wide <- data.frame(x = c("a", "a"), y1 = 1:2, y2 = 3:4)
+  expect_identical(nrow(plot_data(plot2(wide, x, c(y1, y2)))), 4L)
+  # density plots use percentages automatically, unless y.percent = FALSE
+  expect_identical(plot2(iris, Sepal.Length, type = "density")$labels$y, "Density")
+  expect_false(identical(axis_labels(plot2(iris, Sepal.Length, type = "density"), "y"),
+                         axis_labels(plot2(iris, Sepal.Length, type = "density", y.percent = FALSE), "y")))
+  # every default shown in the usage of the automatic arguments is NULL
+  auto <- c("datalabels", "summarise_function", "x.max_items", "x.zoom", "y.percent", "y.percent_break",
+            "y_secondary.colour", "y_secondary.colour_fill", "x.expand", "y.expand", "x.sort", "facet.fixed_x")
+  expect_true(all(vapply(formals(plot2)[auto], is.null, logical(1))))
+})

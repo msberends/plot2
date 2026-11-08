@@ -199,8 +199,6 @@ plot2.sf <- function(.data, ...) {
                        y_secondary.scientific = NULL,
                        y_secondary.percent = NULL,
                        y_secondary.labels = NULL,
-                       `_misses.x` = FALSE,
-                       `_misses.y` = FALSE,
                        `_label.y_secondary` = NULL,
                        `_sf.column` = quote(attributes(.data)$sf_column),
                        `_datalabels.centroid` = quote(datalabels.centroid)))

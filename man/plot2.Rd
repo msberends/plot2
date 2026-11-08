@@ -50,7 +50,7 @@ plot2(
   x.lbl_taxonomy = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -65,13 +65,13 @@ plot2(
   x.character = NULL,
   x.drop = FALSE,
   x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -83,8 +83,8 @@ plot2(
   y_secondary = NULL,
   y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -105,8 +105,8 @@ plot2(
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = "\%n",
   datalabels.colour = "grey25",
   datalabels.colour_fill = NULL,
@@ -116,7 +116,7 @@ plot2(
   datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -262,7 +262,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.position, y.position}{Position of the axis.}
 
-\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the X-axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
+\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. Left \code{NULL} (default for \code{x.max_items}), this is infinite, except for \code{type = "barpercent"} and back-to-back plots (10). All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the X-axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
 
 \item{x.max_txt, category.max_txt, facet.max_txt}{The text to use of values not included number of \verb{*.max_items}. The placeholder \verb{\%n} will be replaced with the outcome of the \code{summarise_function} function, the placeholder \verb{\%p} will be replaced with the percentage.}
 
@@ -272,7 +272,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.transform, y.transform, category.transform}{A transformation function to use, e.g. \code{"log2"}. This can be: \code{"asinh"}, \code{"asn"}, \code{"atanh"}, \code{"boxcox"}, \code{"compose"}, \code{"date"}, \code{"exp"}, \code{"hms"}, \code{"identity"}, \code{"log"}, \code{"log10"}, \code{"log1p"}, \code{"log2"}, \code{"logit"}, \code{"modulus"}, \code{"probability"}, \code{"probit"}, \code{"pseudo_log"}, \code{"reciprocal"}, \code{"reverse"}, \code{"sqrt"}, \code{"time"}, \code{"timespan"}, \code{"yj"}.}
 
-\item{x.expand, y.expand}{\link[ggplot2:expansion]{expansion} to use for the axis, can be length 1 or 2. \code{x.expand} defaults to 0.5 and \code{y.expand} defaults to \code{0.25}, except for sf objects (then both default to 0).}
+\item{x.expand, y.expand}{\link[ggplot2:expansion]{expansion} to use for the axis, can be length 1 or 2. Left \code{NULL} (default), they are determined automatically: \code{x.expand} adds half a category on both sides of a discrete axis and a proportion of the range on a continuous axis, \code{y.expand} adds 25\% above the data; both are 0 for sf objects or when the limits are set. An explicit value is used as given.}
 
 \item{x.limits, y.limits}{Limits to use for the axis, must be length 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero. For a discrete x axis, \code{x.limits} are the items to show, in this order.}
 
@@ -284,7 +284,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.mic}{\link{logical} to indicate whether the X-axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
 
-\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
+\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left \code{NULL} (default for \code{x.zoom}), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
 
 \item{y.24h}{A \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences.}
 
@@ -292,15 +292,15 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y.scientific, y_secondary.scientific}{A \link{logical} to indicate whether the y labels should be formatted in scientific notation. If not set, scientific notation is used only for labels of one billion (\code{1e9}) or more, or for non-zero labels below \code{0.0001}; other labels use \code{big.mark}, e.g. \verb{2 000 000}.}
 
-\item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages.}
+\item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages. Left \code{NULL} (default for \code{y.percent}), percentages are used for density plots only.}
 
-\item{y.percent_break}{A value on which the Y-axis should have breaks.}
+\item{y.percent_break}{A value on which the Y-axis should have breaks if \code{y.percent = TRUE}. Left \code{NULL} (default), this is 0.1 (10\%), widened to keep about 10 labels and narrowed if that would give three or fewer labels. An explicit value is used as given.}
 
 \item{y_secondary}{Values to use for plotting along the secondary Y-axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary Y-axis will set the colour to the axis titles.}
 
 \item{y_secondary.type}{Type of the secondary series, see \strong{\code{type}}. The default (\code{NULL}) is a line with points if the primary type is a column or bar plot, so that the secondary series does not cover the bars, and the primary type otherwise.}
 
-\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary Y-axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
+\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary Y-axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}. Left \code{NULL} (default), the second colour of the \code{plot2.colour} option is used.}
 
 \item{category.type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
@@ -314,12 +314,12 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use \code{category.character = FALSE} to keep numeric values.}
 
-\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the X-axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
+\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction. \code{category.sort} and \code{facet.sort} default to \code{TRUE}; \code{x.sort} defaults to \code{NULL}, which sorts text and factors as \code{TRUE} and leaves continuous values (such as dates and numbers) unsorted. Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
 \itemize{
 \item A manual vector of values
 \item \code{TRUE}: sort \link{factor}s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
 \item \code{FALSE}: sort according to the order in the data
-\item \code{NULL}: do not sort/transform at all
+\item \code{NULL}: sort automatically, as described above
 \item \code{"asc"}, \code{"alpha"} or \code{"alpha-asc"}: sort as \code{TRUE}
 \item \code{"desc"} or \code{"alpha-desc"}: sort \link{factor}s on their \link[=rev]{reversed} levels, otherwise sort descending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
 \item \code{"order"} or \code{"inorder"}: sort as \code{FALSE}
@@ -331,8 +331,8 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{datalabels}{Values to show as datalabels, see also \code{datalabels.format}. This can be:
 \itemize{
-\item Left blank. This will default to the values of \code{y} in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless \code{datalabels = TRUE}.
-\item \code{TRUE} or \code{FALSE} to force or remove datalabels
+\item \code{NULL} (default): automatic. This shows the values of \code{y} in column-type plots, or when plotting spatial 'sf' data, the values of the first column, with a maximum of 25 labels and none for continuous plot types such as lines and points.
+\item \code{TRUE} to always show the values of \code{y}, without the maximum of 25 labels, or \code{FALSE} to remove datalabels
 \item A function to calculate over \code{.data}, such as \code{datalabels = paste(round(column1), "\\n", column2)}
 }}
 
@@ -354,7 +354,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{big.mark}{Thousands separator, defaults to \code{\link[=big_mark]{big_mark()}}.}
 
-\item{summarise_function}{A \link{function} to use if the data has to be summarised, see \emph{Examples}. This can also be \code{NULL}, which will be converted to \code{function(x) x}.}
+\item{summarise_function}{A \link{function} to use if the data has to be summarised, see \emph{Examples}. Left \code{NULL} (default), this is \code{\link[=sum]{sum()}}, except when \code{y} contains several columns (then the values are not summarised). Use \code{FALSE} to not summarise the data at all.}
 
 \item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}.}
 

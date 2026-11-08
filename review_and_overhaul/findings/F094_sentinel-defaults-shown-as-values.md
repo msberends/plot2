@@ -4,7 +4,7 @@ title: Eighteen arguments behave differently when their shown default is passed 
 severity: medium
 type: design
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: possible
@@ -48,4 +48,5 @@ Use `NULL` (or a documented `"auto"`) as the default wherever plot2 decides auto
 - 2026-11-08: filed in R05; test A01.05 parked.
 - 2026-11-08: changing these defaults is not a breaking change for anyone before the first CRAN release (no public users); fix before that release.
 - 2026-11-08: maintainer decided: `NULL` is the default wherever plot2 decides automatically, and explicit values mean what they say (e.g. `datalabels = TRUE` always shows labels). API change consented. Stays in Phase 5 with F035 and I004 unless pulled forward.
-- 2026-11-08: maintainer decided for `summarise_function` (AskUserQuestion): default `NULL` means automatic (sum, or no summarising for several y columns and UpSet plots); `summarise_function = FALSE` means do not summarise; a function always applies. Breaking: `NULL` no longer means "do not summarise".
+- 2026-11-08: maintainer decided for `summarise_function` (AskUserQuestion): default `NULL` means automatic (sum, or no summarising for several y columns); `summarise_function = FALSE` means do not summarise; a function always applies. Breaking: `NULL` no longer means "do not summarise".
+- 2026-11-08: fixed: datalabels, summarise_function, x.max_items, x.zoom, y.percent, y.percent_break and y_secondary.colour(_fill) default to NULL (automatic); the hidden _misses.* arguments are gone, plot2_exec() derives 'automatic' from NULL values and NULL quosures; an explicit y.percent_break is no longer replaced; x.title/y.title keep TRUE (explicit TRUE already equals the default); the Shiny app offers Automatic/Always/Never for datalabels. For UpSet plots the automatic summarising is sum, as before (with a message).

@@ -47,8 +47,7 @@ test_that("A03.04 zooming removes the zero baseline", {
 })
 
 test_that("A03.05 the documented default x.expand, when passed explicitly, gives the default plot", {
-  skip_open_finding("F093")
-  expect_equal(x_range(plot2(iris, Sepal.Length, Sepal.Width, x.expand = 0.5)),
+  expect_equal(x_range(plot2(iris, Sepal.Length, Sepal.Width, x.expand = NULL)),
                x_range(plot2(iris, Sepal.Length, Sepal.Width)))
 })
 
@@ -68,7 +67,6 @@ test_that("A03.08 y.percent_break sets the distance between percentage breaks", 
 })
 
 test_that("A03.08b an explicit y.percent_break is honoured, also when it gives few breaks", {
-  skip_open_finding("F093")
   d <- data.frame(x = c("a", "b"), y = c(0.2, 0.55))
   expect_equal(diff(axis_breaks(plot2(d, x, y, y.percent = TRUE, y.percent_break = 0.25), "y"))[1], 0.25)
 })

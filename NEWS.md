@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Automatic defaults are now `NULL` in the usage, and explicit values mean what they say: e.g. `datalabels = TRUE` always shows all labels, while the default `NULL` shows at most 25; `summarise_function = FALSE` (no longer `NULL`) turns off summarising; an explicit `y.percent_break` is kept as given
 * `plot2()` on a matrix now says that `x`, `y` and `category` are ignored, instead of ignoring them silently
 * In functions and loops, default titles show the column name instead of code such as `{{ col }}` or `.data[[v]]`
 * The arguments of `plot2()` are now defined once; the methods take them from the generic, so they can no longer drift apart
