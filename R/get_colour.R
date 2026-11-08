@@ -94,14 +94,13 @@ get_colour <- function(x, length = 1, opacity = 0) {
         x <- "R4"
       }
       if (tolower(x) == "ggplot2" && length == 1) {
-        # special case for ggplot2 - they did not actually get it right (#595959 is the official first colour)
+        # ggplot2's own default for a single colour (grey35)
         new_cols <- "#595959"
+      } else if (tolower(x) == "ggplot2") {
+        # "ggplot2" stands for not setting a colour, so use ggplot2's own hue spacing,
+        # which depends on the number of colours, not R's fixed "ggplot2" palette
+        new_cols <- scales::hue_pal()(length)
       } else {
-        if (tolower(x) == "ggplot2") {
-          # we request 1 more colour, then remove the first grey one later on
-          length <- length + 1
-        }
-        
         new_cols <- tryCatch(grDevices::palette.colors(length, palette = x),
                              error = function(e) NULL,
                              warning = function(w) NULL)
@@ -109,10 +108,6 @@ get_colour <- function(x, length = 1, opacity = 0) {
           # failed or returned a warning, so now try to expand the colour palette with an 8-sized basis
           new_cols <- grDevices::colorRampPalette(grDevices::palette.colors(8, palette = x))(length)
           # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
-        }
-        if (tolower(x) == "ggplot2") {
-          new_cols <- new_cols[2:length(new_cols)]
-          length <- length - 1
         }
       }
       # no early return: opacity and NA handling below apply to every branch (F096)

@@ -158,3 +158,11 @@ test_that("F131 violin plots with single-observation groups render", {
   p <- expect_plot2(plot2(d, x, y, type = "violin"), allow_warnings = TRUE)
   expect_true(nrow(suppressWarnings(layer_df(p, "violin"))) > 0)
 })
+
+test_that("F096 the 'ggplot2' palette gives ggplot2's own colours, also with an opacity", {
+  for (n in 2:5) expect_identical(unname(as.character(get_colour("ggplot2", n))), toupper(scales::hue_pal()(n)))
+  d <- data.frame(x = rep(c("a", "b"), 2), y = 1:4, k = rep(c("u", "v"), each = 2))
+  plain <- layer_df(expect_plot2(plot2(d, x, y, k)), "bar")$fill
+  transparent <- layer_df(expect_plot2(plot2(d, x, y, k, colour_opacity = 0.5)), "bar")$fill
+  expect_identical(unname(substr(as.character(transparent), 1, 7)), toupper(plain))
+})
