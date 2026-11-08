@@ -1493,12 +1493,18 @@ validate_category_scale <- function(values,
                                   category.transform = category.transform,
                                   category.date_breaks = category.date_breaks,
                                   waiver = waiver()),
-               limits = as.numeric(
-                 limits_fn(values = values,
-                           category.limits = category.limits,
-                           category.percent = category.percent,
-                           category.transform = category.transform,
-                           category.date_breaks = category.date_breaks)),
+               limits = {
+                 lims <- limits_fn(values = values,
+                                   category.limits = category.limits,
+                                   category.percent = category.percent,
+                                   category.transform = category.transform,
+                                   category.date_breaks = category.date_breaks)
+                 if (is.numeric(lims) && transform_name(category.transform) %in% c("log", "log2", "log10", "log-10", "log-2")) {
+                   # these transformations cannot use 0 (or below) as a limit: let the data decide
+                   lims[!is.na(lims) & lims <= 0] <- NA_real_
+                 }
+                 if (is.function(lims)) lims else as.numeric(lims)
+               },
                transform = category.transform)
   args <- Filter(Negate(is.null), args)
   

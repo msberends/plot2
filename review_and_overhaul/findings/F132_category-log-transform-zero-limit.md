@@ -4,7 +4,7 @@ title: category.transform = "log10" errors with the default limits, which can st
 severity: medium
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -41,3 +41,4 @@ When the transformation cannot handle zero, replace a zero lower default limit b
 ## History
 
 - 2026-11-08: found while writing the regression test for F043.
+- 2026-11-08: fixed and verified (Phase 1). Limits of zero or below become data-driven for logarithmic category transformations; numeric limits are no longer coerced when `limits_fn()` returns a function; regression test "F043" (category part).
