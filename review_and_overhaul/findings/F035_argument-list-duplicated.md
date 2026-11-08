@@ -4,7 +4,7 @@ title: About 150 arguments are duplicated across eight functions (about 2,000 li
 severity: medium
 type: maintainability
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: XL
 api_change: no
@@ -37,3 +37,4 @@ Methods only adapt `.data` (and method-specific defaults), then forward with `ma
 ## History
 
 - 2026-11-07: filed in R01.
+- 2026-11-08: fixed: the arguments are defined once, in the generic; R/zzz.R generates the formals of the methods and plot2_exec() and builds the forwarding call (plot2_exec_call()), so each method only states its own defaults and preparation.

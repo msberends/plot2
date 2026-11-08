@@ -4,7 +4,7 @@ title: In functions, axis and legend titles show the code ({{ col }}, .data[[v]]
 severity: medium
 type: bug
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -53,3 +53,4 @@ Capture the arguments as quosures once (in the single argument definition of F03
 ## History
 
 - 2026-11-08: filed in R06 (sheet T04); test T04.01 parked.
+- 2026-11-08: fixed with F035: default titles come from the captured quosures, with .data[[v]], .data$v, {{ }} and !! resolved (plot2_label()).

@@ -19,7 +19,6 @@ f_embrace <- function(df, col) plot2(df, {{ col }}, n())
 f_data <- function(df, v) plot2(df, .data[[v]], n())
 
 test_that("T04.01 titles show the column name when plot2() is called from a function", {
-  skip_open_finding("F105")
   expect_labels(f_embrace(iris, Species), x = "Species")
   expect_labels(f_data(iris, "Species"), x = "Species")
 })

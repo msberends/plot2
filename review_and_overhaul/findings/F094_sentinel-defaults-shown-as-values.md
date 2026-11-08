@@ -48,3 +48,4 @@ Use `NULL` (or a documented `"auto"`) as the default wherever plot2 decides auto
 - 2026-11-08: filed in R05; test A01.05 parked.
 - 2026-11-08: changing these defaults is not a breaking change for anyone before the first CRAN release (no public users); fix before that release.
 - 2026-11-08: maintainer decided: `NULL` is the default wherever plot2 decides automatically, and explicit values mean what they say (e.g. `datalabels = TRUE` always shows labels). API change consented. Stays in Phase 5 with F035 and I004 unless pulled forward.
+- 2026-11-08: maintainer decided for `summarise_function` (AskUserQuestion): default `NULL` means automatic (sum, or no summarising for several y columns and UpSet plots); `summarise_function = FALSE` means do not summarise; a function always applies. Breaking: `NULL` no longer means "do not summarise".

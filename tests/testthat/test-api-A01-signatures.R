@@ -36,7 +36,6 @@ test_that("A01.02 every method accepts every argument of the generic; only the f
 })
 
 test_that("A01.03 methods use the defaults shown in the generic's usage", {
-  skip_open_finding("F034")
   g <- formals(plot2)
   f <- formals(plot2:::plot2.data.frame)
   common <- intersect(names(g), names(f))

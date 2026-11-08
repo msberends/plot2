@@ -1,5 +1,8 @@
 # plot2 1.99.0.9000
 
+* `plot2()` on a matrix now says that `x`, `y` and `category` are ignored, instead of ignoring them silently
+* In functions and loops, default titles show the column name instead of code such as `{{ col }}` or `.data[[v]]`
+* The arguments of `plot2()` are now defined once; the methods take them from the generic, so they can no longer drift apart
 * Spider plots (`type = "spider"`) now support facets, and keep their spider shape when datalabels are shown together with a title or facets
 * `plot2()` on a plain numeric matrix now plots all columns (as categories) instead of only the first, and uses the names of named dimensions as titles
 * `x.limits`, `y.limits` and `category.limits` must now be of length 2 (use `NA` for a limit that follows the data); a single value previously gave a zero-width axis without any data

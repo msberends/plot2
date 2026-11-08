@@ -4,7 +4,7 @@ title: Documented defaults differ from method defaults; plot2.matrix ignores x/y
 severity: medium
 type: docs
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -37,3 +37,4 @@ Resolved structurally by F035; meanwhile align the generic's defaults with the m
 ## History
 
 - 2026-11-07: filed in R01, checked with formals().
+- 2026-11-08: fixed with F035: the generic shows the y_secondary.colour defaults the methods use; plot2.matrix() gives a caution when x, y or category are set, since the matrix determines them.
