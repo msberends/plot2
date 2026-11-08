@@ -4,7 +4,7 @@ title: Fallback for other geoms passes width and size to every geom
 severity: low
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Pass only parameters the geom accepts (`intersect(names(args), geom$parameters(T
 
 - 2026-11-07: filed in R02 (by reading).
 - 2026-11-07: reproduced (deprecated `size` for lines, "Ignoring unknown parameters: `width`").
+- 2026-11-08: fixed: the fallback in generate_geom() builds a probe layer and passes width, size, colour and fill only when the geom or its stat accepts them as parameter or aesthetic; na.rm, mapping and the user's extra arguments are passed as before. The 'only loosely supported' notice is now a caution (message) instead of a warning, as it is advisory. Tests: 08.12 unparked, E03.09 no longer needs local_known_deprecation('F060'), E03.09 and the legacy dotplot test expect a caution.

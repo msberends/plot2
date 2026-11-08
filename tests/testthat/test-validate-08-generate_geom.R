@@ -113,7 +113,6 @@ test_that("08.11 an extra argument in ... reaches the layer, with a message", {
 
 test_that("08.12 a loosely supported geom gives a caution and builds without warnings", {
   expect_plot2_message(plot2(fx_cat, x, y, category, type = "step"), "only loosely supported")
-  skip_open_finding("F060")
   expect_plot2(plot2(fx_cat, x, y, category, type = "step"))
 })
 

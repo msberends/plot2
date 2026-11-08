@@ -1880,13 +1880,24 @@ generate_geom <- function(type,
     
   } else {
     # try to put some arguments into the requested geom
-    plot2_warning(font_blue("type = \"", type, "\"", collapse = ""), " is currently only loosely supported")
+    plot2_caution(font_blue("type = \"", type, "\"", collapse = ""), " is currently only loosely supported")
+    # pass only what this geom accepts as a parameter or aesthetic (F060)
+    probe <- tryCatch(geom_fn(), error = function(e) NULL)
+    accepted <- if (inherits(probe, "LayerInstance")) {
+      unique(c(names(formals(geom_fn)),
+               probe$geom$parameters(TRUE), probe$stat$parameters(TRUE), probe$geom$aesthetics()))
+    } else {
+      NULL
+    }
+    only_accepted <- function(args) {
+      if (is.null(accepted)) args else args[names(args) %in% accepted]
+    }
     do.call(geom_fn,
-            args = set_arguments(list(width = width,
-                                      size = size,
-                                      na.rm = na.rm),
-                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
-                                 list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
+            args = set_arguments(only_accepted(c(list(width = width,
+                                                      size = size),
+                                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
+                                                 list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)])),
+                                 list(na.rm = na.rm),
                                  list(mapping = mapping)[!is.null(mapping)]))
   }
 }

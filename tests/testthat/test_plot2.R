@@ -44,7 +44,7 @@ test_that("general types work", {
   expect_s3_class(iris |> plot2(Species, type = "violin"), "gg")
   expect_s3_class(iris |> plot2(Species, type = "blank"), "gg")
   expect_s3_class(iris |> plot2(Species, type = "area"), "gg")
-  expect_plot2_message(iris |> plot2(Species, type = "dotplot"), "loosely supported", type = "warning")
+  expect_plot2_message(iris |> plot2(Species, type = "dotplot"), "loosely supported", type = "caution")
   # difftime coercion to double:
   expect_s3_class(data.frame(x = letters[1:10],
                              y = difftime(Sys.time(), Sys.time() - seq_len(10))) |>
