@@ -752,7 +752,9 @@ validate_x_scale <- function(df,
                              big.mark,
                              horizontal,
                              type_backup) {
-  if (isTRUE(x.zoom) && is.null(x.limits)) {
+  if (isTRUE(x.zoom) && is.null(x.limits) &&
+      !is.factor(values) && (is.numeric(values) || inherits(values, c("Date", "POSIXt")))) {
+    # only continuous axes can zoom; a discrete axis shows all its items anyway
     x.limits <- c(NA_real_, NA_real_)
     plot2_env$x_lim <- x.limits
     if (is.null(x.expand)) {
@@ -2080,7 +2082,8 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   
   out <- gsub("<br>", "\n", out, fixed = TRUE)
   # strip only markup, so that accented, Greek, Cyrillic or CJK characters still count (F056)
-  out_plain <- gsub("<[^>]+>|[*_^{}$]", "", out)
+  # plotmath between $...$ is not drawn as its source text, so it does not count for the length
+  out_plain <- gsub("<[^>]+>|[*_^{}$]", "", gsub("\\$[^$]*\\$", "", out))
   
   if (isTRUE(markdown)) {
     # support mathematical characters
@@ -2630,11 +2633,11 @@ validate_font <- function(font) {
   }
   
   # get font files from system
-  if (is.null(plot2_env$fonts)) {
-    # so it only runs the first time
-    plot2_env$fonts <- font_files()
+  if (is.null(plot2_session$fonts)) {
+    # so it only runs the first time in a session
+    plot2_session$fonts <- font_files()
   }
-  fonts <- plot2_env$fonts[which(tolower(plot2_env$fonts$family) == trimws(tolower(font)[1L])), , drop = FALSE]
+  fonts <- plot2_session$fonts[which(tolower(plot2_session$fonts$family) == trimws(tolower(font)[1L])), , drop = FALSE]
   
   if (NROW(fonts) == 0) {
     # font does not exist yet - try to download from Google Fonts

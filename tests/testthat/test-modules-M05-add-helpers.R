@@ -93,7 +93,7 @@ test_that("M05.13 add_type(): geom by name, move, invalid and missing type", {
 })
 
 test_that("M05.14 add_*() on an empty plot returns it unchanged", {
-  p <- plot2(fx_xy[0, ], x, y)
+  p <- suppressWarnings(plot2(fx_xy[0, ], x, y))
   expect_length(geoms(add_line(p, y = 3)), 0)
   expect_length(geoms(add_point(p, x = 1, y = 1)), 0)
 })

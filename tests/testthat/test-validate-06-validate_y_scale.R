@@ -136,7 +136,6 @@ test_that("06.19 a character y gives a clear error; a factor y works with datala
 })
 
 test_that("06.20 rendering the plot queues no plot2 messages", {
-  skip_open_finding("F001")
   p <- plot2(data.frame(x = c("a", "b"), y = c(5, 5e7)), x, y) # label function decides on scientific notation
   plot2:::clear_plot2_env()
   invisible(rendered(p))

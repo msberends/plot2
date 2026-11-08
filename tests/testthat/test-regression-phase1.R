@@ -36,7 +36,9 @@ test_that("F033 every stop() and warning() in R/ uses call. = FALSE", {
   walk <- function(e, file) {
     if (is.call(e)) {
       fn <- e[[1]]
-      if (is.symbol(fn) && as.character(fn) %in% c("stop", "warning") && !"call." %in% names(as.list(e))) {
+      # a condition object made with warningCondition() carries its own call
+      is_condition <- length(e) > 1 && is.call(e[[2]]) && identical(e[[2]][[1]], as.name("warningCondition"))
+      if (is.symbol(fn) && as.character(fn) %in% c("stop", "warning") && !"call." %in% names(as.list(e)) && !is_condition) {
         offenders <<- c(offenders, paste0(basename(file), ": ", paste(deparse(e, width.cutoff = 60L)[1], collapse = "")))
       }
       for (el in as.list(e)[-1]) if (!missing(el) && !is.null(el)) walk(el, file)

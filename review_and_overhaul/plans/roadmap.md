@@ -146,6 +146,7 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 - F105 titles in programmatic use (with F035 quosure capture)
 - F034 documented defaults
 - F094 visible defaults acting as sentinels (with F035; scope set by D001)
+- F036 remainder: central guessing step for the data-driven defaults (maintainer, 2026-11-08: moved here from Phase 2; any `plot2.guess` option to be decided with D001/I004)
 - I004 consolidated API proposal: implement D001 (decided) before the first CRAN release
 - F058 taxonomy performance and scope
 - F061 validate_colour hack

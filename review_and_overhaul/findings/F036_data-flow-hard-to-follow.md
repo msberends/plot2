@@ -4,7 +4,7 @@ title: Data flow relies on global state, super-assignment and hidden dot-argumen
 severity: medium
 type: maintainability
 area: architecture
-status: open
+status: in-progress
 verification: reading
 effort: XL
 api_change: no
@@ -13,7 +13,7 @@ related: [F001, F035]
 origin: R01 §4.2
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F036 Data flow hard to follow
@@ -36,3 +36,4 @@ Introduce an explicit per-call context (see F001) holding: original quosures and
 ## History
 
 - 2026-11-07: filed in R01.
+- 2026-11-08: partly done in Phase 2: per-call context for state and diagnostics (F001). Maintainer's decision: the central guessing step (and any plot2.guess option) moves to Phase 5 with D001/I004; the hidden _misses.*/_label.* dot-arguments go with F035/F094.

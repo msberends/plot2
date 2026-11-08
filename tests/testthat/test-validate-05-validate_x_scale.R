@@ -41,7 +41,8 @@ test_that("05.04 x.limits on a discrete x is applied or gives a clear warning", 
 })
 
 test_that("05.05 x.limits of the wrong class is reported", {
-  expect_error(plot2(fx_xy, x, y, x.limits = c("a", "b")), "limits")
+  # the warnings collected before the error are still emitted
+  expect_error(suppressWarnings(plot2(fx_xy, x, y, x.limits = c("a", "b"))), "limits")
   expect_plot2_message(plot2(fx_cat_unique, x, y, x.limits = c(1, 2)), "x.limits.*class", type = "warning")
 })
 

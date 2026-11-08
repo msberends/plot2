@@ -33,14 +33,15 @@ test_that("E01.03 empty data: empty plot with the given title and a plot2 warnin
 })
 
 test_that("E01.04 empty data: axis titles only when given", {
-  p <- plot2(fx_xy[0, ], x, y, x.title = "X axis", y.title = "Y axis")
+  expect_warning(p <- plot2(fx_xy[0, ], x, y, x.title = "X axis", y.title = "Y axis"), "No observations", class = "plot2_warning")
   expect_labels(p, x = "X axis", y = "Y axis")
 })
 
 test_that("E01.05 empty data with print = TRUE returns the plot invisibly (F010)", {
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
-  expect_s3_class(plot2(fx_xy[0, ], x, y, print = TRUE), "gg")
+  expect_warning(p <- plot2(fx_xy[0, ], x, y, print = TRUE), "No observations", class = "plot2_warning")
+  expect_s3_class(p, "gg")
 })
 
 test_that("E01.06 data.frame with an sf geometry column is plotted as a map", {
@@ -60,5 +61,5 @@ test_that("E01.07b a character vector given as a long expression (F072)", {
 })
 
 test_that("E01.08 empty data leaves no internal state behind (F002)", {
-  expect_clean_state(plot2(fx_xy[0, ], x, y))
+  expect_clean_state(suppressWarnings(plot2(fx_xy[0, ], x, y)))
 })

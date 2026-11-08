@@ -45,6 +45,7 @@ test_that("E02.06 category.title is used as legend title", {
 })
 
 test_that("E02.07 a title referring to a missing column does not stop the plot", {
-  p <- expect_plot2(plot2(fx_cat, x, y, title = nonexistent))
+  # plot2 warns that the title cannot be evaluated (an R warning since F014)
+  p <- expect_plot2_message(plot2(fx_cat, x, y, title = nonexistent), "nonexistent", type = "warning")
   expect_true(label_text(p, "title") %in% c("", NA_character_))
 })

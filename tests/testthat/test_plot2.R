@@ -44,7 +44,7 @@ test_that("general types work", {
   expect_s3_class(iris |> plot2(Species, type = "violin"), "gg")
   expect_s3_class(iris |> plot2(Species, type = "blank"), "gg")
   expect_s3_class(iris |> plot2(Species, type = "area"), "gg")
-  expect_warning(iris |> plot2(Species, type = "dotplot"))
+  expect_plot2_message(iris |> plot2(Species, type = "dotplot"), "loosely supported", type = "warning")
   # difftime coercion to double:
   expect_s3_class(data.frame(x = letters[1:10],
                              y = difftime(Sys.time(), Sys.time() - seq_len(10))) |>
@@ -394,8 +394,10 @@ test_that("facet scale works", {
                                 Species), "gg")
   expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
                                 Species, facet.relative = TRUE), "gg")
-  expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
-                                Species, facet.relative = TRUE, facet.nrow = 2), "gg")
+  expect_warning(p <- iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
+                                     Species, facet.relative = TRUE, facet.nrow = 2),
+                 "facet.relative", class = "plot2_warning")
+  expect_s3_class(p, "gg")
   expect_s3_class(iris |> plot2(as.integer(Sepal.Length), Sepal.Width, Petal.Length,
                                 Species,
                                 facet.repeat_lbls_x = TRUE,
@@ -415,14 +417,16 @@ test_that("facet scale works", {
 
 test_that("blank plot works", {
   skip_on_cran()
-  expect_s3_class(plotdata |> subset(n < 0) |> plot2(), "gg")
-  expect_s3_class(data.frame() |> plot2(type = "blank",
-                                        x.title = "test",
-                                        y.title = "test",
-                                        title = "test",
-                                        subtitle = "test",
-                                        tag = "test",
-                                        caption = "test"), "gg")
+  expect_warning(p <- plotdata |> subset(n < 0) |> plot2(), "No observations", class = "plot2_warning")
+  expect_s3_class(p, "gg")
+  expect_warning(p <- data.frame() |> plot2(type = "blank",
+                                            x.title = "test",
+                                            y.title = "test",
+                                            title = "test",
+                                            subtitle = "test",
+                                            tag = "test",
+                                            caption = "test"), "No observations", class = "plot2_warning")
+  expect_s3_class(p, "gg")
 })
 
 test_that("misc elements works", {
@@ -482,13 +486,11 @@ test_that("moving layer works", {
 
 test_that("messaging works", {
   skip_on_cran()
+  # outside a plot2() call, diagnostics are signalled at once as conditions (F014)
+  expect_message(plot2_message("test"), "test", class = "plot2_message")
+  expect_message(plot2_caution("test"), "test", class = "plot2_caution")
+  expect_warning(plot2_warning("test"), "test", class = "plot2_warning")
   expect_null(plot2_env$infos)
-  expect_null(plot2_env$cautions)
-  expect_null(plot2_env$warning)
-  plot2_message("test")
-  plot2_caution("test")
-  plot2_warning("test")
-  expect_message(throw_messages(print = TRUE))
 })
 
 test_that("date labels work", {
@@ -529,8 +531,8 @@ test_that("manual fonts work", {
   skip_on_cran()
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Rock Salt"), "gg")
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Rock Salt"), "gg") # already downloaded
-  expect_s3_class(mtcars |> plot2(mpg, hp, font = "Courier"), "gg")
-  expect_s3_class(mtcars |> plot2(mpg, hp, font = "Courier"), "gg") # already downloaded
+  expect_s3_class(suppressWarnings(mtcars |> plot2(mpg, hp, font = "Courier")), "gg")
+  expect_s3_class(suppressWarnings(mtcars |> plot2(mpg, hp, font = "Courier")), "gg") # already downloaded
 })
 
 test_that("Plotly works", {

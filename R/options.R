@@ -39,7 +39,7 @@
 #' * `plot2.font`\cr
 #'   Default plot font family, defaults to the font of the graphics device. See the `font` argument of [plot2()]
 #' * `plot2.silent`\cr
-#'   A [logical] to hide the console messages when plotting (`TRUE`), default is `FALSE`
+#'   A [logical] to hide the console messages when plotting (`TRUE`), default is `FALSE`. Messages are printed only in interactive sessions (and pkgdown builds), at the end of the [plot2()] call. They are signalled as R conditions of class `plot2_message` (and `plot2_caution` for cautions), so they can also be caught with [withCallingHandlers()] or hidden with [suppressMessages()]. Warnings are R warnings of class `plot2_warning` and are not hidden by this option.
 #' * `plot2.text_factor`\cr
 #'   Default factor to multiply all text sizes with, defaults to `1`
 #' * `plot2.theme`\cr

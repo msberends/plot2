@@ -241,16 +241,16 @@ facet_info <- function(x) {
 #'
 #' Returns a list with `value`, `messages` (data frame with `type` and `text`)
 #' and `warnings` (R warnings, character). `type` is "info", "caution" or
-#' "warning" for plot2's own output, derived from the cli symbol.
-#'
-#' plot2 currently queues its diagnostics and prints them only in interactive
-#' sessions or during pkgdown builds (finding F014), so IN_PKGDOWN is set to
-#' make them visible. Once F014 is fixed, plot2 emits real conditions, which
-#' are captured by the same handlers.
+#' "warning" for plot2's own output, derived from the condition class.
 plot2_diagnostics <- function(expr, build = TRUE) {
-  withr::local_envvar(IN_PKGDOWN = "true")
-  msgs <- character(0)
+  # plot2 signals its diagnostics as conditions (F014): messages of class
+  # "plot2_message" (cautions also "plot2_caution") and warnings of class
+  # "plot2_warning"; other messages and warnings are reported as "other"
+  msgs <- data.frame(type = character(0), text = character(0), stringsAsFactors = FALSE)
   warns <- character(0)
+  add <- function(type, text) {
+    msgs <<- rbind(msgs, data.frame(type = type, text = trimws(cli::ansi_strip(text)), stringsAsFactors = FALSE))
+  }
   value <- withCallingHandlers(
     {
       v <- expr
@@ -258,22 +258,17 @@ plot2_diagnostics <- function(expr, build = TRUE) {
       v
     },
     message = function(m) {
-      msgs <<- c(msgs, conditionMessage(m))
+      type <- if (inherits(m, "plot2_caution")) "caution" else if (inherits(m, "plot2_message")) "info" else "other"
+      add(type, conditionMessage(m))
       invokeRestart("muffleMessage")
     },
     warning = function(w) {
-      warns <<- c(warns, conditionMessage(w))
+      warns <<- c(warns, trimws(cli::ansi_strip(conditionMessage(w))))
+      if (inherits(w, "plot2_warning")) add("warning", conditionMessage(w))
       invokeRestart("muffleWarning")
     })
-  msgs <- trimws(cli::ansi_strip(msgs))
-  msgs <- msgs[nzchar(msgs)]
-  type <- ifelse(startsWith(msgs, "ℹ") | startsWith(msgs, "i "), "info",
-                 ifelse(startsWith(msgs, "!"), "caution",
-                        ifelse(startsWith(msgs, "✖") | startsWith(msgs, "x "), "warning", "other")))
-  text <- trimws(sub("^(ℹ|!|✖|i|x) ", "", msgs))
-  list(value = value,
-       messages = data.frame(type = type, text = text, stringsAsFactors = FALSE),
-       warnings = trimws(cli::ansi_strip(warns)))
+  msgs <- msgs[nzchar(msgs$text), , drop = FALSE]
+  list(value = value, messages = msgs, warnings = warns)
 }
 
 # Colours ----------------------------------------------------------------------
@@ -294,8 +289,9 @@ col_hex <- function(x) {
 #' gtable, see rendered()) without R warnings or errors. Returns the plot
 #' invisibly.
 #'
-#' plot2's own cautions and warnings are not R warnings yet (F014) and are
-#' therefore not checked here; use expect_plot2_message() for them.
+#' plot2's own warnings are R warnings (F014) and therefore fail this
+#' expectation unless `allow_warnings = TRUE`; use expect_plot2_message() to
+#' test for a specific diagnostic.
 expect_plot2 <- function(object, allow_warnings = FALSE) {
   q <- rlang::enquo(object)
   label <- rlang::as_label(q)

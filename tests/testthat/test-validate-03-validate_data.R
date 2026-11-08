@@ -131,7 +131,6 @@ test_that("03.18 na.replace replaces NA in character columns; numeric NA is unto
 })
 
 test_that("03.19 NA in y is removed with a warning that can be caught", {
-  skip_open_finding("F014")
   expect_warning(plot2(fx_na, x, y), "y = NA")
 })
 

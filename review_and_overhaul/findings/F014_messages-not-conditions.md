@@ -4,7 +4,7 @@ title: Messages and warnings are not R conditions; plot2.silent has no effect
 severity: high
 type: design
 area: messaging
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: possible
@@ -13,7 +13,7 @@ related: [F001, F002, F013]
 origin: R01 §2.7
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F014 Messages and warnings are not R conditions
@@ -56,3 +56,4 @@ Emit real conditions at the point of origin: `cli::cli_inform()` with class `plo
 ## History
 
 - 2026-11-07: filed in R01. The first reproduction used `rlang::local_interactive()` at top level, which printed withr notes instead; corrected the same day (simulating interactivity via `IN_PKGDOWN`), and the defect was confirmed: 2 message lines still printed with `plot2.silent = TRUE`.
+- 2026-11-08: fixed and verified (Phase 2, with F001). Maintainer's decisions: messages are conditions (class plot2_message, cautions also plot2_caution), printed only in interactive sessions and pkgdown builds, plot2.silent works; warnings are R warnings (class plot2_warning); diagnostics grouped at the end of the outermost call (infos, cautions, warnings), each in order of occurrence and deduplicated. Tests that now saw plot2 warnings were updated to expect them; two real issues surfaced and were fixed (x.zoom set numeric limits on a discrete x axis; long plotmath titles warned about line wrapping).

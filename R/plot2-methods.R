@@ -198,6 +198,9 @@ plot2.default <- function(.data,
                           background = getOption("plot2.colour_background", "white"),
                           markdown = TRUE,
                           ...) {
+  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  call_state_enter()
+  on.exit(call_state_exit(), add = TRUE)
   if (is.function(.data)) {
     stop("`plot2()` does not yet support functions to be plotted", call. = FALSE)
   }
@@ -577,6 +580,9 @@ plot2.formula <- function(.data = NULL,
                           markdown = TRUE,
                           data = NULL,
                           ...) {
+  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  call_state_enter()
+  on.exit(call_state_exit(), add = TRUE)
   if (is.null(data)) {
     stop("Formula notation requires the `data` argument to be set", call. = FALSE)
   }
@@ -943,6 +949,9 @@ plot2.freq <- function(.data,
                        background = getOption("plot2.colour_background", "white"),
                        markdown = TRUE,
                        ...) {
+  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  call_state_enter()
+  on.exit(call_state_exit(), add = TRUE)
   plot2_exec(as.data.frame(.data, stringsAsFactors = FALSE)[, 1:2, drop = FALSE],
              x = x,
              y = y,
@@ -1290,6 +1299,9 @@ plot2.sf <- function(.data,
                      crs = NULL,
                      datalabels.centroid = NULL,
                      ...) {
+  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  call_state_enter()
+  on.exit(call_state_exit(), add = TRUE)
   
   rlang::check_installed("sf")
   loadNamespace("sf")
@@ -1653,6 +1665,9 @@ plot2.data.frame <- function(.data,
                              background = getOption("plot2.colour_background", "white"),
                              markdown = TRUE,
                              ...) {
+  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  call_state_enter()
+  on.exit(call_state_exit(), add = TRUE)
   
   if (isTRUE(is_grouped_df(.data))) {
     .data <- ungroup(.data)
@@ -1994,6 +2009,9 @@ plot2.matrix <- function(.data,
                          background = getOption("plot2.colour_background", "white"),
                          markdown = TRUE,
                          ...) {
+  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  call_state_enter()
+  on.exit(call_state_exit(), add = TRUE)
   
   df <- .data |>
     as.data.frame(stringsAsFactors = FALSE)

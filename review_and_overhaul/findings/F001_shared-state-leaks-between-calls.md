@@ -4,7 +4,7 @@ title: Shared plot2_env state leaks between calls and corrupts axis labels
 severity: critical
 type: bug
 area: architecture
-status: open
+status: verified
 verification: verified
 effort: L
 api_change: no
@@ -13,7 +13,7 @@ related: [F014, F036]
 origin: R01 §1.1
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F001 Shared state leaks between calls and corrupts axis labels
@@ -56,3 +56,4 @@ Replace the module-level state with a per-call context: create an environment in
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 2, with F014). Every plot2() method (and plot2_exec() when called directly, and the empty-data path) calls call_state_enter()/call_state_exit(): the state of an outer call is saved, cleared and restored, so nested calls (back-to-back, UpSet) no longer wipe it and nothing leaks into the next call; only reg_cols is shared. Diagnostics outside a call (render time) are emitted at once. Font cache moved to plot2_session. Reproduction gives the expected output; tests in test-regression-phase2.R.

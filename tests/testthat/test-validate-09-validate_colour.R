@@ -47,7 +47,7 @@ test_that("09.05 a named colour vector maps names to categories regardless of or
 })
 
 test_that("09.06 fewer colours than categories are recycled or give a clear warning", {
-  expect_plot2(plot2(d_three, x, y, k, colour = c("red", "blue")))
+  expect_plot2_message(plot2(d_three, x, y, k, colour = c("red", "blue")), "recycled", type = "warning")
 })
 
 test_that("09.07 colour_opacity adds transparency, also for palette names", {

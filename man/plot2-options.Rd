@@ -32,7 +32,7 @@ Default plot type when \code{type} is left blank and cannot be determined from t
 \item \code{plot2.font}\cr
 Default plot font family, defaults to the font of the graphics device. See the \code{font} argument of \code{\link[=plot2]{plot2()}}
 \item \code{plot2.silent}\cr
-A \link{logical} to hide the console messages when plotting (\code{TRUE}), default is \code{FALSE}
+A \link{logical} to hide the console messages when plotting (\code{TRUE}), default is \code{FALSE}. Messages are printed only in interactive sessions (and pkgdown builds), at the end of the \code{\link[=plot2]{plot2()}} call. They are signalled as R conditions of class \code{plot2_message} (and \code{plot2_caution} for cautions), so they can also be caught with \code{\link[=withCallingHandlers]{withCallingHandlers()}} or hidden with \code{\link[=suppressMessages]{suppressMessages()}}. Warnings are R warnings of class \code{plot2_warning} and are not hidden by this option.
 \item \code{plot2.text_factor}\cr
 Default factor to multiply all text sizes with, defaults to \code{1}
 \item \code{plot2.theme}\cr

@@ -505,11 +505,6 @@ back2back_plot <- function(df,
           legend.direction = "horizontal")
   
   
-  on.exit({
-    throw_messages()
-    clear_plot2_env()
-  })
-  
   # return plot ----
   if (isTRUE(print)) {
     print(p)

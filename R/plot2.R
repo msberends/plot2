@@ -551,12 +551,10 @@ plot2 <- function(.data,
   
   # no observations, return empty plot immediately
   if (NROW(.data) == 0) {
+    call_state_enter()
+    on.exit(call_state_exit(), add = TRUE)
     # check if markdown is required
     markdown <- validate_markdown(markdown, x.title, y.title, c(category.title, legend.title), title, subtitle, tag, caption)
-    on.exit({
-      throw_messages()
-      clear_plot2_env()
-    })
     plot2_warning("No observations, returning an empty plot")
     p <- ggplot() +
       validate_theme(theme = theme,
@@ -766,6 +764,11 @@ plot2_exec <- function(.data,
                        markdown = TRUE,
                        data = NULL,
                        ...) {
+  if (call_depth() == 0) {
+    # called directly instead of through a plot2() method
+    call_state_enter()
+    on.exit(call_state_exit(), add = TRUE)
+  }
   dots <- list(...)
   dots_geom <- dots[names(dots) %unlike% "^_(label[.]|misses[.]|sf.column|summarise_fn_name|datalabels.centroid)"]
   dots_geom <- dots_geom[!names(dots_geom) %in% names(formals(coord_spider))]
@@ -936,13 +939,6 @@ plot2_exec <- function(.data,
                 facet = dots$`_label.facet`,
                 y_secondary = dots$`_label.y_secondary`,
                 x_variable_names = tryCatch(suppressWarnings(.data |> select({{ x }}) |> colnames()), error = function(e) NULL))
-  
-  if (type_backup != "back-to-back") {
-    on.exit({
-      throw_messages()
-      clear_plot2_env()
-    })
-  }
   
   plot2_env$facet.fixed_y <- facet.fixed_y
   

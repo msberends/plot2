@@ -74,7 +74,7 @@ test_that("E03.08 upset: patchwork of four plots", {
 test_that("E03.09 'errorbar' is not turned into horizontal columns (F009)", {
   local_known_deprecation("F060") # the fallback geom passes `size` to errorbars
   df <- data.frame(x = c("a", "b"), y = c(2, 3))
-  p <- plot2(df, x, y, type = "errorbar")
+  expect_warning(p <- plot2(df, x, y, type = "errorbar"), "loosely supported", class = "plot2_warning")
   expect_false(identical(coord_class(p), "CoordFlip"))
   expect_true("GeomErrorbar" %in% geoms(p))
 })

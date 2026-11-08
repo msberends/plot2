@@ -143,59 +143,118 @@ font_white <- function(..., collapse = " ") {
   }
 }
 
+# Per-call state and diagnostics (F001, F014) ---------------------------------
+#
+# plot2_env holds the state of the plot2() call that is running. Every plot2()
+# method calls call_state_enter() first: it saves and clears the state of an
+# outer call (nested calls happen in back-to-back and UpSet plots, or when a
+# method calls plot2() again), and call_state_exit() restores it. Only the
+# registered colours ("reg_cols") are shared by all calls.
+#
+# plot2_message(), plot2_caution() and plot2_warning() collect diagnostics in
+# order of occurrence. When the outermost call ends, they are emitted grouped:
+# messages, then cautions, then warnings (maintainer's decision, 2026-11-08).
+# Outside a call (e.g. at render time, or get_colour() used directly) they are
+# emitted at once, so that they never surface with a later, unrelated call.
+
+call_depth <- function() {
+  length(plot2_session$call_stack)
+}
+
+call_state_enter <- function() {
+  vars <- setdiff(ls(plot2_env, all.names = TRUE), "reg_cols")
+  saved <- mget(vars, envir = plot2_env)
+  rm(list = vars, envir = plot2_env)
+  plot2_session$call_stack <- c(plot2_session$call_stack, list(saved))
+  invisible(NULL)
+}
+
+call_state_exit <- function() {
+  diagnostics <- list(infos = plot2_env$infos,
+                      cautions = plot2_env$cautions,
+                      warnings = plot2_env$warnings)
+  rm(list = setdiff(ls(plot2_env, all.names = TRUE), "reg_cols"), envir = plot2_env)
+  n <- call_depth()
+  if (n == 0) {
+    return(invisible(NULL))
+  }
+  saved <- plot2_session$call_stack[[n]]
+  plot2_session$call_stack <- plot2_session$call_stack[-n]
+  for (nm in names(saved)) {
+    assign(nm, saved[[nm]], envir = plot2_env)
+  }
+  if (n > 1) {
+    # a nested call: hand its diagnostics to the outer call
+    for (type in names(diagnostics)) {
+      plot2_env[[type]] <- c(plot2_env[[type]], diagnostics[[type]])
+    }
+  } else {
+    throw_messages(diagnostics)
+  }
+  invisible(NULL)
+}
+
 plot2_message <- function(...) {
-  plot2_env$infos <- c(plot2_env$infos, paste0(c(...), collapse = ""))
+  plot2_diagnostic(paste0(c(...), collapse = ""), "infos")
 }
 plot2_caution <- function(...) {
-  plot2_env$cautions <- c(plot2_env$cautions, paste0(c(...), collapse = ""))
+  plot2_diagnostic(paste0(c(...), collapse = ""), "cautions")
 }
 plot2_warning <- function(...) {
-  plot2_env$warnings <- c(plot2_env$warnings, paste0(c(...), collapse = ""))
+  plot2_diagnostic(paste0(c(...), collapse = ""), "warnings")
+}
+plot2_diagnostic <- function(txt, type) {
+  if (call_depth() > 0) {
+    plot2_env[[type]] <- c(plot2_env[[type]], txt)
+  } else {
+    emit_diagnostic(txt, type)
+  }
+  invisible(NULL)
 }
 
-plot2_message_out <- function(txt,
-                          print = (interactive() | Sys.getenv("IN_PKGDOWN") != "") & !identical(as.logical(getOption("plot2.silent", default = FALSE)), TRUE),
-                          type = "info") {
-  # at default, only prints in interactive mode and for the website generation
-  if (isTRUE(print)) {
-    if (type == "info") {
-      cli::cli_alert_info(txt, wrap = TRUE)
-    } else if (type == "caution") {
-      cli::cli_alert_warning(txt, wrap = TRUE)
-    } else if (type == "warning") {
-      cli::cli_alert_danger(txt, wrap = TRUE)
-    }
-  }
+plot2_shows_messages <- function() {
+  (interactive() || Sys.getenv("IN_PKGDOWN") != "") &&
+    !isTRUE(as.logical(getOption("plot2.silent", default = FALSE)))
 }
 
-throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "") {
-  has_given_note <- FALSE
-  # messages
-  if (!is.null(plot2_env$infos)) {
-    plot2_env$infos <- unique(sort(plot2_env$infos))
-    has_given_note <- TRUE
-    for (i in seq_len(length(plot2_env$infos))) {
-      plot2_message_out(plot2_env$infos[i], print = print, type = "info")
-    }
+# Emit one diagnostic as an R condition. Messages and cautions are message
+# conditions (classes "plot2_message", and "plot2_caution" for cautions):
+# they can be caught or muffled (suppressMessages()), and are printed only in
+# interactive sessions and pkgdown builds unless plot2.silent = TRUE. Warnings
+# are R warnings (class "plot2_warning"), always visible. Returns whether a
+# message was printed.
+emit_diagnostic <- function(txt, type) {
+  plain <- cli::ansi_strip(txt)
+  if (type == "warnings") {
+    warning(warningCondition(plain, class = "plot2_warning", call = NULL))
+    return(invisible(FALSE))
   }
-  # cautions
-  if (!is.null(plot2_env$cautions)) {
-    plot2_env$cautions <- unique(sort(plot2_env$cautions))
-    has_given_note <- TRUE
-    for (i in seq_len(length(plot2_env$cautions))) {
-      plot2_message_out(plot2_env$cautions[i], print = print, type = "caution")
+  cls <- c(if (type == "cautions") "plot2_caution", "plot2_message")
+  printed <- FALSE
+  withRestarts({
+    signalCondition(messageCondition(paste0(plain, "\n"), class = cls, call = NULL))
+    if (plot2_shows_messages()) {
+      if (type == "cautions") {
+        cli::cli_alert_warning(txt, wrap = TRUE)
+      } else {
+        cli::cli_alert_info(txt, wrap = TRUE)
+      }
+      printed <- TRUE
     }
-  }
-  # warnings
-  if (!is.null(plot2_env$warnings)) {
-    plot2_env$warnings <- unique(sort(plot2_env$warnings))
-    has_given_note <- TRUE
-    for (i in seq_len(length(plot2_env$warnings))) {
-      plot2_message_out(plot2_env$warnings[i], print = print, type = "warning")
+  }, muffleMessage = function() NULL)
+  invisible(printed)
+}
+
+throw_messages <- function(diagnostics) {
+  printed <- FALSE
+  for (type in c("infos", "cautions", "warnings")) {
+    # in order of occurrence, each text once
+    for (txt in unique(diagnostics[[type]])) {
+      printed <- isTRUE(emit_diagnostic(txt, type)) || printed
     }
   }
   # show the tip about plot2.silent once per session, without touching the random-number stream
-  if (isTRUE(has_given_note) && isTRUE(print) && !isTRUE(plot2_session$silent_tip_shown) && Sys.getenv("IN_PKGDOWN") == "") {
+  if (isTRUE(printed) && !isTRUE(plot2_session$silent_tip_shown) && Sys.getenv("IN_PKGDOWN") == "") {
     if (is.null(getOption("plot2.silent"))) {
       message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
     }
@@ -759,10 +818,12 @@ set_plot2_env <- function(x = NULL, y = NULL, category = NULL, facet = NULL, y_s
   plot2_env$x_variable_names <- x_variable_names
 }
 clear_plot2_env <- function() {
-  # clear everything from local environment, except for registered colours ("reg_cols")
-  vars_in_env <- ls(envir = plot2_env)
+  # clear everything from local environment, except for registered colours ("reg_cols"),
+  # and forget any unfinished calls; used by the tests to recover from failures
+  vars_in_env <- ls(envir = plot2_env, all.names = TRUE)
   vars_to_remove <- setdiff(vars_in_env, "reg_cols")
   rm(list = vars_to_remove, envir = plot2_env)
+  plot2_session$call_stack <- list()
 }
 
 sigfigs <- function(x) {
