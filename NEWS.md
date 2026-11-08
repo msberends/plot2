@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* create_interactively() serves only a copy of the logo, no longer the whole folder that contains it
 * Column names are no longer parsed as R code in back-to-back and UpSet plots, so data with unusual column names (such as `my col`) work, and column names can never run code
 * `label_taxonomy()` italicises species names only after a genus or an abbreviated genus, so ordinary words stay upright
 * `?plot2` has a new section 'Automatic choices' that lists every decision plot2 makes by itself, its rule and the argument that overrides it

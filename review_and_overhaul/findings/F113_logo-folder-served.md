@@ -4,7 +4,7 @@ title: The whole folder of logo_path is served over HTTP
 severity: critical
 type: security
 area: shiny
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -50,3 +50,4 @@ Embed the logo as a data URI (`base64enc`/`xfun::base64_uri()`, or read the SVG 
 
 - 2026-11-08: filed in R07 (verified).
 - 2026-11-08: severity set to critical by the maintainer (all security findings are critical).
+- 2026-11-08: fixed: the logo is copied alone into a temporary folder that is served; the type and existence of logo_path are now really checked (part of F125); tests S01.04 (unparked) and S01.08.

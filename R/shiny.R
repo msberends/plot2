@@ -43,13 +43,11 @@ create_interactively <- function(data = NULL,
                                  hide_export_buttons = NULL,
                                  upload_tab = FALSE) {
   
-  logo_path <- tryCatch({
-    # might return an error:
-    is.null(logo_path) || (file.exists(logo_path) && grepl("[.](svg|jpg|png|gif)$", logo_path, ignore.case = TRUE))
-    logo_path
-  }, error = function(e) NULL)
-  if (!is.null(logo_path) && !file.exists(logo_path)) {
-    stop("Logo file does not exist or is not of type SVG, JPG, PNG, GIF: ", logo_path, ". Use `logo_path = NULL` to remove the logo.", call. = FALSE)
+  if (!is.null(logo_path) &&
+      !(is.character(logo_path) && length(logo_path) == 1 && isTRUE(file.exists(logo_path)) &&
+        grepl("[.](svg|jpe?g|png|gif)$", logo_path, ignore.case = TRUE))) {
+    stop("Logo file does not exist or is not of type SVG, JPG, PNG, GIF: ", paste(logo_path, collapse = ", "),
+         ". Use `logo_path = NULL` to remove the logo.", call. = FALSE)
   }
   
   rlang::check_installed("shiny")
@@ -70,9 +68,13 @@ create_interactively <- function(data = NULL,
     max_height <- min(res[length(res)] - 400, max_height)
   }
   
-  # in server or before shiny::runGadget()
+  # serve a copy of the logo from a folder of its own, never the folder of the logo (F113)
   if (!is.null(logo_path)) {
-    shiny::addResourcePath("plot2res", dirname(logo_path))
+    logo_dir <- tempfile("plot2logo")
+    dir.create(logo_dir)
+    logo_file <- paste0("logo.", tolower(tools::file_ext(logo_path)))
+    file.copy(logo_path, file.path(logo_dir, logo_file))
+    shiny::addResourcePath("plot2res", logo_dir)
   }
   
   # Collect datasets
@@ -232,7 +234,7 @@ create_interactively <- function(data = NULL,
     if (!is.null(logo_path)) { 
       shiny::div(
         id = "logo-container",
-        shiny::img(src = file.path("plot2res", basename(logo_path)), height = "100px")
+        shiny::img(src = file.path("plot2res", logo_file), height = "100px")
       )
     },
     

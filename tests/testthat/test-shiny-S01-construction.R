@@ -42,7 +42,6 @@ test_that("S01.03 every slider has a range that can be used", {
 })
 
 test_that("S01.04 a logo is served on its own, not together with the rest of its folder", {
-  skip_open_finding("F113")
   dir <- tempfile("logo")
   dir.create(dir)
   file.copy(system.file("logo.svg", package = "plot2"), file.path(dir, "logo.svg"))
@@ -70,4 +69,12 @@ test_that("S01.07 hide_generated_code and hide_export_buttons add their CSS", {
   html <- as.character(shiny_app_env(app)$ui)
   expect_match(html, ".generated-code { display: none; }", fixed = TRUE)
   expect_match(html, "#export, .show-export { display: none; }", fixed = TRUE)
+})
+
+test_that("S01.08 the logo is shown and served from its own folder", {
+  app <- shiny_app()
+  served <- shiny::resourcePaths()[["plot2res"]]
+  expect_identical(list.files(served), "logo.svg")
+  expect_match(as.character(shiny_app_env(app)$ui), 'src="plot2res/logo.svg"', fixed = TRUE)
+  expect_error(shiny_app(logo_path = system.file("DESCRIPTION", package = "plot2")), "not of type")
 })
