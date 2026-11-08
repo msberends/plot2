@@ -2,6 +2,23 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: the remaining open items)
+
+- Maintainer decided (AskUserQuestion): F062 `%p` is the share of y and `x.max_items` counts the rest item; F110 is accepted and closed with a guard; I005 is written directly, in a separate commit.
+- Fixed and verified:
+  - F039 (f65a484): CLAUDE.md, codecov.yml, .Rbuildignore and .gitignore.
+  - F062 (3b815e7, Rd 9d07281): `max_items` placeholders and counting rule.
+  - F064 and F066 (eb3be7a): back-to-back halves share one value scale (built twice, the second time with the largest value of both halves, unless `y.limits` is set) and have matching colours and one merged legend.
+  - F038 (5c4c8a4) and I001: `test_plot2.R` split into `test-legacy-*.R` with `helper-legacy.R`, guards for sf, AMR and ggforce, 21 vdiffr snapshots (`test-snapshots-types.R`), and a CRAN core: measured under CRAN conditions at 165 s with no failures, and the Shiny server tests (about 42 s) now skip on CRAN.
+  - F110 (dcb82a8): closed as accepted (0.11 s to 0.058 s per small call); T03.06 checks that the complete theme is built once, T03.07 is a local timing guard.
+  - I005 (d9f3357): README opening ("Plots for users, not for developers.", the ward example as one `plot2()` call, the `plot()` framing) and the vignette introduction. Separate commit, revertable as a whole.
+  - I002: all 24 R02 sheets coded (`test-validate-<nn>-*.R`); the formerly parked cases are active. Coding them found five defects: F137 (a `type` of length 2 was shortened silently), F138 (`size`, `width`, `linewidth` unvalidated), F140 (`datalabels.angle = 270` overlapped the bars) and F141 (horizontal plots read in reverse for factors, `"alpha"` and `FALSE`), all fixed; F139 (empty facet panel warnings) partly fixed, open.
+- F061: the attempt to remove the colour expansion block (c329cb2) broke A06.01 and A08.01 and was reverted (4ff67bf): when colours reach a geom as fixed parameters, ggplot2 needs one value per drawn group. Only the no-op line is removed and the block explained (0758173); open for the structural fix.
+- Visible changes worth knowing: factors in horizontal plots (such as age groups in a dumbbell plot) now read in level order from the top (F141; the dumbbell snapshot was updated); bars without a category no longer use `position_dodge2()` (F139).
+- Mistake on my side: the staged deletion of `test_plot2.R` slipped into the I005 commit; I noticed it before pushing and recommitted I005 without it.
+- Checks: full suite 763 tests, 2 failed in the import audit (T09.01, T09.02: the `@importFrom` tags stayed on `sort_data()` after the split for F141), fixed and T09 rerun green; 8 skipped; 0 warnings; both vignettes and all examples run (only the intended "red123" warning).
+- Next: F061 (structural), F139 (guide warning on an empty panel); then the move of open findings to GitHub issues.
+
 ## 2026-11-08 (session 6, continued: Phase 6, the Shiny app)
 
 - Maintainer decided (AskUserQuestion):

@@ -2831,8 +2831,6 @@ validate_sorting <- function(sort_method, horizontal) {
   sort_method
 }
 
-#' @importFrom dplyr n_distinct
-#' @importFrom forcats fct_inorder fct_reorder
 sort_data <- function(values,
                       original_values, # required for sort = FALSE, should be according to original values
                       sort_method,
@@ -2866,6 +2864,8 @@ sort_data <- function(values,
   out
 }
 
+#' @importFrom dplyr n_distinct
+#' @importFrom forcats fct_inorder fct_reorder
 sort_data_vertical <- function(values,
                                original_values,
                                sort_method,
