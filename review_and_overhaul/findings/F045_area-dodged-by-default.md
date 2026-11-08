@@ -4,7 +4,7 @@ title: Area plots with a category are dodged (shifted sideways) when not stacked
 severity: high
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R02 sheet 08
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F045 Area plots dodged by default
@@ -42,3 +42,4 @@ Restrict dodge to bar-like geoms; use identity (with fill opacity) or stack for 
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Unstacked areas use position identity (overlaid at their x values); `stacked = TRUE` still stacks. Whether stacking should become the default for areas is left open. Regression test 08.03.

@@ -50,7 +50,6 @@ test_that("08.02 columns: width 0.5, dodged by category, stacked, filled and rev
 })
 
 test_that("08.03 areas with a category are not dodged when not stacked", {
-  skip_open_finding("F045")
   p <- expect_plot2(plot2(fx_cat, x, y, category, type = "area"))
   expect_false(positions(p)[layer_index(p, "area")] == "PositionDodge2")
 })

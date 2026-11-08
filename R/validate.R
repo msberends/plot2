@@ -1612,6 +1612,9 @@ generate_geom <- function(type,
     position <- position_stack(reverse = reverse)
   } else if (isTRUE(stacked_fill)) {
     position <- position_fill(reverse = reverse)
+  } else if (type == "geom_area") {
+    # areas must stay at their x values: overlay them (dodging shifts them sideways)
+    position <- "identity"
   } else {
     # small whitespace between columns:
     position <- position_dodge2(width = width * 1.05, preserve = "single")

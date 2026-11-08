@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: area plots with a category were shifted sideways; unstacked areas are now overlaid at their x values
 * Fixed: giving fewer colours than categories failed with "Insufficient values in manual scale"; the colours are now recycled with a warning
 * Fixed: a histogram of constant values was empty because the automatic binwidth was 0
 * Fixed: `y.transform = "reverse"` applied `y.expand` to the wrong sides and in the wrong units
