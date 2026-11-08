@@ -23,53 +23,45 @@ fx_upset <- data.frame(a = c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE),
                        w = c(1, 2, 3, 4, 5, 6))
 
 test_that("E05.01 result is a patchwork of four plots", {
-  local_known_deprecation("F075")
   p <- expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
   expect_s3_class(p, "patchwork")
   expect_length(p, 4)
 })
 
 test_that("E05.02 intersection sizes are the combination counts, sorted descending", {
-  local_known_deprecation("F075")
   p <- plot2(fx_upset, x = c(a, b, c), type = "upset")
   expect_identical(as.numeric(layer_df(p[[2]], "bar")$y), c(2, 1, 1, 1, 1))
 })
 
 test_that("E05.03 set sizes equal the column sums", {
-  local_known_deprecation("F075")
   p <- plot2(fx_upset, x = c(a, b, c), type = "upset")
   # drawn as negative bars, growing to the left
   expect_setequal(abs(as.numeric(layer_df(p[[3]], "bar")$y)), c(4, 3, 3))
 })
 
 test_that("E05.04 y title: default 'Intersection size', replaced by y.title", {
-  local_known_deprecation("F075")
   upset_ylab <- function(p) toString(p[[1]]$layers[[1]]$aes_params$label)
   expect_identical(upset_ylab(plot2(fx_upset, x = c(a, b, c), type = "upset")), "Intersection size")
   expect_identical(upset_ylab(plot2(fx_upset, x = c(a, b, c), type = "upset", y.title = "Patients")), "Patients")
 })
 
 test_that("E05.05 a category stacks the intersection bars", {
-  local_known_deprecation("F075")
   p <- expect_plot2(plot2(fx_upset, x = c(a, b, c), category = g, type = "upset"))
   expect_identical(as.character(scale_breaks(p[[2]], "fill")), c("f", "m"))
 })
 
 test_that("E05.06 with y, intersection heights are sums of y", {
-  local_known_deprecation("F075")
   p <- plot2(fx_upset, x = c(a, b, c), y = w, type = "upset")
   # a&b: 1 + 2; a: 3; b&c: 4; a&c: 5; c: 6
   expect_setequal(as.numeric(layer_df(p[[2]], "bar")$y), c(3, 3, 4, 5, 6))
 })
 
 test_that("E05.07 x.sort = 'freq-asc' sorts ascending", {
-  local_known_deprecation("F075")
   p <- plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = "freq-asc")
   expect_identical(as.numeric(layer_df(p[[2]], "bar")$y), c(1, 1, 1, 1, 2))
 })
 
 test_that("E05.08 a single x column errors", {
-  local_known_deprecation("F075")
   expect_error(plot2(fx_upset, x = a, type = "upset"))
 })
 
@@ -84,7 +76,6 @@ test_that("E05.10 print = TRUE returns the plot invisibly (F010)", {
 })
 
 test_that("E05.11 no internal state left behind", {
-  local_known_deprecation("F075")
   expect_clean_state(plot2(fx_upset, x = c(a, b, c), type = "upset"), check = c("state", "locale"))
 })
 
@@ -93,6 +84,5 @@ test_that("E05.11b the random-number stream is untouched (F002)", {
 })
 
 test_that("E05.12 no R warnings (F075)", {
-  skip_open_finding("F075")
   expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
 })

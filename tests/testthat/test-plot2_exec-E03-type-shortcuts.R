@@ -65,7 +65,6 @@ test_that("E03.07 spider and radar: polygon in CoordSpider", {
 })
 
 test_that("E03.08 upset: patchwork of four plots", {
-  local_known_deprecation("F075")
   up <- data.frame(a = c(TRUE, TRUE, FALSE), b = c(TRUE, FALSE, TRUE))
   p <- plot2(up, x = c(a, b), type = "u")
   expect_s3_class(p, "patchwork")

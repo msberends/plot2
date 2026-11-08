@@ -1148,7 +1148,7 @@ plot2_exec <- function(.data,
       reframe(n = n(),
               out = summarise_function(`_var_y`)) |>
       rowwise() |>
-      mutate(count = sum(c_across(vars_x))) |>
+      mutate(count = sum(c_across(all_of(vars_x)))) |>
       # we must not yet use tibble here - we need row names later on
       as.data.frame()
     
