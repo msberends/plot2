@@ -45,12 +45,10 @@ dec_mark <- function() {
   if (!is.null(option_set)) {
     if (option_set %in% c(",", ".")) {
       return(option_set)
-    } else {
-      plot2_warning("Option 'dec_mark' has an invalid value and was ignored. Use a \",\" or \".\".")
     }
-  } else {
-    getOption("OutDec", default = ".")
+    warning("Option 'dec_mark' has an invalid value and was ignored. Use a \",\" or \".\".", call. = FALSE)
   }
+  getOption("OutDec", default = ".")
 }
 
 #' @rdname dec_mark
@@ -61,7 +59,7 @@ big_mark <- function() {
     if (option_set %in% c(",", ".", "", " ")) {
       return(option_set)
     } else {
-      plot2_warning("Option 'big_mark' has an invalid value and was ignored. Use a \",\" or \".\" or \" \" or \"\".")
+      warning("Option 'big_mark' has an invalid value and was ignored. Use a \",\" or \".\" or \" \" or \"\".", call. = FALSE)
     }
   }
   

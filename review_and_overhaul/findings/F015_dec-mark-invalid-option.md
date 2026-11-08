@@ -4,7 +4,7 @@ title: dec_mark() returns the warning text when the option is invalid
 severity: high
 type: bug
 area: i18n
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F014]
 origin: R01 §2.8
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F015 dec_mark() with an invalid option
@@ -46,3 +46,4 @@ Fall back to `getOption("OutDec", ".")` after warning; use a real `warning()` (s
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Falls back to `OutDec` after an invalid option and warns with a real R warning; regression test "F015" in `test-regression-phase1.R`.
