@@ -129,3 +129,11 @@ test_that("F083 move_layer() reorders by index and clamps the new position", {
   expect_identical(geoms(move_layer(p, layer = 1, move = 10)), c("GeomLine", "GeomRug", "GeomPoint"))
   expect_identical(geoms(move_layer(p, layer = 2, move = 0)), c("GeomPoint", "GeomLine", "GeomRug"))
 })
+
+test_that("F087 theme_minimal2(...) changes only the given properties", {
+  t_default <- theme_minimal2()
+  t <- theme_minimal2(plot.title = ggplot2::element_text(face = "italic"))
+  expect_identical(ggplot2::calc_element("plot.title", t)$face, "italic")
+  expect_identical(ggplot2::calc_element("plot.title", t)$colour, ggplot2::calc_element("plot.title", t_default)$colour)
+  expect_identical(ggplot2::calc_element("plot.title", t)$size, ggplot2::calc_element("plot.title", t_default)$size)
+})

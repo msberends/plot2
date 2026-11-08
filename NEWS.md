@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `theme_minimal2(...)` now changes only the given properties, like `+ theme(...)`
 * `coord_spider()` radial labels now follow `start` and the theme's font family and colour
 * `add_smooth(legend.value = )` now works on non-date x axes
 * `move_layer()` with a positive `move` no longer duplicates or drops layers

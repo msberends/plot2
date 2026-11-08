@@ -46,7 +46,6 @@ test_that("M08.04 + theme(...) merges with plot2's settings", {
 })
 
 test_that("M08.05 theme_minimal2(...) merges as well (F087)", {
-  skip_open_finding("F087")
   t <- theme_minimal2(plot.title = ggplot2::element_text(face = "italic"))
   expect_equal(as.numeric(S7::prop(el(t, "plot.title"), "size")), 13)
 })

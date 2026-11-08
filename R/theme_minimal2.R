@@ -95,8 +95,8 @@ theme_minimal2 <- function(...,
       complete = TRUE)
   
   if (length(list(...)) > 0) {
-    t <- t %+replace%
-      theme(...)
+    # merge like `+ theme(...)`, so only the given properties change (F087)
+    t <- t + theme(...)
   }
   
   t

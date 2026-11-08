@@ -4,7 +4,7 @@ title: theme_minimal2(...) replaces whole elements, losing plot2's settings for 
 severity: low
 type: bug
 area: theme
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -39,3 +39,4 @@ Use `t + theme(...)` (merge) instead of `%+replace%`.
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; theme_minimal2(...) merges with + theme(...) instead of %+replace%. Regression test F087.
