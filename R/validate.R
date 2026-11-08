@@ -313,12 +313,24 @@ validate_data <- function(df,
   # if the secondary Y-axis is not within the limits of the primary Y-axis, the primarY-axis will be transformed
   # so store the factor in which they change, and transform the data accordingly
   if (has_y_secondary(df)) {
-    max_primary <- max(get_y(df), na.rm = TRUE)
-    max_secondary <- max(get_y_secondary(df), na.rm = TRUE)
-    # if 25% difference, create own secondary y breaks
-    if (abs((max_secondary - max_primary) / max_secondary) >= 0.25)  {
-      plot2_env$y_secondary_factor <- max_secondary / max_primary
-      df$`_var_y_secondary` <- df$`_var_y_secondary` / plot2_env$y_secondary_factor
+    # map the range of the secondary values (including 0) linearly onto that of the primary
+    # values, also for negative values; zero ranges are not rescaled (F022)
+    rng_primary <- range(c(0, get_y(df)), na.rm = TRUE, finite = TRUE)
+    rng_secondary <- range(c(0, get_y_secondary(df)), na.rm = TRUE, finite = TRUE)
+    if (diff(rng_primary) > 0 && diff(rng_secondary) > 0) {
+      slope <- diff(rng_primary) / diff(rng_secondary)
+      intercept <- rng_primary[1] - slope * rng_secondary[1]
+      # rescale if the ranges differ by 25% or more, or are not both anchored at 0
+      if (abs(1 - 1 / slope) >= 0.25 || abs(intercept) > sqrt(.Machine$double.eps)) {
+        plot2_env$y_secondary_map <- c(slope = slope, intercept = intercept)
+        df$`_var_y_secondary` <- df$`_var_y_secondary` * slope + intercept
+        # the layer is drawn from the named column (see restore_mapping()), so that column
+        # in the plot data must hold the mapped values as well; the axis shows the originals
+        nm <- plot2_env$mapping_y_secondary
+        if (!is.null(nm) && nm %in% colnames(df) && !nm %in% c(get_x_name(df), get_y_name(df))) {
+          df[[nm]] <- df$`_var_y_secondary`
+        }
+      }
     }
   }
   
@@ -1274,13 +1286,14 @@ validate_y_scale <- function(df,
     secondary_values <- get_y_secondary(df)
     fun <- function(x) x
     br <- y_secondary.breaks
-    if (!is.null(plot2_env$y_secondary_factor)) {
-      # we previously transformed this variable to stay within the range of the primary Y-axis,
-      # so now transform back for the labels and the breaks
-      secondary_values <- secondary_values * plot2_env$y_secondary_factor
-      fctr <- eval(plot2_env$y_secondary_factor)
-      fun <- function(x) x * fctr
-      br <- br * plot2_env$y_secondary_factor
+    if (!is.null(plot2_env$y_secondary_map)) {
+      # we previously mapped this variable onto the range of the primary Y-axis,
+      # so now map back for the labels and the breaks (F022)
+      slope <- plot2_env$y_secondary_map[["slope"]]
+      intercept <- plot2_env$y_secondary_map[["intercept"]]
+      fun <- function(x) (x - intercept) / slope
+      secondary_values <- fun(secondary_values)
+      br <- fun(br)
     }
     sec_y <- sec_axis(transform = fun,
                       breaks = br,

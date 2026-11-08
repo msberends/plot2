@@ -113,3 +113,30 @@ test_that("F028 %p datalabels sum to 100% per x value by default, or per datalab
   expect_equal(as.vector(tapply(as.double(sub("%", "", ld$label)), ld$PANEL, sum)), c(100, 100), tolerance = 0.002)
   expect_error(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "row"), "must be")
 })
+
+test_that("F022 the secondary axis maps the full range, also for zero and negative values", {
+  sec_labels <- function(p) ggplot2::ggplot_build(p)$layout$panel_params[[1]]$y.sec$get_labels()
+  d <- data.frame(x = c("a", "b", "c"), y = c(10, 20, 30), z = c(0, 0, 0))
+  expect_plot2(plot2(d, x, y, y_secondary = z))
+  d$z <- c(-5, 5, 15)
+  p <- expect_plot2(plot2(d, x, y, y_secondary = z))
+  # the secondary values span the primary range: -5 at the lowest, 15 at the highest break
+  expect_identical(sec_labels(p)[c(1, 4)], c("-5.00", "15.00"))
+  expect_equal(range(layer_df(p, "line")$y), c(0, 30))
+})
+
+test_that("F068 the secondary series of a column plot is a line with points in the secondary colour", {
+  df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
+  p <- expect_plot2(plot2(df, x, y, y_secondary = z))
+  expect_geoms(p, c("bar", "line", "point"))
+  # one connected line over the discrete x axis, scaled onto the primary axis
+  expect_identical(length(unique(layer_df(p, "line")$group)), 1L)
+  expect_equal(max(layer_df(p, "line")$y), 3)
+  expect_false(identical(unique(layer_df(p, "line")$colour), unique(layer_df(p, "bar")$fill)))
+  # with a category: one line per category, without warnings
+  d2 <- data.frame(x = rep(c("a", "b", "c"), 2), c = rep(c("p", "q"), each = 3), y = 1:6, z = c(10, 30, 20, 5, 8, 9))
+  p <- expect_plot2(plot2(d2, x, y, c, y_secondary = z))
+  expect_identical(length(unique(layer_df(p, "line")$group)), 2L)
+  # other primary types keep their type
+  expect_geoms(plot2(df, x, y, y_secondary = z, type = "point"), c("point", "point"), exact = TRUE)
+})

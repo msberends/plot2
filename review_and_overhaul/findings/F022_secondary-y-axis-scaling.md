@@ -4,7 +4,7 @@ title: Secondary y-axis scaling divides by zero, ignores negatives and builds th
 severity: high
 type: bug
 area: scales
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -47,3 +47,4 @@ Use a linear map between both ranges (min and max), guard against zero ranges, a
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed: the secondary values are mapped linearly (slope and intercept, ranges including 0) onto the primary range, so negative values work and zero ranges are not rescaled (no division by zero); the axis maps back with the inverse. Found while testing: the secondary layer was drawn from the user's column (restore_mapping()), so the rescaled values were never drawn; the named column in the plot data now holds the mapped values too. Whisker width uses linewidth instead of lwd. Not changed: the primary breaks still come from ggplot_build(), since only a build gives the breaks as drawn after limits, expansion, facets and coord; computing them from the scale would risk misaligned axes. Tests: 06.18 unparked, test-regression-phase4.R (F022).

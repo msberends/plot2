@@ -69,7 +69,7 @@
 #'   - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`, and accepts any value of `type`, such as `"line"` or `"l"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
-#' @param y_secondary.type see **`type`**
+#' @param y_secondary.type Type of the secondary series, see **`type`**. The default (`NULL`) is a line with points if the primary type is a column or bar plot, so that the secondary series does not cover the bars, and the primary type otherwise.
 #' @param title,subtitle,caption,tag,x.title,y.title,category.title,legend.title,y_secondary.title A title to use. This can be:
 #' 
 #' - A [character], which supports markdown by using [md_to_expression()] internally if `markdown = TRUE` (which is the default)
@@ -479,7 +479,7 @@ plot2 <- function(.data,
                   y.position = "left",
                   y.zoom = FALSE,
                   y_secondary = NULL,
-                  y_secondary.type = type,
+                  y_secondary.type = NULL,
                   y_secondary.title = TRUE,
                   y_secondary.colour = colour,
                   y_secondary.colour_fill = colour_fill,
@@ -702,7 +702,7 @@ plot2_exec <- function(.data,
                        y.position = "left",
                        y.zoom = FALSE,
                        y_secondary = NULL,
-                       y_secondary.type = type,
+                       y_secondary.type = NULL,
                        y_secondary.title = TRUE,
                        y_secondary.colour = colour,
                        y_secondary.colour_fill = colour_fill,
@@ -1383,8 +1383,19 @@ plot2_exec <- function(.data,
     plot2_warning("'size' has been replaced with 'linewidth' for line/area types, assuming ", font_blue("linewidth = ", size, collapse = NULL))
     linewidth <- size
   }
+  y_secondary_points <- FALSE
   if (has_y_secondary(df)) {
-    y_secondary.type <- suppressMessages(validate_type(type = y_secondary.type, df = df))
+    if (is.null(y_secondary.type) || identical(y_secondary.type, "")) {
+      # bars on bars would hide the primary bars, so draw a line with points (F068)
+      if (type %in% c("geom_col", "geom_bar")) {
+        y_secondary.type <- "geom_line"
+        y_secondary_points <- TRUE
+      } else {
+        y_secondary.type <- type
+      }
+    } else {
+      y_secondary.type <- suppressMessages(validate_type(type = y_secondary.type, df = df))
+    }
   }
   # transform data if not a continuous geom but group sizes are > 1
   if (any(group_sizes(df) > 1) && !geom_is_continuous(type) && type_backup != "sankey" &&
@@ -1798,8 +1809,16 @@ plot2_exec <- function(.data,
                        mapping = utils::modifyList(mapping, aes(y = `_var_y_secondary`)),
                        coef = 1.5, # 1.5 * IQR
                        width = width * ifelse(has_category(df), 1, 0.75),
-                       lwd = size,
+                       linewidth = size,
                        colour = y_secondary.colour)
+      }
+      mapping_secondary <- utils::modifyList(mapping, aes(y = `_var_y_secondary`))
+      if (geom_is_line_or_area(y_secondary.type) && !is.numeric(get_x(df))) {
+        # connect the values over a discrete x axis, per category if there is one
+        mapping_secondary <- utils::modifyList(mapping_secondary,
+                                               if (has_category(df)) aes(group = `_var_category`) else aes(group = 1))
+        # lines have no fill
+        mapping_secondary$fill <- NULL
       }
       p <- p +
         generate_geom(type = y_secondary.type,
@@ -1819,9 +1838,31 @@ plot2_exec <- function(.data,
                       cols = list(colour = y_secondary.colour,
                                   colour_fill = y_secondary.colour_fill),
                       # an explicit y_secondary.colour always applies (F077)
-                      original_colours = original_colours && misses_y_secondary.colour,
+                      original_colours = original_colours && misses_y_secondary.colour && !y_secondary_points,
                       dots_geom = dots_geom,
-                      mapping = utils::modifyList(mapping, aes(y = `_var_y_secondary`)))
+                      mapping = mapping_secondary)
+      if (isTRUE(y_secondary_points)) {
+        p <- p +
+          generate_geom(type = "geom_point",
+                        df = df,
+                        stacked = FALSE,
+                        stacked_fill = FALSE,
+                        horizontal = horizontal,
+                        width = width,
+                        size = size,
+                        linetype = linetype,
+                        linewidth = linewidth,
+                        reverse = reverse,
+                        na.rm = na.rm,
+                        violin_scale = violin_scale,
+                        jitter_seed = jitter_seed,
+                        binwidth = binwidth,
+                        cols = list(colour = y_secondary.colour,
+                                    colour_fill = y_secondary.colour_fill),
+                        original_colours = original_colours && misses_y_secondary.colour && !y_secondary_points,
+                        dots_geom = dots_geom,
+                        mapping = mapping_secondary)
+      }
     }
   }
   # check for spider plots

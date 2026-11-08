@@ -45,14 +45,14 @@ test_that("E09.04b boxplots raise no deprecation warning (F078)", {
   expect_plot2(plot2(iris, Species, Sepal.Length))
 })
 
-test_that("E09.05 secondary y adds a layer for the secondary series", {
+test_that("E09.05 secondary y adds layers for the secondary series (a line with points for columns, F068)", {
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   n_primary <- length(geoms(plot2(df, x, y)))
-  expect_identical(length(geoms(plot2(df, x, y, y_secondary = z))), n_primary + 1L)
+  expect_identical(length(geoms(plot2(df, x, y, y_secondary = z))), n_primary + 2L)
+  expect_identical(length(geoms(plot2(df, x, y, y_secondary = z, y_secondary.type = "col"))), n_primary + 1L)
 })
 
 test_that("E09.06 secondary series of a column plot is not drawn over the bars (F068)", {
-  skip_open_finding("F068")
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   expect_geoms(plot2(df, x, y, y_secondary = z), "line")
 })

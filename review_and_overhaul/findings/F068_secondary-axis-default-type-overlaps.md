@@ -4,7 +4,7 @@ title: Secondary y-axis defaults to the primary type, so two column layers overl
 severity: medium
 type: design
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: possible
@@ -40,3 +40,4 @@ print(geoms(p))
 
 - 2026-11-07: filed in R03, reproduced.
 - 2026-11-08: maintainer decided (AskUserQuestion): secondary series defaults to a line with points when the primary type is col or bar; otherwise the primary type.
+- 2026-11-08: fixed as decided: y_secondary.type defaults to NULL; for a col or bar primary the secondary series is a line with points in the secondary colour (grouped over a discrete x, per category if any, without the fill aesthetic), otherwise the primary type. Tests: E09.05 adapted (two extra layers), E09.06 unparked, test-regression-phase4.R (F068).

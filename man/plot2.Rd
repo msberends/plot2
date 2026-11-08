@@ -81,7 +81,7 @@ plot2(
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
   y_secondary.colour = colour,
   y_secondary.colour_fill = colour_fill,
@@ -298,7 +298,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{y_secondary}{Values to use for plotting along the secondary Y-axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary Y-axis will set the colour to the axis titles.}
 
-\item{y_secondary.type}{see \strong{\code{type}}}
+\item{y_secondary.type}{Type of the secondary series, see \strong{\code{type}}. The default (\code{NULL}) is a line with points if the primary type is a column or bar plot, so that the secondary series does not cover the bars, and the primary type otherwise.}
 
 \item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary Y-axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 

@@ -124,7 +124,6 @@ test_that("06.18 a secondary axis is drawn; a zero series does not error", {
   d <- data.frame(x = c("a", "b", "c"), y = c(10, 20, 30), z = c(0.1, 0.5, 0.9))
   p <- expect_plot2(plot2(d, x, y, y_secondary = z))
   expect_false(inherits(scale_of(p, "y")$secondary.axis, "waiver"))
-  skip_open_finding("F022")
   d$z <- 0
   expect_plot2(plot2(d, x, y, y_secondary = z))
 })
