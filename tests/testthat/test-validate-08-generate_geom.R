@@ -119,5 +119,8 @@ test_that("08.12 a loosely supported geom gives a caution and builds without war
 
 test_that("08.13 beeswarm uses ggbeeswarm", {
   skip_if_not_installed("ggbeeswarm")
-  expect_geoms(expect_plot2(plot2(d_dist, x, y, type = "beeswarm")), "GeomBeeswarm")
+  p <- expect_plot2(plot2(d_dist, x, y, type = "beeswarm"))
+  # ggbeeswarm draws points with a beeswarm position
+  expect_geoms(p, "point", exact = TRUE)
+  expect_s3_class(p$layers[[1]]$position, "PositionBeeswarm")
 })
