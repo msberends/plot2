@@ -1926,13 +1926,7 @@ plot2_exec <- function(.data,
   } else if (type != "geom_sf") {
     category_txt <- get_category(df)
     if (is.null(category.labels) &&
-        any(category_txt %like% "[*]+.+[*]+" |
-            category_txt %like% "[a-zA-Z0-9,.-]_[{].+[}]" |
-            category_txt %like% "[a-zA-Z0-9,.-] ?\\^ ?[{].+[}]" |
-            category_txt %like% "[a-zA-Z0-9,.-] ?\\^ ?[a-zA-Z0-9,._-]" |
-            category_txt %like% "<sup>.+</sup>" |
-            category_txt %like% "<sub>.+</sub>" |
-            category_txt %like% "[$]", na.rm = TRUE)) {
+        any(has_markdown(category_txt), na.rm = TRUE)) {
       plot2_message("The ", font_blue("category"), " seems to contain markdown, assuming ", font_blue("category.labels = md_to_expression"))
       category.labels <- md_to_expression
     }

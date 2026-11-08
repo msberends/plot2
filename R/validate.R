@@ -2024,16 +2024,16 @@ validate_markdown <- function(markdown,
   } else {
     df_titles <- NULL
   }
-  txt <- paste(c(tryCatch(as.character(x.title), error = function(e) ""),
-                 tryCatch(as.character(y.title), error = function(e) ""),
-                 tryCatch(as.character(legend.title), error = function(e) ""),
-                 tryCatch(as.character(title), error = function(e) ""),
-                 tryCatch(as.character(subtitle), error = function(e) ""),
-                 tryCatch(as.character(tag), error = function(e) ""),
-                 tryCatch(as.character(caption),  error = function(e) ""),
-                 tryCatch(as.character(df_titles),  error = function(e) "")),
-               collapse = "")
-  out <- txt %like% "(\\^|[_*].+[_*])"
+  # check each title on its own, so that patterns cannot match across titles (F018)
+  txt <- c(tryCatch(as.character(x.title), error = function(e) ""),
+           tryCatch(as.character(y.title), error = function(e) ""),
+           tryCatch(as.character(legend.title), error = function(e) ""),
+           tryCatch(as.character(title), error = function(e) ""),
+           tryCatch(as.character(subtitle), error = function(e) ""),
+           tryCatch(as.character(tag), error = function(e) ""),
+           tryCatch(as.character(caption),  error = function(e) ""),
+           tryCatch(as.character(df_titles),  error = function(e) ""))
+  out <- any(txt %like% "(\\^|[_*].+[_*])", na.rm = TRUE)
   if (isTRUE(out)) {
     plot2_message("Assuming ", font_blue("markdown = TRUE"))
   }
@@ -2090,14 +2090,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   }
   
   # support for markdown
-  if (isTRUE(markdown) &&
-      (isTRUE(out %like% "[*]+.+[*]+")
-       || isTRUE(out %like% "[a-zA-Z0-9,.-]_[{].+[}]")
-       || isTRUE(out %like% "[a-zA-Z0-9,.-] ?\\^ ?[{].+[}]")
-       || isTRUE(out %like% "[a-zA-Z0-9,.-] ?\\^ ?[a-zA-Z0-9,._-]")
-       || isTRUE(out %like% "<sup>.+</sup>")
-       || isTRUE(out %like% "<sub>.+</sub>")
-       || isTRUE(out %like% "[$]"))) {
+  if (isTRUE(markdown) && isTRUE(any(has_markdown(out)))) {
     out <- md_to_expression(out)
   }
   

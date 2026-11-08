@@ -4,7 +4,7 @@ title: Markdown conversion breaks on apostrophes and turns any $ into plotmath
 severity: high
 type: bug
 area: markdown
-status: open
+status: verified
 verification: verified
 effort: M
 api_change: no
@@ -47,3 +47,4 @@ Escape quotes and backslashes before building the expression, or construct the e
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed: md_to_expression() protects apostrophes and backslashes outside $...$ parts and restores them as escapes; $...$ follows Pandoc's rule (md_plotmath_regex), so a single $ or currency amounts stay text; one has_markdown() helper replaces the duplicated detection in validate_title() and plot2_exec; validate_markdown() checks each title on its own; a title of several $...$ parts is no longer parsed as one expression. Tests: test-regression-phase4.R (F018).

@@ -18,6 +18,8 @@ This function converts common markdown language to an \R \link[grDevices:plotmat
 \details{
 This function only supports common markdown (italic, bold, bold-italic, subscript, superscript), but also supports some additional functionalities for more advanced expressions using \R \link[grDevices:plotmath]{plotmath}. Please see \emph{Examples}.
 
+Text between dollar signs is used as plotmath, as in Pandoc: the opening \code{$} must be followed and the closing \code{$} preceded by a non-space character, and the closing \code{$} must not be followed by a digit. A single \code{$} ("Costs in $") or amounts such as "$5 to $10" therefore stay text. Apostrophes and backslashes in the text are kept.
+
 In \code{\link[=plot2]{plot2()}}, this function can be also set to argument \code{category.labels} to print the data values as expressions:
 \itemize{
 \item \code{plot2(..., category.labels = md_to_expression)}

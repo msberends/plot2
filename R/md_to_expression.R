@@ -18,6 +18,8 @@
 #' @param x Text to convert. Each element is converted separately.
 #' @details This function only supports common markdown (italic, bold, bold-italic, subscript, superscript), but also supports some additional functionalities for more advanced expressions using \R [plotmath][grDevices::plotmath]. Please see *Examples*.
 #' 
+#' Text between dollar signs is used as plotmath, as in Pandoc: the opening `$` must be followed and the closing `$` preceded by a non-space character, and the closing `$` must not be followed by a digit. A single `$` ("Costs in $") or amounts such as "$5 to $10" therefore stay text. Apostrophes and backslashes in the text are kept.
+#' 
 #' In [plot2()], this function can be also set to argument `category.labels` to print the data values as expressions:
 #' - `plot2(..., category.labels = md_to_expression)`
 #' @export
@@ -54,10 +56,19 @@ md_to_expression <- function(x) {
     return(lapply(x, md_to_expression))
   }
   
-  if (x %like% "^[$].+[$]$") {
+  if (x %like% "^[$][^$]+[$]$") {
     # a full plotmath expression
     return(parse(text = gsub("^[$](.+)[$]$", "\\1", x, perl = TRUE)))
   }
+  
+  # protect apostrophes and backslashes in the text, but not in $plotmath$ parts,
+  # since the text is put between single quotes below (F018)
+  parts <- regmatches(x, gregexpr(paste0(md_plotmath_regex, "|[^$]+|[$]"), x, perl = TRUE))[[1]]
+  is_math <- grepl(paste0("^", md_plotmath_regex, "$"), parts, perl = TRUE)
+  parts[!is_math] <- gsub("\\", "\003", parts[!is_math], fixed = TRUE)
+  parts[!is_math] <- gsub("'", "\002", parts[!is_math], fixed = TRUE)
+  x <- paste(parts, collapse = "")
+  
   x <- paste0("'", x, "'")
   
   # remove backticks
@@ -100,8 +111,8 @@ md_to_expression <- function(x) {
   }
   
   # translate $plotmath$, such as $omega$
-  while (x %like% "[$].+[$]") {
-    x <- gsub("[$](.+?)[$]", "', \\1, '", x, perl = TRUE)
+  while (grepl(md_plotmath_regex, x, perl = TRUE)) {
+    x <- sub(md_plotmath_regex, "', \\1, '", x, perl = TRUE)
   }
   
   # clean up
@@ -114,10 +125,31 @@ md_to_expression <- function(x) {
   x <- gsub(", '^", "^", x, fixed = TRUE)
   x <- gsub("^, ", "", x)
   
+  # restore protected characters as escapes inside the quoted text (F018)
+  x <- gsub("\003", "\\\\", x, fixed = TRUE)
+  x <- gsub("\002", "\\'", x, fixed = TRUE)
+  
   tryCatch(parse(text = paste0("paste(", x, ")")),
            error = function(e) {
              stop("This cannot be parsed by md_to_expression(): \"", x,
                   "\"\n\nFor more complex expressions, start and end with '$' to write in plotmath, or use parse(text = \"...\").",
                   call. = FALSE)
            })
+}
+
+# $...$ marks plotmath, as in Pandoc: the opening $ is followed and the closing $ preceded by a
+# non-space character, and the closing $ is not followed by a digit, so that "Costs in $" and
+# "$5 to $10" stay text (F018)
+md_plotmath_regex <- "[$](?=[^\\s$])([^$]*?)(?<=[^\\s$])[$](?![0-9])"
+
+# does text contain markdown or plotmath that md_to_expression() converts? (F018)
+has_markdown <- function(x) {
+  x <- as.character(x)
+  x %like% "[*]+.+[*]+" |
+    x %like% "[a-zA-Z0-9,.-]_[{].+[}]" |
+    x %like% "[a-zA-Z0-9,.-] ?\\^ ?[{].+[}]" |
+    x %like% "[a-zA-Z0-9,.-] ?\\^ ?[a-zA-Z0-9,._-]" |
+    x %like% "<sup>.+</sup>" |
+    x %like% "<sub>.+</sub>" |
+    grepl(md_plotmath_regex, x, perl = TRUE)
 }

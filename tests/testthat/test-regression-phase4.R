@@ -27,3 +27,27 @@ test_that("F017 column names with regex characters can be plotted", {
   p <- expect_plot2(plot2(d, g, c(`rate (%)`, `n[1`)))
   expect_setequal(as.character(scale_breaks(p, "fill")), c("rate (%)", "n[1"))
 })
+
+test_that("F018 apostrophes and backslashes in markdown text are kept", {
+  expect_identical(deparse(md_to_expression("Children's *E. coli* isolates")[[1]]),
+                   deparse(quote(paste("Children's ", italic("E. coli"), " isolates"))))
+  expect_identical(deparse(md_to_expression("it's $omega$")[[1]]),
+                   deparse(quote(paste("it's ", omega))))
+  df <- data.frame(g = c("a", "b", "c"), v = 1:3)
+  p <- expect_plot2(plot2(df, g, v, title = "Children's *E. coli* isolates"))
+  expect_true(is.expression(ggplot2::get_labs(p)$title))
+})
+
+test_that("F018 a single or currency $ is text, paired $...$ is plotmath", {
+  df <- data.frame(g = c("a", "b", "c"), v = 1:3)
+  expect_type(ggplot2::get_labs(plot2(df, g, v, title = "Costs in $ per patient"))$title, "character")
+  expect_type(ggplot2::get_labs(plot2(df, g, v, title = "From $5 to $10"))$title, "character")
+  expect_identical(deparse(md_to_expression("$a$ and $b$")[[1]]), deparse(quote(paste(a, " and ", b))))
+})
+
+test_that("F018 markdown is not detected across titles", {
+  expect_false(plot2:::validate_markdown(NULL, x.title = "a*b", y.title = "c*d", legend.title = NULL,
+                                         title = NULL, subtitle = NULL, tag = NULL, caption = NULL))
+  expect_true(plot2:::validate_markdown(NULL, x.title = "*ab*", y.title = NULL, legend.title = NULL,
+                                        title = NULL, subtitle = NULL, tag = NULL, caption = NULL))
+})
