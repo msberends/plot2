@@ -22,8 +22,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr:reexports]{\%>\%}}, \code{\link[dplyr:reexports]{all_of}}, \code{\link[dplyr:reexports]{any_of}}, \code{\link[dplyr:nth]{first}}, \code{\link[dplyr:nth]{last}}, \code{\link[dplyr:context]{n}}, \code{\link[dplyr]{n_distinct}}}
+  \item{dplyr}{\code{\link[dplyr:\%>\%]{\%>\%}}, \code{\link[dplyr:all_of]{all_of}}, \code{\link[dplyr:any_of]{any_of}}, \code{\link[dplyr:first]{first()}}, \code{\link[dplyr:last]{last()}}, \code{\link[dplyr:n]{n()}}, \code{\link[dplyr:n_distinct]{n_distinct()}}}
 
-  \item{tidyselect}{\code{\link[tidyselect:starts_with]{ends_with}}, \code{\link[tidyselect]{everything}}, \code{\link[tidyselect:starts_with]{matches}}, \code{\link[tidyselect]{starts_with}}, \code{\link[tidyselect]{where}}}
+  \item{tidyselect}{\code{\link[tidyselect:ends_with]{ends_with()}}, \code{\link[tidyselect:everything]{everything()}}, \code{\link[tidyselect:matches]{matches()}}, \code{\link[tidyselect:starts_with]{starts_with()}}, \code{\link[tidyselect:where]{where()}}}
 }}
 

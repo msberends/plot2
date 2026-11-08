@@ -349,7 +349,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}.}
 
-\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%).}
+\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_fill]{filled} (i.e., stacked to 100\%).}
 
 \item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original X-axis.}
 
@@ -375,10 +375,10 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{linewidth}{Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 \itemize{
-\item \code{0.10} for \link[ggplot2:ggsf]{sf}
-\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
+\item \code{0.10} for \link[ggplot2:geom_sf]{sf}
+\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_area]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
 \item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
-\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_path]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
+\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_line]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
 }}
 
 \item{binwidth}{Width of bins (only useful for \code{geom = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
@@ -411,7 +411,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
 
-\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
+\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:theme_grey]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
 \item{background}{The background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=get_colour]{get_colour()}}. Only applies when \code{theme} is not \code{NULL}.}
 
@@ -432,7 +432,7 @@ Moreover, \code{\link[=plot2]{plot2()}} allows for in-place calculation of \code
 See \link{plot2-methods} for all implemented methods for different object classes.
 }
 \details{
-The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \code{\link[ggplot2:ggplot]{ggplot2}} functions such as \code{\link[ggplot2:ggplot]{ggplot()}}, \code{\link[ggplot2:aes]{aes()}}, \code{\link[ggplot2:geom_bar]{geom_col()}}, \code{\link[ggplot2:facet_wrap]{facet_wrap()}}, \code{\link[ggplot2:labs]{labs()}}, etc., and provides:
+The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \code{\link[ggplot2:ggplot]{ggplot2}} functions such as \code{\link[ggplot2:ggplot]{ggplot()}}, \code{\link[ggplot2:aes]{aes()}}, \code{\link[ggplot2:geom_col]{geom_col()}}, \code{\link[ggplot2:facet_wrap]{facet_wrap()}}, \code{\link[ggplot2:labs]{labs()}}, etc., and provides:
 \itemize{
 \item Writing as few lines of codes as possible
 \item Easy plotting in three 'directions': \code{x} (the regular X-axis), \code{category} (replaces 'fill' and 'colour') and \code{facet}

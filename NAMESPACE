@@ -61,146 +61,165 @@ export(theme_minimal2)
 export(unregister_colour)
 export(where)
 importFrom(broom,augment)
-importFrom(cleaner,as.percentage)
-importFrom(cleaner,percentage)
-importFrom(crayon,black)
-importFrom(crayon,blue)
-importFrom(crayon,bold)
-importFrom(crayon,italic)
-importFrom(crayon,magenta)
-importFrom(crayon,make_style)
-importFrom(crayon,strip_style)
-importFrom(crayon,white)
-importFrom(dplyr,`%>%`)
-importFrom(dplyr,across)
-importFrom(dplyr,all_of)
-importFrom(dplyr,any_of)
-importFrom(dplyr,arrange)
-importFrom(dplyr,as_tibble)
-importFrom(dplyr,bind_cols)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,c_across)
-importFrom(dplyr,count)
-importFrom(dplyr,cur_column)
-importFrom(dplyr,desc)
-importFrom(dplyr,distinct)
-importFrom(dplyr,filter)
-importFrom(dplyr,first)
-importFrom(dplyr,group_by)
-importFrom(dplyr,group_size)
-importFrom(dplyr,if_all)
-importFrom(dplyr,if_else)
-importFrom(dplyr,is_grouped_df)
-importFrom(dplyr,last)
-importFrom(dplyr,left_join)
-importFrom(dplyr,mutate)
-importFrom(dplyr,n)
-importFrom(dplyr,n_distinct)
-importFrom(dplyr,pull)
-importFrom(dplyr,reframe)
-importFrom(dplyr,rename)
-importFrom(dplyr,rowwise)
-importFrom(dplyr,select)
-importFrom(dplyr,summarise)
-importFrom(dplyr,ungroup)
-importFrom(dplyr,vars)
-importFrom(forcats,fct_inorder)
-importFrom(forcats,fct_relevel)
-importFrom(forcats,fct_reorder)
-importFrom(ggplot2,Coord)
-importFrom(ggplot2,`%+replace%`)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,after_stat)
-importFrom(ggplot2,calc_element)
-importFrom(ggplot2,coord_cartesian)
-importFrom(ggplot2,coord_flip)
-importFrom(ggplot2,element_blank)
-importFrom(ggplot2,element_grob)
-importFrom(ggplot2,element_line)
-importFrom(ggplot2,element_rect)
-importFrom(ggplot2,element_text)
-importFrom(ggplot2,expansion)
-importFrom(ggplot2,facet_grid)
-importFrom(ggplot2,facet_wrap)
-importFrom(ggplot2,fortify)
-importFrom(ggplot2,geom_col)
-importFrom(ggplot2,geom_density)
-importFrom(ggplot2,geom_label)
-importFrom(ggplot2,geom_line)
-importFrom(ggplot2,geom_point)
-importFrom(ggplot2,geom_polygon)
-importFrom(ggplot2,geom_segment)
-importFrom(ggplot2,geom_sf)
-importFrom(ggplot2,geom_sf_label)
-importFrom(ggplot2,geom_sf_text)
-importFrom(ggplot2,geom_smooth)
-importFrom(ggplot2,geom_text)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,ggplot_add)
-importFrom(ggplot2,ggplot_build)
-importFrom(ggplot2,ggproto)
-importFrom(ggplot2,guide_colourbar)
-importFrom(ggplot2,guide_legend)
-importFrom(ggplot2,guides)
-importFrom(ggplot2,is_ggplot)
-importFrom(ggplot2,is_waiver)
-importFrom(ggplot2,labs)
-importFrom(ggplot2,margin)
-importFrom(ggplot2,position_dodge2)
-importFrom(ggplot2,position_fill)
-importFrom(ggplot2,position_jitter)
-importFrom(ggplot2,position_stack)
-importFrom(ggplot2,rel)
-importFrom(ggplot2,scale_colour_continuous)
-importFrom(ggplot2,scale_colour_date)
-importFrom(ggplot2,scale_colour_datetime)
-importFrom(ggplot2,scale_colour_discrete)
-importFrom(ggplot2,scale_colour_gradient)
-importFrom(ggplot2,scale_colour_gradient2)
-importFrom(ggplot2,scale_colour_gradientn)
-importFrom(ggplot2,scale_colour_manual)
-importFrom(ggplot2,scale_fill_continuous)
-importFrom(ggplot2,scale_fill_date)
-importFrom(ggplot2,scale_fill_datetime)
-importFrom(ggplot2,scale_fill_discrete)
-importFrom(ggplot2,scale_fill_manual)
-importFrom(ggplot2,scale_linetype_manual)
-importFrom(ggplot2,scale_linewidth_manual)
-importFrom(ggplot2,scale_shape_manual)
-importFrom(ggplot2,scale_x_continuous)
-importFrom(ggplot2,scale_x_date)
-importFrom(ggplot2,scale_x_datetime)
-importFrom(ggplot2,scale_x_discrete)
-importFrom(ggplot2,scale_y_continuous)
-importFrom(ggplot2,scale_y_discrete)
-importFrom(ggplot2,sec_axis)
-importFrom(ggplot2,stat_boxplot)
-importFrom(ggplot2,theme)
-importFrom(ggplot2,theme_bw)
-importFrom(ggplot2,theme_grey)
-importFrom(ggplot2,unit)
-importFrom(ggplot2,waiver)
-importFrom(grDevices,col2rgb)
-importFrom(grDevices,colours)
-importFrom(grDevices,grey.colors)
-importFrom(grDevices,heat.colors)
-importFrom(grDevices,rainbow)
-importFrom(grDevices,rgb)
-importFrom(grDevices,terrain.colors)
-importFrom(grDevices,topo.colors)
+importFrom(cleaner,
+  as.percentage,
+  percentage
+)
+importFrom(crayon,
+  black,
+  blue,
+  bold,
+  italic,
+  magenta,
+  make_style,
+  strip_style,
+  white
+)
+importFrom(dplyr,
+  `%>%`,
+  across,
+  all_of,
+  any_of,
+  arrange,
+  as_tibble,
+  bind_cols,
+  bind_rows,
+  c_across,
+  count,
+  cur_column,
+  desc,
+  distinct,
+  filter,
+  first,
+  group_by,
+  group_size,
+  if_all,
+  if_else,
+  is_grouped_df,
+  last,
+  left_join,
+  mutate,
+  n,
+  n_distinct,
+  pull,
+  reframe,
+  rename,
+  rowwise,
+  select,
+  summarise,
+  ungroup,
+  vars
+)
+importFrom(forcats,
+  fct_inorder,
+  fct_relevel,
+  fct_reorder
+)
+importFrom(ggplot2,
+  Coord,
+  aes,
+  after_stat,
+  calc_element,
+  coord_cartesian,
+  coord_flip,
+  element_blank,
+  element_grob,
+  element_line,
+  element_rect,
+  element_text,
+  expansion,
+  facet_grid,
+  facet_wrap,
+  fortify,
+  geom_col,
+  geom_density,
+  geom_label,
+  geom_line,
+  geom_point,
+  geom_polygon,
+  geom_segment,
+  geom_sf,
+  geom_sf_label,
+  geom_sf_text,
+  geom_smooth,
+  geom_text,
+  ggplot,
+  ggplot_add,
+  ggplot_build,
+  ggproto,
+  guide_colourbar,
+  guide_legend,
+  guides,
+  is_ggplot,
+  is_waiver,
+  labs,
+  margin,
+  position_dodge2,
+  position_fill,
+  position_jitter,
+  position_stack,
+  rel,
+  scale_colour_continuous,
+  scale_colour_date,
+  scale_colour_datetime,
+  scale_colour_discrete,
+  scale_colour_gradient,
+  scale_colour_gradient2,
+  scale_colour_gradientn,
+  scale_colour_manual,
+  scale_fill_continuous,
+  scale_fill_date,
+  scale_fill_datetime,
+  scale_fill_discrete,
+  scale_fill_manual,
+  scale_linetype_manual,
+  scale_linewidth_manual,
+  scale_shape_manual,
+  scale_x_continuous,
+  scale_x_date,
+  scale_x_datetime,
+  scale_x_discrete,
+  scale_y_continuous,
+  scale_y_discrete,
+  sec_axis,
+  stat_boxplot,
+  theme,
+  theme_bw,
+  theme_grey,
+  unit,
+  waiver
+)
+importFrom(grDevices,
+  col2rgb,
+  colours,
+  grey.colors,
+  heat.colors,
+  rainbow,
+  rgb,
+  terrain.colors,
+  topo.colors
+)
 importFrom(showtext,showtext_auto)
-importFrom(showtextdb,font_install)
-importFrom(showtextdb,google_fonts)
-importFrom(showtextdb,load_showtext_fonts)
-importFrom(sysfonts,font_add)
-importFrom(sysfonts,font_families)
-importFrom(sysfonts,font_files)
-importFrom(tidyr,complete)
-importFrom(tidyr,full_seq)
-importFrom(tidyr,pivot_longer)
-importFrom(tidyr,pivot_wider)
-importFrom(tidyselect,ends_with)
-importFrom(tidyselect,everything)
-importFrom(tidyselect,matches)
-importFrom(tidyselect,starts_with)
-importFrom(tidyselect,where)
+importFrom(showtextdb,
+  font_install,
+  google_fonts,
+  load_showtext_fonts
+)
+importFrom(sysfonts,
+  font_add,
+  font_families,
+  font_files
+)
+importFrom(tidyr,
+  complete,
+  full_seq,
+  pivot_longer,
+  pivot_wider
+)
+importFrom(tidyselect,
+  ends_with,
+  everything,
+  matches,
+  starts_with,
+  where
+)

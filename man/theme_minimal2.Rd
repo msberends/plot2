@@ -24,7 +24,7 @@ theme_minimal2(
 \item{colour_background}{Colour to set for the background.}
 }
 \description{
-This \code{ggplot2} theme provides even more white area and less clutter than \code{\link[ggplot2:ggtheme]{theme_minimal()}}.
+This \code{ggplot2} theme provides even more white area and less clutter than \code{\link[ggplot2:theme_minimal]{theme_minimal()}}.
 }
 \examples{
 library(ggplot2)

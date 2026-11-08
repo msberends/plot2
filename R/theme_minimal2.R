@@ -20,7 +20,7 @@
 #' @param colour_font_secondary Colour to set for the plot subtitle and caption.
 #' @param colour_font_axis Colour to set for the axis titles on both x and y.
 #' @param colour_background Colour to set for the background.
-#' @importFrom ggplot2 element_text `%+replace%` theme_bw theme margin element_line element_blank unit element_rect
+#' @importFrom ggplot2 element_text theme_bw theme margin element_line element_blank unit element_rect
 #' @export
 #' @examples 
 #' library(ggplot2)
@@ -49,6 +49,9 @@ theme_minimal2 <- function(...,
   colour_font_axis <- get_colour(colour_font_axis, length = 1)
   colour_background <- get_colour(colour_background, length = 1)
   
+  # not imported via NAMESPACE: R cannot parse non-syntactic names in a grouped importFrom()
+  # of roxygen2 >= 8, other than the first one
+  `%+replace%` <- ggplot2::`%+replace%`
   t <- theme_bw(base_size = 11) %+replace%
     theme(
       axis.text.x = element_text(margin = margin(3, 0, 0, 0)),

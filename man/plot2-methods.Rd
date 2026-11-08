@@ -1136,7 +1136,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}.}
 
-\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%).}
+\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_fill]{filled} (i.e., stacked to 100\%).}
 
 \item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original X-axis.}
 
@@ -1162,10 +1162,10 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{linewidth}{Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 \itemize{
-\item \code{0.10} for \link[ggplot2:ggsf]{sf}
-\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
+\item \code{0.10} for \link[ggplot2:geom_sf]{sf}
+\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_area]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
 \item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
-\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_path]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
+\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_line]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
 }}
 
 \item{binwidth}{Width of bins (only useful for \code{geom = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
@@ -1198,7 +1198,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
 
-\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
+\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:theme_grey]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
 \item{background}{The background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=get_colour]{get_colour()}}. Only applies when \code{theme} is not \code{NULL}.}
 
@@ -1208,7 +1208,7 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{crs}{The coordinate reference system (CRS) to use. If this is not left blank, \code{\link[sf:st_transform]{sf::st_transform()}} will be used to transform the geometric data to the new CRS.}
 
-\item{datalabels.centroid}{A \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:geos_unary]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:geos_unary]{sf::st_point_on_surface()}}).}
+\item{datalabels.centroid}{A \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:st_centroid]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:st_point_on_surface]{sf::st_point_on_surface()}}).}
 }
 \description{
 These are the implemented methods for different S3 classes to be used in \code{\link[=plot2]{plot2()}}. Since they have an extensive list of arguments, they are placed here on a separate manual page.
