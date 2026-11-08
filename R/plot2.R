@@ -883,7 +883,7 @@ plot2_exec <- function(.data,
       type_backup <- "spider"
       type <- "polygon"
     }
-    if (type %like% "bar") {
+    if (type %like% "^(bar|bars|geom_bar)$") {
       type <- "col"
       horizontal <- TRUE
     }

@@ -73,10 +73,10 @@ test_that("E03.08 upset: patchwork of four plots", {
 })
 
 test_that("E03.09 'errorbar' is not turned into horizontal columns (F009)", {
-  skip_open_finding("F009")
-  df <- data.frame(x = c("a", "b"), y = c(2, 3), lo = c(1, 2), hi = c(3, 4))
-  p <- plot2(df, x, y, type = "errorbar", ymin = lo, ymax = hi)
+  df <- data.frame(x = c("a", "b"), y = c(2, 3))
+  p <- plot2(df, x, y, type = "errorbar")
   expect_false(identical(coord_class(p), "CoordFlip"))
+  expect_true("GeomErrorbar" %in% geoms(p))
 })
 
 test_that("E03.10 decimal.mark equal to big.mark: big mark becomes a space", {

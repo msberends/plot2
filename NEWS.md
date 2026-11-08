@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: types that merely contain "bar" (such as `"errorbar"` and `"crossbar"`) were turned into horizontal columns
 * Fixed: `theme = theme_bw` (a theme function instead of its name) failed in several plot types
 * Fixed: `plot2()` no longer changes the random-number stream (`.Random.seed`); the tip about `options(plot2.silent = TRUE)` is now shown once per session
 * Fixed: the message about rows removed with `na.rm = TRUE` was garbled ("rowss")

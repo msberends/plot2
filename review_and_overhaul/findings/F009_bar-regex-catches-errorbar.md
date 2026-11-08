@@ -4,7 +4,7 @@ title: Any type containing "bar" (errorbar, crossbar) becomes horizontal columns
 severity: high
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: [F031]
 origin: R01 §2.2
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F009 "bar" regex catches errorbar and crossbar
@@ -47,3 +47,4 @@ Anchor the pattern: `^(bar|bars|geom_bar)$`.
 ## History
 
 - 2026-11-07: filed in R01, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Pattern anchored to `^(bar|bars|geom_bar)$`; regression test E03.09 (its data no longer passes unsupported `ymin`/`ymax` through `...`).
