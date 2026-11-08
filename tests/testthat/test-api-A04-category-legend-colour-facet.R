@@ -34,7 +34,7 @@ test_that("A04.03 legend.position = NULL means the automatic default (documentat
 })
 
 test_that("A04.04 colour_opacity applies with an explicit colour", {
-  expect_identical(bar_fill(plot2(fx_counts, group, n, colour = "red", colour_opacity = 0.5))[1], "#FF000080")
+  expect_identical(unname(as.character(bar_fill(plot2(fx_counts, group, n, colour = "red", colour_opacity = 0.5))[1])), "#FF000080")
 })
 
 test_that("A04.05 colour_opacity applies with the default colours", {
@@ -58,7 +58,7 @@ test_that("A04.07 category.sort 'alpha-desc' (used in the examples) sorts descen
 test_that("A04.08 a named colour vector matches category values", {
   p <- plot2(fx_cat, x, y, category, colour = c(v = "red", u = "blue"))
   d <- layer_df(p, layer_index(p, "GeomBar"))
-  expect_identical(unique(d$fill[d$group == 1]), "#0000FF")
+  expect_identical(unname(as.character(unique(d$fill[d$group == 1]))), "#0000FF")
 })
 
 test_that("A04.09 facet.nrow sets the number of facet rows", {

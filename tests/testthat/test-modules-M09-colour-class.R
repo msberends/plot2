@@ -77,6 +77,5 @@ test_that("M09.08 registering an invalid colour errors (F088)", {
 })
 
 test_that("M09.09 subsetting keeps the class (F090)", {
-  skip_open_finding("F090")
   expect_s3_class(get_colour(c("red", "blue"))[1], "colour")
 })

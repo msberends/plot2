@@ -4,7 +4,7 @@ title: The colour class is lost when subsetting with [
 severity: low
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -37,3 +37,4 @@ Add `` `[.colour` <- function(x, i) structure(unclass(x)[i], class = class(x)) `
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: fixed; [.colour and [[.colour keep the class (and names). Consequence: colours passed to ggplot2 keep the class in the built layer data; tests A04.04, A04.08, A07.04 and the F067 regression test now compare values with as.character(). Regression test F090.

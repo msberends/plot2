@@ -40,7 +40,7 @@ test_that("A07.04 add_*(move = -1), as in the examples, puts the new layer below
   p <- plot2(iris, Sepal.Length, Sepal.Width, zoom = TRUE)
   p2 <- add_point(p, size = 5, colour = "lightgrey", move = -1)
   expect_identical(length(p2$layers), length(p$layers) + 1L)
-  expect_identical(layer_df(p2, 1)$colour[1], "#D3D3D3")
+  expect_identical(unname(as.character(layer_df(p2, 1)$colour[1])), "#D3D3D3")
 })
 
 test_that("A07.05 move_layer() moves the top layer one down by default", {

@@ -417,6 +417,21 @@ rev.colour <- function(x) {
             class = class(x))
 }
 
+#' @method [ colour
+#' @noRd
+#' @export
+`[.colour` <- function(x, i, ...) {
+  # keep the class when subsetting (F090)
+  structure(unclass(x)[i], class = class(x))
+}
+
+#' @method [[ colour
+#' @noRd
+#' @export
+`[[.colour` <- function(x, i, ...) {
+  structure(unclass(x)[[i]], class = class(x))
+}
+
 #' @method rep colour
 #' @noRd
 #' @export

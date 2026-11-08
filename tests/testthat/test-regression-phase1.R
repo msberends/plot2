@@ -85,7 +85,7 @@ test_that("F067 category.focus keeps the focused category's own colour and greys
   d <- data.frame(x = c("a", "b", "c"), y = 1:3, k = c("a", "b", "c"))
   unfocused <- layer_df(expect_plot2(plot2(d, x, y, k)), "bar")$fill
   focused <- layer_df(expect_plot2(plot2(d, x, y, k, category.focus = "b")), "bar")$fill
-  expect_identical(focused[2], unfocused[2])
+  expect_identical(unname(col_hex(as.character(focused[2]))), unname(col_hex(as.character(unfocused[2]))))
   expect_identical(col_hex(focused[c(1, 3)]), rep(col_hex("grey85"), 2))
 })
 
@@ -136,6 +136,14 @@ test_that("F087 theme_minimal2(...) changes only the given properties", {
   expect_identical(ggplot2::calc_element("plot.title", t)$face, "italic")
   expect_identical(ggplot2::calc_element("plot.title", t)$colour, ggplot2::calc_element("plot.title", t_default)$colour)
   expect_identical(ggplot2::calc_element("plot.title", t)$size, ggplot2::calc_element("plot.title", t_default)$size)
+})
+
+test_that("F090 subsetting a colour vector keeps the class and the names", {
+  cols <- get_colour(c(a = "red", b = "blue"))
+  expect_s3_class(cols[1], "colour")
+  expect_s3_class(cols[[2]], "colour")
+  expect_identical(names(cols[2]), "b")
+  expect_identical(unname(as.character(cols[2:1])), c("#0000FF", "#FF0000"))
 })
 
 test_that("F091 theme_minimal2() text sizes are plain numbers", {
