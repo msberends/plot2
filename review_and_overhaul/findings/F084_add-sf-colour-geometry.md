@@ -4,7 +4,7 @@ title: add_sf() ignores datalabels.colour and requires a geometry column named g
 severity: medium
 type: bug
 area: methods
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Use `datalabels.colour` for the text layer; detect the geometry column with `att
 ## History
 
 - 2026-11-08: filed in R04, reproduced.
+- 2026-11-08: fixed: (1) the label layer uses datalabels.colour; (2) the geometry column is found by class (sfc), so any name works; (3) datalabels.nudge_y defaults to 0 and is documented in CRS units; the hint about a large nudge now applies to longitude/latitude data (sf::st_is_longlat()) instead of 'not EPSG:28992'. Tests: M05.16 unparked.

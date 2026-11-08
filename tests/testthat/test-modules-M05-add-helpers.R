@@ -106,7 +106,6 @@ test_that("M05.15 add_sf() adds an sf layer", {
 
 test_that("M05.16 add_sf(): datalabels.colour and other geometry names (F084)", {
   skip_if_not_installed("sf")
-  skip_open_finding("F084")
   q <- add_sf(plot2(netherlands), netherlands[1:2, ], datalabels = province, datalabels.colour = "red", datalabels.nudge_y = 0)
   expect_identical(unique(col_hex(as.character(last_layer_df(q)$colour))), "#FF0000")
   nl2 <- sf::st_set_geometry(netherlands, "geom")

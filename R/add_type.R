@@ -628,7 +628,7 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param sf_data an 'sf' [data.frame]
 #' @param datalabels a column of `sf_data` to add as label below the points
 #' @param datalabels.colour,datalabels.size,datalabels.angle,datalabels.font properties of `datalabels`
-#' @param datalabels.nudge_y if `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
+#' @param datalabels.nudge_y if `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels in the units of the coordinate reference system (positive value: more to the North, negative value: more to the South), e.g. metres for EPSG:28992 and degrees for EPSG:4326. The default is `0`.
 #' @importFrom dplyr mutate n_distinct
 #' @importFrom ggplot2 aes geom_sf geom_sf_text is_ggplot
 #' @export
@@ -643,7 +643,7 @@ add_sf <- function(plot,
                    datalabels.size = 3,
                    datalabels.angle = 0,
                    datalabels.font = getOption("plot2.font"),
-                   datalabels.nudge_y = 2500,
+                   datalabels.nudge_y = 0,
                    ...,
                    inherit.aes = FALSE) {
   
@@ -657,14 +657,16 @@ add_sf <- function(plot,
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
-  if (!"geometry" %in% colnames(plot$data)) {
+  # the geometry column can have any name (F084)
+  geometry_col <- names(plot$data)[vapply(plot$data, inherits, logical(1), what = "sfc")][1]
+  if (is.na(geometry_col)) {
     stop("`plot` must be a ggplot2 object based on geographic data.", call. = FALSE)
   }
   
   # force sf type
   sf_data <- sf::st_as_sf(sf_data)
   
-  crs <- c(plot = as.character(sf::st_crs(plot$data$geometry))[1],
+  crs <- c(plot = as.character(sf::st_crs(plot$data[[geometry_col]]))[1],
            add = as.character(sf::st_crs(sf_data))[1])
   if (n_distinct(crs) > 1) {
     plot2_warning("The coordinate reference system (CRS) of `plot` and `sf_data` are different, transforming `sf_data` to ", crs[1])
@@ -683,7 +685,7 @@ add_sf <- function(plot,
   
   if (tryCatch(!is.null(datalabels), error = function(e) TRUE)) {
     
-    if (abs(datalabels.nudge_y) > 0.25 && crs %unlike% "28992") {
+    if (abs(datalabels.nudge_y) > 0.25 && sf::st_is_longlat(sf_data)) {
       plot2_message(font_blue(paste0("datalabels.nudge_y = ", datalabels.nudge_y)),
                     " might be very ", ifelse(datalabels.nudge_y < 0, "low", "high"),
                     " for the current coordinate reference system (", crs, ")")
@@ -702,7 +704,7 @@ add_sf <- function(plot,
                    family = datalabels.font,
                    angle = datalabels.angle,
                    nudge_y = datalabels.nudge_y,
-                   colour = get_colour(colour),
+                   colour = get_colour(datalabels.colour),
                    fun.geometry = function(x) {
                      x[!sf::st_is_valid(x)] <- sf::st_point()
                      suppressWarnings(sf::st_point_on_surface(sf::st_zm(x)))

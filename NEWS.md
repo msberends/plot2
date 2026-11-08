@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `add_sf()` now uses `datalabels.colour` for its labels, works with any name of the geometry column, and no longer shifts labels by default (`datalabels.nudge_y = 0`; the former 2500 only suited the Dutch RD New projection)
 * An invalid colour in `colour` now gives a warning and is replaced by grey on its own, keeping the other colours and their names (previously the whole vector became one grey); `register_colour()` gives an error for invalid colours, and registered colour names are matched case-insensitively
 * `add_type()` now adds the layer when `data` is given to a plot without top-level data, warns when there is no data at all (instead of silently returning the plot unchanged), and supports beeswarm types
 * Plot types without dedicated support (such as `"step"`) no longer receive arguments they do not accept, so ggplot2 no longer warns about unknown parameters; the notice that such a type is 'only loosely supported' is now a message instead of a warning
