@@ -21,9 +21,9 @@ F049 (a temporary column named `n` overwrites a user column `n`; crash), F053 (n
 
 ## End-to-end test cases
 
-- [ ] 23.01 Duplicate x values summed by default.
-- [ ] 23.02 `summarise_function = mean`, `median`, `max`.
-- [ ] 23.03 x, category or facet column named `n`, `y` or `count` (F049).
-- [ ] 23.04 `summarise_function = range`: clear error that a single value is required (F053).
-- [ ] 23.05 Datalabels show the summarised values.
-- [ ] 23.06 Facets and categories kept after summarising.
+- [x] 23.01 Duplicate x values summed by default.
+- [x] 23.02 `summarise_function = mean`, `median`, `max`.
+- [ ] 23.03 x, category or facet column named `n`, `y` or `count` (F049). (test written, parts parked: F049)
+- [ ] 23.04 `summarise_function = range`: clear error that a single value is required (F053). (test written, parts parked: F053)
+- [x] 23.05 Datalabels show the summarised values.
+- [x] 23.06 Facets and categories kept after summarising.

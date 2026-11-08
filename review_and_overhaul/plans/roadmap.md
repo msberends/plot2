@@ -4,6 +4,8 @@ Phases group findings (and later ideas) into an order of work. A finding can onl
 
 ## Phase 0: safety net (before touching internals)
 
+Decisions for the fix phases (maintainer, 2026-11-08): I002 for the Phase 1 sheets first; fixes on the branch review-and-overhaul; one commit per finding (fix, unparked test, finding status, NEWS entry); work autonomously through Phase 1, stopping only for decisions or failures. Findings with status needs-decision are not fixed without the maintainer's choice.
+
 Goal: tests that would catch the defects found, so the refactors that follow are safe.
 
 - I001 testthat infrastructure: helper and fixture files, accessors and expectations, edition 3, per-topic files (resolves F038).
@@ -70,6 +72,11 @@ Goal: stop wrong figures and crashes with minimal code movement.
 - F097 barpercent without y
 - F106 counting without a numeric column (with F097)
 - F107 scientific-label sign and euro sign on pdf()
+- F126 x.limits keeps the default expansion
+- F127 linear breaks on a transformed x axis
+- F128 x.mic with the current AMR package
+- F129 horizontal numeric x gives an empty plot
+- F131 violins with single-observation groups
 
 ## Documentation pass (with or after the related Phase 1 fixes)
 
@@ -127,6 +134,7 @@ Goal: per-call context, real R conditions, predictable diagnostics.
 - F084 add_sf() colours, geometry name and nudge default
 - F088 invalid colours collapse the colour vector; registration validation
 - F089 plain matrix semantics
+- F130 limits of length 1 (needs decision)
 - I003 spider plots with facets
 
 ## Phase 5: structure and performance

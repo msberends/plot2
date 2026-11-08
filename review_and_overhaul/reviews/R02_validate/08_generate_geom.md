@@ -26,16 +26,16 @@ F045 (areas dodged instead of overlaid or stacked), F046 (histogram of constant 
 
 ## End-to-end test cases
 
-- [ ] 08.01 One test per supported type: correct geom class in the built layer, no warnings.
-- [ ] 08.02 col: width 0.5, dodge2 with category; `stacked = TRUE` stack; `stacked_fill = TRUE` fill; `reverse = TRUE` reverses the stack order.
-- [ ] 08.03 area with category, not stacked: identity position (F045).
-- [ ] 08.04 line: round line ends; `linetype` and `linewidth` honoured.
-- [ ] 08.05 point and jitter: size 2; `jitter_seed` gives reproducible positions.
-- [ ] 08.06 boxplot: whisker error bars present, outliers at 75% opacity, white fill with category and original colours.
-- [ ] 08.07 violin: quartile lines, `violin_scale` honoured.
-- [ ] 08.08 histogram: automatic binwidth message and value; constant data does not fail (F046); `binwidth` honoured.
-- [ ] 08.09 density: no y used, "Ignoring y" message.
-- [ ] 08.10 tile and raster.
-- [ ] 08.11 Extra argument in `...` (e.g. `alpha = 0.3`) reaches the layer, message lists it.
-- [ ] 08.12 Unsupported geom (e.g. "step"): warning, plot still builds without "unknown parameter" warnings (F060).
-- [ ] 08.13 beeswarm (skip without ggbeeswarm).
+- [x] 08.01 One test per supported type: correct geom class in the built layer, no warnings.
+- [x] 08.02 col: width 0.5, dodge2 with category; `stacked = TRUE` stack; `stacked_fill = TRUE` fill; `reverse = TRUE` reverses the stack order.
+- [ ] 08.03 area with category, not stacked: identity position (F045). (test written, parts parked: F045)
+- [x] 08.04 line: round line ends; `linetype` and `linewidth` honoured.
+- [x] 08.05 point and jitter: size 2; `jitter_seed` gives reproducible positions.
+- [x] 08.06 boxplot: whisker error bars present, outliers at 75% opacity, white fill with category and original colours.
+- [ ] 08.07 violin: quartile lines, `violin_scale` honoured. (test written, parts parked: F131)
+- [ ] 08.08 histogram: automatic binwidth message and value; constant data does not fail (F046); `binwidth` honoured. (test written, parts parked: F046)
+- [x] 08.09 density: no y used, "Ignoring y" message.
+- [x] 08.10 tile and raster.
+- [x] 08.11 Extra argument in `...` (e.g. `alpha = 0.3`) reaches the layer, message lists it.
+- [ ] 08.12 Unsupported geom (e.g. "step"): warning, plot still builds without "unknown parameter" warnings (F060). (test written, parts parked: F060)
+- [x] 08.13 beeswarm (skip without ggbeeswarm).

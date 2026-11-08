@@ -2,13 +2,13 @@
 id: I002
 title: End-to-end tests for every function in validate.R
 area: tests
-status: open
+status: in-progress
 effort: XL
 api_change: no
 related: [I001, F038]
 origin: user
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # I002 End-to-end tests for every validate.R function
@@ -37,3 +37,4 @@ These functions decide what users see; most R01/R02 defects live here. They are 
 ## History
 
 - 2026-11-07: filed from the maintainer's request; specification sheets created in R02.
+- 2026-11-08: Phase 0 (maintainer's decision: the Phase 1 sheets first): 103 cases of sheets 03, 05, 06, 07, 08, 09 and 23 coded in `tests/testthat/test-validate-<nn>-<function>.R`; 68 pass, 35 contain parts parked on open findings (each fails without its skip). Six new findings F126 to F131. The other 17 sheets follow alongside Phase 4.

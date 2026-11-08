@@ -31,16 +31,16 @@ F004 (POSIXct), F023 (function limits), F041 (small-integer breaks ignore negati
 
 ## End-to-end test cases
 
-- [ ] 07.01 Numeric category, default colours: continuous colour bar, legend on the right.
-- [ ] 07.02 One colour: gradient from white, message.
-- [ ] 07.03 Two colours: low and high.
-- [ ] 07.04 Three colours: diverging, midpoint at the centre of the limits, message; `category.midpoint` honoured.
-- [ ] 07.05 Viridis option name: five-colour gradient.
-- [ ] 07.06 `category.percent = TRUE` (F023).
-- [ ] 07.07 Date category: breaks and labels sensible; POSIXct category likewise (F004).
-- [ ] 07.08 `category.transform = "log10"` with `category.limits` containing 0: warning.
-- [ ] 07.09 `category.breaks` and `category.labels` honoured.
-- [ ] 07.10 Integer category from -2 to 3: negative breaks present (F041).
-- [ ] 07.11 `legend.reverse`, `legend.barheight`, `legend.barwidth`, `legend.nbin` reach the guide; top or bottom legend swaps height and width.
-- [ ] 07.12 `category.type = "size"` with a numeric category.
-- [ ] 07.13 No deprecation warnings from ggplot2 when building.
+- [x] 07.01 Numeric category, default colours: continuous colour bar, legend on the right.
+- [x] 07.02 One colour: gradient from white, message.
+- [x] 07.03 Two colours: low and high.
+- [x] 07.04 Three colours: diverging, midpoint at the centre of the limits, message; `category.midpoint` honoured.
+- [x] 07.05 Viridis option name: five-colour gradient.
+- [ ] 07.06 `category.percent = TRUE` (F023). (test written, parts parked: F023)
+- [ ] 07.07 Date category: breaks and labels sensible; POSIXct category likewise (F004). (test written, parts parked: F004)
+- [x] 07.08 `category.transform = "log10"` with `category.limits` containing 0: warning.
+- [x] 07.09 `category.breaks` and `category.labels` honoured.
+- [ ] 07.10 Integer category from -2 to 3: negative breaks present (F041). (test written, parts parked: F041)
+- [x] 07.11 `legend.reverse`, `legend.barheight`, `legend.barwidth`, `legend.nbin` reach the guide; top or bottom legend swaps height and width.
+- [x] 07.12 `category.type = "size"` with a numeric category.
+- [x] 07.13 No deprecation warnings from ggplot2 when building.
