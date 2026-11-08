@@ -4,7 +4,7 @@ title: Unknown types are fuzzy-matched to the first alphabetical geom without no
 severity: medium
 type: design
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -40,3 +40,4 @@ Use exact matching against a documented alias table; for near misses, error with
 
 - 2026-11-07: filed in R01 (by reading).
 - 2026-11-07: R02 added the whitespace and punctuation cases; reproduced.
+- 2026-11-08: fixed: an unknown type must be the start of a geom name (not any part of it, and not used as a regex); it is used only when unambiguous (the shortest candidate is a prefix of all, e.g. dens = density), with a message naming the geom; otherwise an error with up to five suggestions by edit distance. Whitespace or punctuation no longer give geom_abline. Tests: test-regression-phase4.R (F031).

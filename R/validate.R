@@ -99,10 +99,24 @@ validate_type <- function(type, df = NULL) {
                      ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
   }
   if (!type %in% valid_geoms) {
-    if (any(valid_geoms %like% type)) {
-      type <- valid_geoms[valid_geoms %like% type][1L]
+    # an abbreviation must be the start of a geom name, not any part of it, and must be
+    # unambiguous: "hist" is histogram, "dens" is density (a prefix of all its variants) (F031)
+    candidates <- if (type == "geom_") character(0) else valid_geoms[startsWith(valid_geoms, type)]
+    shortest <- candidates[which.min(nchar(candidates))]
+    if (length(candidates) > 0 && all(startsWith(candidates, shortest))) {
+      plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", shortest), "\"", collapse = NULL))
+      type <- shortest
     } else {
-      stop("plot type \"", type.bak, "\" is invalid since ggplot2::", type, "() does not exist", call. = FALSE)
+      if (length(candidates) == 0 && type != "geom_") {
+        # suggest the closest names, compared without the "geom_" prefix
+        dist <- utils::adist(sub("^geom_", "", type), sub("^geom_", "", valid_geoms))[1, ]
+        candidates <- valid_geoms[dist <= 2][order(dist[dist <= 2])]
+      }
+      stop("plot type \"", paste(type.bak, collapse = ", "), "\" is invalid",
+           if (length(candidates) > 0) paste0("; did you mean ",
+                                              paste0("\"", gsub("geom_", "", utils::head(candidates, 5)), "\"", collapse = ", "),
+                                              "?"),
+           call. = FALSE)
     }
   }
   type

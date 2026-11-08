@@ -75,3 +75,14 @@ test_that("F081 a formula after a pipe keeps the other arguments", {
 test_that("F020 `data` outside formula notation errors clearly", {
   expect_error(plot2(iris, Species, Sepal.Length, data = mtcars), "only used in formula notation")
 })
+
+test_that("F031 types match exactly or by an unambiguous start, otherwise error with suggestions", {
+  expect_identical(plot2:::validate_type("hist"), "geom_histogram")
+  expect_identical(plot2:::validate_type("dens"), "geom_density")
+  expect_identical(plot2:::validate_type("seg"), "geom_segment")
+  expect_error(plot2:::validate_type(" "), "invalid")
+  expect_error(plot2:::validate_type("()"), "invalid")
+  expect_error(plot2:::validate_type("boxplt"), "did you mean \"boxplot\"")
+  # a part of a name in the middle is not a match ("line" is not "hline")
+  expect_error(plot2:::validate_type("ine"), "invalid")
+})

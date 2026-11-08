@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* An unknown or ambiguous `type` now gives an error with suggestions ("did you mean 'boxplot'?") instead of silently using the first geom whose name contains the text; abbreviations such as `"hist"` must be the start of a geom name
 * `plot2("name")` now looks up a data frame of that name only in the calling environment, not along the search path or in plot2's namespace; `plot2(numbers, y = values)` now uses the vector as x
 * Passing `data =` to `plot2()` with anything other than a formula now gives a clear error instead of 'argument matches multiple formal arguments'
 * The formula interface now accepts computed terms such as `log(mpg) ~ hp` or `I(hp + 1)`, a facet after `|` (`y ~ x + category | facet`), and works after a pipe: `mtcars |> plot2(mpg ~ wt)`
