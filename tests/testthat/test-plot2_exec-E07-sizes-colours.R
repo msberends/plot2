@@ -56,7 +56,6 @@ test_that("E07.07 the secondary y-axis series takes y_secondary.colour (with col
 })
 
 test_that("E07.07b y_secondary.colour applies without colour (F077)", {
-  skip_open_finding("F077")
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   p <- plot2(df, x, y, y_secondary = z, y_secondary.type = "line", y_secondary.colour = "red")
   expect_identical(unique(col_hex(as.character(layer_df(p, "line")$colour))), "#FF0000")

@@ -4,7 +4,7 @@ title: y_secondary.colour is ignored unless colour is also given
 severity: medium
 type: bug
 area: colours
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -41,3 +41,4 @@ Decide `original_colours` separately for the secondary layer (an explicit `y_sec
 
 - 2026-11-07: found by an R03 end-to-end test (E07.07), reproduced.
 - 2026-11-08: R05 (sheet A02): `?y_secondary` says "Setting the secondary Y-axis will set the colour to the axis titles". With default colours the right axis title gets the primary colour (#F8766D) while both point layers stay black, so the title colours do not identify the series.
+- 2026-11-08: fixed and verified (Phase 1). 2026-11-08: partly fixed and set to verified for the bug: the methods pass _misses.y_secondary.colour, and the secondary layer keeps ggplot2's colours only when neither colour nor y_secondary.colour(_fill) is given. Not changed: the default of y_secondary.colour (methods use the second colour of the plot2.colour palette, while the plot2() generic documents y_secondary.colour = colour); raised to the maintainer.

@@ -782,6 +782,7 @@ plot2_exec <- function(.data,
   misses_facet <- isTRUE(dots$`_misses.facet`)
   misses_datalabels <- isTRUE(dots$`_misses.datalabels`)
   misses_colour_fill <- isTRUE(dots$`_misses.colour_fill`)
+  misses_y_secondary.colour <- !isFALSE(dots$`_misses.y_secondary.colour`)
   misses_x.title <- isTRUE(dots$`_misses.x.title`)
   misses_y.title <- isTRUE(dots$`_misses.y.title`)
   misses_title <- isTRUE(dots$`_misses.title`)
@@ -1790,7 +1791,8 @@ plot2_exec <- function(.data,
                       binwidth = binwidth,
                       cols = list(colour = y_secondary.colour,
                                   colour_fill = y_secondary.colour_fill),
-                      original_colours = original_colours,
+                      # an explicit y_secondary.colour always applies (F077)
+                      original_colours = original_colours && misses_y_secondary.colour,
                       dots_geom = dots_geom,
                       mapping = utils::modifyList(mapping, aes(y = `_var_y_secondary`)))
     }

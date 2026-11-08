@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* `y_secondary.colour` and `y_secondary.colour_fill` now apply also when `colour` is not set
 * `plot2(df, y = col)` no longer fails when the data have no other column to use as x
 * `datalabels` given with an explicit point or line type are no longer silently dropped
 * Numeric x and y with identical values now give a scatter plot instead of a histogram; a histogram is only chosen when x and y are the same column
