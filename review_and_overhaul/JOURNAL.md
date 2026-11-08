@@ -2,6 +2,16 @@
 
 Newest entry first. One entry per working session: what was done, what changed status, what is next.
 
+## 2026-11-08 (session 6, continued: Phase 3)
+
+- Maintainer decided (AskUserQuestion): F003 system locale plus a `plot2.language` option; F011 automatic download, scoped, if CRAN allows it, otherwise opt-in; F108 broom to Suggests, cleaner replaced, crayon dropped for cli, font packages to Suggests; F029 month formats always character.
+- CRAN Repository Policy (revision 6985) allows a small, actively managed user cache in `tools::R_user_dir()` and requires graceful failure of Internet use, so F011 keeps automatic download.
+- Fixed and verified: F008 and F108 (9f88bab, 7ab4db4, dbf918c: Imports are now cli, dplyr, forcats, ggplot2, grDevices, grid, rlang, scales, tidyselect, tidyr; internal natural_sort() and percentage formatting replace stringr and cleaner), F003 and F029 (f15c408), F011 (dbf918c: fonts cached in R_user_dir with 90-day pruning; showtext switched on per drawing through the `plot2_font` class instead of `showtext_auto()`).
+- Tests and the main vignette set `R_USER_CACHE_DIR` to a temporary folder; the ?plot2 font example runs only interactively.
+- Note: the showtextdb installation on this server still holds Rock Salt, Lobster and Titan One from runs before the fix; plot2 no longer writes there.
+- Checks: full suite (NOT_CRAN=true) 562 tests, 0 failures, 0 warnings, 61 skips; both vignettes render without warnings; all examples run (plotly not installed here).
+- Next: Phase 4 (input handling and parsing) per roadmap, with decisions needed on F020 and F013.
+
 ## 2026-11-08 (session 6, continued: Phase 2)
 
 - Maintainer decided (AskUserQuestion): messages as conditions but printed only interactively, as now; warnings real R warnings, cautions as messages; diagnostics grouped at the end of the call in order of occurrence; F036 in Phase 2 only the per-call context, the guessing step (and any plot2.guess option) to Phase 5.
