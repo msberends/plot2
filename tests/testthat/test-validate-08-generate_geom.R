@@ -93,7 +93,6 @@ test_that("08.07b violins with groups of one value do not error", {
 test_that("08.08 histograms: automatic binwidth with a message, binwidth honoured, constant data works", {
   expect_plot2_message(plot2(d_hist, v, type = "histogram"), "binwidth = 0.488", type = "info")
   expect_identical(layer_params(expect_plot2(plot2(d_hist, v, type = "histogram", binwidth = 2)), "bar")$binwidth, 2)
-  skip_open_finding("F046")
   expect_plot2(plot2(data.frame(v = c(3, 3, 3)), v, type = "histogram"))
 })
 

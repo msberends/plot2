@@ -4,7 +4,7 @@ title: Histogram of constant values computes binwidth 0 and fails in stat_bin
 severity: medium
 type: bug
 area: types
-status: open
+status: verified
 verification: verified
 effort: S
 api_change: no
@@ -13,7 +13,7 @@ related: []
 origin: R02 sheet 08
 commit: d09e04d
 created: 2026-11-07
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # F046 Histogram of constant values
@@ -38,3 +38,4 @@ Fall back to `binwidth = 1` (or to ggplot2's default) when the range is 0 or not
 ## History
 
 - 2026-11-07: filed in R02, reproduced.
+- 2026-11-08: fixed and verified (Phase 1). Binwidth falls back to 1 when the data range is 0 or not finite; regression test 08.08.

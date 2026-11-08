@@ -1,5 +1,6 @@
 # plot2 1.99.0.9000
 
+* Fixed: a histogram of constant values was empty because the automatic binwidth was 0
 * Fixed: `y.transform = "reverse"` applied `y.expand` to the wrong sides and in the wrong units
 * Fixed: `category.percent = TRUE` failed for numeric categories
 * Fixed: a logarithmic `category.transform` failed when the automatic colour scale started at 0

@@ -1714,7 +1714,10 @@ generate_geom <- function(type,
       values <- get_x(df)
       values <- values[!is.infinite(values)]
       binwidth <- as.double(diff(range(values, na.rm = TRUE))) / (12 + min(10, length(unique(values)) / 20))
-      if (binwidth < 0.01) {
+      if (!is.finite(binwidth) || binwidth <= 0) {
+        # constant (or no finite) values: one bin of width 1
+        binwidth <- 1
+      } else if (binwidth < 0.01) {
         # do not round
       } else if (binwidth < 1) {
         binwidth <- round(binwidth, 3)
