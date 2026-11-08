@@ -2430,8 +2430,8 @@ validate_facet <- function(df,
     }
   }
   
-  if (type == "geom_sf") {
-    # force fixes scales, otherwise throws an error: coord_sf doesn't support free scales
+  if (type %in% c("geom_sf", "geom_spider")) {
+    # force fixes scales, otherwise throws an error: coord_sf and coord_spider don't support free scales
     scales <- "fixed"
   }
   

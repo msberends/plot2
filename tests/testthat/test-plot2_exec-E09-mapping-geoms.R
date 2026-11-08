@@ -62,9 +62,11 @@ test_that("E09.07 spider: extra coord_spider() arguments are passed on", {
   expect_equal(plot_of(p)$coordinates$start, pi / 2)
 })
 
-test_that("E09.08 spider: facets and fewer than three x values error", {
+test_that("E09.08 spider: facets work with fixed scales (I003); fewer than three x values error", {
   df <- rbind(transform(fx_spider, f = "p"), transform(fx_spider, f = "q"))
-  expect_error(plot2(df, dim, score, facet = f, type = "spider"))
+  p <- expect_plot2(plot2(df, dim, score, facet = f, type = "spider", datalabels = TRUE))
+  expect_facets(p, n_panels = 2L)
+  expect_s3_class(p$coordinates, "CoordSpider")
   expect_error(plot2(fx_spider[1:2, ], dim, score, type = "spider"))
 })
 

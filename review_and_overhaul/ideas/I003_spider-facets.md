@@ -2,7 +2,7 @@
 id: I003
 title: Allow facets in spider plots
 area: types
-status: open
+status: verified
 effort: S
 api_change: no
 related: []
@@ -24,3 +24,4 @@ Comparing profiles per group (e.g. per hospital or per year) is the main use of 
 ## History
 
 - 2026-11-08: filed during R04.
+- 2026-11-08: implemented: the facet restriction is removed; validate_facet() forces fixed scales for spider plots (as for sf, since coord_spider() does not support free scales). Found while testing: with datalabels and a title or facets, coord_cartesian() replaced CoordSpider (also without facets); that block now skips spider plots. Tests: E09.08 rewritten.

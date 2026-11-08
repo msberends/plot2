@@ -66,7 +66,7 @@
 #'   - `"back-to-back"` (short: `"b2b"`, or `"butterfly"`, `"tornado"` or `"population"`) creates a back-to-back plot, sometimes called a [Tornado diagram](https://en.wikipedia.org/wiki/Tornado_diagram), a butterfly plot, or a [Population Pyramid](https://en.wikipedia.org/wiki/Population_pyramid). It uses `facet` to distinguish the left and right plots. Therefore, `facet` must be set to (a column containing) two unique values.
 #'   - `"upset"` or `"UpSet"` (short: `"u"`) creates an [UpSet plot](https://en.wikipedia.org/wiki/UpSet_plot), which requires `x` to contain multiple variables from `.data` that contain `0`/`1` or `FALSE`/`TRUE` values. It is also possible to provide `y`, on which then `summarise_function` will be applied.
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey.alpha`, and the width of the nodes can be set using `sankey.node_width`. Sankey plots can also be flipped using `horizontal = TRUE`, and the label angles can be set with `datalabels.angle`.
-#'   - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system.
+#'   - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system. Facets are supported, always with the same scale in all facets.
 #' 
 #' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`, and accepts any value of `type`, such as `"line"` or `"l"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param y_secondary.type Type of the secondary series, see **`type`**. The default (`NULL`) is a line with points if the primary type is a column or bar plot, so that the secondary series does not cover the bars, and the primary type otherwise.
@@ -1876,9 +1876,6 @@ plot2_exec <- function(.data,
     if (!has_x(df) || n_distinct(get_x(df)) < 3) {
       stop("Spider plots require an x-axis with as least 3 unique values.", call. = FALSE)
     }
-    if (has_facet(df)) {
-      stop("Spider plots do not support facets.", call. = FALSE)
-    }
     # find suitable arguments
     allowed <- names(formals(coord_spider))
     args_given <- dots[names(dots) %in% allowed]
@@ -2244,7 +2241,8 @@ plot2_exec <- function(.data,
     # this must follow after setting the y scale, since plot2_env$facet.fixed_y might have changed
     p <- p +
       validate_facet(df = df,
-                     type = type,
+                     # spider plots need fixed scales in all facets (I003)
+                     type = if (type_backup == "spider") "geom_spider" else type,
                      facet.repeat_lbls_x = facet.repeat_lbls_x,
                      facet.repeat_lbls_y = facet.repeat_lbls_y,
                      facet.fixed_y = plot2_env$facet.fixed_y,
@@ -2280,7 +2278,8 @@ plot2_exec <- function(.data,
   # turn plot horizontal if required ----
   # up until this point, a lot has been done already for `horizontal`.
   # such as switching some x and Y-axis properties of the theme
-  if (type != "geom_sf" && (isTRUE(horizontal) || has_datalabels(df))) {
+  # (not for spider plots, whose own coordinate system would be replaced)
+  if (type != "geom_sf" && type_backup != "spider" && (isTRUE(horizontal) || has_datalabels(df))) {
     x.limits <- x.limits %or% plot2_env$x_lim
     if (is.character(x.limits) || is.factor(x.limits)) {
       # discrete limits are set in the scale, not in the coordinates (F054)
