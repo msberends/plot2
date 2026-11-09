@@ -46,10 +46,6 @@ jobs:
           needs: website
           upgrade: 'TRUE'
 
-      - name: Generate icons
-        run: pkgdown::build_favicons()
-        shell: Rscript {0}
-
       - name: Build site
         run: pkgdown::build_site_github_pages(install = TRUE)
         shell: Rscript {0}
@@ -58,6 +54,6 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
-          clean: false
+          clean: true
           branch: gh-pages
           folder: docs
