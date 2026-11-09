@@ -69,6 +69,9 @@ test_that("messaging works", {
 })
 
 test_that("manual fonts work", {
+  skip_if_not_installed("showtext")
+  skip_if_not_installed("showtextdb")
+  skip_if_not_installed("sysfonts")
   skip_on_cran()
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Rock Salt"), "gg")
   expect_s3_class(mtcars |> plot2(mpg, hp, font = "Rock Salt"), "gg") # already downloaded

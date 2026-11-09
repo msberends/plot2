@@ -29,17 +29,20 @@ test_that("E05.01 result is a patchwork of four plots", {
 })
 
 test_that("E05.02 intersection sizes are the combination counts, sorted descending", {
+  skip_if_not_installed("patchwork")
   p <- plot2(fx_upset, x = c(a, b, c), type = "upset")
   expect_identical(as.numeric(layer_df(p[[2]], "bar")$y), c(2, 1, 1, 1, 1))
 })
 
 test_that("E05.03 set sizes equal the column sums", {
+  skip_if_not_installed("patchwork")
   p <- plot2(fx_upset, x = c(a, b, c), type = "upset")
   # drawn as negative bars, growing to the left
   expect_setequal(abs(as.numeric(layer_df(p[[3]], "bar")$y)), c(4, 3, 3))
 })
 
 test_that("E05.04 y title: default 'Intersection size', replaced by y.title", {
+  skip_if_not_installed("patchwork")
   upset_ylab <- function(p) toString(p[[1]]$layers[[1]]$aes_params$label)
   expect_identical(upset_ylab(plot2(fx_upset, x = c(a, b, c), type = "upset")), "Intersection size")
   expect_identical(upset_ylab(plot2(fx_upset, x = c(a, b, c), type = "upset", y.title = "Patients")), "Patients")
@@ -52,12 +55,14 @@ test_that("E05.05 a category stacks the intersection bars", {
 })
 
 test_that("E05.06 with y, intersection heights are sums of y", {
+  skip_if_not_installed("patchwork")
   p <- plot2(fx_upset, x = c(a, b, c), y = w, type = "upset")
   # a&b: 1 + 2; a: 3; b&c: 4; a&c: 5; c: 6
   expect_setequal(as.numeric(layer_df(p[[2]], "bar")$y), c(3, 3, 4, 5, 6))
 })
 
 test_that("E05.07 x.sort = 'freq-asc' sorts ascending", {
+  skip_if_not_installed("patchwork")
   p <- plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = "freq-asc")
   expect_identical(as.numeric(layer_df(p[[2]], "bar")$y), c(1, 1, 1, 1, 2))
 })
@@ -72,6 +77,7 @@ test_that("E05.09 x.sort as a vector (#83)", {
 })
 
 test_that("E05.10 print = TRUE returns the plot invisibly (#22)", {
+  skip_if_not_installed("patchwork")
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
   expect_s3_class(plot2(fx_upset, x = c(a, b, c), type = "upset", print = TRUE), "patchwork")

@@ -94,6 +94,8 @@ test_that("17.09 the background label layer comes before the text layer", {
 })
 
 test_that("17.10 replacing the plot data afterwards updates the labels (#67)", {
+  # before R 4.3.0, R cannot dispatch `+` between a ggplot2 (S7) object and a data frame
+  skip_if(getRversion() < "4.3.0", "`ggplot + data.frame` needs R >= 4.3.0")
   p <- plot2(fx_counts, group, n)
   new <- p$data
   new$n <- new$n * 2

@@ -14,6 +14,10 @@
 
 # S07: helpers of the app
 
+# the helpers build Shiny and bslib inputs
+skip_if_not_installed("shiny")
+skip_if_not_installed("bslib")
+
 spec_row <- function(arg) {
   spec <- shiny_input_spec()
   spec[spec$arg == arg, , drop = FALSE]
