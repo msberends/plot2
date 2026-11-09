@@ -225,7 +225,11 @@ emit_diagnostic <- function(txt, type) {
   cls <- c(if (type == "cautions") "plot2_caution", "plot2_message")
   printed <- FALSE
   withRestarts({
-    signalCondition(messageCondition(paste0(plain, "\n"), class = cls, call = NULL))
+    # base::messageCondition() only exists as of R 4.6.0, so build it here
+    signalCondition(structure(
+      class = c(cls, "message", "condition"),
+      list(message = paste0(plain, "\n"), call = NULL)
+    ))
     if (plot2_shows_messages()) {
       if (type == "cautions") {
         cli::cli_alert_warning(txt, wrap = TRUE)
