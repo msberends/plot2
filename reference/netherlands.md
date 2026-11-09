@@ -1,6 +1,6 @@
 # Example Geography Data Set: the Netherlands
 
-A data set containing the geometies of the twelve provinces of the
+A data set containing the geometries of the twelve provinces of the
 Netherlands, according to Statistics Netherlands (2021).
 
 ## Usage

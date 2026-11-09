@@ -76,7 +76,7 @@ CoordSpider
 
   Numeric scalar in \[0, 1) specifying the inner radius of the spider
   coordinate system as a fraction of the panel radius. Values greater
-  than 0 create a "donut" / hollow center. The data radius is linearly
+  than 0 create a "donut" / hollow centre. The data radius is linearly
   rescaled onto \[`inner.radius`, `outer.radius`\].
 
 - outer.radius:
@@ -180,6 +180,6 @@ ggplot(df, aes(metric, value, group = 1)) +
     
 df |>
   plot2(type = "spider")
-#> ℹ Using x = metric
-#> ℹ Using y = value
+#> Using y = value
+#> Using x = metric
 ```

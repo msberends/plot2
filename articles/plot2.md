@@ -2,65 +2,50 @@
 
 ## Introduction
 
-If you’ve been using `ggplot2` for a while, you’re likely familiar with
-its strengths and versatility in creating a wide array of
-visualisations. However, as powerful as `ggplot2` is, it often requires
-you to define every single detail yourself. Whether it’s specifying
-aesthetics, selecting geoms, or adjusting scales, you’re in control of
-every element. And that’s one of the reasons we love `ggplot2`; it
-offers immense flexibility and precision.
+`ggplot2` is a developer’s masterpiece. Its grammar of graphics composes
+any plot from layers, aesthetics, scales, coordinates and themes, and
+that makes it flexible and precise. For the people who simply need a
+plot, the same design is a burden. A plot of “counts per ward, coloured
+by year” requires knowing about
+[`geom_col()`](https://ggplot2.tidyverse.org/reference/geom_bar.html),
+`aes(fill = )`,
+[`position_dodge()`](https://ggplot2.tidyverse.org/reference/position_dodge.html),
+`scale_fill_*()` and
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html), and
+about the data steps that come before them. That gap is real, and few
+packages close it well.
 
-But what if you could streamline this process for many common tasks?
-Enter [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md),
-a friendly companion to `ggplot2` designed to reduce the repetitive
-aspects of plotting without sacrificing the customizability that
-`ggplot2` is known for. Think of
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) as
-your plotting assistant, doing a lot of the heavy lifting automatically
-so you can focus on the fun parts — like exploring your data and finding
-insights.
-
-In this vignette, we’ll take a deep dive into the
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-function and its companion `add_*()` functions. We’ll walk through
-everything from the basics to some of the more advanced features,
-helping you unlock the full potential of this powerful tool. Whether
-you’re plotting simple bar charts or complex Sankey diagrams,
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) has
-got you covered.
-
-### The Plot2 Philosophy: Less Typing, More Plotting
-
-Before we dive into the code, let’s talk briefly about the philosophy
-behind
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md). At
-its core,
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) is
-designed to make plotting in R more intuitive and less cumbersome. If
-you’ve ever been frustrated by having to write out
-[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) and
-[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) over and
-over again,
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) is the
-answer.
+written for users. Like base R’s
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html), one call gives
+a plot, even when you do not say which type of plot you want: give it
+your data and it chooses the plot type, aggregates and sorts, and sets
+colours, axes, data labels and the theme. You state what you want to see
+(`x`, `y`, `category`, `facet`), not how `ggplot2` should build it. And
+since [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+returns a standard `ggplot` object, everything `ggplot2` offers remains
+available afterwards.
 
-The concept is simple, and the exact opposite of `ggplot2`: give
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) your
-data, and it will figure out the rest, while enabling many popular
-plotting options without ever needing to leave this single function. The
-goal is to get you from data to visualisation with as little friction as
-possible. And since
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) just
-returns a `ggplot` object, you can extend it in any way you would with
-the outcome of
-[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html).
+In this vignette, we walk through
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) and
+its companion `add_*()` functions, from the basics to more advanced
+features such as Sankey diagrams.
 
-This philosophy shines particularly in how
+### The Plot2 Philosophy: Users First
+
+The concept is the opposite of `ggplot2`’s: you do not assemble a plot
+from parts, you describe it and
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-simplifies functionalities like faceting, theming, and applying in-line
-transformations. Rather than managing multiple functions and layers,
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) allows
-you to achieve the same results more directly.
+assembles the parts. Plot types, geoms and aesthetics stay in the
+background; the arguments are named after what users think in, such as
+`category` for groups shown in colour (whatever the geom), `x.sort` for
+the order of bars and `stacked` for stacked bars. Data transformations
+go directly into the arguments, as in `y = mean(age)` or
+`x = format(date, "%Y")`.
+
+This shows most in facetting, theming and in-line transformations:
+instead of managing several functions and layers, you set one argument
+of a single function.
 
 ## Getting Started with `plot2()`
 
@@ -68,7 +53,7 @@ Let’s start with the basics. The
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 function is a wrapper around `ggplot2` that simplifies many of the tasks
 you usually have to handle manually. To begin with, you don’t even need
-to specify what kind of plot you want —
+to specify what kind of plot you want:
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) will
 make an educated guess based on your data.
 
@@ -89,8 +74,8 @@ df |>
   plot2()
 ```
 
-    #> ℹ Using x = group
-    #> ℹ Using y = values
+    #> Using y = values
+    #> Using x = group
 
 ![](plot2_files/figure-html/unnamed-chunk-4-1.png)
 
@@ -131,8 +116,8 @@ exactly what you want.
 
 df |> 
   plot2(type = "l")
-#> ℹ Using x = group
-#> ℹ Using y = values
+#> Using y = values
+#> Using x = group
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-5-1.png)
@@ -172,7 +157,7 @@ mtcars |>
   plot2(mpg, hp)
 ```
 
-    #> ℹ Using type = "point" since both axes are numeric
+    #> Using type = "point" since both axes are numeric
 
 ![](plot2_files/figure-html/unnamed-chunk-7-1.png)
 
@@ -195,7 +180,7 @@ this easy by allowing you to pass a vector of variables:
 
 mtcars |> 
   plot2(x = mpg, y = c(hp, disp))
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-8-1.png)
@@ -225,7 +210,7 @@ A basic use of the `category` argument might look something like this:
 
 mtcars |> 
   plot2(mpg, hp, category = cyl)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-9-1.png)
@@ -255,8 +240,8 @@ each category:
 mtcars |> 
   plot2(mpg, hp, category = cyl,
         colour = c("4" = "red", "6" = "blue", "8" = "green"))
-#> ℹ Using category.midpoint = 7 (the current category scale centre)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Using category.midpoint = 6 (the current category scale centre)
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-10-1.png)
@@ -286,9 +271,9 @@ A simple example of faceting might look like this:
 
 mtcars |> 
   plot2(mpg, hp, facet = gear)
-#> ℹ Assuming facet.fixed_x = TRUE since the three x scales differ by less than
-#> 25%
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
+#> Using free y scales per facet since the three y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-11-1.png)
@@ -314,10 +299,9 @@ free, and more.
 
 mtcars |> 
   plot2(mpg, hp, facet = starts_with("g"), facet.nrow = 2, facet.fixed_y = TRUE)
-#> ℹ Assuming facet.fixed_x = TRUE since the three x scales differ by less than
-#> 25%
-#> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-12-1.png)
@@ -342,7 +326,7 @@ you do it all on the fly.
 
 #### Aggregations Made Easy
 
-Suppose you want to count the number of patients admitted to each
+Suppose you want to count the number of unique patients admitted to each
 hospital. With
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md),
 there’s no need to pre-calculate these counts; you can simply use
@@ -358,17 +342,18 @@ admitted_patients |>
 
 ![](plot2_files/figure-html/unnamed-chunk-13-1.png)
 
-This will produce a column plot showing the number of admissions per
-hospital, calculated directly within
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md).
+This will produce a column plot showing the number of unique patients
+per hospital, calculated directly within
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md). Use
+`y = n()` instead to count the admissions (the rows).
 
 #### Combining Data with In-line Transformations
 
 The real power of
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) comes
-when you start combining these in-line transformations. Want to add
-another dimension, like the number of unique age groups within each
-hospital? You can do that just as easily:
+when you start combining these in-line transformations. Want to add more
+dimensions, like the period of admission and the ward? You can do that
+just as easily:
 
 ``` r
 
@@ -378,8 +363,8 @@ admitted_patients |>
           category = ifelse(date < "2010-01-01", "Prior to 2010", "Since 2010"),
           facet = ward,
           title = paste("Total of", n(), "patients"))
-#> ℹ Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
-#> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
+#> Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-14-1.png)
@@ -432,7 +417,7 @@ this:
 
 admitted_patients |> 
   plot2(x = log(age), y = n(), y.transform = "log2", category = ward)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-16-1.png)
@@ -458,7 +443,7 @@ admitted_patients |>
   plot2(x = paste("Hospital", hospital),
         y = n(),
         category = format(date, "%Y"))
-#> ! Omitting printing of 60 datalabels - use datalabels = TRUE to force printing
+#> Omitting printing of 60 datalabels - use datalabels = TRUE to force printing
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-17-1.png)
@@ -472,9 +457,8 @@ preprocessing steps.
 #### Combining Everything Together
 
 Let’s put it all together in a more complex example. Suppose you want to
-examine the distribution of patient ages across hospitals, with each bar
-split by gender, and you want the X-axis to reflect the hospital name
-and use facets for the year of admission:
+examine the median age of patients per gender, with the year of
+admission as category and a facet per hospital:
 
 ``` r
 
@@ -487,9 +471,9 @@ admitted_patients |>
         y.title = "Median Patient Age",
         y.labels = function(x) paste(x, "yrs"),
         category.title = "Year")
-#> ℹ Assuming facet.fixed_y = TRUE since the four y scales differ by less than 25%
-#> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
-#> ! Omitting printing of 106 datalabels - use datalabels = TRUE to force printing
+#> Assuming facet.fixed_y = TRUE since the four y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
+#> Omitting printing of 106 datalabels - use datalabels = TRUE to force printing
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-18-1.png)
@@ -522,7 +506,7 @@ Let’s start with a simple sort based on frequency:
 
 mtcars |> 
   plot2(carb, y = n(), x.sort = "freq-desc")
-#> ℹ Using x.character = TRUE since x.sort is set
+#> Using x.character = TRUE since x.sort is set
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-19-1.png)
@@ -548,7 +532,7 @@ in ascending alphabetical order:
 
 mtcars |> 
   plot2(carb, y = n(), x.sort = "asc")
-#> ℹ Using x.character = TRUE since x.sort is set
+#> Using x.character = TRUE since x.sort is set
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-20-1.png)
@@ -572,7 +556,7 @@ by providing a manual vector of values:
 
 mtcars |> 
   plot2(carb, y = n(), x.sort = c(4, 1, 6, 8))
-#> ℹ Using x.character = TRUE since x.sort is set
+#> Using x.character = TRUE since x.sort is set
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-21-1.png)
@@ -593,25 +577,26 @@ function call.
 
 You might not always want to show every single item in your plot. For
 example, if you’re dealing with a lot of categories, you can limit the
-display to just the most frequent ones:
+number of items shown:
 
 ``` r
 
 mtcars |> 
   plot2(carb, y = n(), x.max_items = 5, type = "col")
-#> ℹ Using x.character = TRUE for discrete plot type (geom_col) since carb is
-#> numeric
+#> Using x.character = TRUE for discrete plot type (geom_col) since carb is numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-22-1.png)
 
-This limits the plot to the top 5 most frequent carburetor counts,
-simplifying the visualisation and making it easier to focus on the most
-important data.
+This keeps the first four carburettor counts in their sorted order (1 to
+4) and combines all others into a fifth column, “(rest, x2)”, the number
+telling how many values were combined. Sorting is applied first, so to
+show the most frequent values, combine `x.max_items` with
+`x.sort = "freq-desc"`, as in the next example.
 
 In `ggplot2`, you might need to filter your data with
-[`top_n()`](https://dplyr.tidyverse.org/reference/top_n.html) before
-plotting.
+[`slice_max()`](https://dplyr.tidyverse.org/reference/slice.html) before
+plotting, and summarise the rest yourself.
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 handles this within the plotting function, further reducing the need for
 external data manipulation.
@@ -627,19 +612,19 @@ frequency and also limit the number of items displayed:
 
 mtcars |> 
   plot2(carb, y = n(), x.sort = "freq-desc", x.max_items = 5, type = "col")
-#> ℹ Using x.character = TRUE for discrete plot type (geom_col) since carb is
-#> numeric
+#> Using x.character = TRUE for discrete plot type (geom_col) since carb is numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-23-1.png)
 
-This plot will show only the top 5 most frequent carburettor counts,
-sorted in descending order. This combination helps to declutter your
-visualisation and focus on the most significant parts of your data.
+This plot will show the four most frequent carburettor counts, sorted in
+descending order, and the rest combined in a fifth column. This
+combination helps to declutter your visualisation and focus on the most
+significant parts of your data.
 
 In a `ggplot2` approach, this might involve combining
 [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html),
-[`top_n()`](https://dplyr.tidyverse.org/reference/top_n.html), and
+[`slice_max()`](https://dplyr.tidyverse.org/reference/slice.html), and
 [`geom_col()`](https://ggplot2.tidyverse.org/reference/geom_bar.html).
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 consolidates these operations into a single, coherent function call.
@@ -686,7 +671,7 @@ For a quick and visually appealing colour scheme, you might use a
 
 mtcars |> 
   plot2(mpg, hp, category = cyl, colour = "viridis")
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-25-1.png)
@@ -710,8 +695,8 @@ category:
 
 mtcars |> 
   plot2(mpg, hp, category = cyl, colour = c("4" = "red", "6" = "blue", "8" = "green"))
-#> ℹ Using category.midpoint = 7 (the current category scale centre)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Using category.midpoint = 6 (the current category scale centre)
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-26-1.png)
@@ -759,9 +744,8 @@ You can now use these colours in your plots!
 
 iris |>
   plot2(x = Species, y = where(is.double), colour = "OurOrganisation")
-#> ℹ Using type = "boxplot" since all groups in Species and category contain at
-#> least three values
-#> ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using type = "boxplot" since all groups in Species and category contain at least three values
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-29-1.png)
@@ -838,7 +822,7 @@ Adding a line to an existing plot is as easy as calling
 p <- mtcars |> 
   plot2(mpg, hp, as.character(cyl),
         category.title = "Cylinders")
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 
 # Notice how plot2() adds 3 lines here, since `category` is set
 p |> 
@@ -934,10 +918,9 @@ makes it easy to integrate spatial features:
 
 plot2(netherlands) |> 
   add_sf(netherlands, colour_fill = NA, colour = "red", linewidth = 2)
-#> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
-#> placing of datalabels.
-#> ℹ Using category = area_km2
-#> ℹ Using datalabels = province
+#> Using category = area_km2
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-43-1.png)
@@ -964,7 +947,8 @@ you to easily customise fonts to suit your needs.
 supports all installed system fonts, as well as over 1,400 Google Fonts,
 giving you an extensive range of choices for your plots. Missing fonts
 will be downloaded automatically, and the required DPI will be set for
-you, even in R Markdown outputs.
+you. In R Markdown, set the chunk option `fig.showtext = TRUE` in chunks
+that use another font, as in the examples below.
 
 Here’s how you can apply a custom font from Google Fonts, which will be
 downloaded automatically:
@@ -980,9 +964,10 @@ mtcars |>
         y.title = "Gross Horsepower",
         category.title = "Weight (lbs)",
         facet.fixed_y = TRUE)
-#> ℹ Assuming facet.fixed_x = TRUE since the two x scales differ by less than 25%
-#> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts into /tmp/RtmpniO1e6/R/plot2/fonts
+#> Assuming facet.fixed_x = TRUE since the two x scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-44-1.png)
@@ -1010,7 +995,8 @@ options(plot2.colour = "viridis")
 mtcars |> 
   plot2(mpg, hp, title = "Consistent Font Example",
         text_factor = 1.5)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Downloaded font https://fonts.google.com/specimen/Lobster from Google Fonts into /tmp/RtmpniO1e6/R/plot2/fonts
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-45-1.png)

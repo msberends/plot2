@@ -23,7 +23,7 @@ add_mapping(plot, ...)
 
 ``` r
 p <- iris |> plot2(Sepal.Length, Sepal.Width, Species, zoom = TRUE)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 p
 
 

@@ -54,11 +54,11 @@ ggplot(mtcars, aes(hp, mpg)) +
 # in plot2(), the 'theme' argument defaults to theme_minimal2():
 mtcars |>
   plot2(hp, mpg)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 
   
 # set to NULL to use the ggplot2 default:
 mtcars |>
   plot2(hp, mpg, theme = NULL)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```

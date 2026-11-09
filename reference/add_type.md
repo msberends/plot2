@@ -91,7 +91,7 @@ add_sf(
   datalabels.size = 3,
   datalabels.angle = 0,
   datalabels.font = getOption("plot2.font"),
-  datalabels.nudge_y = 2500,
+  datalabels.nudge_y = 0,
   ...,
   inherit.aes = FALSE
 )
@@ -124,9 +124,11 @@ add_sf(
 
 - move:
 
-  Number of layers to move the newly added geom down, e.g., `move = 1`
-  will place the newly added geom down 1 layer, thus directly under the
-  highest layer.
+  Number of layers to move the newly added geom down; the sign is
+  ignored. For example, `move = 1` (or `move = -1`) places the new geom
+  directly below the layer that was on top before it was added. Use
+  [`move_layer()`](https://msberends.github.io/plot2/reference/move_layer.md)
+  for other changes in the order of layers.
 
 - x, y:
 
@@ -209,9 +211,11 @@ add_sf(
 
 - datalabels.nudge_y:
 
-  is `datalabels` is not `NULL`, the amount of vertical adjustment of
-  the datalabels (positive value: more to the North, negative value:
-  more to the South)
+  if `datalabels` is not `NULL`, the amount of vertical adjustment of
+  the datalabels in the units of the coordinate reference system
+  (positive value: more to the North, negative value: more to the
+  South), e.g. metres for EPSG:28992 and degrees for EPSG:4326. The
+  default is `0`.
 
 ## Value
 
@@ -250,7 +254,7 @@ p <- iris |>
         y = Sepal.Width,
         category = Species,
         zoom = TRUE)
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 p
 
   
@@ -283,12 +287,10 @@ iris |>
         facet = Species) |>
   add_line(y = mean(Sepal.Width),
            legend.value = "Average")
-#> ℹ Assuming facet.fixed_x = TRUE since the three x scales differ by less than
-#> 25%
-#> ℹ Assuming facet.fixed_y = TRUE since the three y scales differ by less than
-#> 25%
-#> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
+#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 
 
 iris |>
@@ -297,12 +299,10 @@ iris |>
         facet = Species) |>
   add_line(y = range(Sepal.Width),
            legend.value = "Range")
-#> ℹ Assuming facet.fixed_x = TRUE since the three x scales differ by less than
-#> 25%
-#> ℹ Assuming facet.fixed_y = TRUE since the three y scales differ by less than
-#> 25%
-#> ℹ Assuming facet.repeat_lbls_y = FALSE since y has fixed scales
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
+#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 
 
 
@@ -367,7 +367,7 @@ df |>
           width = 0.25,
           colour = "blue",
           legend.value = "This *is* **some** symbol: $beta$")
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 #> Warning: Removed 1 row containing missing values or values outside the scale range
 #> (`geom_col()`).
 
@@ -385,52 +385,48 @@ df2
 #> # A tibble: 25 × 5
 #>    var_1 var_2 var_3 error1 error2
 #>    <int> <dbl> <chr>  <dbl>  <dbl>
-#>  1     1  39.1 A       35.2   43.0
-#>  2     2  99.9 B       89.9  110. 
-#>  3     3 116.  C      104.   127. 
-#>  4     4 129.  D      116.   142. 
-#>  5     5  54.5 E       49.0   59.9
-#>  6     6  93.8 A       84.4  103. 
-#>  7     7  93.9 B       84.5  103. 
-#>  8     8  92.9 C       83.6  102. 
-#>  9     9  86.2 D       77.5   94.8
-#> 10    10 116.  E      104.   127. 
+#>  1     1  65.0 A       58.5   71.5
+#>  2     2 106.  B       95.7  117. 
+#>  3     3  39.1 C       35.2   43.0
+#>  4     4  99.9 D       89.9  110. 
+#>  5     5 116.  E      104.   127. 
+#>  6     6 129.  A      116.   142. 
+#>  7     7  54.5 B       49.0   59.9
+#>  8     8  93.8 C       84.4  103. 
+#>  9     9  93.9 D       84.5  103. 
+#> 10    10  92.9 E       83.6  102. 
 #> # ℹ 15 more rows
 
 df2 |> 
   plot2(var_1, var_2, var_3, type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
   # adding error bars was never easier - just reference the lower and upper values
   add_errorbar(error1, error2)
-#> ℹ This additional argument was given to the geom: alpha
-#> ℹ Using x.character = TRUE for discrete plot type (geom_col) since var_1 is
-#> numeric
+#> This additional argument was given to the geom: alpha
+#> Using x.character = TRUE for discrete plot type (geom_col) since var_1 is numeric
 
 
 # adding sf objects is just as convenient as all else
 netherlands |> 
   plot2()
-#> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
-#> placing of datalabels.
-#> ℹ Using category = area_km2
-#> ℹ Using datalabels = province
+#> Using category = area_km2
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 
 netherlands |> 
-  plot2(colour_fill = "viridis", colour_opacity = 0.75)
-#> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
-#> placing of datalabels.
-#> ℹ Using category = area_km2
-#> ℹ Using datalabels = province
+  plot2(colour_fill = "viridis", colour_transparency = 0.75)
+#> Using category = area_km2
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 
 netherlands |> 
-  plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+  plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
   # add the same sf object, but now with empty fill and other options
   add_sf(netherlands,
          colour = "black",
          colour_fill = NA,
          linetype = 2,
          linewidth = 0.5)
-#> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
-#> placing of datalabels.
-#> ℹ Using category = area_km2
-#> ℹ Using datalabels = province
+#> Using category = area_km2
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```

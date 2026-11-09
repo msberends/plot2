@@ -15,14 +15,14 @@ big_mark()
 
 ## Details
 
-If the [option](https://rdrr.io/r/base/options.html) `"dec_mark"` is
-set, that value will be used for `dec_mark()` if it is either a comma or
-a full stop.
+If the [option](https://rdrr.io/r/base/options.html)
+`"plot2.decimal.mark"` is set, that value will be used for `dec_mark()`
+if it is either a comma or a full stop.
 
 At default, `big_mark()` returns a full stop if `dec_mark()` returns a
 comma, and a space otherwise. If the
-[option](https://rdrr.io/r/base/options.html) `"big_mark"` is set, that
-value will be used if it is either a comma (`","`) or a full stop
+[option](https://rdrr.io/r/base/options.html) `"plot2.big.mark"` is set,
+that value will be used if it is either a comma (`","`) or a full stop
 (`"."`) or a space (`" "`) or an empty character (`""`).
 
 ## Examples
@@ -36,24 +36,24 @@ big_mark()
 #> [1] " "
 
 # you you can set options to alter behaviour:
-options(dec_mark = ",", big_mark = ".")
+options(plot2.decimal.mark = ",", plot2.big.mark = ".")
 dec_mark()
 #> [1] ","
 big_mark()
 #> [1] "."
 
-options(dec_mark = ",", big_mark = NULL)
+options(plot2.decimal.mark = ",", plot2.big.mark = NULL)
 dec_mark()
 #> [1] ","
 big_mark()
 #> [1] "."
 
-options(big_mark = ",")
+options(plot2.big.mark = ",")
 dec_mark()
 #> [1] ","
 big_mark()
 #> [1] ","
 
 # clean up
-options(dec_mark = NULL, big_mark = NULL)
+options(plot2.decimal.mark = NULL, plot2.big.mark = NULL)
 ```

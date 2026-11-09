@@ -15,7 +15,7 @@ md_to_expression(x)
 
 - x:
 
-  Text to convert, only the first value will be evaluated.
+  Text to convert. Each element is converted separately.
 
 ## Value
 
@@ -30,6 +30,12 @@ subscript, superscript), but also supports some additional
 functionalities for more advanced expressions using R
 [plotmath](https://rdrr.io/r/grDevices/plotmath.html). Please see
 *Examples*.
+
+Text between dollar signs is used as plotmath, as in Pandoc: the opening
+`$` must be followed and the closing `$` preceded by a non-space
+character, and the closing `$` must not be followed by a digit. A single
+`$` ("Costs in \$") or amounts such as "\$5 to \$10" therefore stay
+text. Apostrophes and backslashes in the text are kept.
 
 In [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md),
 this function can be also set to argument `category.labels` to print the
@@ -67,12 +73,12 @@ mtcars |>
         title = "*These are* the **Greek** lower $omega$ and upper $Omega$",
         x.title = "x_{mpg}",
         y.title = "y_{hp}")
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 
         
 mtcars |> 
   plot2(mpg, hp,
         title = "$f[X](x)==frac(1, sigma*sqrt(2*pi))*plain(e)^{frac(-(x-mu)^2, 2*sigma^2)}$",
         subtitle = "Some insane $widehat(plotmath)$ title")
-#> ℹ Using type = "point" since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```

@@ -7,7 +7,7 @@ unregistering custom colour sets for (automatic) reuse in plots.
 ## Usage
 
 ``` r
-get_colour(x, length = 1, opacity = 0)
+get_colour(x, length = 1, transparency = 0)
 
 register_colour(...)
 
@@ -40,66 +40,34 @@ add_white(x, white)
 
     - `"turbo"`
 
-  - One of the built-in R palettes (these are from R 4.5.1):
+  - `"ggplot2"`, which gives the colours that ggplot2 itself would use,
+    i.e. the same as not setting a colour
 
-    - `"Accent"`
+  - One of the built-in R palettes from
+    [`grDevices::palette.pals()`](https://rdrr.io/r/grDevices/palette.html),
+    such as `"R4"`, `"Okabe-Ito"` or `"Tableau 10"`, or one of `"topo"`,
+    `"heatmap"`, `"rainbow"`, `"terrain"`, `"greyscale"`, `"grayscale"`
 
-    - `"Alphabet"`
-
-    - `"Classic Tableau"`
-
-    - `"Dark 2"`
-
-    - `"Okabe-Ito"`
-
-    - `"Paired"`
-
-    - `"Pastel 1"`
-
-    - `"Pastel 2"`
-
-    - `"Polychrome 36"`
-
-    - `"R3"`
-
-    - `"R4"`
-
-    - `"Set 1"`
-
-    - `"Set 2"`
-
-    - `"Set 3"`
-
-    - `"Tableau 10"`
-
-    - `"ggplot2"`
-
-    - `"grayscale"`
-
-    - `"greyscale"`
-
-    - `"heatmap"`
-
-    - `"rainbow"`
-
-    - `"terrain"`
-
-    - `"topo"`
-
-  - One of the 657 built-in
+  - One of the built-in
     [`colours()`](https://rdrr.io/r/grDevices/colors.html) in R (even
-    case-insensitive), such as `"bisque"`, `"blue1"`, `"chartreuse1"`,
-    `"cornsilk4"`, `"lightcoral"`
+    case-insensitive), such as `"bisque"`, `"cornsilk4"`,
+    `"lightcoral"`, `"salmon2"`, `"slateblue"`
 
   - One of the pre-registered colours using `register_colour()`
+    (case-insensitive)
+
+  An invalid colour gives a warning and is replaced by grey, while valid
+  colours and names are kept. A single unknown name, such as a mistyped
+  palette, is replaced by the default colours. `register_colour()` gives
+  an error for invalid colours.
 
 - length:
 
   Size of the vector to be returned.
 
-- opacity:
+- transparency:
 
-  Amount of opacity (0 = solid, 1 = transparent).
+  Amount of transparency (0 = solid, 1 = fully transparent).
 
 - ...:
 
@@ -117,8 +85,11 @@ add_white(x, white)
 
 ## Value
 
+`get_colour()` returns a
 [character](https://rdrr.io/r/base/character.html) vector in HTML format
-(i.e., `"#AABBCC"`) with new class `colour`
+(i.e., `"#AABBCC"`) with new class `colour`. `register_colour()` and
+`unregister_colour()` are called for their side effect and return `NULL`
+invisibly.
 
 ## Details
 
@@ -187,6 +158,7 @@ barplot(20:1,
 # to register colours, use named input - the values will be evaluated
 # with get_colour()
 get_colour("red123")
+#> Warning: Invalid colour ("red123") replaced with the default colours
 #> [1] "#595959"  
 register_colour(red123 = "red", red456 = "#ff0000", red789 = "f00")
 #> 3 colours registered.
@@ -227,10 +199,8 @@ get_colour("my_organisation", length = 6)
 # Now use it in plots as you like:
 iris |>
   plot2(x = Species, y = where(is.double), colour = "my_organisation")
-#> ℹ Using type = "boxplot" since all groups in Species and category contain at
-#> least three values
-#> ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
-#> ! Invalid colour set ("red123"), replacing with default ggplot2 colour
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using type = "boxplot" since all groups in Species and category contain at least three values
 
 
 # Or even set the option to use it in any future plot:
@@ -238,13 +208,18 @@ options(plot2.colour = "my_organisation")
 
 iris |>
   plot2(x = Species, y = where(is.double))
-#> ℹ Using type = "boxplot" since all groups in Species and category contain at
-#> least three values
-#> ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using type = "boxplot" since all groups in Species and category contain at least three values
 
 
 # reset option again
 options(plot2.colour = NULL)
+
+# unregister colours with a regular expression on their names
+unregister_colour("^red")
+#> 4 colours unregistered.
+unregister_colour("^my_organisation$")
+#> 1 colour unregistered.
 
 
 # Use add_white() to add white to existing colours:

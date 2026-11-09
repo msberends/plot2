@@ -63,10 +63,10 @@ Used for displaying individual observations in a two dimensional space.
 
 iris |> # from base R
   plot2()
-#> ℹ Using category = Species
-#> ℹ Using type = "point" since both axes are numeric
-#> ℹ Using x = Sepal.Length
-#> ℹ Using y = Sepal.Width
+#> Using x = Sepal.Length
+#> Using y = Sepal.Width
+#> Using category = Species
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-5-1.png)
@@ -119,7 +119,7 @@ and density.
 iris |>
   plot2(x = Species,
         type = "violin")
-#> ℹ Using y = Sepal.Length
+#> Using y = Sepal.Length
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-7-1.png)
@@ -130,7 +130,7 @@ iris |>
   plot2(x = Species,
         y = where(is.double),
         type = "boxplot")
-#> ℹ Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-7-2.png)
@@ -144,8 +144,9 @@ Used for visualising the frequency distribution of continuous variables.
 diamonds |>
   plot2(x = price,
         type = "hist")
-#> ℹ Assuming smooth = TRUE for type = "histogram"
-#> ℹ Using binwidth = 841 based on data
+#> Using type = "histogram"
+#> Using binwidth = 841 based on data
+#> Assuming smooth = TRUE for type = "histogram"
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
@@ -158,10 +159,9 @@ Used for mapping spatial data encoded as simple features.
 
 netherlands |> # from this plot2 package
   plot2()
-#> ℹ Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface
-#> placing of datalabels.
-#> ℹ Using category = area_km2
-#> ℹ Using datalabels = province
+#> Using category = area_km2
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-9-1.png)
@@ -192,6 +192,8 @@ admitted_patients |> # from this plot2 package
         y = n(),
         facet = ward,
         type = "back-to-back")
+#> This additional argument was given to the geom: show.legend
+#> Assuming y.expand = 0 since y.limits is set
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-11-1.png)
@@ -205,6 +207,8 @@ admitted_patients |> # from this plot2 package
         category = gender,
         facet = ward,
         type = "back-to-back")
+#> This additional argument was given to the geom: show.legend
+#> Assuming y.expand = 0 since y.limits is set
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-11-2.png)
@@ -219,8 +223,8 @@ Titanic |> # from base R
   plot2(x = c(Age, Class, Survived),
         category = Sex,
         type = "sankey")
-#> ℹ Assuming sankey.remove_axes = TRUE
-#> ! Input class 'table' was transformed using `as.data.frame()`
+#> Assuming sankey_remove_axes = TRUE
+#> Input class 'table' was transformed using `as.data.frame()`
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
@@ -255,7 +259,7 @@ diamonds |>
           colour_fill = "viridis")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-13-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-14-1.png)
 
 ## UpSet
 
@@ -267,11 +271,11 @@ clarity.
 movies |> # from the ggplot2movies package
   plot2(x = c(Action, Animation, Comedy, Drama, Romance),
         type = "upset")
-#> ℹ Using summarise_function = sum for UpSet plot
-#> ℹ Using y = 1
+#> Using y = 1
+#> Using summarise_function = sum for UpSet plot
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-14-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-15-1.png)
 
 ``` r
 
@@ -281,10 +285,10 @@ movies |>
         y.title = "Median Rating",
         x.sort = TRUE,
         type = "upset")
-#> ℹ Using summarise_function = sum for UpSet plot
+#> Using summarise_function = sum for UpSet plot
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-14-2.png)
+![](supported_types_files/figure-html/unnamed-chunk-15-2.png)
 
 ## Dumbbell
 
@@ -300,4 +304,4 @@ diamonds |>
         type = "dumbbell")
 ```
 
-![](supported_types_files/figure-html/unnamed-chunk-15-1.png)
+![](supported_types_files/figure-html/unnamed-chunk-16-1.png)

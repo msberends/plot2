@@ -88,7 +88,9 @@ and make it easy to extract or customise the title of any plot.
   : Get Plot Title
 - [`euros()`](https://msberends.github.io/plot2/reference/labellers.md)
   [`dollars()`](https://msberends.github.io/plot2/reference/labellers.md)
-  : Label Euro currencies
+  : Label Currencies
+- [`label_taxonomy()`](https://msberends.github.io/plot2/reference/label_taxonomy.md)
+  : Label Taxonomic Names in Italics
 
 ## Number Formatting
 

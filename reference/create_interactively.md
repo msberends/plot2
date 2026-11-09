@@ -12,7 +12,8 @@ create_interactively(
   pretty_labels = FALSE,
   hide_generated_code = FALSE,
   hide_export_buttons = NULL,
-  upload_tab = FALSE
+  upload_tab = FALSE,
+  run = interactive()
 )
 ```
 
@@ -20,8 +21,14 @@ create_interactively(
 
 - data:
 
-  A data set to load. Not strictly required, since all data sets in the
-  global environment will be shown.
+  A data set to load, offered as 'Provided' in the data set selector.
+  The generated code refers to it by its name, e.g. `df |> plot2()` for
+  `create_interactively(data = df)`. Not strictly required: in an
+  interactive session, all data frames in the global environment are
+  offered as well, together with the data sets of base R, plot2, ggplot2
+  and dplyr. Outside an interactive session (such as on a server), data
+  frames in the global environment are not offered, so that the app does
+  not expose what the hosting script has loaded.
 
 - css_code:
 
@@ -49,19 +56,76 @@ create_interactively(
 
 - upload_tab:
 
-  A logical to show a dedicated **Upload** tab in the sidebar. When
-  `TRUE`, a full-featured data-import tab is added with format-specific
-  options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS,
-  JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..."
-  dropdown item will redirect to this tab instead of opening a modal.
-  Requires the `readxl` package in addition to the packages checked for
-  `upload_tab = FALSE`. Administrators can ensure all dependencies are
-  present by running `plot2:::install_shiny_deps()` before launching the
-  app.
+  A logical to allow uploading data files. When `TRUE`, an **Upload**
+  tab is added to the sidebar, with format-specific options for text
+  (CSV, TSV, TXT), spreadsheet (Excel, OpenDocument), statistical
+  software (SPSS, Stata, SAS, Minitab), Parquet, Feather, JSON, YAML,
+  XML and HTML files; the data set selector then also offers "Upload
+  data set...". R serialisation files (`.rds`, `.rda`) are not accepted,
+  since reading them can run code: pass such data with the `data`
+  argument instead. When `FALSE` (default), the app offers no way to
+  upload files. Uploading requires the `readxl` package, and per format
+  the package that reads it; administrators can install all of them with
+  `plot2:::install_shiny_deps()`.
+
+- run:
+
+  A logical to run the app (default in an interactive session). Use
+  `run = FALSE` to get the app object instead, for example to deploy it
+  on a server, see *Deployment*.
+
+## Value
+
+With `run = TRUE`, nothing (the app runs until it is closed). With
+`run = FALSE`, an app object of class `shiny.appobj` that can be run
+with [`shiny::runApp()`](https://rdrr.io/pkg/shiny/man/runApp.html) or
+deployed.
 
 ## Details
 
 ![](figures/create_interactively.jpg)
+
+The app builds a
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) call
+from the chosen settings, shows the plot and the code, and explains in a
+panel below the code what
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+decided by itself.
+
+## Deployment
+
+The app can run on a server for several users (e.g. Shiny Server or
+Posit Connect), with an `app.R` such as:
+
+    library(plot2)
+    create_interactively(run = FALSE)
+
+On a server, the app treats everything a visitor types or sends as
+untrusted:
+
+- Settings are converted to values or checked expressions; nothing typed
+  is run as R code. Calculations in the column selectors may only use a
+  fixed list of computing functions (such as
+  [`log()`](https://rdrr.io/r/base/Log.html),
+  [`mean()`](https://rdrr.io/r/base/mean.html) and
+  [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html)),
+  and the call is evaluated apart from the global environment, so it
+  cannot reach other objects of the R process.
+
+- Data frames in the global environment are offered only in an
+  interactive session; pass data with `data` to offer it on a server.
+
+- Uploads are only possible with `upload_tab = TRUE`; R serialisation
+  files are never accepted. The maximum upload size is Shiny's own
+  (option `shiny.maxRequestSize`, 5 MB by default).
+
+- Each session keeps its own plot, and raster exports are limited to 40
+  megapixels.
+
+Each plot is computed in the R process of the app, so a visitor can
+still ask for plots that take long to compute, e.g. with very large data
+or a very small `binwidth`. Use the limits of the hosting platform (e.g.
+timeouts and the number of processes) as for any Shiny app.
 
 ## Examples
 
@@ -74,5 +138,8 @@ iris |> create_interactively()
 
 # With the upload tab for importing external data files:
 create_interactively(upload_tab = TRUE)
+
+# The app object, e.g. for app.R on a server:
+app <- create_interactively(run = FALSE)
 } # }
 ```
