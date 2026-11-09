@@ -1450,10 +1450,12 @@ admitted_patients |>
 
         
 # support for Sankey plots
-Titanic |> # a table from base R
-  plot2(x = c(Age, Class, Survived),
-        category = Sex,
-        type = "sankey")
+if (requireNamespace("ggforce", quietly = TRUE) && requireNamespace("broom", quietly = TRUE)) {
+  Titanic |> # a table from base R
+    plot2(x = c(Age, Class, Survived),
+          category = Sex,
+          type = "sankey")
+}
 #> Assuming sankey_remove_axes = TRUE
 #> Input class 'table' was transformed using `as.data.frame()`
 
@@ -1506,14 +1508,16 @@ mtcars |>
 
 # plot2() supports all S3 extensions available through
 # ggplot2::fortify() and broom::augment(), such as regression models:
-lm(mpg ~ hp, data = mtcars) |> 
-  plot2(x = mpg ^ -3,
-        y = hp ^ 2,
-        smooth = TRUE,
-        smooth.method = "lm",
-        smooth.formula = "y ~ log(x)",
-        title = "Titles/captions *support* **markdown**",
-        subtitle = "Axis titles contain the square notation: x^2")
+if (requireNamespace("broom", quietly = TRUE)) {
+  lm(mpg ~ hp, data = mtcars) |> 
+    plot2(x = mpg ^ -3,
+          y = hp ^ 2,
+          smooth = TRUE,
+          smooth.method = "lm",
+          smooth.formula = "y ~ log(x)",
+          title = "Titles/captions *support* **markdown**",
+          subtitle = "Axis titles contain the square notation: x^2")
+}
 #> Using type = "point" since both axes are numeric
 
 

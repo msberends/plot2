@@ -12,7 +12,7 @@ sorting, faceting, and custom theming.
 
 Useful links:
 
-- <https://msberends.github.io/plot2>
+- <https://msberends.github.io/plot2/>
 
 - <https://github.com/msberends/plot2>
 

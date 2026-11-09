@@ -965,7 +965,7 @@ mtcars |>
         category.title = "Weight (lbs)",
         facet.fixed_y = TRUE)
 #> Using type = "point" since both axes are numeric
-#> Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts into /tmp/Rtmp8zCNYK/R/plot2/fonts
+#> Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts into /tmp/RtmpyXercA/R/plot2/fonts
 #> Assuming facet.fixed_x = TRUE since the two x scales differ by less than 25%
 #> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
@@ -996,7 +996,7 @@ mtcars |>
   plot2(mpg, hp, title = "Consistent Font Example",
         text_factor = 1.5)
 #> Using type = "point" since both axes are numeric
-#> Downloaded font https://fonts.google.com/specimen/Lobster from Google Fonts into /tmp/Rtmp8zCNYK/R/plot2/fonts
+#> Downloaded font https://fonts.google.com/specimen/Lobster from Google Fonts into /tmp/RtmpyXercA/R/plot2/fonts
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-45-1.png)
