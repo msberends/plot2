@@ -9,10 +9,23 @@ move_layer(plot, move = -1, layer = length(plot$layers))
 \arguments{
 \item{plot}{A \code{ggplot} object.}
 
-\item{move}{Number of layers to move \code{layer} up or down.}
+\item{move}{Number of layers to move \code{layer}: a negative value moves it down (drawn earlier, so below other layers), a positive value moves it up. The new position is limited to the existing layers. Defaults to \code{-1}, one layer down.}
 
-\item{layer}{The layer to affect, defaults to top layer.}
+\item{layer}{The number of the layer to move, defaults to the top layer.}
+}
+\value{
+A \code{ggplot} object with the layers in the new order.
 }
 \description{
-Use this function to move a certain plot layer up or down. This function returns a \code{ggplot} object.
+Use this function to move a certain plot layer up or down.
+}
+\examples{
+p <- plot2(iris, Sepal.Length, Sepal.Width, colour = "grey75") |>
+  add_line(y = mean(Sepal.Width), colour = "red", linewidth = 2)
+
+# the line is drawn on top of the points
+p
+
+# move the line one layer down, below the points
+move_layer(p)
 }

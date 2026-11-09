@@ -19,15 +19,18 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' Retrieves, expands, and prints colours or palettes from \R, `viridisLite`, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
 #' @param x Colour or colour palette name. Input can be:
 #' * One of the colourblind-safe `viridisLite` palettes: `r paste0('\n  - \u0060"', viridisLite_colours, '"\u0060', collapse = "")`
-#' * One of the built-in \R palettes (these are from \R `r paste(R.version$major, R.version$minor, sep = ".")`): `r paste0('\n  - \u0060"', sort(c(grDevices::palette.pals(), "topo", "heatmap", "rainbow", "terrain", "greyscale", "grayscale")), '"\u0060', collapse = "")`
-#' * One of the `r length(colours())` built-in [colours()] in \R (even case-insensitive), such as `r paste0('\u0060"', sort(sample(colours()[colours() %unlike% "^grey|gray"], 5)), '"\u0060', collapse = ", ")`
-#' * One of the pre-registered colours using [register_colour()]
+#' * `"ggplot2"`, which gives the colours that ggplot2 itself would use, i.e. the same as not setting a colour
+#' * One of the built-in \R palettes from [grDevices::palette.pals()], such as `"R4"`, `"Okabe-Ito"` or `"Tableau 10"`, or one of `"topo"`, `"heatmap"`, `"rainbow"`, `"terrain"`, `"greyscale"`, `"grayscale"`
+#' * One of the built-in [colours()] in \R (even case-insensitive), such as `"bisque"`, `"cornsilk4"`, `"lightcoral"`, `"salmon2"`, `"slateblue"`
+#' * One of the pre-registered colours using [register_colour()] (case-insensitive)
+#' 
+#' An invalid colour gives a warning and is replaced by grey, while valid colours and names are kept. A single unknown name, such as a mistyped palette, is replaced by the default colours. [register_colour()] gives an error for invalid colours.
 #' @param length Size of the vector to be returned.
-#' @param opacity Amount of opacity (0 = solid, 1 = transparent).
+#' @param transparency Amount of transparency (0 = solid, 1 = fully transparent).
 #' @details 
 #' ### Limitless Palette Length
 #' A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
-#' @return [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`
+#' @return [get_colour()] returns a [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`. [register_colour()] and [unregister_colour()] are called for their side effect and return `NULL` invisibly.
 #' @rdname colour
 #' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
 #' @export
@@ -48,7 +51,7 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' barplot(20:1,
 #'         col = get_colour("R4", 20),
 #'         main = "Not anymore!")
-get_colour <- function(x, length = 1, opacity = 0) {
+get_colour <- function(x, length = 1, transparency = 0) {
   
   if (is.null(x)) {
     # transparent white
@@ -56,14 +59,14 @@ get_colour <- function(x, length = 1, opacity = 0) {
                      class = c("colour", "character")))
   }
   
-  opacity <- as.double(opacity)
+  transparency <- as.double(transparency)
   length <- as.double(length)
   if (all(is.na(length))) {
-    stop("length must be a numeric value")
+    stop("length must be a numeric value", call. = FALSE)
   }
   
   if ((length(x) > 1 && length != 1) | (length > 1 && length(x) != 1)) {
-    stop("Either the length of `x`, or `length` must be 1")
+    stop("Either the length of `x`, or `length` must be 1", call. = FALSE)
   }
   
   x_names <- names(x) # required for named colour vectors such as in ggplot2 and plot2
@@ -75,15 +78,15 @@ get_colour <- function(x, length = 1, opacity = 0) {
   
   if (length(x) == 1) {
     
-    if (x %in% names(plot2_env$reg_cols)) {
-      x <- plot2_env$reg_cols[names(plot2_env$reg_cols) == x][[1]]
+    # registered names are matched case-insensitively, like R's colour names (F088)
+    if (tolower(x) %in% tolower(names(plot2_env$reg_cols))) {
+      x <- plot2_env$reg_cols[[match(tolower(x), tolower(names(plot2_env$reg_cols)))]]
       if (length(x) < length) {
         x <- grDevices::colorRampPalette(x)(length)
         # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
       }
       x <- x[seq_len(length)]
-      # some support names, so return the object
-      return(structure(x, class = c("colour", "character")))
+      # no early return: transparency and NA handling below apply to every branch (F096)
       
     } else if (x %in% viridisLite_colours) {
       rlang::check_installed("viridisLite")
@@ -94,14 +97,13 @@ get_colour <- function(x, length = 1, opacity = 0) {
         x <- "R4"
       }
       if (tolower(x) == "ggplot2" && length == 1) {
-        # special case for ggplot2 - they did not actually get it right (#595959 is the official first colour)
+        # ggplot2's own default for a single colour (grey35)
         new_cols <- "#595959"
+      } else if (tolower(x) == "ggplot2") {
+        # "ggplot2" stands for not setting a colour, so use ggplot2's own hue spacing,
+        # which depends on the number of colours, not R's fixed "ggplot2" palette
+        new_cols <- scales::hue_pal()(length)
       } else {
-        if (tolower(x) == "ggplot2") {
-          # we request 1 more colour, then remove the first grey one later on
-          length <- length + 1
-        }
-        
         new_cols <- tryCatch(grDevices::palette.colors(length, palette = x),
                              error = function(e) NULL,
                              warning = function(w) NULL)
@@ -110,12 +112,9 @@ get_colour <- function(x, length = 1, opacity = 0) {
           new_cols <- grDevices::colorRampPalette(grDevices::palette.colors(8, palette = x))(length)
           # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
         }
-        if (tolower(x) == "ggplot2") {
-          new_cols <- new_cols[2:length(new_cols)]
-        }
       }
-      # some support names, so return the object
-      return(structure(new_cols, class = c("colour", "character")))
+      # no early return: transparency and NA handling below apply to every branch (F096)
+      x <- unname(new_cols)
       
     } else if (x == "topo") {
       x <- topo.colors(length)
@@ -141,32 +140,41 @@ get_colour <- function(x, length = 1, opacity = 0) {
                                            function(rgb) rgb(red = rgb[1], green = rgb[2], blue = rgb[3], maxColorValue = 255))
   }
   # replace pre-registered colour names with HTML code
-  if (any(x %in% names(plot2_env$reg_cols))) {
-    x[x %in% names(plot2_env$reg_cols)] <- unlist(plot2_env$reg_cols[match(x[x %in% names(plot2_env$reg_cols)], names(plot2_env$reg_cols))], use.names = FALSE)
+  reg <- tolower(x) %in% tolower(names(plot2_env$reg_cols))
+  if (any(reg)) {
+    x[reg] <- vapply(plot2_env$reg_cols[match(tolower(x[reg]), tolower(names(plot2_env$reg_cols)))],
+                     function(cols) cols[1L], FUN.VALUE = character(1))
   }
   
   # support #ffa -> #ffffaa
-  shorts <- x %like% "^#?[0-F]{3}$"
+  shorts <- grepl("^#?[0-9A-Fa-f]{3}$", x, perl = TRUE)
   if (any(shorts)) {
-    x[shorts] <- paste0(sapply(strsplit(x[shorts], "")[[1]],
-                               function(x) ifelse(x == "#", "", paste0(x, x))),
-                        collapse = "")
+    x[shorts] <- vapply(strsplit(sub("^#", "", x[shorts]), ""),
+                        function(ch) paste0("#", paste0(ch, ch, collapse = "")),
+                        FUN.VALUE = character(1))
   }
   
   # support fffaa -> #fffaa
-  missing_hastag <- x %like% "^[0-F]{6}$"
+  missing_hastag <- grepl("^[0-9A-Fa-f]{6}$", x, perl = TRUE)
   if (any(missing_hastag)) {
     x[missing_hastag] <- paste0("#", x[missing_hastag])
   }
   
-  # some colours add FF as opacity to HTML colour - remove them
+  # some colours add FF as transparency to HTML colour - remove them
   x[which(nchar(x) > 7 & x %like% "FF$")] <- substr(x[which(nchar(x) > 7 & x %like% "FF$")], 1, 7)
   
-  invalid <- x %unlike% "^#[0-F]{6,8}$"
+  invalid <- !grepl("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$", x, perl = TRUE)
   if (any(invalid)) {
     inv <- unique(x[invalid])
-    plot2_caution("Invalid colour", ifelse(length(inv) != 1, "s", ""), " set (", toString(paste0('"', inv, '"')), "), replacing with default ggplot2 colour", ifelse(length(inv) != 1, "s", ""))
-    return(get_colour("ggplot2", length = length))
+    if (length(inv) == 1 && all(invalid) && length(x_names) == 0) {
+      # one unknown name, such as a mistyped palette: use the default colours
+      plot2_warning("Invalid colour (\"", inv, "\") replaced with the default colours")
+      x <- unname(as.character(get_colour("ggplot2", length = length(x))))
+    } else {
+      # replace only the invalid colours, keeping the valid ones, the names and the length (F088)
+      plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), " (", toString(paste0('"', inv, '"')), ") replaced with grey")
+      x[invalid] <- "#595959"
+    }
   }
   
   if (length > length(x)) {
@@ -176,13 +184,13 @@ get_colour <- function(x, length = 1, opacity = 0) {
            grey.colors(length - length(x), start = 0.7, end = 0.95))
   }
   
-  # so everything is now hexadecimal; paste alpha (opacity) to it
-  if (opacity > 0 & any(nchar(x) == 7)) {
-    opacity <- toupper(as.hexmode(round((1 - opacity) * 255)))
-    if (nchar(opacity) == 1) {
-      opacity <- paste0("0", opacity)
+  # so everything is now hexadecimal; paste alpha (transparency) to it
+  if (transparency > 0 & any(nchar(x) == 7)) {
+    transparency <- toupper(as.hexmode(round((1 - transparency) * 255)))
+    if (nchar(transparency) == 1) {
+      transparency <- paste0("0", transparency)
     }
-    x[nchar(x) == 7] <- paste0(x[nchar(x) == 7], opacity)
+    x[nchar(x) == 7] <- paste0(x[nchar(x) == 7], transparency)
   }
   
   # support NA - make them white and transparent
@@ -272,6 +280,10 @@ get_colour <- function(x, length = 1, opacity = 0) {
 #' 
 #' # reset option again
 #' options(plot2.colour = NULL)
+#' 
+#' # unregister colours with a regular expression on their names
+#' unregister_colour("^red")
+#' unregister_colour("^my_organisation$")
 register_colour <- function(...) {
   dots <- list(...)
   if (length(dots) == 1 && is.null(names(dots)) && !is.null(names(dots[[1]]))) {
@@ -284,13 +296,18 @@ register_colour <- function(...) {
   for (i in seq_along(dots)) {
     name <- names(dots)[i]
     if (is.null(name) || name == "") {
-      stop("Input must be named")
+      stop("Input must be named", call. = FALSE)
     }
     
-    out <- as.character(suppressWarnings(suppressMessages(get_colour(dots[[i]]))))
-    if (anyNA(out)) {
-      stop("Input must not be NA, and must be known, valid colours")
+    if (anyNA(dots[[i]])) {
+      stop("Input must not be NA, and must be known, valid colours", call. = FALSE)
     }
+    # an invalid colour is an error here, not a grey replacement (F088)
+    out <- tryCatch(as.character(suppressMessages(get_colour(dots[[i]]))),
+                    plot2_warning = function(w) {
+                      stop("`", name, "` must contain known, valid colours, not: ",
+                           toString(paste0('"', dots[[i]], '"')), call. = FALSE)
+                    })
     
     if (length(out) == 1) {
       n_colours <- n_colours + 1
@@ -354,7 +371,7 @@ add_white <- function(x, white) {
 get_registered_colour <- function(name) {
   name <- name[1L]
   if (!name %in% names(plot2_env$reg_cols)) {
-    stop("colour not registered: ", name)
+    stop("colour not registered: ", name, call. = FALSE)
   }
   get_colour(plot2_env$reg_cols[[which(names(plot2_env$reg_cols) == name)]])
 }
@@ -367,13 +384,12 @@ as.character.colour <- function(x, ...) {
 }
 
 #' @method print colour
-#' @importFrom crayon make_style
 #' @noRd
 #' @export
 print.colour <- function(x, ...) {
   tryCatch({
     if (any(nchar(as.character(x)) == 9)) {
-      # some have opacity as last 2 characters
+      # some have transparency as last 2 characters
       str_length <- 9
     } else {
       str_length <- 7
@@ -383,7 +399,7 @@ print.colour <- function(x, ...) {
     nms <- format(c(nms, strrep(" ", str_length + 4)), justify = "right")[seq_len(length(x))]
     cols <- substr(y[!is.na(x)], 1, str_length)
     y[!is.na(x)] <- paste0('"', cols, '"',
-                           sapply(cols, function(z) make_style(z, bg = TRUE)(" ")))
+                           sapply(cols, function(z) as.character(cli::make_ansi_style(z, bg = TRUE)(" "))))
     max_print <- floor(options()$width / (str_length + 5)) + 1
     for (i in c(0:(length(y) / max_print))) {
       from <- i * max_print + 1
@@ -415,6 +431,21 @@ print.colour <- function(x, ...) {
 rev.colour <- function(x) {
   structure(stats::setNames(rev(as.character(x)), rev(names(x))),
             class = class(x))
+}
+
+#' @method [ colour
+#' @noRd
+#' @export
+`[.colour` <- function(x, i, ...) {
+  # keep the class when subsetting (F090)
+  structure(unclass(x)[i], class = class(x))
+}
+
+#' @method [[ colour
+#' @noRd
+#' @export
+`[[.colour` <- function(x, i, ...) {
+  structure(unclass(x)[[i]], class = class(x))
 }
 
 #' @method rep colour

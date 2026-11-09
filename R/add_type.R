@@ -20,7 +20,7 @@
 #' @param mapping A mapping created with [`aes()`][ggplot2::aes()] to pass on to the geom.
 #' @param linetype,linewidth,shape,size,width,... Arguments passed on to the geom.
 #' @param data Data to use in mapping.
-#' @param move Number of layers to move the newly added geom down, e.g., `move = 1` will place the newly added geom down 1 layer, thus directly under the highest layer.
+#' @param move Number of layers to move the newly added geom down; the sign is ignored. For example, `move = 1` (or `move = -1`) places the new geom directly below the layer that was on top before it was added. Use [move_layer()] for other changes in the order of layers.
 #' @param inherit.aes A [logical] to indicate whether the default aesthetics should be inherited, rather than combining with them.
 #' @param legend.value Text to show in an additional legend that will be created. Since `ggplot2` does not actually support this, it may give some false-positive warnings or messages, such as "Removed 1 row containing missing values or values outside the scale range".
 #' @importFrom ggplot2 is_ggplot aes
@@ -145,9 +145,9 @@
 #' netherlands |> 
 #'   plot2()
 #' netherlands |> 
-#'   plot2(colour_fill = "viridis", colour_opacity = 0.75)
+#'   plot2(colour_fill = "viridis", colour_transparency = 0.75)
 #' netherlands |> 
-#'   plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+#'   plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
 #'   # add the same sf object, but now with empty fill and other options
 #'   add_sf(netherlands,
 #'          colour = "black",
@@ -157,9 +157,6 @@
 add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move = 0) {
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
-  }
-  if (inherits(attr(plot, "data", exact = TRUE), "waiver") || NROW(attr(plot, "data", exact = TRUE)) == 0) {
-    return(plot)
   }
   type <- validate_type(type[1L])
   if (type == "") {
@@ -175,10 +172,17 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
     data <- args$data
   }
   args$data <- NULL
+  # without data in the plot and in this call, there is nothing to draw (F040)
+  plot_data <- attr(plot, "data", exact = TRUE) %or% plot$data
+  if (is.null(data) && (inherits(plot_data, "waiver") || NROW(plot_data) == 0)) {
+    plot2_warning("The plot has no data and no ", font_blue("data"), " was given, so no ",
+                  font_blue(gsub("geom_", "", type)), " layer was added")
+    return(plot)
+  }
   args <- utils::modifyList(list(mapping = mapping, data = data), args)
   args <- args[!vapply(FUN.VALUE = logical(1), args, is.null)]
   
-  geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
+  geom_fn <- geom_function(type)
   p <- plot +
     do.call(geom_fn, args = args)
   if (move != 0) {
@@ -189,7 +193,7 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
 
 NA_missing_ <- structure(NA, class = c("missing", "logical"))
 
-#' @importFrom dplyr mutate group_by across reframe arrange select pull any_of if_else as_tibble bind_cols
+#' @importFrom dplyr across any_of arrange as_tibble bind_cols first group_by mutate reframe select
 new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   if (!is.null(plot$mapping$colour) && isTRUE(colour_missing)) {
     category_name <- rlang::as_label(plot$mapping$colour)
@@ -199,8 +203,9 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
     colour_unique <- ""
   }
   
-  if (!is.null(plot$facet$params) && length(plot$facet$params) != 0) {
-    facet_name <- rlang::as_label(plot$facet$params$facets[[1]])
+  # the public vars() method of the facet, not its internal params (F037)
+  if (length(plot$facet$vars()) > 0) {
+    facet_name <- plot$facet$vars()[1]
     facet_unique <- unique(plot$data[[facet_name]])
   } else {
     facet_name <- NULL
@@ -239,7 +244,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
   } else if ("y" %in% colnames(y_part)) {
     new_df <- y_part
   } else {
-    stop("Something went wrong - plot data could not be determined")
+    stop("Something went wrong - plot data could not be determined", call. = FALSE)
   }
   
   has_category <- !is.null(category_name) && !isFALSE(inherit.aes)
@@ -325,7 +330,8 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_line aes scale_linetype_manual
+#' @importFrom dplyr n_distinct
+#' @importFrom ggplot2 aes geom_line is_ggplot scale_linetype_manual
 #' @param x,y aesthetic arguments
 #' @param colour,colour_fill colour of the line or column, will be evaluated with [get_colour()]. If `colour_fill` is missing but `colour` is given, `colour_fill` will inherit the colour set with `colour`.
 #' @details The function [add_line()] will add:
@@ -395,7 +401,7 @@ add_line <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour"
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_point aes scale_shape_manual
+#' @importFrom ggplot2 aes geom_point is_ggplot scale_shape_manual
 #' @export
 add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), size, shape, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is_ggplot(plot)) {
@@ -440,7 +446,7 @@ add_point <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour
 }
 
 #' @rdname add_type
-#' @importFrom ggplot2 geom_line aes geom_col scale_linewidth_manual
+#' @importFrom ggplot2 aes geom_col is_ggplot scale_linewidth_manual
 #' @export
 add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), colour_fill, width, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is_ggplot(plot)) {
@@ -488,8 +494,8 @@ add_col <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour",
 
 #' @rdname add_type
 #' @param min,max minimum (lower) and maximum (upper) values of the error bars
-#' @importFrom dplyr group_by across reframe
-#' @importFrom ggplot2 aes
+#' @importFrom dplyr across any_of arrange group_by mutate reframe select
+#' @importFrom ggplot2 is_ggplot
 #' @details
 #' The function [add_errorbar()] only adds error bars to the `y` values, see *Examples*.
 #' @export
@@ -520,15 +526,21 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
   
   new_df$x <- plot$data[[rlang::as_label(plot$mapping$x)]]
   
-  if (!missing(colour) && is.null(inherit.aes)) {
-    inherit.aes <- FALSE
+  # carry the facet columns, so that the error bars are drawn in the right panels
+  facet_names <- plot$facet$vars()
+  for (facet_name in intersect(facet_names, colnames(plot$data))) {
+    new_df[[facet_name]] <- plot$data[[facet_name]]
+  }
+  
+  # never inherit the plot mapping by default: it refers to columns that new_df lacks, such as `group` (F082)
+  if (isTRUE(inherit.aes)) {
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
-  } else if (!is.null(category_name) && !isFALSE(inherit.aes)) {
+  } else if (!is.null(category_name)) {
     # has category
     inherit.aes <- FALSE
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax", colour = category_name)
   } else {
-    inherit.aes <- TRUE
+    inherit.aes <- FALSE
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
   }
 
@@ -553,7 +565,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
 
 #' @rdname add_type
 #' @inheritParams ggplot2::geom_smooth
-#' @importFrom ggplot2 is_ggplot geom_line scale_linetype_manual
+#' @importFrom ggplot2 aes geom_line is_ggplot scale_linetype_manual
 #' @export
 add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colour", "ggplot2"), linetype, linewidth, formula, method, se, ..., inherit.aes = NULL, move = 0, legend.value = NULL) {
   if (!is_ggplot(plot)) {
@@ -602,7 +614,7 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
     }
     linetype <- ifelse(identical(linetype, NA_missing_), "solid", linetype)
     p <- p +
-      geom_line(data = data.frame(x = c(as.Date(Inf), as.Date(Inf)), y = c(Inf, Inf), group = c(legend.value, legend.value)),
+      geom_line(data = data.frame(x = rep(legend_dummy_x(p), 2), y = c(Inf, Inf), group = c(legend.value, legend.value)),
                 mapping = aes(x = x, y = y, linetype = group),
                 colour = get_colour(colour[1L]),
                 linewidth = validate_linewidth(geom_data$params$linewidth, type = "geom_line", type_backup = "geom_line"),
@@ -617,9 +629,9 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
 #' @param sf_data an 'sf' [data.frame]
 #' @param datalabels a column of `sf_data` to add as label below the points
 #' @param datalabels.colour,datalabels.size,datalabels.angle,datalabels.font properties of `datalabels`
-#' @param datalabels.nudge_y is `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)
-#' @importFrom dplyr mutate
-#' @importFrom ggplot2 geom_sf geom_sf_text aes is_ggplot
+#' @param datalabels.nudge_y if `datalabels` is not `NULL`, the amount of vertical adjustment of the datalabels in the units of the coordinate reference system (positive value: more to the North, negative value: more to the South), e.g. metres for EPSG:28992 and degrees for EPSG:4326. The default is `0`.
+#' @importFrom dplyr mutate n_distinct
+#' @importFrom ggplot2 aes geom_sf geom_sf_text is_ggplot
 #' @export
 add_sf <- function(plot,
                    sf_data,
@@ -632,7 +644,7 @@ add_sf <- function(plot,
                    datalabels.size = 3,
                    datalabels.angle = 0,
                    datalabels.font = getOption("plot2.font"),
-                   datalabels.nudge_y = 2500,
+                   datalabels.nudge_y = 0,
                    ...,
                    inherit.aes = FALSE) {
   
@@ -646,14 +658,16 @@ add_sf <- function(plot,
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
-  if (!"geometry" %in% colnames(plot$data)) {
+  # the geometry column can have any name (F084)
+  geometry_col <- names(plot$data)[vapply(plot$data, inherits, logical(1), what = "sfc")][1]
+  if (is.na(geometry_col)) {
     stop("`plot` must be a ggplot2 object based on geographic data.", call. = FALSE)
   }
   
   # force sf type
   sf_data <- sf::st_as_sf(sf_data)
   
-  crs <- c(plot = as.character(sf::st_crs(plot$data$geometry))[1],
+  crs <- c(plot = as.character(sf::st_crs(plot$data[[geometry_col]]))[1],
            add = as.character(sf::st_crs(sf_data))[1])
   if (n_distinct(crs) > 1) {
     plot2_warning("The coordinate reference system (CRS) of `plot` and `sf_data` are different, transforming `sf_data` to ", crs[1])
@@ -672,7 +686,7 @@ add_sf <- function(plot,
   
   if (tryCatch(!is.null(datalabels), error = function(e) TRUE)) {
     
-    if (abs(datalabels.nudge_y) > 0.25 && crs %unlike% "28992") {
+    if (abs(datalabels.nudge_y) > 0.25 && sf::st_is_longlat(sf_data)) {
       plot2_message(font_blue(paste0("datalabels.nudge_y = ", datalabels.nudge_y)),
                     " might be very ", ifelse(datalabels.nudge_y < 0, "low", "high"),
                     " for the current coordinate reference system (", crs, ")")
@@ -691,11 +705,27 @@ add_sf <- function(plot,
                    family = datalabels.font,
                    angle = datalabels.angle,
                    nudge_y = datalabels.nudge_y,
-                   colour = get_colour(colour),
+                   colour = get_colour(datalabels.colour),
                    fun.geometry = function(x) {
                      x[!sf::st_is_valid(x)] <- sf::st_point()
                      suppressWarnings(sf::st_point_on_surface(sf::st_zm(x)))
                    })
+    if (!identical(datalabels.font, "")) {
+      # a custom font: showtext is switched on when the plot is drawn (F011)
+      p <- as_plot2_font(p)
+    }
   }
   p
+}
+
+legend_dummy_x <- function(plot) {
+  # an invisible x value for legend-only layers, of the same class as the x axis (F085)
+  x <- tryCatch(plot$data[[rlang::as_label(plot$mapping$x)]], error = function(e) NULL)
+  if (inherits(x, "Date")) {
+    as.Date(Inf)
+  } else if (inherits(x, "POSIXt")) {
+    as.POSIXct(Inf, origin = "1970-01-01")
+  } else {
+    Inf
+  }
 }

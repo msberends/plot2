@@ -11,11 +11,12 @@ create_interactively(
   pretty_labels = FALSE,
   hide_generated_code = FALSE,
   hide_export_buttons = NULL,
-  upload_tab = FALSE
+  upload_tab = FALSE,
+  run = interactive()
 )
 }
 \arguments{
-\item{data}{A data set to load. Not strictly required, since all data sets in the global environment will be shown.}
+\item{data}{A data set to load, offered as 'Provided' in the data set selector. The generated code refers to it by its name, e.g. \code{df |> plot2()} for \code{create_interactively(data = df)}. Not strictly required: in an interactive session, all data frames in the global environment are offered as well, together with the data sets of base R, plot2, ggplot2 and dplyr. Outside an interactive session (such as on a server), data frames in the global environment are not offered, so that the app does not expose what the hosting script has loaded.}
 
 \item{css_code}{Additional CSS code to load in the app.}
 
@@ -27,14 +28,40 @@ create_interactively(
 
 \item{hide_export_buttons}{A logical to hide export buttons and functionality. \code{TRUE} will hide the elements completely, \code{NULL} will show a clickable text to expand buttons (default), \code{FALSE} will show the expanded buttons.}
 
-\item{upload_tab}{A logical to show a dedicated \strong{Upload} tab in the sidebar. When \code{TRUE}, a full-featured data-import tab is added with format-specific options for many file types (CSV, TSV, Excel, SPSS, Stata, SAS, RDS, JSON, Parquet, Feather, YAML, XML, and more). The "Upload data set..." dropdown item will redirect to this tab instead of opening a modal. Requires the \code{readxl} package in addition to the packages checked for \code{upload_tab = FALSE}. Administrators can ensure all dependencies are present by running \code{plot2:::install_shiny_deps()} before launching the app.}
+\item{upload_tab}{A logical to allow uploading data files. When \code{TRUE}, an \strong{Upload} tab is added to the sidebar, with format-specific options for text (CSV, TSV, TXT), spreadsheet (Excel, OpenDocument), statistical software (SPSS, Stata, SAS, Minitab), Parquet, Feather, JSON, YAML, XML and HTML files; the data set selector then also offers "Upload data set...". R serialisation files (\code{.rds}, \code{.rda}) are not accepted, since reading them can run code: pass such data with the \code{data} argument instead. When \code{FALSE} (default), the app offers no way to upload files. Uploading requires the \code{readxl} package, and per format the package that reads it; administrators can install all of them with \code{plot2:::install_shiny_deps()}.}
+
+\item{run}{A logical to run the app (default in an interactive session). Use \code{run = FALSE} to get the app object instead, for example to deploy it on a server, see \emph{Deployment}.}
+}
+\value{
+With \code{run = TRUE}, nothing (the app runs until it is closed). With \code{run = FALSE}, an app object of class \code{shiny.appobj} that can be run with \code{\link[shiny:runApp]{shiny::runApp()}} or deployed.
 }
 \description{
 This Shiny app allows for interactive creation of a \code{plot2}.
 }
 \details{
 \figure{create_interactively.jpg}
+
+The app builds a \code{\link[=plot2]{plot2()}} call from the chosen settings, shows the plot and the code, and explains in a panel below the code what \code{\link[=plot2]{plot2()}} decided by itself.
 }
+\section{Deployment}{
+
+The app can run on a server for several users (e.g. Shiny Server or Posit Connect), with an \code{app.R} such as:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(plot2)
+create_interactively(run = FALSE)
+}\if{html}{\out{</div>}}
+
+On a server, the app treats everything a visitor types or sends as untrusted:
+\itemize{
+\item Settings are converted to values or checked expressions; nothing typed is run as R code. Calculations in the column selectors may only use a fixed list of computing functions (such as \code{log()}, \code{mean()} and \code{n_distinct()}), and the call is evaluated apart from the global environment, so it cannot reach other objects of the R process.
+\item Data frames in the global environment are offered only in an interactive session; pass data with \code{data} to offer it on a server.
+\item Uploads are only possible with \code{upload_tab = TRUE}; R serialisation files are never accepted. The maximum upload size is Shiny's own (option \code{shiny.maxRequestSize}, 5 MB by default).
+\item Each session keeps its own plot, and raster exports are limited to 40 megapixels.
+}
+
+Each plot is computed in the R process of the app, so a visitor can still ask for plots that take long to compute, e.g. with very large data or a very small \code{binwidth}. Use the limits of the hosting platform (e.g. timeouts and the number of processes) as for any Shiny app.
+}
+
 \examples{
 \dontrun{
 
@@ -44,5 +71,8 @@ iris |> create_interactively()
 
 # With the upload tab for importing external data files:
 create_interactively(upload_tab = TRUE)
+
+# The app object, e.g. for app.R on a server:
+app <- create_interactively(run = FALSE)
 }
 }

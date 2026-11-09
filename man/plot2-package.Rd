@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Matthijs S. Berends \email{m.s.berends@umcg.nl}
   \item Erwin E. A. Hassing [contributor]
   \item Wikje E. Berends-Hoekstra [contributor]
 }

@@ -31,13 +31,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -49,14 +49,13 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -70,14 +69,13 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -87,10 +85,10 @@
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -111,17 +109,18 @@
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = "\%n",
   datalabels.colour = "grey25",
   datalabels.colour_fill = NULL,
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -142,6 +141,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -150,10 +150,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -186,13 +186,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -204,14 +204,13 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -225,14 +224,13 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -242,10 +240,10 @@
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -266,17 +264,18 @@
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = "\%n",
   datalabels.colour = "grey25",
   datalabels.colour_fill = NULL,
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -297,6 +296,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -305,10 +305,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -342,13 +342,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -360,14 +360,13 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -381,14 +380,13 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -398,10 +396,10 @@
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -422,17 +420,18 @@
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = "\%n",
   datalabels.colour = "grey25",
   datalabels.colour_fill = NULL,
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -453,6 +452,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -461,10 +461,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -497,13 +497,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -515,14 +515,13 @@
   category.focus = NULL,
   colour = getOption("plot2.colour_sf", "grey50"),
   colour_fill = getOption("plot2.colour_sf_fill", getOption("plot2.colour", "ggplot2")),
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -536,14 +535,13 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -553,10 +551,10 @@
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -577,17 +575,18 @@
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = NULL,
   datalabels.colour = "black",
   datalabels.colour_fill = NULL,
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -608,6 +607,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = "right",
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -616,10 +616,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -631,7 +631,6 @@
     element_blank(), axis.ticks = element_blank()),
   background = getOption("plot2.colour_background", "white"),
   markdown = TRUE,
-  data = NULL,
   crs = NULL,
   datalabels.centroid = NULL,
   ...
@@ -658,13 +657,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -676,14 +675,13 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -697,14 +695,13 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -714,10 +711,10 @@
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -738,17 +735,18 @@
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = "\%n",
   datalabels.colour = "grey25",
   datalabels.colour_fill = NULL,
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -769,6 +767,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -777,10 +776,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -813,13 +812,13 @@
   na.replace = "",
   na.rm = FALSE,
   facet.position = "top",
-  facet.fill = NULL,
+  facet.colour_fill = NULL,
   facet.bold = TRUE,
   facet.italic = FALSE,
   facet.size = 10,
   facet.margin = 8,
-  facet.repeat_lbls_x = TRUE,
-  facet.repeat_lbls_y = NULL,
+  facet.repeat_labels_x = TRUE,
+  facet.repeat_labels_y = NULL,
   facet.fixed_y = NULL,
   facet.fixed_x = NULL,
   facet.drop = FALSE,
@@ -831,14 +830,13 @@
   category.focus = NULL,
   colour = getOption("plot2.colour", "ggplot2"),
   colour_fill = NULL,
-  colour_opacity = 0,
-  x.lbl_angle = 0,
-  x.lbl_align = NULL,
-  x.lbl_italic = FALSE,
-  x.lbl_taxonomy = FALSE,
+  colour_transparency = 0,
+  x.label_angle = 0,
+  x.label_align = NULL,
+  x.label_italic = FALSE,
   x.remove = FALSE,
   x.position = "bottom",
-  x.max_items = Inf,
+  x.max_items = NULL,
   x.max_txt = "(rest, x\%n)",
   category.max_items = Inf,
   category.max_txt = "(rest, x\%n)",
@@ -852,14 +850,13 @@
   x.labels = NULL,
   x.character = NULL,
   x.drop = FALSE,
-  x.mic = FALSE,
-  x.zoom = FALSE,
+  x.zoom = NULL,
   y.remove = FALSE,
   y.24h = FALSE,
   y.age = FALSE,
   y.scientific = NULL,
-  y.percent = FALSE,
-  y.percent_break = 0.1,
+  y.percent = NULL,
+  y.percent_break = NULL,
   y.breaks = NULL,
   y.n_breaks = NULL,
   y.limits = NULL,
@@ -869,10 +866,10 @@
   y.position = "left",
   y.zoom = FALSE,
   y_secondary = NULL,
-  y_secondary.type = type,
+  y_secondary.type = NULL,
   y_secondary.title = TRUE,
-  y_secondary.colour = get_colour(getOption("plot2.colour", "ggplot2"), 2),
-  y_secondary.colour_fill = get_colour(getOption("plot2.colour", "ggplot2"), 2),
+  y_secondary.colour = NULL,
+  y_secondary.colour_fill = NULL,
   y_secondary.scientific = NULL,
   y_secondary.percent = FALSE,
   y_secondary.labels = NULL,
@@ -893,17 +890,18 @@
   x.complete = NULL,
   category.complete = NULL,
   facet.complete = NULL,
-  datalabels = TRUE,
-  datalabels.round = ifelse(y.percent, 2, 1),
+  datalabels = NULL,
+  datalabels.round = ifelse(isTRUE(y.percent), 2, 1),
   datalabels.format = "\%n",
   datalabels.colour = "grey25",
   datalabels.colour_fill = NULL,
   datalabels.size = (3 * text_factor),
   datalabels.angle = 0,
   datalabels.lineheight = 1,
+  datalabels.percent_by = "x",
   decimal.mark = dec_mark(),
   big.mark = big_mark(),
-  summarise_function = base::sum,
+  summarise_function = NULL,
   stacked = FALSE,
   stacked_fill = FALSE,
   horizontal = FALSE,
@@ -924,6 +922,7 @@
   width = NULL,
   jitter_seed = NA,
   violin_scale = "count",
+  legend = NULL,
   legend.position = NULL,
   legend.title = NULL,
   legend.reverse = FALSE,
@@ -932,10 +931,10 @@
   legend.barwidth = 1.5,
   legend.nbin = 300,
   legend.italic = FALSE,
-  sankey.node_width = 0.15,
-  sankey.node_whitespace = 0.03,
-  sankey.alpha = 0.5,
-  sankey.remove_axes = NULL,
+  sankey_node_width = 0.15,
+  sankey_node_whitespace = 0.03,
+  sankey_alpha = 0.5,
+  sankey_remove_axes = NULL,
   zoom = FALSE,
   sep = " / ",
   print = FALSE,
@@ -948,7 +947,7 @@
 )
 }
 \arguments{
-\item{.data, data}{Data to plot.}
+\item{.data, data}{Data to plot. A single character value that is the name of a data frame in the calling environment (such as \code{plot2("df")}, as used in tool calling) plots that data frame; only the calling environment is searched, not the search path.}
 
 \item{x}{Plotting 'direction' for the X-axis. This can be:
 \itemize{
@@ -979,20 +978,20 @@ The \code{category} can also be a date or date/time (class \code{Date} or \code{
 \itemize{
 \item A \code{ggplot2} geom name or their abbreviation such as \code{"col"} and \code{"point"}. All geoms are supported (including \code{\link[ggplot2:geom_blank]{geom_blank()}}).
 
-Full function names can be used (e.g., \code{"geom_histogram"}), but they can also be abbreviated (e.g., \code{"h"}, \code{"hist"}). The following geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), beeswarm (\code{"bs"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), and violin (\code{"v"}).
+Full function names can be used (e.g., \code{"geom_histogram"}), but they can also be abbreviated (e.g., \code{"h"}, \code{"hist"}). The following geoms can be abbreviated by their first character: area (\code{"a"}), boxplot (\code{"b"}), column (\code{"c"}), histogram (\code{"h"}), jitter (\code{"j"}), line (\code{"l"}), point (\code{"p"}), ribbon (\code{"r"}), and violin (\code{"v"}). Beeswarm plots (\code{"beeswarm"}, short: \code{"bs"}) require the \code{ggbeeswarm} package.
 
 Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is common to many people that 'bars' are oriented horizontally and 'columns' are oriented vertically since Microsoft Excel has been using these terms this way for many years. For this reason, \code{type = "bar"} will set \code{type = "col"} and \code{horizontal = TRUE}.
 \item One of these additional types:
 \itemize{
 \item \code{"barpercent"} (short: \code{"bp"}), which is effectively a shortcut to set \code{type = "col"} and \code{horizontal = TRUE} and \code{x.max_items = 10} and \code{x.sort = "freq-desc"} and \code{datalabels.format = "\%n (\%p)"}.
-\item \code{"dumbbell"} (short: \code{"d"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[ggplot2:geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
-\item \code{"linedot"} (short: \code{"ld"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
-\item \code{"back-to-back"} (short: \code{"b2b"}) creates a back-to-back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Butterfly plot}, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} to distinquish the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
+\item \code{"dumbbell"} (short: \code{"d"} or \code{"db"}), which sets \code{type = "point"} and \code{horizontal = TRUE}, and adds a line between the points (using \code{\link[ggplot2:geom_segment]{geom_segment()}}). The line colour cannot be changed. This plot type is only possible when the \code{category} has two distinct values.
+\item \code{"linedot"} or \code{"line-point"} (short: \code{"ld"} or \code{"lp"}), which sets \code{type = "line"} and adds two point geoms using \code{\link[=add_point]{add_point()}}; one with large white dots and one with smaller dots using the colours set in \code{colour}. This is essentially equal to base \R \code{plot(..., type = "b")} but with closed shapes.
+\item \code{"back-to-back"} (short: \code{"b2b"}, or \code{"butterfly"}, \code{"tornado"} or \code{"population"}) creates a back-to-back plot, sometimes called a \href{https://en.wikipedia.org/wiki/Tornado_diagram}{Tornado diagram}, a butterfly plot, or a \href{https://en.wikipedia.org/wiki/Population_pyramid}{Population Pyramid}. It uses \code{facet} to distinguish the left and right plots. Therefore, \code{facet} must be set to (a column containing) two unique values.
 \item \code{"upset"} or \code{"UpSet"} (short: \code{"u"}) creates an \href{https://en.wikipedia.org/wiki/UpSet_plot}{UpSet plot}, which requires \code{x} to contain multiple variables from \code{.data} that contain \code{0}/\code{1} or \code{FALSE}/\code{TRUE} values. It is also possible to provide \code{y}, on which then \code{summarise_function} will be applied.
-\item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey.alpha}, and the width of the nodes can be set using \code{sankey.node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
-\item \code{"spider"} or \code{"radar"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system.
+\item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey_alpha}, and the width of the nodes can be set using \code{sankey_node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
+\item \code{"spider"} or \code{"radar"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system. Facets are supported, always with the same scale in all facets.
 }
-\item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
+\item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}, and accepts any value of \code{type}, such as \code{"line"} or \code{"l"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
 }}
 
 \item{title, subtitle, caption, tag, x.title, y.title, category.title, legend.title, y_secondary.title}{A title to use. This can be:
@@ -1002,7 +1001,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item An \link{expression}, e.g. using \code{parse(text = "...")}
 }
 
-The \code{category.title} defaults to \code{TRUE} if the legend items are numeric.}
+The \code{category.title} defaults to \code{TRUE} if the legend items are numeric. \code{category.title} and \code{legend.title} are the same setting; use one of them.}
 
 \item{title.linelength}{Maximum number of characters per line in the title, before a linebreak occurs.}
 
@@ -1016,129 +1015,133 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{na.rm}{Remove \code{NA} values from showing in the plot.}
 
-\item{facet.position, facet.fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_lbls_x, facet.repeat_lbls_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}.}
+\item{facet.position, facet.colour_fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_labels_x, facet.repeat_labels_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}. \code{facet.repeat_labels_x} and \code{facet.repeat_labels_y} repeat the axis labels in every facet, which also makes the scales of that axis free (unless \code{facet.fixed_x} or \code{facet.fixed_y} is \code{TRUE}).}
 
-\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. Defaults to \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum values of y is less than 25\%.}
+\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. If not set, this depends on the data: \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25\%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set \code{facet.fixed_y = TRUE} when panels must be compared.}
 
-\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}.}
+\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}. If not set and x is numeric, the same rule as for \code{facet.fixed_y} applies to the maximum x values per facet.}
 
 \item{x.date_breaks}{Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
 
-\item{x.date_labels}{Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
+\item{x.date_labels}{Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}: \code{d}/\code{dd} (day), \code{ddd}/\code{dddd} (weekday name), \code{mm} (month number), \code{mmm}/\code{mmmm} (month name), \code{yy}/\code{yyyy} (year), \code{q}/\code{qq} (quarter: \code{1} or \code{Q1}), \code{w}/\code{ww} (ISO week), \code{h}/\code{hh} (hour), \code{MM} (minutes), \code{ss} (seconds). Other words are kept as they are (e.g. \code{"Week ww"}), and text in single quotes is always kept literally (e.g. \code{"'d' d"}). A format containing \verb{\%} is used as a \code{\link[=strftime]{strftime()}} format. Month and weekday names follow the \link[=options]{option} \code{plot2.language} if set, and the system locale otherwise.}
 
 \item{x.date_remove_years}{A \link{logical} to indicate whether the years of all \code{x} values must be unified. This will set the years of all \code{x} values \href{https://en.wikipedia.org/wiki/Unix_time}{to 1970} if the data does not contain a leap year, and to 1972 otherwise. This allows to plot years on the \code{category} while maintaining a date range on \code{x}. The default is \code{FALSE}, unless \code{category} contains all years present in \code{x}.}
 
 \item{category.focus}{A value of \code{category} that should be highlighted, meaning that all other values in \code{category} will be greyed out. This can also be a numeric value between 1 and the length of unique values of \code{category}, e.g. \code{category.focus = 2} to focus on the second legend item.}
 
-\item{colour}{Get_colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
+\item{colour}{Colour(s) to set, will be evaluated with \code{\link[=get_colour]{get_colour()}} if set. This can also be one of the viridis colours with automatic implementation for any plot: \code{"viridis"}, \code{"magma"}, \code{"inferno"}, \code{"plasma"}, \code{"cividis"}, \code{"rocket"}, \code{"mako"} or \code{"turbo"}. Also, this can be a named vector to match values of \code{category}, see \emph{Examples}. Using a named vector can be used to manually sort the values of \code{category}.}
 
-\item{colour_fill}{Get_colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
+\item{colour_fill}{Colour(s) to be used for filling, will be determined automatically if left blank and will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
 
-\item{colour_opacity}{Amount of opacity for \code{colour}/\code{colour_fill} (0 = solid, 1 = transparent).}
+\item{colour_transparency}{Amount of transparency for \code{colour}/\code{colour_fill} (0 = solid, 1 = fully transparent).}
 
-\item{x.lbl_angle}{Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
+\item{x.label_angle}{Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of \code{90} will orient the axis labels from bottom to top, a value of \code{270} will orient the axis labels from top to bottom).}
 
-\item{x.lbl_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned).}
+\item{x.label_align}{Alignment for the X-axis between \code{0} (left aligned) and \code{1} (right aligned). If not set, rotated labels (see \code{x.label_angle}) are anchored at their ticks with \code{\link[ggplot2:guide_axis]{guide_axis(angle = )}}, for every angle and also when \code{horizontal = TRUE}.}
 
-\item{x.lbl_italic}{\link{logical} to indicate whether the x labels should in in \emph{italics}.}
-
-\item{x.lbl_taxonomy}{A \link{logical} to transform all words of the \code{x} labels into italics that are in the \link[AMR:microorganisms]{microorganisms} data set of the \code{AMR} package. This uses \code{\link[=md_to_expression]{md_to_expression()}} internally and will set \code{x.labels} to parse expressions.}
+\item{x.label_italic}{\link{logical} to indicate whether the x labels should be in \emph{italics}.}
 
 \item{x.remove, y.remove}{A \link{logical} to indicate whether the axis labels and title should be removed.}
 
 \item{x.position, y.position}{Position of the axis.}
 
-\item{x.max_items, category.max_items, facet.max_items}{Number of maximum items to use, defaults to infinite. All other values will be grouped and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, allowing to e.g. plot the top \emph{n} most frequent values of the X-axis by combining \code{x.sort = "freq-desc"} with \verb{x.max_items =} \emph{n}.}
+\item{x.max_items, category.max_items, facet.max_items}{Maximum number of items to show, including the item that holds the rest: \code{x.max_items = 5} shows four values and the rest, see \code{x.max_txt}. Defaults to infinite. Left \code{NULL} (default for \code{x.max_items}), this is infinite, except for \code{type = "barpercent"} and back-to-back plots (10). The remaining values are grouped into one item and summarised using the \code{summarise_function} function. \strong{Please note:} the sorting will be applied first, so that e.g. \code{x.sort = "freq-desc"} with \code{x.max_items = 5} shows the four most frequent values of the X-axis and the rest.}
 
-\item{x.max_txt, category.max_txt, facet.max_txt}{The text to use of values not included number of \verb{*.max_items}. The placeholder \verb{\%n} will be replaced with the outcome of the \code{summarise_function} function, the placeholder \verb{\%p} will be replaced with the percentage.}
+\item{x.max_txt, category.max_txt, facet.max_txt}{The text of the item that holds the values beyond \verb{*.max_items}. The placeholder \verb{\%n} is replaced with the number of values in that item, and \verb{\%p} with their share of the total of \code{y} (or of the rows, when \code{y} is not numeric). For example, the default \code{"(rest, x\%n)"} gives \code{"(rest, x4)"} for four values.}
 
 \item{x.breaks, y.breaks}{A breaks function or numeric vector to use for the axis.}
 
-\item{x.n_breaks, y.n_breaks}{Number of breaks, only useful if \code{x.breaks} cq. \code{y.breaks} is \code{NULL}.}
+\item{x.n_breaks, y.n_breaks}{Number of breaks, only useful if \code{x.breaks} or \code{y.breaks} respectively is \code{NULL}.}
 
 \item{x.transform, y.transform, category.transform}{A transformation function to use, e.g. \code{"log2"}. This can be: \code{"asinh"}, \code{"asn"}, \code{"atanh"}, \code{"boxcox"}, \code{"compose"}, \code{"date"}, \code{"exp"}, \code{"hms"}, \code{"identity"}, \code{"log"}, \code{"log10"}, \code{"log1p"}, \code{"log2"}, \code{"logit"}, \code{"modulus"}, \code{"probability"}, \code{"probit"}, \code{"pseudo_log"}, \code{"reciprocal"}, \code{"reverse"}, \code{"sqrt"}, \code{"time"}, \code{"timespan"}, \code{"yj"}.}
 
-\item{x.expand, y.expand}{\link[ggplot2:expansion]{expansion} to use for the axis, can be length 1 or 2. \code{x.expand} defaults to 0.5 and \code{y.expand} defaults to \code{0.25}, except for sf objects (then both default to 0).}
+\item{x.expand, y.expand}{\link[ggplot2:expansion]{expansion} to use for the axis, can be length 1 or 2. Left \code{NULL} (default), they are determined automatically: \code{x.expand} adds half a category on both sides of a discrete axis and a proportion of the range on a continuous axis, \code{y.expand} adds 25\% above the data; both are 0 for sf objects or when the limits are set. An explicit value is used as given.}
 
-\item{x.limits, y.limits}{Limits to use for the axis, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero.}
+\item{x.limits, y.limits}{Limits to use for the axis, must be length 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{y.limits = c(0, NA)} to have the y scale start at zero. For a discrete x axis, \code{x.limits} are the items to show, in this order.}
 
 \item{x.labels, y.labels, y_secondary.labels}{A labels function or character vector to use for the axis.}
 
-\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when \code{type} is not set or is a discrete type such as \code{"col"} or \code{"boxplot"}, with a message; for continuous types such as \code{"point"}, \code{"line"} and \code{"area"} they stay numeric. Numeric values also become character for other discrete types. Use \code{x.character = FALSE} to keep numeric values.}
 
 \item{x.drop}{\link{logical} to indicate whether factor levels should be dropped.}
 
-\item{x.mic}{\link{logical} to indicate whether the X-axis should be formatted as \link[AMR:as.mic]{MIC values}, by dropping all factor levels and adding missing factors of 2.}
+\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left \code{NULL} (default for \code{x.zoom}), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
 
-\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, by setting \code{x.limits = c(NA, NA)} and \code{x.expand = 0} for the X-axis, or \code{y.limits = c(NA, NA)} and \code{y.expand = 0} for the Y-axis.}
-
-\item{y.24h}{a \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences}
+\item{y.24h}{A \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences.}
 
 \item{y.age}{A \link{logical} to indicate whether the y labels and breaks should be formatted as ages in years.}
 
-\item{y.scientific, y_secondary.scientific}{A \link{logical} to indicate whether the y labels should be formatted in scientific notation. Defaults to \code{TRUE} only if the range of the y values spans more than \code{10e5}.}
+\item{y.scientific, y_secondary.scientific}{A \link{logical} to indicate whether the y labels should be formatted in scientific notation. If not set, scientific notation is used only for labels of one billion (\code{1e9}) or more, or for non-zero labels below \code{0.0001}; other labels use \code{big.mark}, e.g. \verb{2 000 000}.}
 
-\item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages.}
+\item{y.percent, y_secondary.percent}{A \link{logical} to indicate whether the y labels should be formatted as percentages. Left \code{NULL} (default for \code{y.percent}), percentages are used for density plots only.}
 
-\item{y.percent_break}{A value on which the Y-axis should have breaks.}
+\item{y.percent_break}{A value on which the Y-axis should have breaks if \code{y.percent = TRUE}. Left \code{NULL} (default), this is 0.1 (10\%), widened to keep about 10 labels and narrowed if that would give three or fewer labels. An explicit value is used as given.}
 
 \item{y_secondary}{Values to use for plotting along the secondary Y-axis. This functionality is poorly supported by \code{ggplot2} and might give unexpected results. Setting the secondary Y-axis will set the colour to the axis titles.}
 
-\item{y_secondary.type}{see \strong{\code{type}}}
+\item{y_secondary.type}{Type of the secondary series, see \strong{\code{type}}. The default (\code{NULL}) is a line with points if the primary type is a column or bar plot, so that the secondary series does not cover the bars, and the primary type otherwise.}
 
-\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary Y-axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}.}
+\item{y_secondary.colour, y_secondary.colour_fill}{Colours to set for the secondary Y-axis, will be evaluated with \code{\link[=get_colour]{get_colour()}}. Left \code{NULL} (default), the second colour of the \code{plot2.colour} option is used.}
 
 \item{category.type}{Type of the \code{category}, one or more of: \code{"colour"} (default), \code{"shape"}, \code{"size"}, \code{"linetype"}, \code{"linewidth"}, \code{"alpha"}. There is no need to set \code{"fill"}, as \code{plot2} handles colour-setting internally and determines automatically whether the \code{colour} or \code{fill} aesthetic must be used.}
 
 \item{category.labels, category.percent, category.breaks, category.expand, category.midpoint}{Settings for the plotting direction \code{category}.}
 
-\item{category.limits}{Limits to use for a numeric category, can be length 1 or 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{category.limits = c(0, NA)} to have the scale start at zero.}
+\item{category.limits}{Limits to use for a numeric category, must be length 2. Use \code{NA} for the highest or lowest value in the data, e.g. \code{category.limits = c(0, NA)} to have the scale start at zero. If not set, the limits are the range of the data, rounded outwards to pretty values with \code{\link[=pretty]{pretty()}} (e.g., values from 12 to 87 give limits 0 to 100). With three colours and \code{category.midpoint} set, the limits are made symmetric around the midpoint.}
 
 \item{category.date_breaks}{Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to \code{\link[=seq.Date]{seq.Date(by = ...)}} and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").}
 
 \item{category.date_labels}{Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
 
-\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. The default is \code{FALSE}, except for years (values between 2000 and 2050) and months (values from 1 to 12).}
+\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use \code{category.character = FALSE} to keep numeric values.}
 
-\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction, defaults to \code{TRUE}, except for continuous values on the X-axis (such as dates and numbers). Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
+\item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction. \code{category.sort} and \code{facet.sort} default to \code{TRUE}; \code{x.sort} defaults to \code{NULL}, which sorts text and factors as \code{TRUE} and leaves continuous values (such as dates and numbers) unsorted. Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
 \itemize{
 \item A manual vector of values
 \item \code{TRUE}: sort \link{factor}s on their levels, otherwise sort ascending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
 \item \code{FALSE}: sort according to the order in the data
-\item \code{NULL}: do not sort/transform at all
-\item \code{"asc"} or \code{"alpha"}: sort as \code{TRUE}
-\item \code{"desc"}: sort \link{factor}s on their \link[=rev]{reversed} levels, otherwise sort descending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
+\item \code{NULL}: sort automatically, as described above
+\item \code{"asc"}, \code{"alpha"} or \code{"alpha-asc"}: sort as \code{TRUE}
+\item \code{"desc"} or \code{"alpha-desc"}: sort \link{factor}s on their \link[=rev]{reversed} levels, otherwise sort descending on alphabet, while maintaining numbers in the text (\emph{numeric} sort)
 \item \code{"order"} or \code{"inorder"}: sort as \code{FALSE}
 \item \code{"freq"} or \code{"freq-desc"}: sort descending according to the frequencies of \code{y} computed by \code{summarise_function} (highest value first)
 \item \code{"freq-asc"}: sort ascending according to the frequencies of \code{y} computed by \code{summarise_function} (lowest value first)
 }}
 
-\item{x.complete, category.complete, facet.complete}{A value to complete the data. This makes use of \code{\link[tidyr:full_seq]{tidyr::full_seq()}} and \code{\link[tidyr:complete]{tidyr::complete()}}. For example, using \code{x.complete = 0} will apply \code{data |> complete(full_seq(x, ...), fill = list(x = 0))}. Using value \code{TRUE} (e.g., \code{x.complete = TRUE}) is identical to using value \code{0}.}
+\item{x.complete, category.complete, facet.complete}{A value to complete the data. This makes use of \code{\link[tidyr:full_seq]{tidyr::full_seq()}} and \code{\link[tidyr:complete]{tidyr::complete()}}. For example, using \code{x.complete = 0} will apply \code{data |> complete(x = full_seq(x, ...), fill = list(y = 0))}, crossed with the values of \code{category} and \code{facet} if set. Numeric values and dates are completed with \code{\link[tidyr:full_seq]{tidyr::full_seq()}} at their observed resolution, date-times at their observed interval, and character values and factors with their unique values or levels. Using value \code{TRUE} (e.g., \code{x.complete = TRUE}) is identical to using value \code{0}.}
 
 \item{datalabels}{Values to show as datalabels, see also \code{datalabels.format}. This can be:
 \itemize{
-\item Left blank. This will default to the values of \code{y} in column-type plots, or when plotting spatial 'sf' data, the values of the first column. It will print a maximum of 25 labels unless \code{datalabels = TRUE}.
-\item \code{TRUE} or \code{FALSE} to force or remove datalabels
+\item \code{NULL} (default): automatic. This shows the values of \code{y} in column-type plots, or when plotting spatial 'sf' data, the values of the first column, with a maximum of 25 labels and none for continuous plot types such as lines and points.
+\item \code{TRUE} to always show the values of \code{y}, without the maximum of 25 labels, or \code{FALSE} to remove datalabels
 \item A function to calculate over \code{.data}, such as \code{datalabels = paste(round(column1), "\\n", column2)}
 }}
 
 \item{datalabels.round}{Number of digits to round the datalabels, applies to both \code{"\%n"} and \code{"\%p"} for replacement (see \code{datalabels.format}).}
 
-\item{datalabels.format}{Format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage of the total count. Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
+\item{datalabels.format}{Format to use for datalabels. This can be a function (such as \code{\link[=euros]{euros()}}) or a text. For the text, \code{"\%n"} will be replaced by the count number, and \code{"\%p"} will be replaced by the percentage (see \code{datalabels.percent_by}). Use \code{datalabels.format = NULL} to \emph{not} transform the datalabels.}
 
-\item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{Settings for the datalabels.}
+\item{datalabels.colour, datalabels.colour_fill, datalabels.size, datalabels.angle, datalabels.lineheight}{Settings for the datalabels. Rotated datalabels (\code{datalabels.angle}) start or end at their bar with a small fixed gap; if \code{y.expand} and \code{y.limits} are not set, the value axis gets extra room for long rotated labels, estimated for a figure of about 6 by 4 inches.}
+
+\item{datalabels.percent_by}{Group within which the \code{"\%p"} percentages of \code{datalabels.format} sum to 100\%. This can be:
+\itemize{
+\item \code{"x"} (default): within each x value and facet, so that the stacked or dodged bars of one x value sum to 100\%. Without a \code{category}, each x value has a single bar, so this is the same as \code{"facet"}.
+\item \code{"category"}: within each category and facet
+\item \code{"facet"}: within each facet
+\item \code{"total"}: over all data in the plot
+}}
 
 \item{decimal.mark}{Decimal mark, defaults to \code{\link[=dec_mark]{dec_mark()}}.}
 
 \item{big.mark}{Thousands separator, defaults to \code{\link[=big_mark]{big_mark()}}.}
 
-\item{summarise_function}{A \link{function} to use if the data has to be summarised, see \emph{Examples}. This can also be \code{NULL}, which will be converted to \code{function(x) x}.}
+\item{summarise_function}{A \link{function} to use if the data has to be summarised, see \emph{Examples}. Left \code{NULL} (default), this is \code{\link[=sum]{sum()}}, except when \code{y} contains several columns (then the values are not summarised). Use \code{FALSE} to not summarise the data at all.}
 
-\item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}.}
+\item{stacked}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{stacked}, or \code{"fill"} to stack them to 100\% (the same as \code{stacked_fill = TRUE}).}
 
-\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_stack]{filled} (i.e., stacked to 100\%).}
+\item{stacked_fill}{A \link{logical} to indicate that values must be \link[ggplot2:position_fill]{filled} (i.e., stacked to 100\%). If \code{TRUE}, this takes precedence over \code{stacked}.}
 
-\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.lbl_italic} will still apply to the original X-axis.}
+\item{horizontal}{A \link{logical} to turn the plot 90 degrees using \code{\link[ggplot2:coord_flip]{coord_flip()}}. This option also updates some theme options, so that e.g., \code{x.label_italic} will still apply to the original X-axis.}
 
 \item{reverse}{A \link{logical} to reverse the \emph{values} of \code{category}. Use \code{legend.reverse} to reverse the \emph{legend} of \code{category}.}
 
@@ -1146,7 +1149,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{Settings for \code{smooth}.}
 
-\item{size}{Size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for a UpSet plots (using \code{type = "upset"}); \code{5} for a dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
+\item{size}{Size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for UpSet plots (using \code{type = "upset"}); \code{5} for dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
 
 \item{linetype}{Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
 \enumerate{
@@ -1162,13 +1165,13 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{linewidth}{Linewidth of the geom, only suitable for geoms that draw lines. Defaults to:
 \itemize{
-\item \code{0.10} for \link[ggplot2:ggsf]{sf}
-\item \code{0.25} for geoms that are continous and have fills (such as \link[ggplot2:geom_ribbon]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
+\item \code{0.10} for \link[ggplot2:geom_sf]{sf}
+\item \code{0.25} for geoms that are continuous and have fills (such as \link[ggplot2:geom_area]{area}), except for geoms \link[ggplot2:geom_boxplot]{boxplot} and \link[ggplot2:geom_violin]{violin}
 \item \code{1.0} for dumbbell plots (using \code{type = "dumbbell"}) and UpSet plots (using \code{type = "upset"})
-\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_path]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
+\item \code{0.5} otherwise (such as geoms \link[ggplot2:geom_line]{line}, \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin}, and \link[ggplot2:geom_histogram]{histogram})
 }}
 
-\item{binwidth}{Width of bins (only useful for \code{geom = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
+\item{binwidth}{Width of bins (only useful for \code{type = "histogram"}), can be specified as a numeric value or as a function that calculates width from \code{x}, see \code{\link[ggplot2:geom_histogram]{geom_histogram()}}. It defaults to approx. \code{diff(range(x))} divided by 12 to 22 based on the data.}
 
 \item{width}{Width of the geom. Defaults to \code{0.66} for geoms \link[ggplot2:geom_boxplot]{boxplot}, \link[ggplot2:geom_violin]{violin} and \link[ggplot2:geom_jitter]{jitter}, and to \code{0.5} otherwise.}
 
@@ -1176,19 +1179,29 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{violin_scale}{Scale to be set when using \code{type = "violin"}, can also be set to \code{"area"}.}
 
-\item{legend.position}{Position of the legend, must be \code{"top"}, \code{"right"}, \code{"bottom"}, \code{"left"} or \code{"none"} (or \code{NA} or \code{NULL}), can be abbreviated. Defaults to \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
+\item{legend}{A \link{logical} to show (\code{TRUE}) or hide (\code{FALSE}) the legend, i.e. the box explaining the values of \code{category}. The default \code{NULL} shows it when the plot has a \code{category}.}
+
+\item{legend.position}{Position of the legend. This can be:
+\itemize{
+\item \code{"top"}, \code{"right"}, \code{"bottom"} or \code{"left"}, can be abbreviated
+\item \code{"inside"}, to place the legend inside the plot area at ggplot2's default position
+\item Two numbers between 0 and 1, to place the legend inside the plot area at these relative coordinates, e.g. \code{c(0.95, 0.95)} for the top right
+\item \code{"none"}, \code{FALSE} or \code{NA} to remove the legend
+}
+
+The default \code{NULL} sets it automatically: \code{"right"} for numeric \code{category} values and 'sf' plots, and \code{"top"} otherwise.}
 
 \item{legend.reverse, legend.barheight, legend.barwidth, legend.nbin, legend.italic, legend.nrow}{Other settings for the legend.}
 
-\item{sankey.node_width}{Width of the vertical nodes in a Sankey plot.}
+\item{sankey_node_width}{Width of the vertical nodes in a Sankey plot.}
 
-\item{sankey.node_whitespace}{Whitespace between the nodes in a Sankey plot.}
+\item{sankey_node_whitespace}{Whitespace between the nodes in a Sankey plot.}
 
-\item{sankey.alpha}{Alpha of the flows in a Sankey plot.}
+\item{sankey_alpha}{Alpha of the flows in a Sankey plot.}
 
-\item{sankey.remove_axes}{Logical to indicate whether all axes must be removed in a Sankey plot.}
+\item{sankey_remove_axes}{Logical to indicate whether all axes must be removed in a Sankey plot.}
 
-\item{zoom}{A \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This will set \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
+\item{zoom}{A \link{logical} to indicate if the plot should be scaled to the data, i.e., not having the x and y axes to start at 0. This is identical to setting \code{x.zoom = TRUE} and \code{y.zoom = TRUE}.}
 
 \item{sep}{Separator character to use if multiple columns are given to either of the three directions: \code{x}, \code{category} and \code{facet}, e.g. \code{facet = c(column1, column2)}.}
 
@@ -1196,9 +1209,9 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{text_factor}{Text factor to use, which will apply to all texts shown in the plot.}
 
-\item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
+\item{font}{Font (family) to use, can be set with \code{options(plot2.font = "...")}. Can be any installed system font or any of the > 1400 font names from \href{https://fonts.google.com}{Google Fonts}. Custom fonts require the \code{showtext}, \code{showtextdb} and \code{sysfonts} packages. A Google Font that is not installed is downloaded once into the user cache folder of plot2 (\code{\link[tools:R_user_dir]{tools::R_user_dir("plot2", "cache")}}); fonts that have not been used for 90 days are removed from it automatically. The font is applied only while the plot is drawn, so other plots in the session are not affected. When using custom fonts in R Markdown, be sure to set the chunk option \code{fig.showtext = TRUE}, otherwise an informative error will be generated.}
 
-\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:ggtheme]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
+\item{theme}{A valid \code{ggplot2} \link[ggplot2:theme]{theme} to apply, or \code{NULL} to use the default \code{\link[ggplot2:theme_grey]{theme_grey()}}. This argument accepts themes (e.g., \code{theme_bw()}), functions (e.g., \code{theme_bw}) and characters themes (e.g., \code{"theme_bw"}). A partial theme, such as \code{theme(panel.background = element_blank())}, is added on top of \code{\link[=theme_minimal2]{theme_minimal2()}}, and its elements take precedence over plot2's own settings. The default is \code{\link[=theme_minimal2]{theme_minimal2()}}, but can be set with \code{options(plot2.theme = "...")}.}
 
 \item{background}{The background colour of the entire plot, can also be \code{NA} to remove it. Will be evaluated with \code{\link[=get_colour]{get_colour()}}. Only applies when \code{theme} is not \code{NULL}.}
 
@@ -1208,11 +1221,43 @@ Both numbers and text are supported, e.g., \code{linetype = 2} and \code{linetyp
 
 \item{crs}{The coordinate reference system (CRS) to use. If this is not left blank, \code{\link[sf:st_transform]{sf::st_transform()}} will be used to transform the geometric data to the new CRS.}
 
-\item{datalabels.centroid}{A \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:geos_unary]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:geos_unary]{sf::st_point_on_surface()}}).}
+\item{datalabels.centroid}{A \link{logical} to indicate whether datalabels must be centred on the polygon (using \code{\link[sf:st_centroid]{sf::st_centroid()}}, the default), or be placed on the 'best' spot on the surface (using \code{\link[sf:st_point_on_surface]{sf::st_point_on_surface()}}).}
+}
+\value{
+A \code{\link[ggplot2:ggplot]{ggplot}} object.
 }
 \description{
 These are the implemented methods for different S3 classes to be used in \code{\link[=plot2]{plot2()}}. Since they have an extensive list of arguments, they are placed here on a separate manual page.
 }
 \details{
+The methods differ from the data frame method as follows:
+\itemize{
+\item \strong{Vectors and other objects} (\code{plot2.default()}): the input is converted to a data frame first. Character and factor values are counted. A single character value that is the name of a data frame is replaced by that data frame.
+\item \strong{Formulas} (\code{plot2.formula()}): \code{y ~ x} takes the variables from \code{data}, e.g. \code{plot2(Sepal.Length ~ Species, data = iris)}.
+\item \strong{Frequency tables} (\code{plot2.freq()}, from \code{\link[cleaner:freq]{cleaner::freq()}}): \code{x} and \code{y} default to the items and their counts, the axis titles to "Item" and "Count", and \code{x.sort} to \code{"freq-desc"}.
+\item \strong{Spatial data} (\code{plot2.sf()}, from the \code{sf} package): plots a map, without axis titles, axis expansion, grid or axes; the borders use the \code{plot2.colour_sf} option (default \code{"grey50"}), the fill uses \code{plot2.colour_sf_fill}, and the legend is on the right. The extra arguments \code{crs} and \code{datalabels.centroid} apply only here.
+\item \strong{Matrices} (\code{plot2.matrix()}): the row names (or row numbers) become \code{x} and every column becomes a \code{category}. A matrix with identical row and column names, such as the outcome of \code{\link[=cor]{cor()}}, is plotted as a heatmap (\code{type = "tile"}). The axis titles are left out, unless the dimensions are named (e.g. \code{dimnames = list(region = ..., year = ...)}); these names are then used as titles of x and of the category.
+}
+
 For geographic information system (GIS) analysis, use the \code{sf} package with a data set containing geometries. The result can be used as input for \code{\link[=plot2]{plot2()}}.
+}
+\examples{
+# vectors: character values are counted
+plot2(c("a", "b", "b", "c", "c", "c"))
+
+# formulas
+plot2(Sepal.Length ~ Species, data = iris)
+
+# frequency tables
+if (requireNamespace("cleaner", quietly = TRUE)) {
+  plot2(cleaner::freq(iris$Species))
+}
+
+# correlation matrices become a heatmap
+plot2(cor(mtcars[, 1:5]))
+
+# spatial data
+if (requireNamespace("sf", quietly = TRUE)) {
+  plot2(netherlands)
+}
 }

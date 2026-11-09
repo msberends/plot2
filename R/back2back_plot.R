@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+#' @importFrom dplyr select
+#' @importFrom ggplot2 element_blank element_text
+#' @importFrom tidyselect starts_with
 back2back_plot <- function(df,
                            x.title,
                            y.title,
@@ -27,13 +30,13 @@ back2back_plot <- function(df,
                            na.replace,
                            na.rm,
                            facet.position,
-                           facet.fill,
+                           facet.colour_fill,
                            facet.bold,
                            facet.italic,
                            facet.size,
                            facet.margin,
-                           facet.repeat_lbls_x,
-                           facet.repeat_lbls_y,
+                           facet.repeat_labels_x,
+                           facet.repeat_labels_y,
                            facet.fixed_y,
                            facet.fixed_x,
                            facet.drop,
@@ -45,11 +48,10 @@ back2back_plot <- function(df,
                            category.focus,
                            colour,
                            colour_fill,
-                           colour_opacity,
-                           x.lbl_angle,
-                           x.lbl_align,
-                           x.lbl_italic,
-                           x.lbl_taxonomy,
+                           colour_transparency,
+                           x.label_angle,
+                           x.label_align,
+                           x.label_italic,
                            x.remove,
                            x.position,
                            x.max_items,
@@ -66,7 +68,6 @@ back2back_plot <- function(df,
                            x.labels,
                            x.character,
                            x.drop,
-                           x.mic,
                            x.zoom,
                            y.remove,
                            y.24h,
@@ -115,6 +116,7 @@ back2back_plot <- function(df,
                            datalabels.size,
                            datalabels.angle,
                            datalabels.lineheight,
+                           datalabels.percent_by,
                            decimal.mark,
                            big.mark,
                            summarise_function,
@@ -146,10 +148,10 @@ back2back_plot <- function(df,
                            legend.barwidth,
                            legend.nbin,
                            legend.italic,
-                           sankey.node_width,
-                           sankey.node_whitespace,
-                           sankey.alpha,
-                           sankey.remove_axes,
+                           sankey_node_width,
+                           sankey_node_whitespace,
+                           sankey_alpha,
+                           sankey_remove_axes,
                            zoom,
                            sep,
                            print,
@@ -167,7 +169,8 @@ back2back_plot <- function(df,
                             datapoints = facet_values,
                             summarise_function = NULL,
                             summarise_fn_name = "",
-                            horizontal = TRUE,
+                            # reversed, except for the order in the data (as before F141)
+                            horizontal = !identical(validate_sorting(facet.sort, horizontal = FALSE), "inorder"),
                             drop = FALSE,
                             argument = "facet")
   facet_values <- as.character(levels(facet_values))
@@ -184,9 +187,6 @@ back2back_plot <- function(df,
     y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
   }
   
-  if (isTRUE(facet.fixed_x) || isTRUE(facet.fixed_y)) {
-    plot2_caution("For fixed scales, set `y.limits` when using back-to-back plots")
-  }
   
   # legend
   if (is.null(legend.position)) {
@@ -198,12 +198,22 @@ back2back_plot <- function(df,
   }
   legend.position <- validate_legend.position(legend.position)
   
-  suppressMessages(
-    left_plot <- df_left |>
+  # one colour per category for both halves, from all data, so that a category has
+  # the same colour on both sides also when it is missing on one side (F066)
+  if (has_category(df) && !data_is_numeric(get_category(df))) {
+    category_levels <- levels(as.factor(get_category(df)))
+    colour <- b2b_named_colours(colour, category_levels, colour_transparency)
+    if (!is.null(colour_fill) && !isTRUE(colour_fill)) {
+      colour_fill <- b2b_named_colours(colour_fill, category_levels, colour_transparency)
+    }
+  }
+
+  make_left <- function(y.limits) suppressMessages(
+    df_left |>
       select(-starts_with("_var_")) |>
-      plot2(x = !!str2lang(get_x_name(df)),
+      plot2(x = !!rlang::sym(get_x_name(df)),
             y = !!get_y(df_left),
-            category = !!(if (has_category(df)) str2lang(get_category_name(df)) else NULL),
+            category = !!(if (has_category(df)) rlang::sym(get_category_name(df)) else NULL),
             facet = !!facet_values[1],
             type = "col",
             horizontal = TRUE,
@@ -220,7 +230,7 @@ back2back_plot <- function(df,
             na.replace = na.replace,
             na.rm = na.rm,
             facet.position = facet.position,
-            facet.fill = facet.fill,
+            facet.colour_fill = facet.colour_fill,
             facet.bold = facet.bold,
             facet.italic = facet.italic,
             facet.size = facet.size,
@@ -231,11 +241,10 @@ back2back_plot <- function(df,
             category.focus = category.focus,
             colour = colour,
             colour_fill = colour_fill,
-            colour_opacity = colour_opacity,
-            x.lbl_angle = x.lbl_angle,
-            x.lbl_align = x.lbl_align,
-            x.lbl_italic = x.lbl_italic,
-            x.lbl_taxonomy = x.lbl_taxonomy,
+            colour_transparency = colour_transparency,
+            x.label_angle = x.label_angle,
+            x.label_align = x.label_align,
+            x.label_italic = x.label_italic,
             x.remove = x.remove,
             x.max_items = x.max_items,
             x.max_txt = x.max_txt,
@@ -249,7 +258,6 @@ back2back_plot <- function(df,
             x.labels = x.labels,
             x.character = x.character,
             x.drop = x.drop,
-            x.mic = x.mic,
             x.zoom = x.zoom,
             y.remove = y.remove,
             y.24h = y.24h,
@@ -282,6 +290,7 @@ back2back_plot <- function(df,
             datalabels = datalabels,
             datalabels.round = datalabels.round,
             datalabels.format = datalabels.format,
+            datalabels.percent_by = datalabels.percent_by,
             datalabels.colour = datalabels.colour,
             datalabels.colour_fill = datalabels.colour_fill,
             datalabels.size = datalabels.size,
@@ -316,28 +325,30 @@ back2back_plot <- function(df,
             legend.barwidth = legend.barwidth,
             legend.nbin = legend.nbin,
             legend.italic = legend.italic,
-            sankey.node_width = sankey.node_width,
-            sankey.node_whitespace = sankey.node_whitespace,
-            sankey.alpha = sankey.alpha,
-            sankey.remove_axes = sankey.remove_axes,
+            sankey_node_width = sankey_node_width,
+            sankey_node_whitespace = sankey_node_whitespace,
+            sankey_alpha = sankey_alpha,
+            sankey_remove_axes = sankey_remove_axes,
             zoom = zoom,
             sep = sep,
             text_factor = text_factor,
             font = font,
             theme = theme,
             background = background,
-            markdown = markdown
+            markdown = markdown,
+            # keys for all categories, also those missing in this half (F066)
+            show.legend = if (has_category(df)) TRUE else NA
       ) +
-      theme(axis.text.y = element_blank(),
+      ggplot2::theme(axis.text.y = element_blank(),
             plot.margin = margin(5,5,5,5))
   )
   
-  suppressMessages(
-    right_plot <- df_right |>
+  make_right <- function(y.limits) suppressMessages(
+    df_right |>
       select(-starts_with("_var_")) |>
-      plot2(x = !!str2lang(get_x_name(df)),
+      plot2(x = !!rlang::sym(get_x_name(df)),
             y = !!get_y(df_right),
-            category = !!(if (has_category(df)) str2lang(get_category_name(df)) else NULL),
+            category = !!(if (has_category(df)) rlang::sym(get_category_name(df)) else NULL),
             facet = !!facet_values[2],
             type = "col",
             horizontal = TRUE,
@@ -353,7 +364,7 @@ back2back_plot <- function(df,
             na.replace = na.replace,
             na.rm = na.rm,
             facet.position = facet.position,
-            facet.fill = facet.fill,
+            facet.colour_fill = facet.colour_fill,
             facet.bold = facet.bold,
             facet.italic = facet.italic,
             facet.size = facet.size,
@@ -364,11 +375,10 @@ back2back_plot <- function(df,
             category.focus = category.focus,
             colour = colour,
             colour_fill = colour_fill,
-            colour_opacity = colour_opacity,
-            x.lbl_angle = x.lbl_angle,
-            x.lbl_align = x.lbl_align,
-            x.lbl_italic = x.lbl_italic,
-            x.lbl_taxonomy = x.lbl_taxonomy,
+            colour_transparency = colour_transparency,
+            x.label_angle = x.label_angle,
+            x.label_align = x.label_align,
+            x.label_italic = x.label_italic,
             x.remove = x.remove,
             x.max_items = x.max_items,
             x.max_txt = x.max_txt,
@@ -382,7 +392,6 @@ back2back_plot <- function(df,
             x.labels = x.labels,
             x.character = x.character,
             x.drop = x.drop,
-            x.mic = x.mic,
             x.zoom = x.zoom,
             y.remove = y.remove,
             y.24h = y.24h,
@@ -415,6 +424,7 @@ back2back_plot <- function(df,
             datalabels = datalabels,
             datalabels.round = datalabels.round,
             datalabels.format = datalabels.format,
+            datalabels.percent_by = datalabels.percent_by,
             datalabels.colour = datalabels.colour,
             datalabels.colour_fill = datalabels.colour_fill,
             datalabels.size = datalabels.size,
@@ -449,22 +459,40 @@ back2back_plot <- function(df,
             legend.barwidth = legend.barwidth,
             legend.nbin = legend.nbin,
             legend.italic = legend.italic,
-            sankey.node_width = sankey.node_width,
-            sankey.node_whitespace = sankey.node_whitespace,
-            sankey.alpha = sankey.alpha,
-            sankey.remove_axes = sankey.remove_axes,
+            sankey_node_width = sankey_node_width,
+            sankey_node_whitespace = sankey_node_whitespace,
+            sankey_alpha = sankey_alpha,
+            sankey_remove_axes = sankey_remove_axes,
             zoom = zoom,
             sep = sep,
             text_factor = text_factor,
             font = font,
             theme = theme,
             background = background,
-            markdown = markdown
+            markdown = markdown,
+            # keys for all categories, also those missing in this half (F066)
+            show.legend = if (has_category(df)) TRUE else NA
       ) +
-      theme(axis.text.y = element_text(hjust = 0.5,
+      ggplot2::theme(axis.text.y = element_text(hjust = 0.5,
                                        margin = margin(l = 10, r = 10)),
             plot.margin = margin(5, 5, 5, 0))
   )
+
+  left_plot <- make_left(y.limits)
+  right_plot <- make_right(y.limits)
+  category_levels <- if (has_category(df) && !data_is_numeric(get_category(df))) levels(as.factor(get_category(df))) else NULL
+  if (is.null(y.limits)) {
+    # one value scale for both halves, so that equal lengths mean equal values (F064)
+    y_max <- max(b2b_max_value(left_plot), b2b_max_value(right_plot))
+    if (is.finite(y_max) && y_max > 0) {
+      left_plot <- make_left(c(0, y_max))
+      right_plot <- make_right(c(0, y_max))
+    }
+  }
+  if (!is.null(category_levels)) {
+    left_plot <- b2b_all_levels(left_plot, category_levels)
+    right_plot <- b2b_all_levels(right_plot, category_levels)
+  }
 
   p <- patchwork::wrap_plots(left_plot,
                              right_plot,
@@ -481,10 +509,10 @@ back2back_plot <- function(df,
                                                       horizontal = TRUE,
                                                       x.remove = x.remove,
                                                       y.remove = y.remove,
-                                                      x.lbl_angle = x.lbl_angle,
-                                                      x.lbl_align = x.lbl_align,
-                                                      x.lbl_italic = x.lbl_italic,
-                                                      facet.fill = facet.fill,
+                                                      x.label_angle = x.label_angle,
+                                                      x.label_align = x.label_align,
+                                                      x.label_italic = x.label_italic,
+                                                      facet.colour_fill = facet.colour_fill,
                                                       facet.bold = facet.bold,
                                                       facet.italic = facet.italic,
                                                       facet.size = facet.size,
@@ -496,21 +524,60 @@ back2back_plot <- function(df,
                                                       has_category = has_category(df),
                                                       col_y_primary = NULL,
                                                       col_y_secondary = NULL,
-                                                      sankey.remove_axes = FALSE)) & 
-    theme(legend.position = legend.position,
+                                                      sankey_remove_axes = FALSE)) & 
+    ggplot2::theme(legend.position = legend.position,
           legend.justification = "center",
           legend.direction = "horizontal")
   
   
-  on.exit({
-    throw_messages()
-    clear_plot2_env()
-  })
-  
   # return plot ----
   if (isTRUE(print)) {
     print(p)
+    invisible(p)
   } else {
     p
   }
+}
+
+# colours named by category level, unless they are named already
+b2b_named_colours <- function(colour, levels, transparency) {
+  if (!is.null(names(colour)) || length(levels) == 0) {
+    return(colour)
+  }
+  cols <- if (length(colour) == 1) {
+    get_colour(colour, length = length(levels), transparency = transparency)
+  } else {
+    get_colour(colour, transparency = transparency)
+  }
+  if (length(cols) < length(levels)) {
+    cols <- rep_len(cols, length(levels))
+  }
+  cols <- as.character(cols)[seq_along(levels)]
+  stats::setNames(cols, levels)
+}
+
+# the largest absolute value of the value axis of one half, including the room
+# that plot2 leaves for datalabels
+b2b_max_value <- function(p) {
+  built <- ggplot2::ggplot_build(p)
+  params <- built$layout$panel_params[[1]]
+  # the halves are horizontal: the value axis is drawn as x
+  range <- params$x.range
+  if (is.null(range)) range <- params$x$continuous_range
+  range <- abs(suppressWarnings(as.numeric(range)))
+  if (any(is.finite(range))) max(range[is.finite(range)]) else -Inf
+}
+
+# the same categories in the legend of both halves, so that patchwork collects one
+# legend (F066): a copy of each discrete colour scale with all levels as limits
+b2b_all_levels <- function(p, levels) {
+  for (aes in c("colour", "fill")) {
+    sc <- p$scales$get_scales(aes)
+    if (!is.null(sc) && inherits(sc, "ScaleDiscrete")) {
+      sc <- sc$clone()
+      sc$limits <- levels
+      p <- suppressMessages(p + sc)
+    }
+  }
+  p
 }

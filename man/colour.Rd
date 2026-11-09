@@ -7,7 +7,7 @@
 \alias{add_white}
 \title{Get (and Register) Colours from \R, Viridis and More}
 \usage{
-get_colour(x, length = 1, opacity = 0)
+get_colour(x, length = 1, transparency = 0)
 
 register_colour(...)
 
@@ -29,38 +29,17 @@ add_white(x, white)
 \item \code{"mako"}
 \item \code{"turbo"}
 }
-\item One of the built-in \R palettes (these are from \R 4.5.1):
-\itemize{
-\item \code{"Accent"}
-\item \code{"Alphabet"}
-\item \code{"Classic Tableau"}
-\item \code{"Dark 2"}
-\item \code{"Okabe-Ito"}
-\item \code{"Paired"}
-\item \code{"Pastel 1"}
-\item \code{"Pastel 2"}
-\item \code{"Polychrome 36"}
-\item \code{"R3"}
-\item \code{"R4"}
-\item \code{"Set 1"}
-\item \code{"Set 2"}
-\item \code{"Set 3"}
-\item \code{"Tableau 10"}
-\item \code{"ggplot2"}
-\item \code{"grayscale"}
-\item \code{"greyscale"}
-\item \code{"heatmap"}
-\item \code{"rainbow"}
-\item \code{"terrain"}
-\item \code{"topo"}
+\item \code{"ggplot2"}, which gives the colours that ggplot2 itself would use, i.e. the same as not setting a colour
+\item One of the built-in \R palettes from \code{\link[grDevices:palette.pals]{grDevices::palette.pals()}}, such as \code{"R4"}, \code{"Okabe-Ito"} or \code{"Tableau 10"}, or one of \code{"topo"}, \code{"heatmap"}, \code{"rainbow"}, \code{"terrain"}, \code{"greyscale"}, \code{"grayscale"}
+\item One of the built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"bisque"}, \code{"cornsilk4"}, \code{"lightcoral"}, \code{"salmon2"}, \code{"slateblue"}
+\item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}} (case-insensitive)
 }
-\item One of the 657 built-in \code{\link[=colours]{colours()}} in \R (even case-insensitive), such as \code{"bisque"}, \code{"blue1"}, \code{"chartreuse1"}, \code{"cornsilk4"}, \code{"lightcoral"}
-\item One of the pre-registered colours using \code{\link[=register_colour]{register_colour()}}
-}}
+
+An invalid colour gives a warning and is replaced by grey, while valid colours and names are kept. A single unknown name, such as a mistyped palette, is replaced by the default colours. \code{\link[=register_colour]{register_colour()}} gives an error for invalid colours.}
 
 \item{length}{Size of the vector to be returned.}
 
-\item{opacity}{Amount of opacity (0 = solid, 1 = transparent).}
+\item{transparency}{Amount of transparency (0 = solid, 1 = fully transparent).}
 
 \item{...}{Named vectors with known, valid colours. They must be coercible with \code{\link[=get_colour]{get_colour()}}.}
 
@@ -69,7 +48,7 @@ add_white(x, white)
 \item{white}{A number between \verb{[0, 1]} to add white to \code{x}.}
 }
 \value{
-\link{character} vector in HTML format (i.e., \code{"#AABBCC"}) with new class \code{colour}
+\code{\link[=get_colour]{get_colour()}} returns a \link{character} vector in HTML format (i.e., \code{"#AABBCC"}) with new class \code{colour}. \code{\link[=register_colour]{register_colour()}} and \code{\link[=unregister_colour]{unregister_colour()}} are called for their side effect and return \code{NULL} invisibly.
 }
 \description{
 Retrieves, expands, and prints colours or palettes from \R, \code{viridisLite}, or user-defined sources, with support for registering and unregistering custom colour sets for (automatic) reuse in plots.
@@ -170,6 +149,10 @@ iris |>
 
 # reset option again
 options(plot2.colour = NULL)
+
+# unregister colours with a regular expression on their names
+unregister_colour("^red")
+unregister_colour("^my_organisation$")
 
 
 # Use add_white() to add white to existing colours:

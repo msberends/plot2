@@ -20,7 +20,7 @@ format2 <- function(x, ...) {
 #' @exportS3Method
 format2.default <- function(x, ...) {
   if (isTRUE(list(...)$percent)) {
-    format2(as.percentage(x), ...)
+    format2(as_percentage(x), ...)
   } else {
     # all below have to be wrapped in tryCatch to also work for e.g. functions and calls
     if (tryCatch(all(x %like% "^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}$", na.rm = TRUE), error = function(e) FALSE)) {
@@ -36,7 +36,6 @@ format2.default <- function(x, ...) {
   }
 }
 
-#' @importFrom cleaner as.percentage
 #' @method format2 numeric
 #' @exportS3Method
 format2.numeric <- function(x,
@@ -49,7 +48,7 @@ format2.numeric <- function(x,
                             ...) {
   
   if (percent == TRUE) {
-    format2(x = as.percentage(x),
+    format2(x = as_percentage(x),
             round = round,
             force_decimals = force_decimals,
             decimal.mark = decimal.mark,
@@ -91,7 +90,7 @@ format2.numeric <- function(x,
   }
 }
 
-#' @importFrom cleaner percentage
+#' @exportS3Method
 format2.percentage <- function(x,
                                round = 1,
                                force_decimals = TRUE,
@@ -102,11 +101,11 @@ format2.percentage <- function(x,
   if (length(x) == 0) {
     return(character())
   }
-  # this will call cleaner:::format.percentage
-  out <- trimws(format(x,
-                       digits = round,
-                       decimal.mark = decimal.mark,
-                       big.mark = big.mark))
+  # formats like cleaner's percentage class did, without depending on cleaner (F108)
+  out <- trimws(format_percentage(x,
+                                  digits = round,
+                                  decimal.mark = decimal.mark,
+                                  big.mark = big.mark))
   out[out == "NA%"] <- NA_character_
   out
 }
@@ -115,7 +114,7 @@ format2.percentage <- function(x,
 #' @exportS3Method
 format2.Date <- function(x,
                          format = "d mmmm yyyy",
-                         locale = "nl",
+                         locale = NULL,
                          ...) {
   coerce_datetime(x = x, format = format, locale = locale, ...)
 }
@@ -124,7 +123,7 @@ format2.Date <- function(x,
 #' @exportS3Method
 format2.POSIXt <- function(x,
                            format = "yyyy-mm-dd HH:MM:SS",
-                           locale = "nl",
+                           locale = NULL,
                            ...) {
   coerce_datetime(x = x, format = format, locale = locale, ...)
 }
@@ -154,85 +153,80 @@ format2.difftime <- function(x,
 }
 
 coerce_datetime <- function(x, format, locale, ...) {
-  
   format <- posix_date_format(format)
   
-  if (!is.null(locale)) {
-    if (locale %like% "^[a-z]{2}$") {
-      locale <- paste0(tolower(locale), "_", toupper(locale))
-    }
-    if (Sys.getlocale("LC_TIME") %like% ".UTF-8" && locale %unlike% ".UTF-8") {
-      locale <- paste0(locale, ".UTF-8")
-    }
-    # exception for Dutch on Windows
-    if (locale %like% "nl_NL" && tolower(.Platform$OS.type) == "windows") {
-      locale <- "Dutch_Netherlands.1252"
-    }
-  } else {
-    locale <- Sys.getlocale("LC_TIME")
-  }
-  
-  if (format == "%B") {
-    # same as format = "mmmm"
-    rlang::check_installed("lubridate")
-    return(lubridate::month(x, label = TRUE, abbr = FALSE, locale = locale))
-  } else if (format == "%b") {
-    # same as format = "mmm"
-    rlang::check_installed("lubridate")
-    return(lubridate::month(x, label = TRUE, abbr = TRUE, locale = locale))
-  }
-  
-  if (Sys.getlocale("LC_TIME") %unlike% locale) {
-    old_option <- Sys.getlocale("LC_TIME")
-    Sys.setlocale("LC_TIME", locale = locale)
-  } else {
-    old_option <- NULL
-  }
+  # format in the requested language; any change of LC_TIME is restored on exit (F003)
+  local_time_locale(locale)
   
   if (inherits(x, c("hms", "difftime", "POSIXlt"))) {
     if (all(x %like% "^[0-9]+:[0-9]+")) {
       x <- paste("1970-01-01", x)
     }
-    df <- data.frame(dat = as.POSIXct(x), form = format(as.POSIXct(x), format), stringsAsFactors = FALSE)
-  } else {
-    df <- data.frame(dat = as.POSIXct(x), form = format(as.POSIXct(x), format), stringsAsFactors = FALSE)
+  }
+  # keep the time zone of date-times (F029)
+  tz <- if (inherits(x, "POSIXt")) attr(as.POSIXct(x), "tzone") else NULL
+  dat <- if (is.null(tz)) as.POSIXct(x) else as.POSIXct(x, tz = tz[1])
+  
+  # quarters (q = 1, qq = Q1) are not known to strftime(); posix_date_format() marks them with \001
+  form <- format(dat, format)
+  if (any(grepl("\001", form, fixed = TRUE), na.rm = TRUE)) {
+    quarter <- as.POSIXlt(dat)$mon %/% 3 + 1
+    form <- unlist(Map(function(f, q) gsub("\001", q, f, fixed = TRUE), form, quarter), use.names = FALSE)
   }
   
   # remove extra spaces
-  df$form <- gsub(" +", " ", trimws(df$form))
+  form <- gsub(" +", " ", trimws(form))
+  form[is.na(dat)] <- NA_character_
   
-  # replace quarters
-  if (any(df$form %like% "(q|qq)")) {
-    rlang::check_installed("lubridate")
-    df$quarter <- lubridate::quarter(df$dat)
-    df$quarter[df$form %like% "qq"] <- paste0("Q", df$quarter[df$form %like% "qq"])
-    df$form <- unlist(Map(gsub,
-                          df$quarter,
-                          df$form,
-                          MoreArgs = list(pattern = "(q|qq)+"),
-                          USE.NAMES = FALSE))
-  }
-  
-  if (!is.null(old_option)) {
-    tryCatch(Sys.setlocale("LC_TIME", locale = old_option),
-             error = function(e) {
-               plot2_warning("Unable to reset original language when running: ",
-                             'Sys.setlocale("LC_TIME", locale = "', old_option, '")')
-             })
-  }
-  
-  if (format == "unix") {
-    as.double(df$form)
+  if (identical(format, "%s")) {
+    as.double(form)
   } else {
-    df$form
+    # always character, also for month names (F029)
+    form
   }
+}
+
+# Set LC_TIME for the calling function and restore it when that function exits.
+# `locale` is a locale name or a two-letter language code; NULL uses the
+# plot2.language option if set, otherwise the system locale.
+local_time_locale <- function(locale = NULL, .env = parent.frame()) {
+  if (is.null(locale)) {
+    lang <- plot2_language()
+    if (lang == "en" && is.null(getOption("plot2.language"))) {
+      # no language set: keep the system locale
+      return(invisible(NULL))
+    }
+    locale <- lang
+  }
+  candidates <- locale
+  if (locale %like% "^[a-z]{2}$") {
+    # common names of the locale on Linux, macOS and Windows
+    base <- paste0(tolower(locale), "_", switch(tolower(locale), en = "US", toupper(locale)))
+    candidates <- c(paste0(base, c(".UTF-8", ".utf8", "")),
+                    switch(tolower(locale), nl = "Dutch_Netherlands.1252", en = "English_United States.1252", NULL))
+  }
+  old <- Sys.getlocale("LC_TIME")
+  if (old %in% candidates) {
+    return(invisible(NULL))
+  }
+  new <- ""
+  for (cand in candidates) {
+    new <- suppressWarnings(Sys.setlocale("LC_TIME", locale = cand))
+    if (!identical(new, "")) break
+  }
+  if (identical(new, "")) {
+    plot2_caution("The locale \"", candidates[1], "\" is not available on this system, so dates use the system locale")
+    return(invisible(NULL))
+  }
+  do.call(on.exit, list(substitute(suppressWarnings(Sys.setlocale("LC_TIME", locale = old)), list(old = old)), add = TRUE),
+          envir = .env)
+  invisible(NULL)
 }
 
 format2_scientific <- function(x,
                                round = 2,
                                decimal.mark = dec_mark(),
                                ...) {
-  bullet <- cli::symbol$bullet
   out <- vector("list", length(x))
   
   for (i in seq_along(x)) {
@@ -260,36 +254,74 @@ format2_scientific <- function(x,
     mant <- trimws(format(mant, decimal.mark = decimal.mark))
     
     # Build expression
-    out[[i]] <- bquote(.(mant) * " " * .(bullet) * " " * 10^.(expn))
+    # plotmath %*% gives a multiplication sign on every device and console (F107)
+    out[[i]] <- bquote(.(mant) %*% 10^.(expn))
   }
   out
 }
 
+# Translate plot2's date format tokens (e.g. "d mmmm yyyy") to strftime() codes (F029).
+# A run of letters is converted only if it consists entirely of tokens, so that
+# words such as "Week" or "Month" stay as they are; text in single quotes is
+# always kept literally. Tokens are case-insensitive, except "MM" (minutes)
+# versus "mm" (month). Formats that already contain "%" are used as-is.
 posix_date_format <- function(format) {
-  if (!any(grepl("%", format, fixed = TRUE))) {
-    format <- gsub("mmmm", "%B1", format, fixed = TRUE)
-    format <- gsub("mmm", "%b", format, fixed = TRUE)
-    format <- gsub("mm", "%m", format, fixed = TRUE)
-    format <- gsub("MM", "%M1", format, fixed = TRUE)
-    format <- gsub("%m1", "%M", gsub("%b1", "%B", tolower(format), 
-                                     fixed = TRUE), fixed = TRUE)
-    format <- gsub("dddd", "%A", format, fixed = TRUE)
-    format <- gsub("ddd", "%a", format, fixed = TRUE)
-    format <- gsub("dd", "%!", format, fixed = TRUE)
-    format <- gsub("d", "%e", format, fixed = TRUE)
-    format <- gsub("%!", "%d", format, fixed = TRUE)
-    format <- gsub("ww", "%V", format, fixed = TRUE)
-    format <- gsub("w", "%V", format, fixed = TRUE)
-    format <- gsub("yyyy_iso", "%G", format, fixed = TRUE)
-    format <- gsub("yyyy", "%Y", format, fixed = TRUE)
-    format <- gsub("yy_iso", "%g", format, fixed = TRUE)
-    format <- gsub("yy", "%y", format, fixed = TRUE)
-    format <- gsub("hh", "%H", format, fixed = TRUE)
-    format <- gsub("h", "%k", format, fixed = TRUE)
-    format <- gsub("ss", "%S", format, fixed = TRUE)
-    format <- gsub("unix", "%s", format, fixed = TRUE)
-    format <- gsub("epoc%k", "%s", format, fixed = TRUE)
-    format <- gsub("iso", "%F", format, fixed = TRUE)
+  if (is.null(format) || is.na(format) || any(grepl("%", format, fixed = TRUE))) {
+    return(format)
   }
-  format
+  tokens <- c(yyyy_iso = "%G", yy_iso = "%g", epoch = "%s", unix = "%s", iso = "%F",
+              mmmm = "%B", mmm = "%b", mm = "%m",
+              dddd = "%A", ddd = "%a", dd = "%d", d = "%e",
+              ww = "%V", w = "%V", yyyy = "%Y", yy = "%y",
+              hh = "%H", h = "%k", ss = "%S", qq = "{QQ}", q = "{Q}")
+  convert_run <- function(run) {
+    # split a run of letters entirely into tokens (longest first), or return NULL
+    if (run == "") return("")
+    if (startsWith(run, "MM") && !startsWith(run, "MMM")) {
+      rest <- convert_run(substr(run, 3, nchar(run)))
+      return(if (is.null(rest)) NULL else paste0("%M", rest))
+    }
+    for (tok in names(tokens)[order(-nchar(names(tokens)))]) {
+      if (startsWith(tolower(run), tok)) {
+        rest <- convert_run(substr(run, nchar(tok) + 1, nchar(run)))
+        if (!is.null(rest)) return(paste0(tokens[[tok]], rest))
+      }
+    }
+    NULL
+  }
+  # split into quoted literals, letter runs, and other characters
+  parts <- regmatches(format, gregexpr("'[^']*'|[A-Za-z_]+|[^A-Za-z_']+", format))[[1]]
+  out <- vapply(parts, function(p) {
+    if (startsWith(p, "'")) {
+      gsub("'", "", p, fixed = TRUE)
+    } else if (grepl("^[A-Za-z_]+$", p)) {
+      conv <- convert_run(p)
+      if (is.null(conv)) p else conv
+    } else {
+      p
+    }
+  }, character(1), USE.NAMES = FALSE)
+  out <- paste(out, collapse = "")
+  # a single q means the quarter number, qq "Q" plus the number
+  out <- gsub("{Q}", "\001", out, fixed = TRUE)
+  out <- gsub("{QQ}", "Q\001", out, fixed = TRUE)
+  out
+}
+
+# percentages, formerly from the cleaner package (F108); the class name "percentage"
+# is kept, so that format2() also formats percentages made with cleaner
+as_percentage <- function(x) {
+  if (inherits(x, "percentage")) {
+    return(x)
+  }
+  structure(as.double(x), class = c("percentage", "numeric"))
+}
+
+format_percentage <- function(x, digits = 1, ...) {
+  x <- as.double(x) * 100
+  # round half away from zero
+  x <- trunc(abs(x) * 10 ^ digits + 0.5 + sqrt(.Machine$double.eps)) / 10 ^ digits * sign(x)
+  out <- format(x, scientific = FALSE, ...)
+  out[!is.na(out)] <- paste0(out[!is.na(out)], "%")
+  out
 }

@@ -41,7 +41,9 @@ get_plot_title <- function(plot,
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   
-  current_title <- plot$labels$title
+  # public accessor for the labels (F037)
+  plot_labels <- ggplot2::get_labs(plot)
+  current_title <- plot_labels$title
   default_title <- get_default_title(plot = plot, default = NULL)
   
   if (identical(current_title, default_title)) {
@@ -70,7 +72,7 @@ get_plot_title <- function(plot,
       tolower()
   }
   
-  caption <- plot$labels$caption
+  caption <- plot_labels$caption
   if (!is.null(caption) && caption %like% "^[0-9a-f]+$") {
     if (is.na(title)) {
       title <- NULL
@@ -88,7 +90,7 @@ get_default_title <- function(plot, default) {
   
   get_mapping <- function(plot) {
     c(gsub("~", "", sapply(plot$mapping, deparse)),
-      gsub("~", "", sapply(plot$facet$params$facets, deparse)))
+      plot$facet$vars())
   }
   
   
@@ -98,7 +100,7 @@ get_default_title <- function(plot, default) {
   val <- unname(mapp[names(mapp) == "y"])
   
   # generate txt of Y-axis
-  is_dutch <- Sys.getlocale() %like% "nl|dutch|nederlands"
+  is_dutch <- plot2_language() == "nl"
   txt_per <- ifelse(is_dutch, "per", "per")
   txt_sep <- ifelse(is_dutch, "en", "and")
   

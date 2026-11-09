@@ -13,6 +13,8 @@
 # ===================================================================== #
 
 plot2_env <- new.env(hash = FALSE)
+# state that lives for the whole R session (never cleared by clear_plot2_env())
+plot2_session <- new.env(hash = FALSE)
 plot2_env$reg_cols <- list()
 
 globalVariables(c(".",
@@ -73,11 +75,11 @@ globalVariables(c(".",
                   "ymin"))
 
 like <- function(x, pattern) {
-  x <- tolower(x)
-  pattern <- tolower(pattern)
+  # case-insensitive with ignore.case: lowercasing the pattern would change its meaning,
+  # e.g. "\\D" would become "\\d" (F017)
   if (length(pattern) == 1) {
     # only one pattern
-    grepl(pattern, x, ignore.case = FALSE, fixed = FALSE,  perl = TRUE)
+    grepl(pattern, x, ignore.case = TRUE, fixed = FALSE,  perl = TRUE)
   } else {
     # multiple patterns
     if (length(x) == 1) {
@@ -86,7 +88,7 @@ like <- function(x, pattern) {
       stop("'x' and 'pattern' must be of equal length", call. = FALSE)
     }
     unlist(mapply(FUN = grepl, x = x, pattern = pattern, 
-                  fixed = FALSE, perl = TRUE, MoreArgs = list(ignore.case = FALSE), 
+                  fixed = FALSE, perl = TRUE, MoreArgs = list(ignore.case = TRUE), 
                   SIMPLIFY = FALSE, USE.NAMES = FALSE))
   }
 }
@@ -97,33 +99,27 @@ like <- function(x, pattern) {
   !like(x = x, pattern = pattern)
 }
 
-#' @importFrom crayon black white
 font_black <- function(..., collapse = " ") {
   if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
-    white(paste0(c(...), collapse = collapse))
+    as.character(cli::col_white(paste0(c(...), collapse = collapse)))
   } else {
-    black(paste0(c(...), collapse = collapse))
+    as.character(cli::col_black(paste0(c(...), collapse = collapse)))
   }
 }
-#' @importFrom crayon blue
 font_blue <- function(..., collapse = " ") {
-  blue(paste0(c(...), collapse = collapse))
+  as.character(cli::col_blue(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon bold
 font_bold <- function(..., collapse = " ") {
-  bold(paste0(c(...), collapse = collapse))
+  as.character(cli::style_bold(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon italic
 font_italic <- function(..., collapse = " ") {
-  italic(paste0(c(...), collapse = collapse))
+  as.character(cli::style_italic(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon magenta
 font_magenta <- function(..., collapse = " ") {
-  magenta(paste0(c(...), collapse = collapse))
+  as.character(cli::col_magenta(paste0(c(...), collapse = collapse)))
 }
-#' @importFrom crayon strip_style
 font_stripstyle <- function(..., collapse = " ") {
-  strip_style(paste0(c(...), collapse = collapse))
+  as.character(cli::ansi_strip(paste0(c(...), collapse = collapse)))
 }
 font_url <- function(url, txt = url) {
   if (tryCatch(cli::ansi_has_hyperlink_support(), error = function(e) FALSE)) {
@@ -132,72 +128,185 @@ font_url <- function(url, txt = url) {
     url
   }
 }
-#' @importFrom crayon black white
 font_white <- function(..., collapse = " ") {
   if (isTRUE(tryCatch(rstudioapi::getThemeInfo()$dark, error = function(e) FALSE))) {
-    black(paste0(c(...), collapse = collapse))
+    as.character(cli::col_black(paste0(c(...), collapse = collapse)))
   } else {
-    white(paste0(c(...), collapse = collapse))
+    as.character(cli::col_white(paste0(c(...), collapse = collapse)))
   }
+}
+
+# Per-call state and diagnostics (F001, F014) ---------------------------------
+#
+# plot2_env holds the state of the plot2() call that is running. Every plot2()
+# method calls call_state_enter() first: it saves and clears the state of an
+# outer call (nested calls happen in back-to-back and UpSet plots, or when a
+# method calls plot2() again), and call_state_exit() restores it. Only the
+# registered colours ("reg_cols") are shared by all calls.
+#
+# plot2_message(), plot2_caution() and plot2_warning() collect diagnostics in
+# order of occurrence. When the outermost call ends, they are emitted grouped:
+# messages, then cautions, then warnings (maintainer's decision, 2026-11-08).
+# Outside a call (e.g. at render time, or get_colour() used directly) they are
+# emitted at once, so that they never surface with a later, unrelated call.
+
+call_depth <- function() {
+  length(plot2_session$call_stack)
+}
+
+call_state_enter <- function() {
+  vars <- setdiff(ls(plot2_env, all.names = TRUE), "reg_cols")
+  saved <- mget(vars, envir = plot2_env)
+  rm(list = vars, envir = plot2_env)
+  plot2_session$call_stack <- c(plot2_session$call_stack, list(saved))
+  invisible(NULL)
+}
+
+call_state_exit <- function() {
+  diagnostics <- list(infos = plot2_env$infos,
+                      cautions = plot2_env$cautions,
+                      warnings = plot2_env$warnings)
+  rm(list = setdiff(ls(plot2_env, all.names = TRUE), "reg_cols"), envir = plot2_env)
+  n <- call_depth()
+  if (n == 0) {
+    return(invisible(NULL))
+  }
+  saved <- plot2_session$call_stack[[n]]
+  plot2_session$call_stack <- plot2_session$call_stack[-n]
+  for (nm in names(saved)) {
+    assign(nm, saved[[nm]], envir = plot2_env)
+  }
+  if (n > 1) {
+    # a nested call: hand its diagnostics to the outer call
+    for (type in names(diagnostics)) {
+      plot2_env[[type]] <- c(plot2_env[[type]], diagnostics[[type]])
+    }
+  } else {
+    throw_messages(diagnostics)
+  }
+  invisible(NULL)
 }
 
 plot2_message <- function(...) {
-  plot2_env$infos <- c(plot2_env$infos, paste0(c(...), collapse = ""))
+  plot2_diagnostic(paste0(c(...), collapse = ""), "infos")
 }
 plot2_caution <- function(...) {
-  plot2_env$cautions <- c(plot2_env$cautions, paste0(c(...), collapse = ""))
+  plot2_diagnostic(paste0(c(...), collapse = ""), "cautions")
 }
 plot2_warning <- function(...) {
-  plot2_env$warnings <- c(plot2_env$warnings, paste0(c(...), collapse = ""))
+  plot2_diagnostic(paste0(c(...), collapse = ""), "warnings")
+}
+plot2_diagnostic <- function(txt, type) {
+  if (call_depth() > 0) {
+    plot2_env[[type]] <- c(plot2_env[[type]], txt)
+  } else {
+    emit_diagnostic(txt, type)
+  }
+  invisible(NULL)
 }
 
-plot2_message_out <- function(txt,
-                          print = (interactive() | Sys.getenv("IN_PKGDOWN") != "") & !identical(as.logical(getOption("plot2.silent", default = FALSE)), TRUE),
-                          type = "info") {
-  # at default, only prints in interactive mode and for the website generation
-  if (isTRUE(print)) {
-    if (type == "info") {
-      cli::cli_alert_info(txt, wrap = TRUE)
-    } else if (type == "caution") {
-      cli::cli_alert_warning(txt, wrap = TRUE)
-    } else if (type == "warning") {
-      cli::cli_alert_danger(txt, wrap = TRUE)
-    }
-  }
+plot2_shows_messages <- function() {
+  (interactive() || Sys.getenv("IN_PKGDOWN") != "") &&
+    !isTRUE(as.logical(getOption("plot2.silent", default = FALSE)))
 }
 
-throw_messages <- function(print = interactive() | Sys.getenv("IN_PKGDOWN") != "") {
-  has_given_note <- FALSE
-  # messages
-  if (!is.null(plot2_env$infos)) {
-    plot2_env$infos <- unique(sort(plot2_env$infos))
-    has_given_note <- TRUE
-    for (i in seq_len(length(plot2_env$infos))) {
-      plot2_message_out(plot2_env$infos[i], print = print, type = "info")
+# Emit one diagnostic as an R condition. Messages and cautions are message
+# conditions (classes "plot2_message", and "plot2_caution" for cautions):
+# they can be caught or muffled (suppressMessages()), and are printed only in
+# interactive sessions and pkgdown builds unless plot2.silent = TRUE. Warnings
+# are R warnings (class "plot2_warning"), always visible. Returns whether a
+# message was printed.
+emit_diagnostic <- function(txt, type) {
+  plain <- cli::ansi_strip(txt)
+  if (type == "warnings") {
+    warning(warningCondition(plain, class = "plot2_warning", call = NULL))
+    return(invisible(FALSE))
+  }
+  cls <- c(if (type == "cautions") "plot2_caution", "plot2_message")
+  printed <- FALSE
+  withRestarts({
+    signalCondition(messageCondition(paste0(plain, "\n"), class = cls, call = NULL))
+    if (plot2_shows_messages()) {
+      if (type == "cautions") {
+        cli::cli_alert_warning(txt, wrap = TRUE)
+      } else {
+        cli::cli_alert_info(txt, wrap = TRUE)
+      }
+      printed <- TRUE
+    }
+  }, muffleMessage = function() NULL)
+  invisible(printed)
+}
+
+throw_messages <- function(diagnostics) {
+  printed <- FALSE
+  for (type in c("infos", "cautions", "warnings")) {
+    # in order of occurrence, each text once
+    for (txt in unique(diagnostics[[type]])) {
+      printed <- isTRUE(emit_diagnostic(txt, type)) || printed
     }
   }
-  # cautions
-  if (!is.null(plot2_env$cautions)) {
-    plot2_env$cautions <- unique(sort(plot2_env$cautions))
-    has_given_note <- TRUE
-    for (i in seq_len(length(plot2_env$cautions))) {
-      plot2_message_out(plot2_env$cautions[i], print = print, type = "caution")
-    }
-  }
-  # warnings
-  if (!is.null(plot2_env$warnings)) {
-    plot2_env$warnings <- unique(sort(plot2_env$warnings))
-    has_given_note <- TRUE
-    for (i in seq_len(length(plot2_env$warnings))) {
-      plot2_message_out(plot2_env$warnings[i], print = print, type = "warning")
-    }
-  }
-  if (isTRUE(has_given_note) && stats::runif(1) < 0.01 && Sys.getenv("IN_PKGDOWN") == "") {
+  # show the tip about plot2.silent once per session, without touching the random-number stream
+  if (isTRUE(printed) && !isTRUE(plot2_session$silent_tip_shown) && Sys.getenv("IN_PKGDOWN") == "") {
     if (is.null(getOption("plot2.silent"))) {
       message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
     }
-    has_given_note <- FALSE
+    plot2_session$silent_tip_shown <- TRUE
   }
+}
+
+# whether an unevaluated direction (e.g. the y argument) is a column
+# specification: a name, a string, c() of those, a `:` range of names, or a
+# tidyselect helper; evaluated values (numeric vectors) are not
+is_column_selection <- function(expr) {
+  helpers <- c("where", "starts_with", "ends_with", "contains", "matches", "num_range",
+               "everything", "last_col", "all_of", "any_of", "c", ":", "-", "!")
+  if (is.symbol(expr)) return(TRUE)
+  if (is.character(expr)) return(TRUE)
+  if (!is.call(expr)) return(FALSE)
+  fn <- expr[[1]]
+  if (is.call(fn) && identical(fn[[1]], as.name("::"))) fn <- fn[[3]]
+  if (!is.symbol(fn) || !as.character(fn) %in% helpers) return(FALSE)
+  if (as.character(fn) %in% c("c", ":", "-", "!")) {
+    return(all(vapply(as.list(expr)[-1], is_column_selection, logical(1))))
+  }
+  TRUE
+}
+
+# whether a materialised direction column is the switch TRUE or FALSE (e.g.
+# `category = FALSE`, `datalabels = TRUE`) rather than data: only logical
+# columns qualify, so numeric 0/1 data and NA values are never mistaken for it
+is_switch <- function(x, value) {
+  is.logical(x) && length(x) > 0 && !anyNA(x) && all(x == value)
+}
+
+# name of a transformation given as a string or as a transformation object
+# (e.g. scales::transform_log10()), for comparisons such as == "identity"
+transform_name <- function(x) {
+  if (is.null(x)) return("identity")
+  if (is.character(x)) return(x[1L])
+  if (inherits(x, "transform") || is.list(x)) return(as.character(x$name %or% "custom")[1L])
+  "custom"
+}
+
+# a sequence of breaks that are multiples of `by` (anchored at zero), also when
+# `from` is negative and not a multiple of `by`
+seq_anchored <- function(from, to, by) {
+  out <- seq(floor(from / by + 1e-8) * by, to, by = by)
+  round(out / by) * by
+}
+
+# breaks for whole numbers with a small range: pretty breaks without decimals,
+# also below zero (used for the x, y and category scales)
+breaks_whole_numbers <- function(x, ...) {
+  x <- x[is.finite(x)]
+  if (length(x) == 0) return(numeric(0))
+  b <- scales::breaks_pretty()(x)
+  b <- b[abs(b - round(b)) < 1e-8]
+  if (length(b) < 2) {
+    b <- seq(floor(min(x)), ceiling(max(x)), by = 1)
+  }
+  b
 }
 
 requires_numeric_coercion <- function(x) {
@@ -208,7 +317,8 @@ summarise_variable <- function(df, var, sep) {
   # combined with add_direction(), this will add support for multiple vars in one direction:
   # e.g., `category = c(col1, col2)`
   cols <- colnames(df)
-  old_vars <- cols[cols %like% paste0(var, "_")]
+  # column names are data, not patterns (F017)
+  old_vars <- cols[grepl(paste0(var, "_"), cols, fixed = TRUE)]
   if (length(old_vars) == 0) {
     return(df)
   } else if (length(old_vars) > 1) {
@@ -230,7 +340,7 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
       select({{ direction }}) |> 
       colnames()
     selected_cols <- selected_cols[selected_cols %unlike% "^_var_"]
-    if (length(selected_cols) > 1 && is.character(selected_cols) && !all(var_label %like% selected_cols)) {
+    if (length(selected_cols) > 1 && is.character(selected_cols) && !all(vapply(selected_cols, grepl, logical(1), x = var_label, fixed = TRUE))) {
       # replace e.g. `facet = where(is.character)` with `facet = c(var1, var2, var3)`
       # in labels for columns, but also in mapping
       new_var_name <- paste0("c(", paste0(selected_cols, collapse = ", "), ")")
@@ -269,16 +379,13 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
 
 #' @importFrom dplyr pull
 get_column_name <- function(df, column_var) {
-  out <- vapply(FUN.VALUE = logical(1), df, function(col) {
-    identical(col,
-              df |> pull({{column_var}}))
-  })
+  # take the target column once, not once per compared column (F025)
+  target <- df |> pull({{column_var}})
+  out <- vapply(FUN.VALUE = logical(1), df, function(col) identical(col, target))
   if (all(out[names(out) %unlike% "^_var_"] == FALSE)) {
     # no column found, probably due to sorting (i.e., factors), try again with character comparison
-    out <- vapply(FUN.VALUE = logical(1), df, function(col) {
-      identical(col |> as.character(),
-                df |> pull({{column_var}}) |> as.character())
-    })
+    target <- as.character(target)
+    out <- vapply(FUN.VALUE = logical(1), df, function(col) identical(as.character(col), target))
   }
   out <- names(out)[out & names(out) %unlike% "^_var_"][1L]
   if (is.na(out)) {
@@ -416,7 +523,6 @@ has_datalabels <- function(df) {
   "_var_datalabels" %in% colnames(df)
 }
 
-#' @importFrom dplyr n_distinct
 determine_date_breaks_labels <- function(x) {
   rng <- range(x, na.rm = TRUE)
   range_in_days <- as.double(difftime(rng[2], rng[1], units = "days"))
@@ -511,7 +617,10 @@ unify_years <- function(x, as_leap_year = NULL) {
   if (inherits(x, "Date")) {
     as.Date(paste0(ifelse(as_leap_year, "1972", "1970"), x |> format() |> substr(5, 10)))
   } else {
-    as.POSIXct(paste0(ifelse(as_leap_year, "1972", "1970"), x |> format() |> substr(5, 99)))
+    # keep the time zone (F029)
+    tz <- attr(as.POSIXct(x), "tzone")
+    tz <- if (is.null(tz)) "" else tz[1]
+    as.POSIXct(paste0(ifelse(as_leap_year, "1972", "1970"), format(x, tz = tz) |> substr(5, 99)), tz = tz)
   }
 }
 
@@ -545,6 +654,19 @@ group_sizes <- function(df) {
   }
 }
 
+# The expression for a column name, or for the label of a selection of several
+# columns such as "c(a, b)". Only names, and c() of names, are parsed; anything
+# else is taken as one name, so that names from data are never run as code (F136).
+column_selection_expr <- function(x) {
+  e <- tryCatch(str2lang(x), error = function(e) NULL)
+  if (is.symbol(e) ||
+      (is.call(e) && identical(e[[1]], as.name("c")) && all(vapply(as.list(e)[-1], is.symbol, logical(1))))) {
+    e
+  } else {
+    rlang::sym(x)
+  }
+}
+
 # this replaces ggplot2::aes_string(), which was deprecated in 3.4.0
 #' @importFrom ggplot2 aes
 setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
@@ -563,12 +685,17 @@ setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
       # this is required for restore_mapping()
       x <- as.symbol(x)
     } else {
-      # use str2lang() to get a `call` type, but not if it's already in backticks or if it's a number:
+      # a column name becomes a symbol and a number a constant; text is never
+      # parsed as code, since column names can come from data (F136)
       x <- as.character(x)
-      if (x != make.names(x) && substr(x, 1, 1) != "`" && x %unlike% "^[0-9.]+$") {
-        x <- paste0("`", x, "`")
+      if (x %like% "^[0-9.]+$" && !is.na(suppressWarnings(as.numeric(x)))) {
+        x <- as.numeric(x)
+      } else if (x %like% "^`.+`$" && is.symbol(tryCatch(str2lang(x), error = function(e) NULL))) {
+        # a name in backticks, such as from rlang::as_label()
+        x <- str2lang(x)
+      } else {
+        x <- as.symbol(x)
       }
-      x <- str2lang(x)
     }
     rlang::new_quosure(x, env = caller_env)
   })
@@ -610,23 +737,57 @@ restore_mapping <- function(p, df) {
     p$layers[[i]]$mapping <- fn_new_mapping(mapping = p$layers[[i]]$mapping, df = df)
   }
   
-  # facet mapping
-  if (has_facet(df)) {
-    p$facet$params$facets[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
-    names(p$facet$params$facets)[1] <- get_facet_name(df)
-    # required for ggplot2::facet_grid(), which is used when facet.relative = TRUE:
-    if (length(p$facet$params$rows) > 0) {
-      p$facet$params$rows[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
-      names(p$facet$params$rows)[1] <- get_facet_name(df)
-    }
-    if (length(p$facet$params$cols) > 0) {
-      p$facet$params$cols[[1]] <- setup_aes(x = get_facet_name(df), as_symbol = TRUE)[[1]]
-      names(p$facet$params$cols)[1] <- get_facet_name(df)
-    }
-  }
+  # the facet already refers to the readable column, see validate_facet() (F037)
   
   # now remove these anonymous`_var_*` columns from the data
   p$data <- p$data[, colnames(p$data)[colnames(p$data) %unlike% "^_var_(x|y|category|facet)$"], drop = FALSE]
+
+  # give the remaining internal columns (such as `_var_datalabels` and `_sankey_x`) readable names,
+  # or remove them if no layer uses them (F069)
+  internal <- colnames(p$data)[startsWith(colnames(p$data), "_")]
+  if (length(internal) > 0) {
+    # mapping entries are quosures or, after the renaming above, plain symbols
+    map_expr <- function(m) if (rlang::is_quosure(m)) rlang::quo_get_expr(m) else m
+    used <- unique(unlist(c(lapply(p$mapping, function(m) all.vars(map_expr(m))),
+                            lapply(p$layers, function(l) {
+                              if (inherits(l$data, "waiver")) {
+                                unlist(lapply(l$mapping, function(m) all.vars(map_expr(m))))
+                              }
+                            }))))
+    internal_used <- internal[internal %in% used]
+    p$data <- p$data[, colnames(p$data)[!colnames(p$data) %in% setdiff(internal, internal_used)], drop = FALSE]
+    if (length(internal_used) > 0) {
+      others <- setdiff(colnames(p$data), internal_used)
+      readable <- make.unique(c(others, sub("^_(var_)?", "", internal_used)))[-seq_along(others)]
+      colnames(p$data)[match(internal_used, colnames(p$data))] <- readable
+      rename_symbols <- function(expr) {
+        if (is.symbol(expr) && as.character(expr) %in% internal_used) {
+          as.symbol(readable[match(as.character(expr), internal_used)])
+        } else if (is.call(expr)) {
+          as.call(lapply(as.list(expr), rename_symbols))
+        } else {
+          expr
+        }
+      }
+      rename_mapping <- function(mapping) {
+        if (is.null(mapping)) {
+          return(mapping)
+        }
+        att <- attributes(mapping)
+        out <- lapply(mapping, function(m) {
+          if (rlang::is_quosure(m)) rlang::quo_set_expr(m, rename_symbols(rlang::quo_get_expr(m))) else rename_symbols(m)
+        })
+        attributes(out) <- att
+        out
+      }
+      p$mapping <- rename_mapping(p$mapping)
+      for (i in seq_along(p$layers)) {
+        if (inherits(p$layers[[i]]$data, "waiver")) {
+          p$layers[[i]]$mapping <- rename_mapping(p$layers[[i]]$mapping)
+        }
+      }
+    }
+  }
   
   # return the plot object
   p
@@ -656,10 +817,12 @@ set_plot2_env <- function(x = NULL, y = NULL, category = NULL, facet = NULL, y_s
   plot2_env$x_variable_names <- x_variable_names
 }
 clear_plot2_env <- function() {
-  # clear everything from local environment, except for registered colours ("reg_cols")
-  vars_in_env <- ls(envir = plot2_env)
+  # clear everything from local environment, except for registered colours ("reg_cols"),
+  # and forget any unfinished calls; used by the tests to recover from failures
+  vars_in_env <- ls(envir = plot2_env, all.names = TRUE)
   vars_to_remove <- setdiff(vars_in_env, "reg_cols")
   rm(list = vars_to_remove, envir = plot2_env)
+  plot2_session$call_stack <- list()
 }
 
 sigfigs <- function(x) {
@@ -680,7 +843,8 @@ is_date <- function(x) {
 }
 
 data_is_numeric <- function(x) {
-  all(x %like% "^[0-9.,-]+(e[+][0-9.,-]+)?$", na.rm = TRUE)
+  # the unique values suffice (F025)
+  all(unique(x) %like% "^[0-9.,-]+(e[+][0-9.,-]+)?$", na.rm = TRUE)
 }
 
 digit_to_text <- function(x) {
@@ -721,70 +885,31 @@ format_error <- function(e, replace = character(0), by = character(0)) {
   if (is.null(x)) y else x
 }
 
-# this is to prevent that messages/notes will be printed for every facet rather than once per call
-msg_not_thrown_before <- function(fn, ..., entire_session = FALSE) {
-  if (identical(Sys.getenv("TESTTHAT"), "true")) {
-    # always print in testthat runs
-    return(TRUE)
-  }
-  unique_call_id <- function(entire_session = FALSE, match_fn = NULL) {
-    if (entire_session == TRUE) {
-      return(c(envir = "session", call = "session"))
-    }
-    # combination of environment ID (such as "0x7fed4ee8c848") and relevant system call (where 'match_fn' is being called in)
-    calls <- sys.calls()
-    if (!is.null(match_fn)) {
-      for (i in seq_len(length(calls))) {
-        call_clean <- gsub("[^a-zA-Z0-9_().-]", "", as.character(calls[[i]]), perl = TRUE)
-        if (match_fn %in% call_clean || any(call_clean %like% paste0(match_fn, "\\("), na.rm = TRUE)) {
-          return(c(
-            envir = gsub("<environment: (.*)>", "\\1", utils::capture.output(sys.frames()[[1]]), perl = TRUE),
-            call = paste0(deparse(calls[[i]]), collapse = "")
-          ))
-        }
-      }
-    }
-    c(envir = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""),
-      call = paste0(sample(c(0:9, letters[1:6]), size = 32, replace = TRUE), collapse = ""))
-  }
-  
-  salt <- gsub("[^a-zA-Z0-9|_-]", "?", substr(paste(c(...), sep = "|", collapse = "|"), 1, 512), perl = TRUE)
-  not_thrown_before <- is.null(plot2_env[[paste0("thrown_msg.", fn, ".", salt)]]) ||
-    !identical(
-      plot2_env[[paste0("thrown_msg.", fn, ".", salt)]],
-      unique_call_id(
-        entire_session = entire_session,
-        match_fn = fn
-      )
-    )
-  if (isTRUE(not_thrown_before)) {
-    # message was not thrown before - remember this so on the next run it will return FALSE:
-    assign(
-      x = paste0("thrown_msg.", fn, ".", salt),
-      value = unique_call_id(entire_session = entire_session, match_fn = fn),
-      envir = plot2_env
-    )
-  }
-  not_thrown_before
-}
-
 #' @importFrom ggplot2 fortify
-#' @importFrom broom augment
 #' @importFrom dplyr select mutate
 fortify_df <- function(df, y = NULL) {
-  augment_methods <- suppressMessages(utils::methods(augment))
-  augment_methods <- gsub("augment.", "", as.character(augment_methods), fixed = TRUE)
+  # broom is in Suggests (F108): use broom::augment() for model objects when it is installed
+  augment_classes <- function() {
+    m <- suppressMessages(utils::methods(broom::augment))
+    gsub("augment.", "", as.character(m), fixed = TRUE)
+  }
+  has_broom <- requireNamespace("broom", quietly = TRUE)
   
   if (is.null(tryCatch(rlang::eval_tidy(y), error = function(e) FALSE))) {
     y <- NULL
   }
   
-  if (inherits(df, augment_methods)) {
+  if (has_broom && inherits(df, augment_classes())) {
     # broom::augment() supports our data
-    new_df <- tryCatch(augment(df), error = function(e) NULL)
+    new_df <- tryCatch(broom::augment(df), error = function(e) NULL)
   } else {
     # try the ggplot2::fortify()
     new_df <- tryCatch(fortify(df), error = function(e) NULL)
+    if (!is.data.frame(new_df) && !has_broom) {
+      # e.g. a model object, which broom can turn into a data frame
+      rlang::check_installed("broom", reason = paste0("to plot an object of class '", class(df)[1], "'"))
+      new_df <- tryCatch(broom::augment(df), error = function(e) NULL)
+    }
   }
   
   if (is.data.frame(new_df)) {
@@ -823,4 +948,71 @@ fortify_df <- function(df, y = NULL) {
   }
   
   list(new_df = new_df, y = y)
+}
+
+natural_sort <- function(x, decreasing = FALSE) {
+  # like stringr::str_sort(numeric = TRUE) (ICU collation): numbers within strings are
+  # compared as numbers and come before text; text ignores case, with lower case first
+  x <- as.character(x)
+  nas <- x[is.na(x)]
+  x <- x[!is.na(x)]
+  if (length(x) < 2) return(c(x, nas))
+  parts <- regmatches(x, gregexpr("[0-9]+|[^0-9]+", x))
+  n <- max(lengths(parts))
+  keys <- list()
+  for (i in seq_len(n)) {
+    tok <- vapply(parts, function(p) if (length(p) >= i) p[i] else NA_character_, character(1))
+    is_num <- !is.na(tok) & grepl("^[0-9]+$", tok)
+    # a string that has ended sorts first, then numbers, then text
+    keys[[length(keys) + 1]] <- ifelse(is.na(tok), 0L, ifelse(is_num, 1L, 2L))
+    keys[[length(keys) + 1]] <- ifelse(is_num, suppressWarnings(as.double(tok)), 0)
+    keys[[length(keys) + 1]] <- xtfrm(ifelse(is_num | is.na(tok), "", tolower(tok)))
+  }
+  # ties (only case differs): lower case first
+  # (a key of 0 for lower case and 1 for upper case per character, so independent of the locale)
+  keys[[length(keys) + 1]] <- xtfrm(gsub("[^1]", "0", gsub("[[:upper:]]", "1", x)))
+  ord <- do.call(order, keys)
+  if (isTRUE(decreasing)) ord <- rev(ord)
+  c(x[ord], nas)
+}
+
+# The language of the words that plot2 generates (titles, y.24h, y.age) and of
+# date labels: option plot2.language, "en" (default) or "nl" (F003)
+plot2_language <- function() {
+  lang <- getOption("plot2.language", default = "en")
+  lang <- tolower(substr(trimws(as.character(lang)[1L]), 1, 2))
+  if (!isTRUE(lang %in% c("en", "nl"))) {
+    plot2_warning("Option plot2.language must be \"en\" or \"nl\", using \"en\"")
+    lang <- "en"
+  }
+  lang
+}
+
+# Split a formula into plot2 directions (F019): y ~ x + category + facet, or
+# y ~ x + category | facet. Only top-level `+` separates terms; `|` gives the facet.
+formula_terms <- function(form) {
+  split_plus <- function(e) {
+    if (is.call(e) && identical(e[[1]], as.name("+")) && length(e) == 3) {
+      c(split_plus(e[[2]]), list(e[[3]]))
+    } else {
+      list(e)
+    }
+  }
+  lhs <- rlang::f_lhs(form)
+  rhs <- rlang::f_rhs(form)
+  facet <- NULL
+  if (is.call(rhs) && identical(rhs[[1]], as.name("|")) && length(rhs) == 3) {
+    facet <- split_plus(rhs[[3]])
+    facet <- if (length(facet) == 1) facet[[1]] else as.call(c(as.name("c"), facet))
+    rhs <- rhs[[2]]
+  }
+  rhs <- split_plus(rhs)
+  if (length(rhs) > 3 || (length(rhs) > 2 && !is.null(facet))) {
+    stop("A formula takes at most `y ~ x + category + facet` or `y ~ x + category | facet`, not: ",
+         paste(deparse(form), collapse = " "), call. = FALSE)
+  }
+  list(y = lhs,
+       x = rhs[[1]],
+       category = if (length(rhs) > 1) rhs[[2]] else NULL,
+       facet = if (!is.null(facet)) facet else if (length(rhs) > 2) rhs[[3]] else NULL)
 }

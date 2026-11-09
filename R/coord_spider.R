@@ -28,7 +28,7 @@
 #' @param theta Character scalar specifying which position aesthetic is interpreted as the angular coordinate (theta). Must be `"x"` or `"y"`. In the common spider-chart case, use `theta = "x"` with a discrete `x` scale (categories around the circle) and a continuous `y` scale (radius). Setting `theta = "y"` swaps these roles.
 #' @param start Numeric scalar giving the angular offset in **radians** for the first axis. Angles increase according to the `direction` field stored in the coord (this implementation fixes `direction = 1` internally). With `start = 0`, the first axis is at 12 o'clock (positive vertical). Use `start = pi/2` to rotate the first axis to 3 o'clock, etc.
 #' @param clip Character scalar passed through to the coordinate system to control clipping of grobs to the panel. Use `"on"` to clip all drawing (including axis labels drawn in `render_bg()`) to the panel region, and `"off"` to allow grobs to extend outside the panel. When `clip = "on"`, labels that lie beyond the panel boundary will be cut off, so in that case it is recommended to set `outer.radius < 1` to reserve headroom inside the panel.
-#' @param inner.radius Numeric scalar in \[0, 1) specifying the inner radius of the spider coordinate system as a fraction of the panel radius. Values greater than 0 create a "donut" / hollow center. The data radius is linearly rescaled onto \[`inner.radius`, `outer.radius`\].
+#' @param inner.radius Numeric scalar in \[0, 1) specifying the inner radius of the spider coordinate system as a fraction of the panel radius. Values greater than 0 create a "donut" / hollow centre. The data radius is linearly rescaled onto \[`inner.radius`, `outer.radius`\].
 #' @param outer.radius Numeric scalar in (0, 1] specifying the maximum radius used for drawing the spider geometry as a fraction of the panel radius. Setting `outer.radius < 1` shrinks the spider grid and data polygon inward, thereby reserving whitespace inside the panel for labels while keeping `clip = "on"`. This is the preferred way to create consistent headroom independent of plot margins and device size.
 #' @param axis_labels Logical; if `TRUE`, draw the theta-axis labels (typically the discrete category labels) at the ends of the spokes using `grid::textGrob` in the panel background. Labels are taken from the trained discrete limits of the theta scale.
 #' @param axis_label_size Numeric scalar giving the font size (in points) for theta-axis labels drawn when `axis_labels = TRUE`.
@@ -384,19 +384,25 @@ CoordSpider <- ggproto(
       
       rr <- r_to_unit(panel_params$r_breaks)
       
-      x_base <- grid::unit(0.5, "npc") + grid::unit(self$r_label_pad_mm, "mm")
       aligned <- ifelse(self$r_label_pad_mm == 0,
                         "center",
                         ifelse(self$r_label_pad_mm > 0, "left", "right"))
+      # place the labels along the first spoke, which starts at angle `start` (F086)
+      x_pos  <- (rr * sin(panel_params$start) + 1) / 2
       y_pos  <- (rr * cos(panel_params$start) + 1) / 2
+      # font family and colour follow the theme
+      txt <- tryCatch(calc_element("axis.text", theme), error = function(e) NULL)
+      txt_family <- if (is.null(txt$family) || identical(txt$family, "")) NULL else txt$family
+      txt_colour <- txt$colour %or% "grey30"
       
       r_label_grobs <- lapply(seq_along(rr), function(i) {
         grid::textGrob(
           label = as.character(panel_params$r_labels[i]),
-          x = x_base,
+          x = grid::unit(x_pos[i], "npc") + grid::unit(self$r_label_pad_mm, "mm"),
           y = grid::unit(y_pos[i], "npc"),
           just = aligned,
-          gp = grid::gpar(fontsize = self$r_label_size)
+          gp = do.call(grid::gpar, c(list(fontsize = self$r_label_size, col = txt_colour),
+                                     list(fontfamily = txt_family)[!is.null(txt_family)]))
         )
       })
     }
@@ -421,13 +427,7 @@ CoordSpider <- ggproto(
 ggplot_add.CoordSpider <- function(object, plot, ...) {
   plot$coordinates <- object
   
-  # Prevent ggplot2 from regenerating default axis titles at build time
-  plot$labels$x <- ""
-  plot$labels$y <- ""
-  
-  # Secondary axes if present
-  if (!is.null(plot$labels$x.sec)) plot$labels$x.sec <- ""
-  if (!is.null(plot$labels$y.sec)) plot$labels$y.sec <- ""
-  
-  plot
+  # prevent ggplot2 from regenerating default axis titles at build time; through labs(),
+  # not by editing the labels directly (F037)
+  plot + ggplot2::labs(x = "", y = "")
 }

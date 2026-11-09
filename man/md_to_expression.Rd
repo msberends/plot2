@@ -7,7 +7,7 @@
 md_to_expression(x)
 }
 \arguments{
-\item{x}{Text to convert, only the first value will be evaluated.}
+\item{x}{Text to convert. Each element is converted separately.}
 }
 \value{
 An \link{expression} if \code{x} is length 1, or a \link{list} of expressions otherwise
@@ -17,6 +17,8 @@ This function converts common markdown language to an \R \link[grDevices:plotmat
 }
 \details{
 This function only supports common markdown (italic, bold, bold-italic, subscript, superscript), but also supports some additional functionalities for more advanced expressions using \R \link[grDevices:plotmath]{plotmath}. Please see \emph{Examples}.
+
+Text between dollar signs is used as plotmath, as in Pandoc: the opening \code{$} must be followed and the closing \code{$} preceded by a non-space character, and the closing \code{$} must not be followed by a digit. A single \code{$} ("Costs in $") or amounts such as "$5 to $10" therefore stay text. Apostrophes and backslashes in the text are kept.
 
 In \code{\link[=plot2]{plot2()}}, this function can be also set to argument \code{category.labels} to print the data values as expressions:
 \itemize{

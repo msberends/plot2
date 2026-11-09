@@ -4,7 +4,7 @@
 \alias{labellers}
 \alias{euros}
 \alias{dollars}
-\title{Label Euro currencies}
+\title{Label Currencies}
 \usage{
 euros(x, big.mark = big_mark(), decimal.mark = dec_mark(), ...)
 
@@ -22,8 +22,10 @@ dollars(x, big.mark = big_mark(), decimal.mark = dec_mark(), ...)
 \description{
 Format numbers as currency, rounding values to dollars or cents using a convenient heuristic.
 }
+\details{
+The euro sign of \code{\link[=euros]{euros()}} cannot be encoded by the default \link[grDevices:pdf]{pdf()} device. To save such plots as PDF, use the Cairo device, e.g. \code{ggplot2::ggsave("plot.pdf", device = grDevices::cairo_pdf)}, or in R Markdown the chunk option \code{dev = "cairo_pdf"}.
+}
 \examples{
-\dontrun{
 profit <- data.frame(group = LETTERS[1:4],
                      profit = runif(4, 10000, 25000))
 
@@ -34,5 +36,6 @@ profit |>
 profit |>
   plot2(y.labels = euros,
         datalabels.format = euros)
-}
+
+dollars(c(1500, 2499.5))
 }

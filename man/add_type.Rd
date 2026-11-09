@@ -90,7 +90,7 @@ add_sf(
   datalabels.size = 3,
   datalabels.angle = 0,
   datalabels.font = getOption("plot2.font"),
-  datalabels.nudge_y = 2500,
+  datalabels.nudge_y = 0,
   ...,
   inherit.aes = FALSE
 )
@@ -104,7 +104,7 @@ add_sf(
 
 \item{data}{Data to use in mapping.}
 
-\item{move}{Number of layers to move the newly added geom down, e.g., \code{move = 1} will place the newly added geom down 1 layer, thus directly under the highest layer.}
+\item{move}{Number of layers to move the newly added geom down; the sign is ignored. For example, \code{move = 1} (or \code{move = -1}) places the new geom directly below the layer that was on top before it was added. Use \code{\link[=move_layer]{move_layer()}} for other changes in the order of layers.}
 
 \item{x, y}{aesthetic arguments}
 
@@ -149,7 +149,7 @@ model that \code{method = NULL} would use, then set
 
 \item{datalabels.colour, datalabels.size, datalabels.angle, datalabels.font}{properties of \code{datalabels}}
 
-\item{datalabels.nudge_y}{is \code{datalabels} is not \code{NULL}, the amount of vertical adjustment of the datalabels (positive value: more to the North, negative value: more to the South)}
+\item{datalabels.nudge_y}{if \code{datalabels} is not \code{NULL}, the amount of vertical adjustment of the datalabels in the units of the coordinate reference system (positive value: more to the North, negative value: more to the South), e.g. metres for EPSG:28992 and degrees for EPSG:4326. The default is \code{0}.}
 }
 \value{
 a \code{ggplot} object
@@ -160,9 +160,9 @@ Quickly and conveniently add a new 'geom' to an existing \code{plot2}/\code{ggpl
 \details{
 The function \code{\link[=add_line]{add_line()}} will add:
 \itemize{
-\item \code{\link[ggplot2:geom_abline]{geom_hline()}} if only \code{y} is provided and it contains one unique value;
-\item \code{\link[ggplot2:geom_abline]{geom_vline()}} if only \code{x} is provided and it contains one unique value;
-\item \code{\link[ggplot2:geom_path]{geom_line()}} in all other cases.
+\item \code{\link[ggplot2:geom_hline]{geom_hline()}} if only \code{y} is provided and it contains one unique value;
+\item \code{\link[ggplot2:geom_vline]{geom_vline()}} if only \code{x} is provided and it contains one unique value;
+\item \code{\link[ggplot2:geom_line]{geom_line()}} in all other cases.
 }
 
 The function \code{\link[=add_errorbar]{add_errorbar()}} only adds error bars to the \code{y} values, see \emph{Examples}.
@@ -285,9 +285,9 @@ df2 |>
 netherlands |> 
   plot2()
 netherlands |> 
-  plot2(colour_fill = "viridis", colour_opacity = 0.75)
+  plot2(colour_fill = "viridis", colour_transparency = 0.75)
 netherlands |> 
-  plot2(colour_fill = "viridis", colour_opacity = 0.75) |>
+  plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
   # add the same sf object, but now with empty fill and other options
   add_sf(netherlands,
          colour = "black",

@@ -20,7 +20,7 @@
 #' @param colour_font_secondary Colour to set for the plot subtitle and caption.
 #' @param colour_font_axis Colour to set for the axis titles on both x and y.
 #' @param colour_background Colour to set for the background.
-#' @importFrom ggplot2 element_text `%+replace%` theme_bw theme margin element_line element_blank unit element_rect
+#' @importFrom ggplot2 theme
 #' @export
 #' @examples 
 #' library(ggplot2)
@@ -49,6 +49,36 @@ theme_minimal2 <- function(...,
   colour_font_axis <- get_colour(colour_font_axis, length = 1)
   colour_background <- get_colour(colour_background, length = 1)
   
+  # the complete theme is the same for the same colours, so build it once per session (F110)
+  cache_key <- paste(colour_font_primary, colour_font_secondary, colour_font_axis, colour_background,
+                     utils::packageVersion("ggplot2"), sep = "|")
+  t <- plot2_session$theme_cache[[cache_key]]
+  if (is.null(t)) {
+    t <- theme_minimal2_build(colour_font_primary = colour_font_primary,
+                              colour_font_secondary = colour_font_secondary,
+                              colour_font_axis = colour_font_axis,
+                              colour_background = colour_background)
+    if (is.null(plot2_session$theme_cache)) {
+      plot2_session$theme_cache <- list()
+    }
+    plot2_session$theme_cache[[cache_key]] <- t
+  }
+  
+  if (length(list(...)) > 0) {
+    # merge like `+ theme(...)`, so only the given properties change (F087)
+    t <- t + theme(...)
+  }
+  
+  t
+}
+
+#' Build the complete theme of theme_minimal2() (cached per session by theme_minimal2(), F110)
+#' @importFrom ggplot2 element_text theme_bw theme margin element_line element_blank unit element_rect
+#' @noRd
+theme_minimal2_build <- function(colour_font_primary, colour_font_secondary, colour_font_axis, colour_background) {
+  # not imported via NAMESPACE: R cannot parse non-syntactic names in a grouped importFrom()
+  # of roxygen2 >= 8, other than the first one
+  `%+replace%` <- ggplot2::`%+replace%`
   t <- theme_bw(base_size = 11) %+replace%
     theme(
       axis.text.x = element_text(margin = margin(3, 0, 0, 0)),
@@ -60,9 +90,9 @@ theme_minimal2 <- function(...,
       legend.background = element_blank(),
       legend.key = element_blank(),
       legend.key.size = unit(11, "pt"), # squares and lines left to legend text
-      legend.text = element_text(size = unit(9, "pt"), # text itself
+      legend.text = element_text(size = 9, # text itself
                                  margin = margin(l = 1, r = 6, unit = "pt")), # left and right of text
-      legend.title = element_text(face = "bold", size = unit(10, "pt")),
+      legend.title = element_text(face = "bold", size = 10),
       panel.background = element_rect(fill = colour_background, linetype = 0),
       panel.border = element_blank(),
       panel.grid.major.x = element_blank(),
@@ -73,18 +103,18 @@ theme_minimal2 <- function(...,
       axis.line.y = element_blank(),
       plot.margin = unit(c(5, 12, 5, 5), units = "pt"),
       plot.background = element_rect(fill = colour_background, linetype = 0),
-      plot.subtitle = element_text(size = unit(11, "pt"),
+      plot.subtitle = element_text(size = 11,
                                    hjust = 0.5,
                                    colour = colour_font_secondary,
                                    margin = margin(0, 0, 10, 0)),
-      plot.title = element_text(size = unit(13, "pt"),
+      plot.title = element_text(size = 13,
                                 hjust = 0.5,
                                 colour = colour_font_primary,
                                 margin = margin(0, 0, 10, 0)),
-      plot.caption = element_text(size = unit(10, "pt"),
+      plot.caption = element_text(size = 10,
                                   hjust = 1,
                                   colour = colour_font_secondary),
-      plot.tag = element_text(size = unit(14, "pt"),
+      plot.tag = element_text(size = 14,
                               hjust = 0,
                               colour = colour_font_primary,
                               margin = margin(0, 0, 0, 0),
@@ -93,11 +123,5 @@ theme_minimal2 <- function(...,
       strip.switch.pad.wrap = unit(-5, "pt"),
       strip.placement = "outside",
       complete = TRUE)
-  
-  if (length(list(...)) > 0) {
-    t <- t %+replace%
-      theme(...)
-  }
-  
   t
 }

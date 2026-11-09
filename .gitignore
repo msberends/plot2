@@ -48,3 +48,6 @@ Thumbs.db
 inst/doc
 
 .claude
+
+# graphics output of tests and examples
+Rplots.pdf

@@ -13,9 +13,9 @@ big_mark()
 These functions determine which characters the decimal mark and big mark should be that are used in plotting. They base the determination on \code{getOption("OutDec")}, which is also what \code{\link[base:format]{base::format()}} uses.
 }
 \details{
-If the \link[=options]{option} \code{"dec_mark"} is set, that value will be used for \code{\link[=dec_mark]{dec_mark()}} if it is either a comma or a full stop.
+If the \link[=options]{option} \code{"plot2.decimal.mark"} is set, that value will be used for \code{\link[=dec_mark]{dec_mark()}} if it is either a comma or a full stop.
 
-At default, \code{\link[=big_mark]{big_mark()}} returns a full stop if \code{\link[=dec_mark]{dec_mark()}} returns a comma, and a space otherwise. If the \link[=options]{option} \code{"big_mark"} is set, that value will be used if it is either a comma (\code{","}) or a full stop (\code{"."}) or a space (\code{" "}) or an empty character (\code{""}).
+At default, \code{\link[=big_mark]{big_mark()}} returns a full stop if \code{\link[=dec_mark]{dec_mark()}} returns a comma, and a space otherwise. If the \link[=options]{option} \code{"plot2.big.mark"} is set, that value will be used if it is either a comma (\code{","}) or a full stop (\code{"."}) or a space (\code{" "}) or an empty character (\code{""}).
 }
 \examples{
 # at default, this follows `getOption("OutDec")`:
@@ -24,18 +24,18 @@ dec_mark()
 big_mark()
 
 # you you can set options to alter behaviour:
-options(dec_mark = ",", big_mark = ".")
+options(plot2.decimal.mark = ",", plot2.big.mark = ".")
 dec_mark()
 big_mark()
 
-options(dec_mark = ",", big_mark = NULL)
+options(plot2.decimal.mark = ",", plot2.big.mark = NULL)
 dec_mark()
 big_mark()
 
-options(big_mark = ",")
+options(plot2.big.mark = ",")
 dec_mark()
 big_mark()
 
 # clean up
-options(dec_mark = NULL, big_mark = NULL)
+options(plot2.decimal.mark = NULL, plot2.big.mark = NULL)
 }

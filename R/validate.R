@@ -23,8 +23,8 @@ validate_type <- function(type, df = NULL) {
       plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", type), "\"", collapse = NULL),
                     font_black(" since there is no X-axis"))
     } else if (has_x(df) && is.numeric(get_x(df))) {
-      if (identical(get_x(df), get_y(df))) {
-        # both x and y are numeric - if they are equal then use histogram
+      if (identical(get_x_name(df), get_y_name(df))) {
+        # x and y refer to the same column, so use a histogram; compare names, not values (F074)
         # see plot_message below 'since the variable ... is the only numeric variable'
         type <- "geom_histogram"
       } else {
@@ -44,8 +44,8 @@ validate_type <- function(type, df = NULL) {
                              collapse = font_black(" and ")), 
                       " contain at least three values")
       } else {
-        # otherwise: the default
-        type <- getOption("plot2.default_type", "geom_col")
+        # otherwise: the default, normalised like `type` so that e.g. "line" and "l" work (F095)
+        type <- validate_type(getOption("plot2.default_type", "geom_col"), df = NULL)
         if (!is.null(df) && has_x(df) && has_category(df) && n_distinct(get_category(df)) == 2) {
           count_nrs <- df |>
             group_by(across(c(get_x_name(df), get_category_name(df)))) |>
@@ -89,40 +89,84 @@ validate_type <- function(type, df = NULL) {
     type <- gsub("s$", "", type)
   }
   
-  valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
-  valid_geoms <- c(valid_geoms, "geom_upset", "geom_spider")
-  if ("ggbeeswarm" %in% rownames(utils::installed.packages())) {
-    valid_geoms <- c(valid_geoms, 
-                     ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
+  if (type %in% c("geom_beeswarm", "geom_quasirandom")) {
+    rlang::check_installed("ggbeeswarm", reason = paste0("for `type = \"", type.bak, "\"`"))
+    plot2_session$valid_geoms <- NULL
+  }
+  # the list of geoms is the same for the whole session (F110)
+  valid_geoms <- plot2_session$valid_geoms
+  if (is.null(valid_geoms)) {
+    valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
+    valid_geoms <- c(valid_geoms, "geom_upset", "geom_spider")
+    if (requireNamespace("ggbeeswarm", quietly = TRUE)) {
+      valid_geoms <- c(valid_geoms, 
+                       ls(pattern = "^geom_", envir = asNamespace("ggbeeswarm")))
+    }
+    plot2_session$valid_geoms <- valid_geoms
   }
   if (!type %in% valid_geoms) {
-    if (any(valid_geoms %like% type)) {
-      type <- valid_geoms[valid_geoms %like% type][1L]
+    # an abbreviation must be the start of a geom name, not any part of it, and must be
+    # unambiguous: "hist" is histogram, "dens" is density (a prefix of all its variants) (F031)
+    candidates <- if (type == "geom_") character(0) else valid_geoms[startsWith(valid_geoms, type)]
+    shortest <- candidates[which.min(nchar(candidates))]
+    if (length(candidates) > 0 && all(startsWith(candidates, shortest))) {
+      plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", shortest), "\"", collapse = NULL))
+      type <- shortest
     } else {
-      stop("plot type \"", type.bak, "\" is invalid since ggplot2::", type, "() does not exist", call. = FALSE)
+      if (length(candidates) == 0 && type != "geom_") {
+        # suggest the closest names, compared without the "geom_" prefix
+        dist <- utils::adist(sub("^geom_", "", type), sub("^geom_", "", valid_geoms))[1, ]
+        candidates <- valid_geoms[dist <= 2][order(dist[dist <= 2])]
+      }
+      stop("plot type \"", paste(type.bak, collapse = ", "), "\" is invalid",
+           if (length(candidates) > 0) paste0("; did you mean ",
+                                              paste0("\"", gsub("geom_", "", utils::head(candidates, 5)), "\"", collapse = ", "),
+                                              "?"),
+           call. = FALSE)
     }
   }
   type
 }
 
 validate_legend.position <- function(legend.position) {
-  if (is.null(legend.position) || is.na(legend.position[1L])) {
+  # FALSE means no legend; numeric coordinates place it inside the plot (F050)
+  if (is.null(legend.position) || isFALSE(legend.position) || is.na(legend.position[1L])) {
     legend.position <- "none"
   }
+  if (is.numeric(legend.position)) {
+    if (length(legend.position) != 2 || any(legend.position < 0 | legend.position > 1)) {
+      stop("A numeric `legend.position` must be two values between 0 and 1, e.g. `legend.position = c(0.9, 0.9)` for the top right inside the plot", call. = FALSE)
+    }
+    return(structure("inside", inside = as.double(legend.position)))
+  }
+  inside <- attr(legend.position, "inside")
   legend.position <- trimws(tolower(legend.position[1L]))
   legend.position <- gsub("^t$", "top", legend.position)
   legend.position <- gsub("^r$", "right", legend.position)
   legend.position <- gsub("^b$", "bottom", legend.position)
   legend.position <- gsub("^l$", "left", legend.position)
+  legend.position <- gsub("^i$", "inside", legend.position)
   
-  if (!legend.position %in% c("top", "right", "bottom", "left", "none")) {
-    stop("`legend.position` must be 'top', 'right', 'bottom', 'left' or 'none'", call. = FALSE)
+  if (!legend.position %in% c("top", "right", "bottom", "left", "inside", "none")) {
+    stop("`legend.position` must be 'top', 'right', 'bottom', 'left', 'inside', 'none', FALSE, or two numbers between 0 and 1", call. = FALSE)
+  }
+  if (legend.position == "inside") {
+    legend.position <- structure("inside", inside = inside)
   }
   legend.position
 }
 
-#' @importFrom dplyr select pull mutate arrange across if_all cur_column filter distinct group_by summarise bind_rows
-#' @importFrom tidyselect starts_with matches
+# theme elements for a validated legend.position (F050)
+legend_position_theme <- function(legend.position) {
+  if (!is.null(attr(legend.position, "inside"))) {
+    ggplot2::theme(legend.position = "inside", legend.position.inside = attr(legend.position, "inside"))
+  } else {
+    ggplot2::theme(legend.position = as.character(legend.position))
+  }
+}
+
+#' @importFrom dplyr across arrange bind_rows cur_column distinct filter group_by mutate pull select summarise
+#' @importFrom tidyselect matches starts_with
 validate_data <- function(df,
                           misses_x,
                           misses_category,
@@ -130,11 +174,11 @@ validate_data <- function(df,
   dots <- list(...)
   type <- validate_type(dots$type, df = NULL) # quick validation
   
-  numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) == "numeric" & !inherits(col, c("Date", "POSIXTt", "factor")))))
+  numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) == "numeric" & !inherits(col, c("Date", "POSIXt", "factor")))))
   numeric_cols <- numeric_cols[numeric_cols %unlike% "^_var_"]
   character_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) is.character(col) || is.factor(col))))
   character_cols <- character_cols[character_cols %unlike% "^_var_"]
-  non_numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) != "numeric" || inherits(col, c("Date", "POSIXTt", "factor")))))
+  non_numeric_cols <- names(which(vapply(FUN.VALUE = logical(1), df, function(col) mode(col) != "numeric" || inherits(col, c("Date", "POSIXt", "factor")))))
   non_numeric_cols <- non_numeric_cols[non_numeric_cols %unlike% "^_var_"]
   
   if (!has_y(df) && "n" %in% numeric_cols && mode(df$n) == "numeric") {
@@ -221,7 +265,7 @@ validate_data <- function(df,
   # integers and doubles both return FALSE for requires_numeric_coercion()
   if (has_y(df) &&
       (requires_numeric_coercion(get_y(df)) ||
-       "AMR" %in% rownames(utils::installed.packages()) && AMR::is.mic(get_y(df)))) {
+       inherits(get_y(df), "mic"))) {
     plot2_message(paste0("Coercing values of ", font_blue("y"),
                          font_black(" from class "), font_blue(paste(class(get_y(df)), collapse = "/")),
                          font_black(" to class "), font_blue("double")))
@@ -235,18 +279,17 @@ validate_data <- function(df,
     df[, get_x_name(df)] <- df$`_var_x`
   }
   
-  if (misses_x && !has_x(df) && ncol(df) > 1) {
-    eligible_cols <- colnames(df)[colnames(df) %unlike% "^(y|_var_(x|y|category|facet|datalabels))$"]
-    # take first column if it's not used for y
-    if (identical(pull(df, 1), get_y(df))) {
-      x_col <- eligible_cols[2L]
-    } else {
+  if (misses_x && !has_x(df)) {
+    # only the user's columns are eligible, and not the column used for y; compare names, not values (F079)
+    eligible_cols <- colnames(df)[!startsWith(colnames(df), "_")]
+    eligible_cols <- setdiff(eligible_cols, c(get_y_name(df), get_category_name(df), get_facet_name(df)))
+    if (length(eligible_cols) > 0) {
       x_col <- eligible_cols[1L]
+      plot2_message("Using ", font_blue("x = ", x_col, collapse = NULL))
+      df <- df |> 
+        mutate(`_var_x` = df |> pull(x_col))
+      set_plot2_env(x = x_col)
     }
-    plot2_message("Using ", font_blue("x = ", x_col, collapse = NULL))
-    df <- df |> 
-      mutate(`_var_x` = df |> pull(x_col))
-    set_plot2_env(x = x_col)
   }
   
   if (misses_x && misses_category && !has_category(df) && ncol(df) > 2 && type != "geom_sf") {
@@ -280,32 +323,41 @@ validate_data <- function(df,
   }
   
   # if given FALSE for a direction (e.g., category = FALSE), remove these columns
-  if (has_category(df) && all(get_category(df) == FALSE)) {
+  if (has_category(df) && is_switch(get_category(df), FALSE)) {
     df <- df |> select(-`_var_category`)
     plot2_env$mapping_category <- NULL
   }
-  if (has_facet(df) && all(get_facet(df) == FALSE)) {
+  if (has_facet(df) && is_switch(get_facet(df), FALSE)) {
     df <- df |> select(-`_var_facet`)
     plot2_env$mapping_facet <- NULL
   }
-  if (has_datalabels(df) && 
-      (all(get_datalabels(df) == FALSE) ||
-       (!is.null(dots$type) && dots$type != "sf" &&
-        geom_is_continuous(suppressMessages(validate_type(dots$type, df))) &&
-        isTRUE(!type %in% c("geom_tile", "geom_raster", "geom_rect"))))) {
-    # remove datalabels if `datalabels = FALSE`, or if the type now seems to be continuous
+  if (has_datalabels(df) && is_switch(get_datalabels(df), FALSE)) {
+    # remove datalabels if `datalabels = FALSE`; for continuous types, plot2_exec() removes them
+    # only when `datalabels` was not given (F076)
     df <- df |> select(-`_var_datalabels`)
   }
   
   # if the secondary Y-axis is not within the limits of the primary Y-axis, the primarY-axis will be transformed
   # so store the factor in which they change, and transform the data accordingly
   if (has_y_secondary(df)) {
-    max_primary <- max(get_y(df), na.rm = TRUE)
-    max_secondary <- max(get_y_secondary(df), na.rm = TRUE)
-    # if 25% difference, create own secondary y breaks
-    if (abs((max_secondary - max_primary) / max_secondary) >= 0.25)  {
-      plot2_env$y_secondary_factor <- max_secondary / max_primary
-      df$`_var_y_secondary` <- df$`_var_y_secondary` / plot2_env$y_secondary_factor
+    # map the range of the secondary values (including 0) linearly onto that of the primary
+    # values, also for negative values; zero ranges are not rescaled (F022)
+    rng_primary <- range(c(0, get_y(df)), na.rm = TRUE, finite = TRUE)
+    rng_secondary <- range(c(0, get_y_secondary(df)), na.rm = TRUE, finite = TRUE)
+    if (diff(rng_primary) > 0 && diff(rng_secondary) > 0) {
+      slope <- diff(rng_primary) / diff(rng_secondary)
+      intercept <- rng_primary[1] - slope * rng_secondary[1]
+      # rescale if the ranges differ by 25% or more, or are not both anchored at 0
+      if (abs(1 - 1 / slope) >= 0.25 || abs(intercept) > sqrt(.Machine$double.eps)) {
+        plot2_env$y_secondary_map <- c(slope = slope, intercept = intercept)
+        df$`_var_y_secondary` <- df$`_var_y_secondary` * slope + intercept
+        # the layer is drawn from the named column (see restore_mapping()), so that column
+        # in the plot data must hold the mapped values as well; the axis shows the originals
+        nm <- plot2_env$mapping_y_secondary
+        if (!is.null(nm) && nm %in% colnames(df) && !nm %in% c(get_x_name(df), get_y_name(df))) {
+          df[[nm]] <- df$`_var_y_secondary`
+        }
+      }
     }
   }
   
@@ -337,7 +389,7 @@ validate_data <- function(df,
   }
   
   if (has_datalabels(df)) {
-    if (all(get_datalabels(df) == TRUE)) {
+    if (is_switch(get_datalabels(df), TRUE)) {
       # for when given: datalabels = TRUE, guess the results
       if (type == "geom_sf") {
         # take values from first character column in case of sf plots
@@ -362,30 +414,28 @@ validate_data <- function(df,
       df <- df |> 
         mutate(`_var_datalabels` = as.double(`_var_datalabels`))
     }
-    df <- df |>
-      mutate(`_var_datalabels` = format_datalabels(`_var_datalabels`, 
-                                                   datalabels.round = dots$datalabels.round,
-                                                   datalabels.format = dots$datalabels.format,
-                                                   decimal.mark = dots$decimal.mark,
-                                                   big.mark = dots$big.mark,
-                                                   y.percent = dots$y.percent))
+    # the labels are formatted in generate_datalabels(), on the final rows and only when drawn (F025)
   }
   
-  # turn x to character if data seems to suggest so
+  # turn x to character if data seems to suggest so; years and months are only guessed for
+  # whole numbers and for discrete or automatic types, so that e.g. a scatter plot of
+  # weights from 2000 to 2050 keeps a numeric x (F013)
+  guess_discrete <- !type %in% c("geom_point", "geom_line", "geom_area", "geom_ribbon", "geom_path", "geom_step",
+                                "geom_smooth", "geom_histogram", "geom_density", "geom_polygon", "geom_rect", "geom_sf")
   if (has_x(df) &&!isTRUE(dots$x.character)) {
     if (is.null(dots$x.character) &&
-        is.numeric(get_x(df)) &&
-        all(get_x(df, na.rm = TRUE) >= 2000) &&
-        all(get_x(df, na.rm = TRUE) <= 2050)) {
+        guess_discrete &&
+        looks_like_years(get_x(df))) {
       plot2_message("Assuming ", font_blue("x.character = TRUE"),
-                    " since the ", font_blue("x"), " labels seem to be years")
+                    " since the ", font_blue("x"), " labels seem to be years (use ",
+                    font_blue("x.character = FALSE"), " to prevent this)")
       dots$x.character <- TRUE
     } else if (is.null(dots$x.character) &&
-               is.numeric(get_x(df)) &&
-               (identical(sort(unique(get_x(df))), seq_len(12)) ||
-                identical(sort(unique(get_x(df))), as.double(seq_len(12))))) {
+               guess_discrete &&
+               looks_like_months(get_x(df))) {
       plot2_message("Assuming ", font_blue("x.character = TRUE"),
-                    " since the ", font_blue("x"), " labels seem to be months")
+                    " since the ", font_blue("x"), " labels seem to be months (use ",
+                    font_blue("x.character = FALSE"), " to prevent this)")
       dots$x.character <- TRUE
     } else if (is.numeric(get_x(df)) &&
                !type %in% c("", "geom_blank") &&
@@ -408,18 +458,16 @@ validate_data <- function(df,
   # turn category to character if data seems to suggest so
   if (has_category(df) &&!isTRUE(dots$category.character)) {
     if (is.null(dots$category.character) &&
-        is.numeric(get_category(df)) &&
-        all(get_category(df, na.rm = TRUE) >= 2000) &&
-        all(get_category(df, na.rm = TRUE) <= 2050)) {
+        looks_like_years(get_category(df))) {
       plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                    " since ", font_blue("category"), " seems to be years")
+                    " since ", font_blue("category"), " seems to be years (use ",
+                    font_blue("category.character = FALSE"), " to prevent this)")
       dots$category.character <- TRUE
     } else if (is.null(dots$category.character) &&
-               is.numeric(get_category(df)) &&
-               (identical(sort(unique(get_category(df))), seq_len(12)) ||
-                identical(sort(unique(get_category(df))), as.double(seq_len(12))))) {
+               looks_like_months(get_category(df))) {
       plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                    " since ", font_blue("category"), " seems to be months")
+                    " since ", font_blue("category"), " seems to be months (use ",
+                    font_blue("category.character = FALSE"), " to prevent this)")
       dots$category.character <- TRUE
       # } else if (is.numeric(get_category(df)) &&
       #            is.null(dots$category.character) &&
@@ -484,7 +532,7 @@ validate_data <- function(df,
     # so some are NAs
     if (isTRUE(dots$na.rm)) {
       plot2_message("Removed ", length(rows_with_NA),
-                    " row", ifelse(rows_with_NA > 1, "s", ""),
+                    " row", ifelse(length(rows_with_NA) > 1, "s", ""),
                     " since ", font_blue("na.rm = TRUE"))
       df <- df[-rows_with_NA, , drop = FALSE]
     } else {
@@ -624,19 +672,22 @@ validate_data <- function(df,
   type_validated <- suppressMessages(validate_type(dots$type, df))
   if ((!geom_is_continuous(type_validated) || geom_is_line_or_area(type_validated)) &&
       !is.null(dots$summarise_function) &&
+      !identical(dots$summarise_fn_name, "function(x) x") &&
       dots$type_backup != "sankey" &&
       (df |> select(starts_with("_var")) |> distinct() |> nrow()) < nrow(df)) {
     y_name <- get_y_name(df)
     df <- df |> 
       group_by(across(c(get_x_name(df), get_category_name(df), get_facet_name(df),
                         matches("_var_(x|category|facet)")))) |> 
-      summarise(`_var_y` = dots$summarise_function(`_var_y`),
+      summarise(`_var_y` = summarise_single(`_var_y`, dots$summarise_function),
                 .groups = "drop")
     df[, y_name] <- df$`_var_y`
     
     if (!dots$summarise_fn_name %in% c("summarise_function", "function(x) x")) {
       plot2_caution("Applying ", font_blue(paste0("y = ", dots$summarise_fn_name, "(", get_y_name(df), ")")),
-                    " since ", font_blue(paste0("summarise_function = ", dots$summarise_fn_name)), " was set.\n",
+                    " since ", font_blue(paste0("summarise_function = ", dots$summarise_fn_name)),
+                    ifelse(isTRUE(dots$misses_summarise_function), " is the default (use ", " was set (use "),
+                    font_blue("summarise_function = FALSE"), " to plot all values).\n",
                     "  When using a transformation function on ", font_blue("x"), 
                     ifelse(has_category(df), paste0(" or ", font_blue("category")), ""),
                     ifelse(has_facet(df), paste0(" or ", font_blue("facet")), ""),
@@ -657,13 +708,7 @@ validate_data <- function(df,
                         facet = get_facet_name(df), 
                         facet.max_items = dots$facet.max_items, 
                         facet.max_txt = dots$facet.max_txt,
-                        horizontal = dots$horizontal,
-                        summarise_function = dots$summarise_function,
-                        decimal.mark = dots$decimal.mark,
-                        big.mark = dots$big.mark,
-                        datalabels.round = dots$datalabels.round,
-                        datalabels.format = dots$datalabels.format,
-                        y.percent = dots$y.percent)
+                        horizontal = dots$horizontal)
     # sort on x, important when piping plot2()'s after plot2()'s
     if (has_x(df)) {
       df <- df |> 
@@ -675,64 +720,8 @@ validate_data <- function(df,
   df
 }
 
-#' @importFrom dplyr mutate across
-validate_taxonomy <- function(df) {
-  if (!has_x(df)) {
-    return(df)
-  }
-  suppressWarnings(requireNamespace("AMR", quietly = TRUE))
-  taxonomic_nms <- unique(c(AMR::microorganisms$family,
-                            AMR::microorganisms$genus,
-                            AMR::microorganisms$species,
-                            AMR::microorganisms$subspecies))
-  make_taxonomy <- function(x, nms = taxonomic_nms) {
-    if (is.null(x)) {
-      return(NULL)
-    }
-    out <- vapply(FUN.VALUE = character(1),
-                  X = strsplit(x, " "),
-                  FUN = function(nm) {
-                    if (!all(is.na(nm))) {
-                      nm[nm %in% nms] <- paste0("*", nm[nm %in% nms], "*")
-                      nm <- paste0(nm, collapse = " ")
-                      nm <- gsub("(.*)([A-Z][.]) [*]([a-z]+)[*](.*)", "\\1*\\2 \\3*\\4", nm, perl = TRUE)
-                    } else if (length(nm) == 0) {
-                      # this is because of `strsplit("", " ")`
-                      nm <- ""
-                    }
-                    nm
-                  },
-                  USE.NAMES = FALSE)
-    out <- gsub("* *", " ", out, fixed = TRUE)
-    out
-  }
-  taxonomy_to_chr_expression <- function(x) {
-    with_taxonomy <- make_taxonomy(as.character(x))
-    if (any(with_taxonomy %like% "[*].+[*]", na.rm = TRUE)) {
-      out <- vapply(with_taxonomy,
-                    FUN.VALUE = character(1),
-                    function(y) {
-                      as.character(md_to_expression(y))
-                    },
-                    USE.NAMES = FALSE)
-      if (is.factor(x)) {
-        # take order of levels from original sorting, since e.g. `x.sort = "freq-desc"` may have been applied
-        factor(out, levels = out[match(levels(x), x)], ordered = is.ordered(x))
-      } else {
-        out
-      }
-    } else {
-      # no taxonomic values found
-      x
-    }
-  }
-  df <- df |>
-    mutate(across(get_x_name(df), taxonomy_to_chr_expression))
-  df$`_var_x` <- df[, get_x_name(df), drop = TRUE]
-  df
-}
-
-#' @importFrom ggplot2 scale_x_discrete scale_x_date scale_x_datetime scale_x_continuous expansion waiver
+#' @importFrom dplyr across group_by summarise
+#' @importFrom ggplot2 expansion scale_x_continuous scale_x_date scale_x_datetime scale_x_discrete waiver
 validate_x_scale <- function(df,
                              values,
                              x.date_breaks,
@@ -751,12 +740,14 @@ validate_x_scale <- function(df,
                              big.mark,
                              horizontal,
                              type_backup) {
-  if (isTRUE(x.zoom) && is.null(x.limits)) {
+  if (isTRUE(x.zoom) && is.null(x.limits) &&
+      !is.factor(values) && (is.numeric(values) || inherits(values, c("Date", "POSIXt")))) {
+    # only continuous axes can zoom; a discrete axis shows all its items anyway
     x.limits <- c(NA_real_, NA_real_)
     plot2_env$x_lim <- x.limits
     if (is.null(x.expand)) {
-      # set default value to 0.5
-      x.expand <- 0.5
+      # zoom to the data with ggplot2's usual 5% expansion (F092)
+      x.expand <- c(0.05, 0.05)
     }
   }
   
@@ -769,6 +760,10 @@ validate_x_scale <- function(df,
       if (!inherits(values, c("Date", "POSIXt"))) {
         plot2_message("Assuming ", font_blue("x.expand = 0"), " since ", font_blue("x.limits"), " is set")
         x.expand <- 0
+        if (is.numeric(values) && !is.factor(values)) {
+          # also apply it, as announced (the continuous scale only uses x.expand when set)
+          set_x.expand <- TRUE
+        }
       } else {
         # dates - no need mention that x.expand is set to 0.5 - it's already the default
         x.expand <- 0.5
@@ -791,11 +786,26 @@ validate_x_scale <- function(df,
                       " since the ", digit_to_text(nrow(x_maxima)), " ",
                       font_blue("x"), " scales differ by less than 25%")
         facet.fixed_x <- TRUE
+      } else if (isTRUE(coeff_of_variation >= 0.25)) {
+        # report the data-dependent choice, so that readers know panels are not comparable (F052)
+        plot2_message("Using free ", font_blue("x"), " scales per facet since the ",
+                      digit_to_text(nrow(x_maxima)), " ", font_blue("x"),
+                      " scales differ by 25% or more (use ", font_blue("facet.fixed_x = TRUE"),
+                      " for the same scale in all facets)")
       }
     }
   }
   
-  if (!is.null(x.limits)) {
+  x_discrete <- !is.numeric(values) && !inherits(values, c("Date", "POSIXt"))
+  if (!is.null(x.limits) && x_discrete && (is.character(x.limits) || is.factor(x.limits))) {
+    # discrete x: the limits are the items to show, in this order (F054)
+    x.limits <- as.character(x.limits)
+    not_in_x <- setdiff(x.limits, as.character(values))
+    if (length(not_in_x) > 0) {
+      plot2_warning("Value", ifelse(length(not_in_x) > 1, "s", ""), " in ", font_blue("x.limits"), " not found in ", font_blue("x"), ": ",
+                    paste0(not_in_x, collapse = ", "))
+    }
+  } else if (!is.null(x.limits)) {
     if (is.integer(values) && is.numeric(x.limits) && !is.integer(x.limits)) {
       x.limits <- as.integer(x.limits)
     }
@@ -803,12 +813,8 @@ validate_x_scale <- function(df,
       plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
     }
     if (length(x.limits) != 2) {
-      if (length(x.limits) == 1) {
-        x.limits <- rep(x.limits, 2)
-        plot2_env$x_lim <- x.limits
-      } else {
-        stop("`x.limits` must be of length 1 or 2", call. = FALSE)
-      }
+      # a single value used to become a zero-width axis (F130)
+      stop("`x.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `x.limits = c(0, NA)`", call. = FALSE)
     }
     if (inherits(values, "Date")) {
       x.limits <- as.Date(x.limits, origin = "1970-01-01")
@@ -852,34 +858,41 @@ validate_x_scale <- function(df,
   }
   plot2_env$x_lim <- x.limits
   if (inherits(values, "Date")) {
+    # format2() formats the labels, so that plot2's tokens (e.g. quarters) and plot2.language apply (F003)
     scale_x_date(position = x.position,
                  date_breaks = x.date_breaks,
-                 date_labels = posix_date_format(x.date_labels),
                  expand = x.expand,
                  limits = x.limits, 
-                 labels = if (is.null(x.labels)) waiver() else x.labels)
+                 labels = if (is.null(x.labels)) function(v) format2(v, format = x.date_labels) else x.labels)
   } else if (inherits(values, "POSIXt")) {
     scale_x_datetime(position = x.position,
                      date_breaks = x.date_breaks,
-                     date_labels = posix_date_format(x.date_labels),
                      expand = x.expand,
                      limits = x.limits, 
-                     labels = if (is.null(x.labels)) waiver() else x.labels)
+                     labels = if (is.null(x.labels)) function(v) format2(v, format = x.date_labels) else x.labels)
   } else {
     if (!is.numeric(values)) {
       scale_x_discrete(position = x.position,
                        drop = x.drop, 
+                       limits = if (is.character(x.limits)) x.limits else NULL,
                        labels = if (is.null(x.labels)) waiver() else x.labels,
                        expand = if (set_x.expand) x.expand else waiver())
     } else {
-      if (x.transform == "identity" && isTRUE(horizontal)) {
+      x_reversed <- FALSE
+      if (transform_name(x.transform) == "identity" && isTRUE(horizontal)) {
         x.transform <- scales::reverse_trans()
+        x_reversed <- TRUE
       }
       if (is.null(x.limits)) {
         x.limits <- c(ifelse(min(values) < 0, NA_real_, 0), NA_real_)
         plot2_env$x_lim <- x.limits
       }
-      if (tryCatch(length(x.transform) == 1 && x.transform != "identity", error = function(x) FALSE)) {
+      if (isTRUE(x_reversed) && length(x.limits) == 2) {
+        # a reversed scale expects its limits in reversed order
+        x.limits <- rev(x.limits)
+        plot2_env$x_lim <- x.limits
+      }
+      if (!isTRUE(x_reversed) && transform_name(x.transform) != "identity") {
         # some transformations, such as log, do not allow 0
         x.limits[x.limits == 0] <- NA_real_ 
         plot2_env$x_lim <- x.limits
@@ -895,9 +908,12 @@ validate_x_scale <- function(df,
       breaks_fn <- function(values, x.breaks, x.n_breaks, waiver) {
         if (!is.null(x.breaks)) {
           x.breaks
+        } else if (!isTRUE(x_reversed) && transform_name(x.transform) != "identity") {
+          # transformed scale (e.g. log10): use the transformation's own breaks
+          waiver
         } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
           # whole numbers - only strip decimal numbers if total y range is low
-          function(x, ...) unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
+          breaks_whole_numbers
         } else {
           scales::breaks_pretty(n = ifelse(is.null(x.n_breaks), 5, x.n_breaks))
         }
@@ -947,7 +963,6 @@ validate_x_scale <- function(df,
 
 #' @importFrom dplyr group_by across summarise
 #' @importFrom ggplot2 waiver expansion scale_y_continuous scale_y_discrete sec_axis
-#' @importFrom cleaner as.percentage
 validate_y_scale <- function(df,
                              type,
                              y.24h,
@@ -980,7 +995,8 @@ validate_y_scale <- function(df,
     y.limits <- c(NA_real_, NA_real_)
     plot2_env$y_lim <- y.limits
     if (is.null(y.expand)) {
-      y.expand <- c(0.25, 0.25)
+      # zoom to the data with ggplot2's usual 5% expansion (F092)
+      y.expand <- c(0.05, 0.05)
     }
   }
   if (is.null(y.transform)) {
@@ -995,13 +1011,9 @@ validate_y_scale <- function(df,
       y.expand <- 0
     }
   }
-  if (!is.null(y.limits) && length(y.limits) != 2) {
-    if (length(y.limits) == 1) {
-      y.limits <- rep(y.limits, 2)
-      plot2_env$y_lim <- y.limits
-    } else {
-      stop("`y.limits` must be of length 1 or 2", call. = FALSE)
-    }
+  if (!is.null(y.limits) && !is.function(y.limits) && length(y.limits) != 2) {
+    # a single value used to become a zero-width axis (F130)
+    stop("`y.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `y.limits = c(0, NA)`", call. = FALSE)
   }
   
   values <- get_y(df)
@@ -1027,6 +1039,12 @@ validate_y_scale <- function(df,
                       font_blue("y"), " scales differ by less than 25%")
         facet.fixed_y <- TRUE
         plot2_env$facet.fixed_y <- TRUE
+      } else if (isTRUE(coeff_of_variation >= 0.25)) {
+        # report the data-dependent choice, so that readers know panels are not comparable (F052)
+        plot2_message("Using free ", font_blue("y"), " scales per facet since the ",
+                      digit_to_text(nrow(y_maxima)), " ", font_blue("y"),
+                      " scales differ by 25% or more (use ", font_blue("facet.fixed_y = TRUE"),
+                      " for the same scale in all facets)")
       }
     }
   }
@@ -1040,7 +1058,7 @@ validate_y_scale <- function(df,
     if (!inherits(values, c("Date", "POSIXt"))) {
       data_max <- data_max * (1 + y.expand[length(y.expand)])
     }
-    if (y.transform != "identity") {
+    if (transform_name(y.transform) != "identity") {
       if (!is.null(y.breaks)) {
         plot2_warning("Ignoring ", font_blue("y.breaks"), " since ",
                       font_blue(paste0("y.transform = \"", y.transform, "\"")))
@@ -1051,20 +1069,20 @@ validate_y_scale <- function(df,
     } else if (isTRUE(y.age)) {
       # no decimal numbers, generate max 12 labels
       function(x, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = min(120, max(x, na.rm = TRUE), na.rm = TRUE),
             by = 10)
       }
     } else if (isTRUE(y.24h)) {
       function(x, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = max(x, na.rm = TRUE),
             by = 24)
       }
     } else if (isTRUE(stacked_fill)) {
       # special case of y.percent, where the y scale is always 0 to 1
       function(x, y_percent_break = y.percent_break, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = max(x, na.rm = TRUE),
             by = y_percent_break)
       }
@@ -1083,7 +1101,8 @@ validate_y_scale <- function(df,
         plot2_message("Using ", font_blue("y.percent_break =", y.percent_break),
                       " (", y.percent_break * 100, "%) to keep a maximum of ~10 labels")
       }
-      if (!all(is.na(y.limits)) && (y.percent_break >= max(y.limits, na.rm = TRUE) || labels_n <= 3)) {
+      # an explicit y.percent_break is kept as given (F094)
+      if (isTRUE(misses_y.percent_break) && !all(is.na(y.limits)) && (y.percent_break >= max(y.limits, na.rm = TRUE) || labels_n <= 3)) {
         y.percent_break.bak <- y.percent_break
         y.percent_break <- max(y.limits, na.rm = TRUE) / 6.5
         allowed <- c(1e6 / 10 ^ c(1:18), 5e6 / 10 ^ c(1:18))
@@ -1093,16 +1112,14 @@ validate_y_scale <- function(df,
                       " would yield too few labels")
       }
       function(x, ...) {
-        seq(from = min(0, x, na.rm = TRUE),
+        seq_anchored(from = min(0, x, na.rm = TRUE),
             to = max(x, na.rm = TRUE),
             by = y.percent_break)
       }
       
     } else if (all(values %% 1 == 0, na.rm = TRUE) && data_max < 5) {
       # whole numbers - only strip decimal numbers if total y range is low
-      function(x, ...) {
-        unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
-      }
+      breaks_whole_numbers
     } else {
       scales::breaks_pretty(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
     }
@@ -1122,24 +1139,35 @@ validate_y_scale <- function(df,
     } else if (isTRUE(y.24h)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         paste0(format2(x, decimal.mark = dec, big.mark = big),
-               ifelse(Sys.getlocale("LC_COLLATE") %like% "nl|dutch", "u (", "h ("),
+               ifelse(plot2_language() == "nl", "u (", "h ("),
                x / 24,
                "d)")
       }
     } else if (isTRUE(y.age)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         paste0(format2(x, decimal.mark = dec, big.mark = big, round = 0),
-               ifelse(Sys.getlocale("LC_COLLATE") %like% "nl|dutch", " jr", " yrs"))
+               ifelse(plot2_language() == "nl", " jr", " yrs"))
       }
     } else if (isTRUE(y.percent) || isTRUE(stacked_fill)) {
       function(x, dec = decimal.mark, big = big.mark, ...) {
-        format2(as.percentage(x), round = max(1, sigfigs(x) - 2), decimal.mark = dec, big.mark = big)
+        format2(as_percentage(x), round = max(1, sigfigs(x) - 2), decimal.mark = dec, big.mark = big)
       }
     } else {
       function(x, dec = decimal.mark, big = big.mark, ...) {
-        is_scientific <- any(format(x) %like% "^(-?[0-9.]+e-?[0-9.]+)$", na.rm = TRUE) ||
-          diff(range(values, na.rm = TRUE)) > 10e5
-        non_unique <- length(unique(format2(x[!is.na(x)]))) < length(format2(x[!is.na(x)]))
+        # scientific notation only for very large or very small values, so that e.g. population
+        # counts and costs keep big marks (F063)
+        nonzero <- abs(x[!is.na(x) & is.finite(x) & x != 0])
+        is_scientific <- length(nonzero) > 0 && (max(nonzero) >= 1e9 || min(nonzero) < 1e-4)
+        is_unique <- function(r) {
+          lbls <- format2(x[!is.na(x)], round = r)
+          length(unique(lbls)) == length(lbls)
+        }
+        # labels that are equal after rounding get more decimals first (F063)
+        digits <- 2
+        while (!isTRUE(is_scientific) && !is_unique(digits) && digits < 6) {
+          digits <- digits + 1
+        }
+        non_unique <- !is_unique(digits)
         if (isTRUE(non_unique) || (isTRUE(is_scientific) && is.null(y.scientific))) {
           if (isTRUE(is_scientific)) {
             plot2_message("Assuming ", font_blue("y.scientific = TRUE"))
@@ -1147,7 +1175,7 @@ validate_y_scale <- function(df,
           # scientific notation or non-unique labels
           format2_scientific(x, decimal.mark = dec, big.mark = big)
         } else {
-          format2(x, decimal.mark = dec, big.mark = big)
+          format2(x, round = digits, decimal.mark = dec, big.mark = big)
         }
       }
     }
@@ -1157,12 +1185,16 @@ validate_y_scale <- function(df,
                         y.expand, facet.fixed_y, y.age, y.transform,
                         df) {
     min_value <- min(0, min(values, na.rm = TRUE))
-    if (y.transform != "identity") {
+    if (transform_name(y.transform) != "identity") {
       # in certain transformations, such as log, 0 is not allowed
       min_value <- NA_real_
     }
     if (!is.null(y.limits)) {
-      y.limits[y.limits == 0] <- min_value
+      # respect the user's limits literally; only a zero that the transformation
+      # cannot handle (e.g. log) becomes data-driven
+      if (is.numeric(y.limits) && transform_name(y.transform) != "identity") {
+        y.limits[y.limits == 0] <- NA_real_
+      }
       y.limits
     } else if (isTRUE(y.age)) {
       # so no function, but force a vector (y.expand is needed since it won't expand)
@@ -1184,6 +1216,10 @@ validate_y_scale <- function(df,
       }
     } else {
       function(x, min_val = min_value, ...) {
+        if (!is.numeric(x) || all(is.na(x))) {
+          # no data on this axis, e.g. when a stat dropped all groups (F131)
+          return(c(0, 1))
+        }
         if (all(x == 0, na.rm = TRUE)) {
           if (identical(x, floor(x))) {
             c(0, 8) # will not print half ones if they are integers
@@ -1224,13 +1260,14 @@ validate_y_scale <- function(df,
     secondary_values <- get_y_secondary(df)
     fun <- function(x) x
     br <- y_secondary.breaks
-    if (!is.null(plot2_env$y_secondary_factor)) {
-      # we previously transformed this variable to stay within the range of the primary Y-axis,
-      # so now transform back for the labels and the breaks
-      secondary_values <- secondary_values * plot2_env$y_secondary_factor
-      fctr <- eval(plot2_env$y_secondary_factor)
-      fun <- function(x) x * fctr
-      br <- br * plot2_env$y_secondary_factor
+    if (!is.null(plot2_env$y_secondary_map)) {
+      # we previously mapped this variable onto the range of the primary Y-axis,
+      # so now map back for the labels and the breaks (F022)
+      slope <- plot2_env$y_secondary_map[["slope"]]
+      intercept <- plot2_env$y_secondary_map[["intercept"]]
+      fun <- function(x) (x - intercept) / slope
+      secondary_values <- fun(secondary_values)
+      br <- fun(br)
     }
     sec_y <- sec_axis(transform = fun,
                       breaks = br,
@@ -1257,7 +1294,7 @@ validate_y_scale <- function(df,
                                 y.transform = y.transform,
                                 df)
   
-  if (y.transform == "reverse") {
+  if (transform_name(y.transform) == "reverse") {
     limits_evaluated <- NULL
   }
   expand_evaluated <- expand_fn(values = values,
@@ -1265,8 +1302,8 @@ validate_y_scale <- function(df,
                                 y.age = y.age,
                                 stacked_fill = stacked_fill,
                                 y.limits = limits_evaluated)
-  if (y.transform == "reverse") {
-    expand_evaluated <- c(expand_evaluated[3], expand_evaluated[c(1, 2, 4)])
+  if (transform_name(y.transform) == "reverse") {
+    expand_evaluated <- expand_evaluated[c(3, 4, 1, 2)]
   }
   scale_y_continuous(
     breaks = breaks_fn(values = values,
@@ -1300,8 +1337,7 @@ validate_y_scale <- function(df,
   )
 }
 
-#' @importFrom ggplot2 scale_colour_gradient2 scale_colour_gradient scale_colour_gradientn expansion guide_colourbar element_text
-#' @importFrom cleaner as.percentage
+#' @importFrom ggplot2 expansion guide_colourbar scale_colour_gradient scale_colour_gradient2 scale_colour_gradientn
 validate_category_scale <- function(values,
                                     type,
                                     cols,
@@ -1342,7 +1378,7 @@ validate_category_scale <- function(values,
     if (!is.null(category.labels)) {
       category.labels
     } else if (isTRUE(category.percent) || isTRUE(stacked_fill)) {
-      function(x, dec = decimal.mark, big = big.mark, ...) format2(as.percentage(x), decimal.mark = dec, big.mark = big)
+      function(x, dec = decimal.mark, big = big.mark, ...) format2(as_percentage(x), decimal.mark = dec, big.mark = big)
     } else if (is_date(values)) {
       if (is.null(category.date_labels)) {
         lbls <- determine_date_breaks_labels(values)$labels
@@ -1350,13 +1386,19 @@ validate_category_scale <- function(values,
       } else {
         lbls <- category.date_labels
       }
-      function(x, format = lbls, ...) format2(as.Date(as.numeric(x), origin = "1970-01-01"), format = format)
+      if (inherits(values, "POSIXt")) {
+        tz <- attr(values, "tzone")
+        if (is.null(tz) || !nzchar(tz[1L])) tz <- ""
+        function(x, format = lbls, tzone = tz, ...) format2(as.POSIXct(as.numeric(x), origin = "1970-01-01", tz = tzone), format = format)
+      } else {
+        function(x, format = lbls, ...) format2(as.Date(as.numeric(x), origin = "1970-01-01"), format = format)
+      }
     } else {
       function(x, dec = decimal.mark, big = big.mark, ...) format2(x, decimal.mark = dec, big.mark = big)
     }
   }
   breaks_fn <- function(values, category.breaks, category.percent, category.transform, category.date_breaks, waiver) {
-    if (category.transform != "identity") {
+    if (transform_name(category.transform) != "identity") {
       if (!is.null(category.breaks)) {
         plot2_warning("Ignoring ", font_blue("category.breaks"), " since ",
                       font_blue(paste0("category.transform = \"", category.transform, "\"")))
@@ -1374,6 +1416,9 @@ validate_category_scale <- function(values,
         # print 5 labels nicely
         scales::breaks_pretty(n = 5)
       }
+    } else if (is_date(values) && is.null(category.date_breaks) && length(unique(values[!is.na(values)])) <= 3) {
+      # only a few distinct dates: one legend entry per date
+      sort(unique(values[!is.na(values)]))
     } else if (is_date(values)) {
       if (is.null(category.date_breaks)) {
         breaks <- determine_date_breaks_labels(values)$breaks
@@ -1381,16 +1426,22 @@ validate_category_scale <- function(values,
       } else {
         breaks <- category.date_breaks
       }
-      seq.Date(from = min(values, na.rm = TRUE),
-               to = max(values, na.rm = TRUE),
-               by = breaks)
+      if (inherits(values, "POSIXt")) {
+        seq.POSIXt(from = min(values, na.rm = TRUE),
+                   to = max(values, na.rm = TRUE),
+                   by = breaks)
+      } else {
+        seq.Date(from = min(values, na.rm = TRUE),
+                 to = max(values, na.rm = TRUE),
+                 by = breaks)
+      }
       # scales::breaks_pretty(n = 5)(values)
     } else if (all(values %% 1 == 0, na.rm = TRUE) && max(values, na.rm = TRUE) < 5) {
       # whole numbers - only strip decimal numbers if total y range is low
       if (diff(range(values, na.rm = TRUE)) < 5 && 0 %in% values[!is.na(values)]) {
         sort(unique(values[!is.na(values)]))
       } else {
-        function(x, ...) unique(floor(pretty(seq(0, (max(x, na.rm = TRUE) + 1) * 3))))
+        breaks_whole_numbers
       }
     } else {
       # print 5 labels nicely
@@ -1398,12 +1449,15 @@ validate_category_scale <- function(values,
     }
   }
   limits_fn <- function(values, category.limits, category.percent, category.transform, category.date_breaks, waiver) {
-    if (isTRUE(category.transform %in% c("log", "log2", "log10")) && isTRUE(0 %in% category.limits)) {
+    if (isTRUE(transform_name(category.transform) %in% c("log", "log2", "log10", "log-10", "log-2")) && isTRUE(0 %in% category.limits)) {
       # in certain transformations, such as log, 0 is not allowed
       plot2_warning("Ignoring ", font_blue("category.limits"), " since it contains 0, and ",
                     font_blue(paste0("category.transform = \"", category.transform, "\"")))
       c(NA_real_, NA_real_)
     } else if (!is.null(category.limits)) {
+      if (!is.function(category.limits) && length(category.limits) != 2) {
+        stop("`category.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `category.limits = c(0, NA)`", call. = FALSE)
+      }
       category.limits
     } else if (isTRUE(category.percent)) {
       function(x, ...) c(min(0, x, na.rm = TRUE), max(1, x, na.rm = TRUE))
@@ -1411,25 +1465,9 @@ validate_category_scale <- function(values,
       # for dates, take the outer range
       c(min(values, na.rm = TRUE) - 1, max(values, na.rm = TRUE) + 1)
     } else {
-      # now determine if we should start at zero:
-      # x will be the lower and upper limit - if zero under lower minus fifth of upper then start at zero
-      upper <- max(values, na.rm = TRUE)
-      lower <- min(values, na.rm = TRUE)
-      # round upper to significance of lower
-      new_upper <- max(upper, round(upper, digits = nchar(lower) * -1))
-      # but only if within a 5th of the scale
-      if (upper / new_upper >= 0.8) {
-        upper <- new_upper
-      }
-      # and set lower to 0 if need be
-      if (lower >= 0 && lower - (upper / 5) < 0) {
-        lower <- 0
-      }
-      # check if negative lower should be equal to upper
-      if (lower < 0 && lower / (upper * -1) >= 0.8) {
-        lower <- upper * -1
-      }
-      c(lower, upper)
+      # the data range, rounded outwards to pretty values, e.g. 12 to 87 gives 0 to 100 (F059)
+      rng <- range(values, na.rm = TRUE, finite = TRUE)
+      range(pretty(rng))
     }
   }
   
@@ -1477,12 +1515,18 @@ validate_category_scale <- function(values,
                                   category.transform = category.transform,
                                   category.date_breaks = category.date_breaks,
                                   waiver = waiver()),
-               limits = as.numeric(
-                 limits_fn(values = values,
-                           category.limits = category.limits,
-                           category.percent = category.percent,
-                           category.transform = category.transform,
-                           category.date_breaks = category.date_breaks)),
+               limits = {
+                 lims <- limits_fn(values = values,
+                                   category.limits = category.limits,
+                                   category.percent = category.percent,
+                                   category.transform = category.transform,
+                                   category.date_breaks = category.date_breaks)
+                 if (is.numeric(lims) && transform_name(category.transform) %in% c("log", "log2", "log10", "log-10", "log-2")) {
+                   # these transformations cannot use 0 (or below) as a limit: let the data decide
+                   lims[!is.na(lims) & lims <= 0] <- NA_real_
+                 }
+                 if (is.function(lims)) lims else as.numeric(lims)
+               },
                transform = category.transform)
   args <- Filter(Negate(is.null), args)
   
@@ -1525,6 +1569,12 @@ validate_category_scale <- function(values,
     # 3 colours, so low, mid (set as vector name) and high
     if (!is.null(category.midpoint)) {
       mid_point <- as.double(category.midpoint)
+      if (is.null(category.limits) && is.numeric(args$limits) && !anyNA(args$limits)) {
+        # a diverging scale is symmetric around its midpoint, so that equal distances to the
+        # midpoint get equally strong colours (F059)
+        half <- max(abs(args$limits - mid_point))
+        args$limits <- mid_point + c(-half, half)
+      }
     } else {
       # default to the middle of the set limits
       if (is.function(args$limits)) {
@@ -1535,7 +1585,7 @@ validate_category_scale <- function(values,
       mid_point <- sum(rng) / 2
       plot2_message("Using ", font_blue("category.midpoint =", round(mid_point, 2)),
                     ifelse(isTRUE(category.percent),
-                           paste0(" (", format2(as.percentage(mid_point)), ", "),
+                           paste0(" (", format2(as_percentage(mid_point)), ", "),
                            " ("),
                     "the current ", font_blue("category"), " scale centre)")
     }
@@ -1555,7 +1605,7 @@ validate_category_scale <- function(values,
   }
 }
 
-#' @importFrom ggplot2 position_stack position_fill position_dodge2 position_jitter geom_polygon
+#' @importFrom ggplot2 position_dodge2 position_fill position_jitter position_stack
 generate_geom <- function(type,
                           df,
                           stacked,
@@ -1578,18 +1628,19 @@ generate_geom <- function(type,
   if (type == "geom_col") {
     type <- "geom_bar"
   }
-  if (type == "geom_beeswarm") {
-    rlang::check_installed("ggbeeswarm")
-    geom_fn <- ggbeeswarm::geom_beeswarm
-  } else {
-    geom_fn <- getExportedValue(name = type, ns = asNamespace("ggplot2"))
-  }
+  geom_fn <- geom_function(type)
   
   # set position
   if (isTRUE(stacked)) {
     position <- position_stack(reverse = reverse)
   } else if (isTRUE(stacked_fill)) {
     position <- position_fill(reverse = reverse)
+  } else if (type == "geom_area") {
+    # areas must stay at their x values: overlay them (dodging shifts them sideways)
+    position <- "identity"
+  } else if (!has_category(df)) {
+    # nothing to dodge; position_dodge2() would also warn on empty facet panels (F139)
+    position <- "identity"
   } else {
     # small whitespace between columns:
     position <- position_dodge2(width = width * 1.05, preserve = "single")
@@ -1663,7 +1714,8 @@ generate_geom <- function(type,
                                       outlier.alpha = 0.75,
                                       width = width,
                                       linewidth = linewidth, # line width of whole box
-                                      fatten = ifelse((linewidth %or% 0.5) < 1, 1.5, (linewidth %or% 0.5) + 0.5), # factor to make median thicker compared to lwd
+                                      # median thicker than the box; `fatten` is deprecated since ggplot2 4.0.0 (F078)
+                                      median.linewidth = (linewidth %or% 0.5) * ifelse((linewidth %or% 0.5) < 1, 1.5, (linewidth %or% 0.5) + 0.5),
                                       na.rm = na.rm),
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
                                  list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
@@ -1692,7 +1744,10 @@ generate_geom <- function(type,
       values <- get_x(df)
       values <- values[!is.infinite(values)]
       binwidth <- as.double(diff(range(values, na.rm = TRUE))) / (12 + min(10, length(unique(values)) / 20))
-      if (binwidth < 0.01) {
+      if (!is.finite(binwidth) || binwidth <= 0) {
+        # constant (or no finite) values: one bin of width 1
+        binwidth <- 1
+      } else if (binwidth < 0.01) {
         # do not round
       } else if (binwidth < 1) {
         binwidth <- round(binwidth, 3)
@@ -1746,13 +1801,24 @@ generate_geom <- function(type,
     
   } else {
     # try to put some arguments into the requested geom
-    plot2_warning(font_blue("type = \"", type, "\"", collapse = ""), " is currently only loosely supported")
+    plot2_caution(font_blue("type = \"", type, "\"", collapse = ""), " is currently only loosely supported")
+    # pass only what this geom accepts as a parameter or aesthetic (F060)
+    probe <- tryCatch(geom_fn(), error = function(e) NULL)
+    accepted <- if (inherits(probe, "LayerInstance")) {
+      unique(c(names(formals(geom_fn)),
+               probe$geom$parameters(TRUE), probe$stat$parameters(TRUE), probe$geom$aesthetics()))
+    } else {
+      NULL
+    }
+    only_accepted <- function(args) {
+      if (is.null(accepted)) args else args[names(args) %in% accepted]
+    }
     do.call(geom_fn,
-            args = set_arguments(list(width = width,
-                                      size = size,
-                                      na.rm = na.rm),
-                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
-                                 list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)],
+            args = set_arguments(only_accepted(c(list(width = width,
+                                                      size = size),
+                                                 list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
+                                                 list(fill = cols$colour_fill)[!has_category(df) & !isTRUE(original_colours)])),
+                                 list(na.rm = na.rm),
                                  list(mapping = mapping)[!is.null(mapping)]))
   }
 }
@@ -1762,7 +1828,7 @@ validate_colour <- function(df,
                             type_backup,
                             colour,
                             colour_fill,
-                            colour_opacity,
+                            colour_transparency,
                             misses_colour_fill,
                             horizontal) {
 
@@ -1771,15 +1837,15 @@ validate_colour <- function(df,
     # this is for validate_category_scale()
     if (length(colour) == 1 && !is.na(colour)) {
       if (colour %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour)) > 1) {
-        colour <- get_colour(colour, 4, opacity = colour_opacity)
+        colour <- get_colour(colour, 4, transparency = colour_transparency)
       } else if (colour %in% viridisLite_colours) {
         # generate viridis colour
-        colour <- get_colour(colour, 5, opacity = colour_opacity)
+        colour <- get_colour(colour, 5, transparency = colour_transparency)
       } else {
-        colour <- get_colour(colour, opacity = colour_opacity)
+        colour <- get_colour(colour, transparency = colour_transparency)
       }
     } else {
-      colour <- get_colour(colour, opacity = colour_opacity)
+      colour <- get_colour(colour, transparency = colour_transparency)
     }
     
     if (is.null(colour_fill) || identical(colour.bak, colour_fill)) {
@@ -1787,15 +1853,15 @@ validate_colour <- function(df,
     } else {
       if (length(colour_fill) == 1 && !is.na(colour_fill)) {
         if (colour_fill %in% names(plot2_env$reg_cols) && length(get_registered_colour(colour_fill)) > 1) {
-          colour_fill <- get_colour(colour_fill, 4, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, 4, transparency = colour_transparency)
         } else if (colour_fill %in% viridisLite_colours) {
           # generate viridis colour
-          colour_fill <- get_colour(colour_fill, 5, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, 5, transparency = colour_transparency)
         } else {
-          colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
+          colour_fill <- get_colour(colour_fill, transparency = colour_transparency)
         }
       } else {
-        colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
+        colour_fill <- get_colour(colour_fill, transparency = colour_transparency)
       }
     }
     return(list(colour = colour,
@@ -1813,12 +1879,12 @@ validate_colour <- function(df,
       colour <- colour[1]
       colour_fill <- colour_fill[1]
     }
-    colour <- get_colour(colour, opacity = colour_opacity)
+    colour <- get_colour(colour, transparency = colour_transparency)
     if (geom_is_continuous(type) && is.null(colour_fill)) {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
       colour_fill <- add_white(colour, white = 0.75)
     } else {
-      colour_fill <- get_colour(colour_fill, opacity = colour_opacity)
+      colour_fill <- get_colour(colour_fill, transparency = colour_transparency)
     }
     
   } else {
@@ -1826,20 +1892,33 @@ validate_colour <- function(df,
     n_unique <- length(unique(get_category(df)))
     colour <- get_colour(colour,
                          length = ifelse(length(colour) == 1, n_unique, 1),
-                         opacity = colour_opacity)
+                         transparency = colour_transparency)
     
     if (isTRUE(colour_fill)) {
       colour_fill <- colour
     }
     if (geom_is_continuous(type) && is.null(colour_fill) && type_backup != "sankey") {
       # specific treatment for continuous geoms (such as boxplots/violins/histograms/...)
-      # but not for Sankey plots - they have sankey.alpha
+      # but not for Sankey plots - they have sankey_alpha
       colour_fill <- add_white(colour, white = 0.75)
     } else {
       colour_fill <- get_colour(colour_fill,
                                 length = ifelse(length(colour_fill) == 1, n_unique, 1),
-                                opacity = colour_opacity)
+                                transparency = colour_transparency)
     }
+    
+    # fewer colours than categories: recycle them, with a warning
+    recycle_colours <- function(cols, n, what, quiet = FALSE) {
+      if (length(cols) > 1 && length(cols) < n && is.null(names(cols))) {
+        if (!isTRUE(quiet)) plot2_warning("Only ", length(cols), " values given in ", font_blue(what), " for ", n,
+                      " categories, so they were recycled")
+        cols <- structure(rep_len(as.character(cols), n), class = class(cols))
+      }
+      cols
+    }
+    fill_is_colour <- identical(as.character(colour_fill), as.character(colour))
+    colour <- recycle_colours(colour, n_unique, "colour")
+    colour_fill <- recycle_colours(colour_fill, n_unique, "colour_fill", quiet = fill_is_colour)
     
     if (isTRUE(horizontal)) {
       colour <- rev(colour)
@@ -1848,34 +1927,6 @@ validate_colour <- function(df,
     
     if (length(colour) > 1 && length(colour_fill) == 1) {
       colour_fill <- colour
-    }
-    
-    # expand the range
-    df_nonempty <- df |> 
-      filter(!is.na(`_var_category`) & !is.na(`_var_y`))
-    if (has_x(df)) {
-      df_nonempty <- df_nonempty |> 
-        filter(!is.na(`_var_x`))
-    }
-    if (has_facet(df)) {
-      df_nonempty <- df_nonempty |> 
-        filter(!is.na(`_var_facet`))
-    }
-    # TODO this very hacky... since ggplot2 3.4.0 manual values in scale_*_manual work differently
-    grp_sizes <- group_sizes(df_nonempty)
-    grp_sizes <- grp_sizes[grp_sizes != 0]
-    n_categories <- length(grp_sizes)
-    if (any(grp_sizes > 1, na.rm = TRUE) && n_categories * n_distinct(get_category(df)) < nrow(df)) {
-      if (length(colour) < n_categories) {
-        # expand colour for all categories, except when all colours were named
-        colour <- c(colour, rep(colour, n_categories)[seq_len(n_categories - length(colour))])
-      }
-      if (length(colour_fill) < n_categories) {
-        # expand colour_fill for all categories, except when all colours were named
-        colour_fill <- c(colour_fill, rep(colour_fill, n_categories)[seq_len(n_categories - length(colour_fill))])
-        # remove empty groups
-        colour_fill <- colour_fill[grp_sizes != 0]
-      }
     }
   }
   
@@ -1887,7 +1938,16 @@ validate_colour <- function(df,
        colour_fill = get_colour(colour_fill))
 }
 
+# a clear error for sizes that ggplot2 would only reject when drawing (F138)
+check_non_negative <- function(x, name) {
+  if (!is.null(x) && (!is.numeric(x) || length(x) == 0 || anyNA(x) || any(x < 0))) {
+    stop("`", name, "` must be a non-negative number", call. = FALSE)
+  }
+  invisible(x)
+}
+
 validate_size <- function(size, type, type_backup) {
+  check_non_negative(size, "size")
   if (is.null(size)) {
     if (type_backup == "dumbbell") {
       size <- 5
@@ -1903,6 +1963,7 @@ validate_size <- function(size, type, type_backup) {
 }
 
 validate_width <- function(width, type) {
+  check_non_negative(width, "width")
   if (is.null(width)) {
     if (type %in% c("geom_boxplot", "geom_violin", "geom_jitter", "geom_beeswarm")) {
       width <- 0.66
@@ -1914,6 +1975,7 @@ validate_width <- function(width, type) {
 }
 
 validate_linewidth <- function(linewidth, type, type_backup) {
+  check_non_negative(linewidth, "linewidth")
   if (is.null(linewidth)) {
     if (type == "geom_sf") {
       linewidth <- 0.1
@@ -1951,16 +2013,16 @@ validate_markdown <- function(markdown,
   } else {
     df_titles <- NULL
   }
-  txt <- paste(c(tryCatch(as.character(x.title), error = function(e) ""),
-                 tryCatch(as.character(y.title), error = function(e) ""),
-                 tryCatch(as.character(legend.title), error = function(e) ""),
-                 tryCatch(as.character(title), error = function(e) ""),
-                 tryCatch(as.character(subtitle), error = function(e) ""),
-                 tryCatch(as.character(tag), error = function(e) ""),
-                 tryCatch(as.character(caption),  error = function(e) ""),
-                 tryCatch(as.character(df_titles),  error = function(e) "")),
-               collapse = "")
-  out <- txt %like% "(\\^|[_*].+[_*])"
+  # check each title on its own, so that patterns cannot match across titles (F018)
+  txt <- c(tryCatch(as.character(x.title), error = function(e) ""),
+           tryCatch(as.character(y.title), error = function(e) ""),
+           tryCatch(as.character(legend.title), error = function(e) ""),
+           tryCatch(as.character(title), error = function(e) ""),
+           tryCatch(as.character(subtitle), error = function(e) ""),
+           tryCatch(as.character(tag), error = function(e) ""),
+           tryCatch(as.character(caption),  error = function(e) ""),
+           tryCatch(as.character(df_titles),  error = function(e) ""))
+  out <- any(txt %like% "(\\^|[_*].+[_*])", na.rm = TRUE)
   if (isTRUE(out)) {
     plot2_message("Assuming ", font_blue("markdown = TRUE"))
   }
@@ -1980,7 +2042,12 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
     }
   )
   
-  # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`
+  # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`;
+  # a constant, such as a plain text, needs no evaluation over the data (F025)
+  title_quo <- rlang::enquo(x)
+  if (!is.null(df) && !rlang::quo_is_symbol(title_quo) && !rlang::quo_is_call(title_quo)) {
+    df <- NULL
+  }
   if (!is.null(df)) {
     out <- tryCatch(
       suppressWarnings(
@@ -2005,7 +2072,9 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   }
   
   out <- gsub("<br>", "\n", out, fixed = TRUE)
-  out_plain <- gsub("[^a-zA-Z0-9,. .-]", "", out)
+  # strip only markup, so that accented, Greek, Cyrillic or CJK characters still count (F056)
+  # plotmath between $...$ is not drawn as its source text, so it does not count for the length
+  out_plain <- gsub("<[^>]+>|[*_^{}$]", "", gsub("\\$[^$]*\\$", "", out))
   
   if (isTRUE(markdown)) {
     # support mathematical characters
@@ -2015,19 +2084,12 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   }
   
   # support for markdown
-  if (isTRUE(markdown) &&
-      (isTRUE(out %like% "[*]+.+[*]+")
-       || isTRUE(out %like% "[a-zA-Z0-9,.-]_[{].+[}]")
-       || isTRUE(out %like% "[a-zA-Z0-9,.-] ?\\^ ?[{].+[}]")
-       || isTRUE(out %like% "[a-zA-Z0-9,.-] ?\\^ ?[a-zA-Z0-9,._-]")
-       || isTRUE(out %like% "<sup>.+</sup>")
-       || isTRUE(out %like% "<sub>.+</sub>")
-       || isTRUE(out %like% "[$]"))) {
+  if (isTRUE(markdown) && isTRUE(any(has_markdown(out)))) {
     out <- md_to_expression(out)
   }
   
   # support overly lengthy titles
-  if (!is.null(max_length) && isTRUE(nchar(out_plain) > as.double(max_length))) {
+  if (!is.null(max_length) && isTRUE(nchar(out_plain, type = "width") > as.double(max_length))) {
     if (is.expression(out)) {
       x_deparsed <- trimws(deparse(substitute(x)))
       x_deparsed <- x_deparsed[!x_deparsed %in% c("{", "}")]
@@ -2043,8 +2105,29 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   out
 }
 
-#' @importFrom ggplot2 theme_grey element_blank margin rel
-validate_theme <- function(theme,
+validate_theme <- function(...) {
+  # the theme only depends on its arguments, the registered colours and the plot2 options, so
+  # it is built once per combination and session (F110); a theme object is never cached, so
+  # that its validation messages are always shown
+  args <- list(...)
+  if (!is.null(args$theme) && !is.character(args$theme)) {
+    return(do.call(validate_theme_build, args))
+  }
+  opts <- options()
+  key <- rlang::hash(list(args, plot2_env$reg_cols, opts[startsWith(names(opts), "plot2.")]))
+  out <- plot2_session$validated_themes[[key]]
+  if (is.null(out)) {
+    out <- do.call(validate_theme_build, args)
+    if (length(plot2_session$validated_themes) >= 100) {
+      plot2_session$validated_themes <- NULL
+    }
+    plot2_session$validated_themes[[key]] <- out
+  }
+  out
+}
+
+#' @importFrom ggplot2 element_blank element_rect margin theme_grey
+validate_theme_build <- function(theme,
                            type,
                            background,
                            text_factor,
@@ -2052,10 +2135,10 @@ validate_theme <- function(theme,
                            horizontal,
                            x.remove,
                            y.remove,
-                           x.lbl_angle,
-                           x.lbl_align,
-                           x.lbl_italic,
-                           facet.fill,
+                           x.label_angle,
+                           x.label_align,
+                           x.label_italic,
+                           facet.colour_fill,
                            facet.bold,
                            facet.italic,
                            facet.size,
@@ -2067,7 +2150,7 @@ validate_theme <- function(theme,
                            has_category,
                            col_y_primary,
                            col_y_secondary,
-                           sankey.remove_axes) {
+                           sankey_remove_axes) {
   
   if (!is.null(theme)) {
     if (is.character(theme)) {
@@ -2095,10 +2178,19 @@ validate_theme <- function(theme,
     }
   }
   
+  user_partial <- NULL
+  if (!is.null(theme) && !isTRUE(attr(theme, "complete"))) {
+    # a partial theme, e.g. theme(panel.background = element_blank()), is added on top of the
+    # default theme at the end, so that all elements exist while they are edited below and
+    # the user's elements win (F032)
+    user_partial <- theme
+    theme <- theme_minimal2()
+  }
+  
   orginally_empty <- is_empty(theme)
   if (isTRUE(orginally_empty)) {
     # turn to default ggplot2 theme, so we can at least
-    # add all theme options set as arguments, like x.lbl_angle
+    # add all theme options set as arguments, like x.label_angle
     theme <- theme_grey()
   }
   
@@ -2114,7 +2206,7 @@ validate_theme <- function(theme,
                                           linetype = theme$plot.background$linetype)
   }
   if (isTRUE(horizontal)) {
-    if (isTRUE(x.lbl_italic)) {
+    if (isTRUE(x.label_italic)) {
       theme$axis.text.y$face <- "italic"
     }
     if (isTRUE(x.remove)) {
@@ -2124,7 +2216,7 @@ validate_theme <- function(theme,
       theme$axis.text.x <- element_blank()
     }
   } else {
-    if (isTRUE(x.lbl_italic)) {
+    if (isTRUE(x.label_italic)) {
       theme$axis.text.x$face <- "italic"
     }
     if (isTRUE(x.remove)) {
@@ -2143,26 +2235,15 @@ validate_theme <- function(theme,
     theme$axis.title.y.right$face <- "bold"
   }
   
-  if (x.lbl_angle != 0) {
-    theme$axis.text.x$angle <- x.lbl_angle
+  # the x axis labels are on the vertical axis after coord_flip() (F051)
+  x_text <- ifelse(isTRUE(horizontal), "axis.text.y", "axis.text.x")
+  # rotated labels are justified by guide_axis(angle = ) in plot2_exec(), which anchors them at
+  # their ticks for every angle and axis position (F142); only a user-set x.label_align uses the theme
+  if (x.label_angle != 0 && !is.null(x.label_align)) {
+    theme[[x_text]]$angle <- x.label_angle
   }
-  if (is.null(x.lbl_align) && x.lbl_angle != 0) {
-    # determine the better alignment
-    if (abs(x.lbl_angle) %in% c(0:10, 171:190, 351:360)) {
-      x.lbl_align <- 0.5 # centre
-    }
-    if (abs(x.lbl_angle) %in% 191:350) {
-      x.lbl_align <- 0 # left
-    }
-    if (abs(x.lbl_angle) %in% 11:170) {
-      x.lbl_align <- 1 # right
-    }
-    if (x.lbl_angle < 0) {
-      x.lbl_align <- 1 - x.lbl_align
-    }
-  }
-  if (!is.null(x.lbl_align)) {
-    theme$axis.text.x$hjust <- x.lbl_align
+  if (!is.null(x.label_align)) {
+    theme[[x_text]]$hjust <- x.label_align
   }
   
   if (isTRUE(legend.italic)) {
@@ -2176,7 +2257,7 @@ validate_theme <- function(theme,
     theme$plot.subtitle$colour <- get_colour(subtitle.colour)
   }
   # facet
-  theme$strip.background$fill <- facet.fill
+  theme$strip.background$fill <- facet.colour_fill
   if (isTRUE(facet.bold) && isTRUE(facet.italic)) {
     theme$strip.text$face <- "bold.italic"
   } else if (isTRUE(facet.bold)) {
@@ -2187,22 +2268,18 @@ validate_theme <- function(theme,
     theme$strip.text$face <- "plain"
   }
   theme$strip.text$margin <- margin(t = facet.margin, b = facet.margin / 2)
-  theme$strip.text$size <- unit(facet.size, "pt")
+  # a plain number, as for all text sizes in ggplot2 (F032)
+  theme$strip.text$size <- as.double(facet.size)
   
   # set the font family and font size, taking text_factor into account
   attr_bak <- attributes(theme)
-  base_size <- theme$text$size
   theme <- lapply(theme, function(el) {
     if (inherits(el, "element_text")) {
       el$family <- font
-      if (text_factor != 1 && !is.null(el$size) && is.numeric(el$size)) {
-        if (inherits(el$size, "rel")) {
-          # in theme_minimal2, these are the x and Y-axis labels, not their titles
-          # in thme_bw, a lot of element have class 'rel'
-          el$size <- base_size * text_factor * as.double(el$size)
-        } else {
-          el$size <- base_size * text_factor * (as.double(el$size) / base_size)
-        }
+      # absolute sizes are multiplied; rel() sizes are relative to their parent element, so they
+      # scale through inheritance and stay as they are (F057)
+      if (text_factor != 1 && !is.null(el$size) && is.numeric(el$size) && !inherits(el$size, "rel")) {
+        el$size <- as.double(el$size) * text_factor
       }
     }
     el
@@ -2230,7 +2307,7 @@ validate_theme <- function(theme,
   }
   
   # for Sankey plots, remove axes if indicated
-  if (isTRUE(sankey.remove_axes)) {
+  if (isTRUE(sankey_remove_axes)) {
     theme$axis.line <- element_blank()
     theme$panel.grid.major <- element_blank()
     theme$panel.grid.minor <- element_blank()
@@ -2243,15 +2320,20 @@ validate_theme <- function(theme,
     theme$axis.title <- element_blank()
   }
   
+  if (!is.null(user_partial)) {
+    theme <- theme + user_partial
+  }
+  
   # return the theme
   return(theme)
 }
 
+#' @importFrom dplyr vars
 #' @importFrom ggplot2 facet_grid facet_wrap
 validate_facet <- function(df,
                            type,
-                           facet.repeat_lbls_x,
-                           facet.repeat_lbls_y,
+                           facet.repeat_labels_x,
+                           facet.repeat_labels_y,
                            facet.fixed_y,
                            facet.relative,
                            facet.drop,
@@ -2259,35 +2341,48 @@ validate_facet <- function(df,
                            facet.position,
                            horizontal) {
   
-  if (is.null(facet.repeat_lbls_y)) {
+  if (is.null(facet.repeat_labels_y)) {
     if (isTRUE(facet.fixed_y)) {
-      plot2_message("Assuming ", font_blue("facet.repeat_lbls_y = FALSE"),
+      plot2_message("Assuming ", font_blue("facet.repeat_labels_y = FALSE"),
                     " since ", font_blue("y"), " has fixed scales")
-      facet.repeat_lbls_y <- FALSE
+      facet.repeat_labels_y <- FALSE
     } else {
-      facet.repeat_lbls_y <- TRUE
+      facet.repeat_labels_y <- TRUE
     }
   }
   
+  facet_values <- get_facet(df)
+  if (isTRUE(facet.repeat_labels_x) && !isTRUE(facet.drop) && is.factor(facet_values) &&
+      !all(levels(facet_values) %in% facet_values) && has_x(df) && !is.numeric(get_x(df)) &&
+      !type %in% c("geom_sf", "geom_spider")) {
+    # a free discrete scale on an empty panel makes ggplot2 warn when drawing (F139)
+    plot2_message("Using a shared x scale (", font_blue("facet.repeat_labels_x = FALSE"), ") since ",
+                  font_blue("facet.drop = FALSE"), " leaves empty panels")
+    facet.repeat_labels_x <- FALSE
+  }
+  
   scales <- "fixed"
-  if (isTRUE(facet.repeat_lbls_x) && isTRUE(facet.repeat_lbls_y)) {
+  if (isTRUE(facet.repeat_labels_x) && isTRUE(facet.repeat_labels_y)) {
     scales <- "free"
-  } else if (isTRUE(facet.repeat_lbls_y)) {
+  } else if (isTRUE(facet.repeat_labels_y)) {
     scales <- "free_y"
     if (isTRUE(horizontal)) {
       scales <- "free_x"
     }
-  } else if (isTRUE(facet.repeat_lbls_x)) {
+  } else if (isTRUE(facet.repeat_labels_x)) {
     scales <- "free_x"
     if (isTRUE(horizontal)) {
       scales <- "free_y"
     }
   }
   
-  if (type == "geom_sf") {
-    # force fixes scales, otherwise throws an error: coord_sf doesn't support free scales
+  if (type %in% c("geom_sf", "geom_spider")) {
+    # force fixes scales, otherwise throws an error: coord_sf and coord_spider don't support free scales
     scales <- "fixed"
   }
+  
+  # refer to the readable column, so that the facet needs no editing afterwards (F037)
+  facet_var <- vars(!!rlang::sym(get_facet_name(df)))
   
   if (any(is.na(get_facet(df)))) {
     # 'drop' means dropping of factor levels. If this is FALSE and the columns contains NA, this throws an error:
@@ -2301,7 +2396,7 @@ validate_facet <- function(df,
       switch <- "x"
     }
     if (is.null(facet.nrow) || facet.nrow == 1) {
-      return(facet_grid(cols = vars(`_var_facet`),
+      return(facet_grid(cols = facet_var,
                         space = scales, # <- this makes the facet.relative happen
                         drop = facet.drop,
                         scales = scales,
@@ -2309,7 +2404,7 @@ validate_facet <- function(df,
     } else {
       plot2_warning("When using ", font_blue("facet.relative = TRUE"), ", the number of columns cannot be > 1 when ",
                     font_blue("facet.nrow"), " is larger than 1")
-      return(facet_grid(rows = vars(`_var_facet`),
+      return(facet_grid(rows = facet_var,
                         space = scales,
                         drop = facet.drop,
                         scales = scales,
@@ -2321,7 +2416,7 @@ validate_facet <- function(df,
     facet.position <- gsub("^r$", "right", facet.position)
     facet.position <- gsub("^b$", "bottom", facet.position)
     facet.position <- gsub("^l$", "left", facet.position)
-    return(facet_wrap("`_var_facet`",
+    return(facet_wrap(facet_var,
                       scales = scales,
                       strip.position = facet.position,
                       drop = facet.drop,
@@ -2329,7 +2424,7 @@ validate_facet <- function(df,
   }
 }
 
-#' @importFrom ggplot2 geom_text geom_label geom_sf_label geom_sf_text aes position_fill position_stack position_dodge2
+#' @importFrom ggplot2 aes geom_label geom_sf_label geom_sf_text geom_text position_dodge2 position_fill position_stack unit
 generate_datalabels <- function(p,
                                 df,
                                 type,
@@ -2347,13 +2442,29 @@ generate_datalabels <- function(p,
                                 y.transform,
                                 horizontal,
                                 misses_datalabels,
-                                markdown) {
+                                markdown,
+                                datalabels.round = 1,
+                                datalabels.format = "%n",
+                                datalabels.percent_by = "x",
+                                decimal.mark = dec_mark(),
+                                big.mark = big_mark(),
+                                y.percent = FALSE) {
   
   if (isTRUE(misses_datalabels) && nrow(df) > 25) {
     plot2_caution("Omitting printing of ", nrow(df), " datalabels - use ",
                   font_blue("datalabels = TRUE"), " to force printing")
     return(p)
   }
+  
+  # format only now: on the final rows, and only when the labels are drawn (F025);
+  # %p is relative to the group set in datalabels.percent_by (F028)
+  p$data$`_var_datalabels` <- format_datalabels(p$data$`_var_datalabels`,
+                                                datalabels.round = datalabels.round,
+                                                datalabels.format = datalabels.format,
+                                                decimal.mark = decimal.mark,
+                                                big.mark = big.mark,
+                                                y.percent = y.percent,
+                                                group = percent_group(p$data, datalabels.percent_by))
   
   if (!has_category(df)) {
     stacked <- FALSE
@@ -2377,9 +2488,9 @@ generate_datalabels <- function(p,
   }
   
   if (!isTRUE(stacked) && !isTRUE(stacked_fill) && !isTRUE(is_sf) && !isTRUE(is_tile)) {
-    datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.4) # 40% transparency
+    datalabels.colour_fill <- get_colour(datalabels.colour_fill, transparency = 0.4) # 40% transparency
   } else {
-    datalabels.colour_fill <- get_colour(datalabels.colour_fill, opacity = 0.75) # 75% transparency
+    datalabels.colour_fill <- get_colour(datalabels.colour_fill, transparency = 0.75) # 75% transparency
   }
   datalabels.colour <- get_colour(datalabels.colour)
   
@@ -2388,15 +2499,17 @@ generate_datalabels <- function(p,
   text_vertical <- -0.75
   label_horizontal <- 0.5
   label_vertical <- -0.1
-  if (isTRUE(horizontal) || datalabels.angle == 90) {
-    text_horizontal <- -0.25
+  # rotated text (or any text in a horizontal plot) is anchored exactly at the end of the bar,
+  # with a fixed padding inside the label, so that the gap is the same for short and long
+  # labels; a relative offset would grow with the length of the label (F140)
+  pad_side <- datalabels_pad_side(angle = datalabels.angle,
+                                  horizontal = horizontal,
+                                  reversed = transform_name(y.transform) == "reverse")
+  if (!is.null(pad_side)) {
+    text_horizontal <- if (pad_side == "start") 0 else 1
+    label_horizontal <- text_horizontal
     text_vertical <- 0.5
-    label_horizontal <- -0.1
     label_vertical <- 0.5
-    if (y.transform == "reverse") {
-      text_horizontal <- text_horizontal + 1.5
-      label_horizontal <- label_horizontal + 1.2
-    }
   }
   
   # set positioning function
@@ -2440,14 +2553,23 @@ generate_datalabels <- function(p,
     }
   }
   
+  # stacked, sf and tile labels are centred, so they get no offset or padding
+  is_offset_free <- isTRUE(stacked) || isTRUE(stacked_fill) || isTRUE(is_sf) || isTRUE(is_tile)
+  
   # generate the datalabels
   p <- p +
     # set background label
     do.call(geom_label_fn,
-            args = c(list(mapping = aes(label = ifelse(is.na(original_values),
-                                                       NA_character_,
-                                                       paste0(original_values,
-                                                              strrep("-", ceiling(nchar(original_values) * 0.33))))),
+            # the padded label is computed from the data column, not from a vector of this
+            # function, so that it follows the layer data (F055)
+            args = c(list(mapping = if (!is.null(pad_side) && !is_offset_free) {
+                            aes(label = datalabels_pad(`_var_datalabels`, side = pad_side))
+                          } else {
+                            aes(label = ifelse(is.na(`_var_datalabels`),
+                                               NA_character_,
+                                               paste0(`_var_datalabels`,
+                                                      strrep("-", ceiling(nchar(as.character(`_var_datalabels`)) * 0.33)))))
+                          },
                           colour = NA,
                           fill = datalabels.colour_fill,
                           size = datalabels.size,
@@ -2469,7 +2591,11 @@ generate_datalabels <- function(p,
                      list(fun.geometry = geometry_fix_fn)[isTRUE(is_sf)])) +
     # set text
     do.call(geom_text_fn,
-            args = c(list(mapping = aes(label = `_var_datalabels`),
+            args = c(list(mapping = if (!is.null(pad_side) && !is_offset_free) {
+                            aes(label = datalabels_pad(`_var_datalabels`, side = pad_side))
+                          } else {
+                            aes(label = `_var_datalabels`)
+                          },
                           colour = datalabels.colour,
                           size = datalabels.size * ifelse(isTRUE(markdown) & isTRUE(is_sf), 1.05, 1),
                           family = font,
@@ -2500,9 +2626,6 @@ generate_datalabels <- function(p,
   p
 }
 
-#' @importFrom showtext showtext_auto
-#' @importFrom sysfonts font_families font_files font_add
-#' @importFrom showtextdb google_fonts font_install load_showtext_fonts
 validate_font <- function(font) {
   if (is_empty(font)) {
     # no font set, so return empty string to use default
@@ -2539,36 +2662,33 @@ validate_font <- function(font) {
                   "For more information, see ", font_url("https://yihui.org/knitr/options/#plots", "this knitr manual"), "."),
            call. = FALSE)
     }
-  } else {
-    # enable showtext
-    showtext_auto(enable = TRUE)
   }
+  # showtext is switched on only while the plot is drawn, see print.plot2_font() (F011)
+  rlang::check_installed(c("showtext", "showtextdb", "sysfonts"), reason = "to use custom fonts")
   
   font.bak <- font
   font <- trimws(tolower(font)[1L])
-  if (font %in% tolower(font_families())) {
+  if (font %in% tolower(sysfonts::font_families())) {
     # this is for previously activated fonts, or fonts installed from Google Fonts
-    return(font_families()[tolower(font_families()) == font])
+    return(sysfonts::font_families()[tolower(sysfonts::font_families()) == font])
   }
   
   # get font files from system
-  if (is.null(plot2_env$fonts)) {
-    # so it only runs the first time
-    plot2_env$fonts <- font_files()
+  if (is.null(plot2_session$fonts)) {
+    # so it only runs the first time in a session
+    plot2_session$fonts <- sysfonts::font_files()
   }
-  fonts <- plot2_env$fonts[which(tolower(plot2_env$fonts$family) == trimws(tolower(font)[1L])), , drop = FALSE]
+  fonts <- plot2_session$fonts[which(tolower(plot2_session$fonts$family) == trimws(tolower(font)[1L])), , drop = FALSE]
   
   if (NROW(fonts) == 0) {
-    # font does not exist yet - try to download from Google Fonts
-    tryCatch({
-      font_urls <- google_fonts(font.bak)
-      # install and register using showtextdb
-      suppressMessages(font_install(font_urls, quiet = TRUE))
-      plot2_message("Downloaded font ", font_blue(font_url(paste0("https://fonts.google.com/specimen/", gsub(" ", "+", font.bak)), font.bak)), " from Google Fonts")
-      load_showtext_fonts()
-    }, error = function(e) invisible())
-    
-  } else if (!fonts$family[1L] %in% font_families()) {
+    # not installed: use the cached copy, or download it from Google Fonts into the user cache (F011)
+    if (!font_from_cache(font.bak)) {
+      if (font_from_google(font.bak)) {
+        plot2_message("Downloaded font ", font_blue(font_url(paste0("https://fonts.google.com/specimen/", gsub(" ", "+", font.bak)), font.bak)),
+                      " from Google Fonts into ", font_blue(font_cache_dir()))
+      }
+    }
+  } else if (!fonts$family[1L] %in% sysfonts::font_families()) {
     # helper function for adding fonts
     set_if_not_null <- function(type) {
       fonts$fullpath <- paste(fonts$path, fonts$file, sep = "/")
@@ -2581,7 +2701,7 @@ validate_font <- function(font) {
       }
     }
     # still has to be 'registered' with sysfonts, so do it
-    font_add(family = fonts$family[1L],
+    sysfonts::font_add(family = fonts$family[1L],
              regular = set_if_not_null("regular"),
              bold = set_if_not_null("bold"),
              italic = set_if_not_null("italic"),
@@ -2589,46 +2709,68 @@ validate_font <- function(font) {
   }
   
   # return the font if it is available
-  if (font %in% tolower(font_families())) {
-    return(font_families()[tolower(font_families()) == font])
+  if (font %in% tolower(sysfonts::font_families())) {
+    return(sysfonts::font_families()[tolower(sysfonts::font_families()) == font])
   } else {
     plot2_warning("Ignoring unknown font family \"", font.bak, "\"")
     return("")
   }
 }
 
-#' @importFrom tidyr complete full_seq
+#' @importFrom tidyr full_seq
 complete_direction <- function(df, direction, has_direction, filler) {
   if (has_direction && !is.null(filler) && !isFALSE(filler)) {
-    direction_data <- df[[paste0("_var_", direction)]]
+    direction_col <- paste0("_var_", direction)
+    direction_data <- df[[direction_col]]
     if (isTRUE(filler)) {
       filler <- 0
     }
     fill_list <- list(`_var_y` = filler,
                       y_name = filler)
     names(fill_list)[2] <- get_y_name(df)
-    if (!inherits(direction_data, c("Date", "POSIXt")) && is.double(direction_data)) {
+    # the values to complete, per class (F048)
+    if (is.factor(direction_data)) {
+      values <- factor(levels(direction_data), levels = levels(direction_data))
+    } else if (is.character(direction_data) || is.logical(direction_data)) {
+      values <- sort(unique(direction_data[!is.na(direction_data)]))
+    } else if (inherits(direction_data, "POSIXt")) {
+      # the period is the greatest common divisor of the observed gaps (in seconds), not 1 second
+      gaps <- unique(round(as.double(diff(sort(unique(direction_data))), units = "secs")))
+      gaps <- gaps[gaps > 0]
+      period <- if (length(gaps) == 0) 1 else Reduce(gcd, gaps)
+      values <- seq(min(direction_data, na.rm = TRUE), max(direction_data, na.rm = TRUE), by = period)
+    } else if (inherits(direction_data, "Date")) {
+      values <- full_seq(direction_data, period = 1)
+    } else if (is.double(direction_data)) {
       # determine significance
       sig <- max(sigfigs(diff(direction_data)), na.rm = TRUE)
-      period <- 1 / 10 ^ sig
+      values <- full_seq(direction_data, period = 1 / 10 ^ sig)
     } else {
-      period <- 1
+      values <- full_seq(direction_data, period = 1)
     }
-    if (direction == "x") {
-      df <- df |> 
-        complete(`_var_x` = full_seq(direction_data, period = period), fill = fill_list)
-      df[, get_x_name(df)] <- df$`_var_x`  
-    } else if (direction == "category") {
-      df <- df |> 
-        complete(`_var_category` = full_seq(direction_data, period = period), fill = fill_list)
-      df[, get_category_name(df)] <- df$`_var_category`  
-    } else if (direction == "facet") {
-      df <- df |> 
-        complete(`_var_facet` = full_seq(direction_data, period = period), fill = fill_list)
-      df[, get_facet_name(df)] <- df$`_var_facet`  
+    # cross with the other directions that are present, e.g. all categories for every x value
+    others <- intersect(setdiff(c("_var_x", "_var_category", "_var_facet"), direction_col), colnames(df))
+    completion <- c(stats::setNames(list(values), direction_col), rlang::syms(others))
+    df <- tidyr::complete(df, !!!completion, fill = fill_list)
+    # keep the columns with the original names in line
+    for (d in c("x", "category", "facet")) {
+      col <- paste0("_var_", d)
+      nm <- switch(d, x = get_x_name(df), category = get_category_name(df), facet = get_facet_name(df))
+      if (col %in% colnames(df) && !is.null(nm) && nm != col && nm %in% colnames(df)) {
+        df[[nm]] <- df[[col]]
+      }
     }
   }
   df
+}
+
+gcd <- function(a, b) {
+  while (b > 0) {
+    r <- a %% b
+    a <- b
+    b <- r
+  }
+  a
 }
 
 validate_sorting <- function(sort_method, horizontal) {
@@ -2658,7 +2800,6 @@ validate_sorting <- function(sort_method, horizontal) {
   sort_method
 }
 
-#' @importFrom forcats fct_inorder fct_reorder
 sort_data <- function(values,
                       original_values, # required for sort = FALSE, should be according to original values
                       sort_method,
@@ -2676,9 +2817,34 @@ sort_data <- function(values,
     return(values)
   }
   
-  # set up sort_method
+  # sort as for a vertical plot; for a horizontal plot, the levels are reversed at the end,
+  # so that the values read from top to bottom as they would read from left to right (F141)
+  out <- sort_data_vertical(values = values,
+                            original_values = original_values,
+                            sort_method = sort_method,
+                            datapoints = datapoints,
+                            summarise_function = summarise_function,
+                            summarise_fn_name = summarise_fn_name,
+                            drop = drop,
+                            argument = argument)
+  if (isTRUE(horizontal)) {
+    out <- factor(as.character(out), levels = rev(levels(out)), ordered = is.ordered(out))
+  }
+  out
+}
+
+#' @importFrom dplyr n_distinct
+#' @importFrom forcats fct_inorder fct_reorder
+sort_data_vertical <- function(values,
+                               original_values,
+                               sort_method,
+                               datapoints,
+                               summarise_function,
+                               summarise_fn_name,
+                               drop,
+                               argument) {
   sort_method.bak <- sort_method
-  sort_method <- validate_sorting(sort_method = sort_method, horizontal = horizontal)
+  sort_method <- validate_sorting(sort_method = sort_method, horizontal = FALSE)
   if (sort_method != "manual") {
     # 'manual' is because of a manually set vector of values
     sort_method.bak <- sort_method.bak[1L]
@@ -2689,31 +2855,18 @@ sort_data <- function(values,
     values <- as.character(values)
     sort_method.bak <- as.character(sort_method.bak)
     lvls <- union(sort_method.bak, values[!values %in% sort_method.bak])
-    if (isTRUE(horizontal)) {
-      lvls <- rev(lvls)
-    }
     return(factor(values, levels = lvls, ordered = TRUE))
   }
   
   # factors get a special treatment - they are sorted on their levels
   if (is.factor(values)) {
     if (sort_method %in% c("alpha", "alpha-asc", "asc")) {
-      if (isTRUE(horizontal)) {
-        lvls <- rev(levels(values))
-      } else {
-        lvls <- levels(values)
-      }
       return(factor(as.character(values),
-                    levels = lvls,
+                    levels = levels(values),
                     ordered = is.ordered(values)))
     } else if (sort_method %in% c("alpha-desc", "desc")) {
-      if (isTRUE(horizontal)) {
-        lvls <- levels(values)
-      } else {
-        lvls <- rev(levels(values))
-      }
       return(factor(as.character(values),
-                    levels = lvls,
+                    levels = rev(levels(values)),
                     ordered = is.ordered(values)))
     }
   }
@@ -2725,19 +2878,13 @@ sort_data <- function(values,
   values <- as.character(values)
   
   # start the sorting
-  numeric_sort <- any(values %like% "[0-9]", na.rm = TRUE)
   if (sort_method %in% c("alpha", "alpha-asc", "asc")) {
-    rlang::check_installed("stringr")
     # alphabetical, or ascending
     out <- factor(values,
-                  levels = stringr::str_sort(unique(values),
-                                             numeric = numeric_sort))
+                  levels = natural_sort(unique(values)))
   } else if (sort_method %in% c("alpha-desc", "desc")) {
-    rlang::check_installed("stringr")
     out <- factor(values,
-                  levels = stringr::str_sort(unique(values),
-                                             numeric = numeric_sort,
-                                             decreasing = TRUE))
+                  levels = natural_sort(unique(values), decreasing = TRUE))
   } else if (sort_method == "inorder") {
     out <- factor(as.character(values),
                   levels = levels(fct_inorder(as.character(original_values))))
@@ -2771,7 +2918,6 @@ sort_data <- function(values,
 }
 
 #' @importFrom forcats fct_relevel
-#' @importFrom dplyr group_by across group_size mutate summarise
 set_max_items <- function(df,
                           y,
                           x,
@@ -2783,13 +2929,7 @@ set_max_items <- function(df,
                           facet,
                           facet.max_items,
                           facet.max_txt,
-                          horizontal,
-                          summarise_function,
-                          decimal.mark,
-                          big.mark,
-                          datalabels.round,
-                          datalabels.format,
-                          y.percent) {
+                          horizontal) {
   if (is.infinite(x.max_items) && is.infinite(category.max_items) && is.infinite(facet.max_items)) {
     return(df)
   }
@@ -2797,7 +2937,9 @@ set_max_items <- function(df,
     return(df)
   }
   
-  # helper function
+  # helper function: n_max is the number of items including the item for the rest,
+  # %n is the number of values merged into that item and %p their share of the
+  # total of y (F062), or of the rows when y is not numeric
   set_max <- function(values, n_max, txt, horizontal) {
     if (is.null(n_max) || is.infinite(n_max)) {
       return(values)
@@ -2814,7 +2956,13 @@ set_max_items <- function(df,
       }
       lvls_remove <- lvls_remove[order(-nchar(lvls_remove))]
       value_new <- gsub("%n", format2(length(lvls_remove)), txt, fixed = TRUE)
-      pct <- format2(length(values[values %in% lvls_remove]) / length(values), percent = TRUE)
+      merged <- values %in% lvls_remove
+      share <- if (is.numeric(y) && length(y) == length(values) && isTRUE(sum(y, na.rm = TRUE) != 0)) {
+        sum(y[merged], na.rm = TRUE) / sum(y, na.rm = TRUE)
+      } else {
+        sum(merged) / length(values)
+      }
+      pct <- format2(share, percent = TRUE)
       value_new <- gsub("%p", pct, value_new, fixed = TRUE)
       # add new factor level
       levels(values) <- c(levels(values), value_new)
@@ -2854,63 +3002,58 @@ set_max_items <- function(df,
                            horizontal = FALSE)
     df$`_var_facet` <- df[, facet, drop = TRUE]
   }
-  
-  if (all(group_sizes(df) == 1)) {
-    # summarise again
-    df <- summarise_data(df = df,
-                         summarise_function = summarise_function,
-                         decimal.mark = decimal.mark,
-                         big.mark = big.mark,
-                         datalabels.round = datalabels.round,
-                         datalabels.format = datalabels.format,
-                         y.percent = y.percent)
-  }
+  # merged values are summarised later in plot2_exec(), with the other groups
   df
   
 }
 
-#' @importFrom dplyr mutate group_by across all_of summarise
+#' @importFrom dplyr group_by across all_of summarise
 summarise_data <- function(df,
                            summarise_function,
                            decimal.mark,
                            big.mark,
                            datalabels.round,
                            datalabels.format,
+                           datalabels.percent_by = "x",
                            y.percent) {
   x <- get_x_name(df)
   y <- get_y_name(df)
   category <- get_category_name(df)
   facet <- get_facet_name(df)
   has_datalbls <- has_datalabels(df)
-  summ_fn <- function(x, fn = summarise_function, ...) {
-    # alter summarise_function to remove NAs
-    if (is.factor(x)) {
-      out <- x
-    } else {
-      out <- fn(x, ...)
+  summ_fn <- function(values) {
+    if (is.factor(values)) {
+      return(values)
     }
-    out[!is.na(out)]
+    summarise_single(values, summarise_function)
   }
+  # summarise the reserved column directly, so that user columns (such as 'n') are never overwritten
   df <- df |>
-    mutate(n = get_y(df)) |>
-    group_by(across(all_of(c(x, category, facet)))) |>
-    summarise(n = summ_fn(n),
+    group_by(across(all_of(unique(c(x, category, facet))))) |>
+    summarise(`_var_y` = summ_fn(`_var_y`),
               .groups = "drop")
-  colnames(df)[colnames(df) == "n"] <- y
-  df$`_var_y` <- df[, y, drop = TRUE]
+  if (!is.null(y) && y != "_var_y") {
+    df[[y]] <- df$`_var_y`
+  }
   if (!is.null(x)) df$`_var_x` <- df[, x, drop = TRUE]
   if (!is.null(category)) df$`_var_category` <- df[, category, drop = TRUE]
   if (!is.null(facet)) df$`_var_facet` <- df[, facet, drop = TRUE]
   if (isTRUE(has_datalbls)) {
-    df <- df |>
-      mutate(`_var_datalabels` = format_datalabels(`_var_y`,
-                                                   datalabels.round = datalabels.round,
-                                                   datalabels.format = datalabels.format,
-                                                   decimal.mark = decimal.mark,
-                                                   big.mark = big.mark,
-                                                   y.percent = y.percent))
+    # formatted in generate_datalabels() (F025)
+    df$`_var_datalabels` <- df$`_var_y`
   }
   df
+}
+
+summarise_single <- function(values, fn) {
+  # apply summarise_function to one group and check that it returns one value (F053)
+  out <- fn(values)
+  if (length(out) != 1) {
+    stop("'summarise_function' must return a single value per group, but returned ", length(out),
+         " values. Use e.g. summarise_function = mean, or summarise_function = FALSE to plot all values.",
+         call. = FALSE)
+  }
+  out
 }
 
 #' @importFrom dplyr n_distinct
@@ -2919,7 +3062,8 @@ format_datalabels <- function(datalabels,
                               datalabels.format,
                               decimal.mark,
                               big.mark,
-                              y.percent) {
+                              y.percent,
+                              group = NULL) {
   datalabels[as.character(datalabels) %in% c("", "0")] <- NA
   datalabels_out <- datalabels
   
@@ -2947,31 +3091,150 @@ format_datalabels <- function(datalabels,
              mode(datalabels) == "numeric" &&
              !inherits(datalabels, c("factor", "Date", "POSIXt"))) {
     datalabels <- as.double(datalabels)
-    datalabels_out <- rep(datalabels.format, length(datalabels_out))
-    if (datalabels.format %like% "%p") {
-      datalabels_p <- trimws(format2(datalabels / sum(datalabels, na.rm = TRUE),
-                                     round = datalabels.round,
-                                     decimal.mark = decimal.mark,
-                                     big.mark = big.mark,
-                                     percent = TRUE))
-      datalabels_out <- mapply(gsub,
-                               x = datalabels_out,
-                               pattern = "%p",
-                               replacement = datalabels_p,
-                               USE.NAMES = FALSE)
+    # fill in the placeholders of the one format for all labels at once, not row by row (F025)
+    tokens <- regmatches(datalabels.format, gregexpr("%n|%p", datalabels.format), invert = NA)[[1]]
+    values <- list()
+    if ("%p" %in% tokens) {
+      if (is.null(group)) group <- rep(1L, length(datalabels))
+      denominator <- stats::ave(datalabels, group, FUN = function(v) sum(v, na.rm = TRUE))
+      values[["%p"]] <- trimws(format2(datalabels / denominator,
+                                       round = datalabels.round,
+                                       decimal.mark = decimal.mark,
+                                       big.mark = big.mark,
+                                       percent = TRUE))
     }
-    if (datalabels.format %like% "%n") {
-      datalabels_n <- trimws(format2(datalabels,
-                                     decimal.mark = decimal.mark,
-                                     big.mark = big.mark,
-                                     round = datalabels.round,
-                                     force_decimals = FALSE))
-      datalabels_out <- mapply(gsub,
-                               x = datalabels_out,
-                               pattern = "%n",
-                               replacement = datalabels_n,
-                               USE.NAMES = FALSE)
+    if ("%n" %in% tokens) {
+      values[["%n"]] <- trimws(format2(datalabels,
+                                       decimal.mark = decimal.mark,
+                                       big.mark = big.mark,
+                                       round = datalabels.round,
+                                       force_decimals = FALSE))
     }
+    pieces <- lapply(tokens, function(tk) if (tk %in% names(values)) values[[tk]] else rep(tk, length(datalabels)))
+    datalabels_out <- if (length(pieces) == 0) rep("", length(datalabels)) else do.call(paste0, pieces)
+    datalabels_out[is.na(datalabels)] <- NA
   }
   datalabels_out
+}
+
+# whole numbers from 2000 to 2050 (F013)
+looks_like_years <- function(x) {
+  x <- x[!is.na(x)]
+  is.numeric(x) && length(x) > 0 && all(x == round(x)) && all(x >= 2000 & x <= 2050)
+}
+
+# exactly the whole numbers 1 to 12 (F013)
+looks_like_months <- function(x) {
+  is.numeric(x) && isTRUE(all.equal(sort(unique(as.double(x[!is.na(x)]))), as.double(seq_len(12))))
+}
+
+# Groups within which "%p" datalabels sum to 100% (F028). "x" means each x value within its
+# facet, so that stacked or dodged bars of one x value sum to 100%; without a category every
+# x value has a single bar, so then "x" is the same as "facet".
+percent_group <- function(df, percent_by = "x") {
+  if (is.null(percent_by)) percent_by <- "x"
+  percent_by <- tolower(trimws(percent_by[1L]))
+  if (!percent_by %in% c("x", "category", "facet", "total")) {
+    stop("`datalabels.percent_by` must be \"x\", \"category\", \"facet\" or \"total\"", call. = FALSE)
+  }
+  if (percent_by == "x" && !has_category(df)) {
+    percent_by <- "facet"
+  }
+  cols <- switch(percent_by,
+                 x = c("_var_x", "_var_facet"),
+                 category = c("_var_category", "_var_facet"),
+                 facet = "_var_facet",
+                 total = character(0))
+  cols <- intersect(cols, colnames(df))
+  if (length(cols) == 0) {
+    return(rep(1L, NROW(df)))
+  }
+  # missing values form their own group
+  interaction(lapply(cols, function(col) ifelse(is.na(df[[col]]), "\001NA", as.character(df[[col]]))), drop = TRUE)
+}
+
+# the function of a validated geom type, from ggplot2 or ggbeeswarm (F040)
+geom_function <- function(type) {
+  if (type %in% c("geom_beeswarm", "geom_quasirandom")) {
+    rlang::check_installed("ggbeeswarm")
+    getExportedValue(name = type, ns = asNamespace("ggbeeswarm"))
+  } else {
+    getExportedValue(name = type, ns = asNamespace("ggplot2"))
+  }
+}
+
+# on which side of a datalabel the bar is, or NULL for unrotated labels above the bar (F140)
+datalabels_pad_side <- function(angle, horizontal, reversed) {
+  angle <- angle %% 360
+  if (isTRUE(horizontal)) {
+    starts_at_bar <- TRUE
+  } else if (angle > 0 && angle < 180) {
+    # text runs upwards: it starts at the bar
+    starts_at_bar <- TRUE
+  } else if (angle > 180) {
+    # text runs downwards: it ends at the bar
+    starts_at_bar <- FALSE
+  } else {
+    return(NULL)
+  }
+  if (isTRUE(reversed)) {
+    starts_at_bar <- !starts_at_bar
+  }
+  if (starts_at_bar) "start" else "end"
+}
+
+# a fixed gap between bar and datalabel: padding on the side of the bar (F140)
+datalabels_pad <- function(x, side, pad = "  ") {
+  ifelse(is.na(x),
+         NA_character_,
+         if (side == "start") paste0(pad, x) else paste0(x, pad))
+}
+
+# Enlarge the upper expansion of the value axis so that rotated datalabels fit (F143). The
+# length of a label on the page is estimated from its number of characters and the label size,
+# for a typical panel height; the room is only ever increased.
+fit_rotated_datalabels <- function(p, type, angle, size, horizontal, stacked, y.transform,
+                                   panel_mm = 65, char_width = 0.6) {
+  angle <- angle %% 360
+  if (isTRUE(horizontal) || isTRUE(stacked) || angle == 0 || angle == 180 ||
+      !type %in% c("geom_col", "geom_bar") || !transform_name(y.transform) %in% c("identity", "reverse")) {
+    return(p)
+  }
+  d <- p$data
+  if (!all(c("_var_y", "_var_datalabels") %in% colnames(d)) || !is.numeric(d$`_var_y`)) {
+    return(p)
+  }
+  y <- abs(d$`_var_y`)
+  labels <- as.character(d$`_var_datalabels`)
+  keep <- !is.na(labels) & is.finite(y)
+  if (!any(keep) || any(d$`_var_y`[keep] < 0)) {
+    return(p)
+  }
+  # share of the panel height taken by each label, including the padding of two spaces;
+  # the vertical extent of rotated text is its length times |sin(angle)|
+  share <- (nchar(labels[keep]) + 2) * char_width * size * abs(sin(angle * pi / 180)) / panel_mm
+  share <- pmin(share, 0.8)
+  if ("_var_facet" %in% colnames(d)) {
+    panel <- as.character(d$`_var_facet`[keep])
+  } else {
+    panel <- rep("", sum(keep))
+  }
+  y <- y[keep]
+  # per panel: the axis must reach y / (1 - share) for every bar; relative to the highest bar
+  needed <- vapply(split(seq_along(y), panel), function(i) {
+    top <- max(y[i])
+    if (top <= 0) return(0)
+    max(y[i] / (1 - share[i])) / top - 1
+  }, numeric(1))
+  mult <- max(needed)
+  sc <- p$scales$get_scales("y")
+  if (is.null(sc) || !is.numeric(sc$expand) || length(sc$expand) != 4) {
+    return(p)
+  }
+  # the side of the axis where the labels are: the upper side, or the lower for a reversed axis
+  side <- if (transform_name(y.transform) == "reverse") 1L else 3L
+  if (mult > sc$expand[side]) {
+    sc$expand[side] <- mult
+  }
+  p
 }
