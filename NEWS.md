@@ -1,4 +1,4 @@
-# plot2 1.99.0.9000
+# plot2 1.99.1
 
 * Long rotated datalabels no longer run beyond the plot: unless `y.expand` or `y.limits` is set, the value axis gets extra room for them, estimated for a typical figure size.
 * The whiskers of boxplots with a category now get their colours from the colour scale, which removes an internal workaround that repeated colour vectors.
@@ -137,6 +137,9 @@
 * Fixed: `plot2()` no longer changes the random-number stream (`.Random.seed`); the tip about `options(plot2.silent = TRUE)` is now shown once per session
 * Fixed: the message about rows removed with `na.rm = TRUE` was garbled ("rowss")
 * Fixed: date-time (POSIXct) columns could be chosen as the automatic y variable, which crashed `plot2()`
+
+# plot2 1.99.0
+
 * Support for ggplot2 4.0.0
 * Support for dplyr 1.2.0
 * Added Shiny app (`plot2::create_interactively()`), with file upload
