@@ -38,7 +38,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.99.1" id="plot2-1991">plot2 1.99.1<a class="anchor" aria-label="anchor" href="#plot2-1991"></a></h2>
-<ul><li>Long rotated datalabels no longer run beyond the plot: unless <code>y.expand</code> or <code>y.limits</code> is set, the value axis gets extra room for them, estimated for a typical figure size.</li>
+<ul><li>In <code><a href="../reference/plot2.html">plot2()</a></code> for sf objects, the arguments <code>crs</code> and <code>datalabels.centroid</code> now come after <code>...</code>, so they must be named (e.g. <code>crs = 28992</code>). This makes the method consistent with the generic, as R CMD check requires.</li>
+<li>Long rotated datalabels no longer run beyond the plot: unless <code>y.expand</code> or <code>y.limits</code> is set, the value axis gets extra room for them, estimated for a typical figure size.</li>
 <li>The whiskers of boxplots with a category now get their colours from the colour scale, which removes an internal workaround that repeated colour vectors.</li>
 <li>With <code>facet.drop = FALSE</code>, empty panels no longer cause R warnings when drawing: bars without a category are no longer dodged, and a discrete x axis is shared between the panels (with a message).</li>
 <li>Rotated x-axis labels (<code>x.label_angle</code>) are now anchored at their ticks for every angle, also in horizontal plots, using <code>ggplot2::guide_axis(angle = )</code>; setting <code>x.label_align</code> still uses your own alignment.</li>

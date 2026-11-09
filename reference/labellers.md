@@ -43,23 +43,29 @@ Markdown the chunk option `dev = "cairo_pdf"`.
 ## Examples
 
 ``` r
+euros(c(1500, 2499.5))
+#> [1] "€ 1 500.00" "€ 2 499.50"
+dollars(c(1500, 2499.5))
+#> [1] "$1 500.00" "$2 499.50"
+
 profit <- data.frame(group = LETTERS[1:4],
                      profit = runif(4, 10000, 25000))
 
-profit |>
-  plot2(y.labels = euros,
-        datalabels = FALSE)
+# the default pdf() and postscript() devices cannot draw the euro sign;
+# use e.g. cairo_pdf(), png() or the RStudio plot pane instead
+if (!names(grDevices::dev.cur()) %in% c("pdf", "postscript")) {
+  profit |>
+    plot2(y.labels = euros,
+          datalabels = FALSE)
+}
 #> Using y = profit
 #> Using x = group
 
-        
-profit |>
-  plot2(y.labels = euros,
-        datalabels.format = euros)
+if (!names(grDevices::dev.cur()) %in% c("pdf", "postscript")) {
+  profit |>
+    plot2(y.labels = euros,
+          datalabels.format = euros)
+}
 #> Using y = profit
 #> Using x = group
-
-
-dollars(c(1500, 2499.5))
-#> [1] "$1 500.00" "$2 499.50"
 ```

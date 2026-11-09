@@ -2,6 +2,10 @@
 
 ## plot2 1.99.1
 
+- In [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+  for sf objects, the arguments `crs` and `datalabels.centroid` now come
+  after `...`, so they must be named (e.g. `crs = 28992`). This makes
+  the method consistent with the generic, as R CMD check requires.
 - Long rotated datalabels no longer run beyond the plot: unless
   `y.expand` or `y.limits` is set, the value axis gets extra room for
   them, estimated for a typical figure size.

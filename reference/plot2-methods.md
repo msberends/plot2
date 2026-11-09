@@ -633,9 +633,9 @@ plot2(
     element_blank(), axis.ticks = element_blank()),
   background = getOption("plot2.colour_background", "white"),
   markdown = TRUE,
+  ...,
   crs = NULL,
-  datalabels.centroid = NULL,
-  ...
+  datalabels.centroid = NULL
 )
 
 # S3 method for class 'data.frame'

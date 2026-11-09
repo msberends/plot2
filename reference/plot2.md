@@ -1518,15 +1518,19 @@ lm(mpg ~ hp, data = mtcars) |>
 
 
 # sf objects (geographic plots, 'simple features') are also supported
-netherlands |> 
-  plot2()
+if (requireNamespace("sf", quietly = TRUE)) {
+  netherlands |> 
+    plot2()
+}
 #> Using category = area_km2
 #> Using datalabels = province
 #> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 
-netherlands |> 
-  plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
-  add_sf(netherlands, colour = "black", colour_fill = NA)
+if (requireNamespace("sf", quietly = TRUE)) {
+  netherlands |> 
+    plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
+    add_sf(netherlands, colour = "black", colour_fill = NA)
+}
 #> Using category = area_km2
 #> Using datalabels = province
 #> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
