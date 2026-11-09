@@ -45,7 +45,6 @@ Suggests:
   ggbeeswarm (>= 0.7.0),
   ggforce (>= 0.5.0),
   glue,
-  ggplot2movies,
   haven,
   jsonlite,
   nanoparquet,

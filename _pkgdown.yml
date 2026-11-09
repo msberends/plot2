@@ -20,85 +20,51 @@ template:
   bootswatch: "united"
 
 navbar:
-  title: "plot2"
-  left:
-    - text: "Home"
-      icon: "fa-home"
-      href: "index.html"
-      
-    - text: "Reference"
-      icon: "fa-book-open"
-      href: "reference/index.html"
-      
-    - text: "Vignettes"
-      icon: "fa-solid fa-newspaper"
-      menu:
-      
-      - text: "Introduction to plot2"
-        href: "articles/plot2.html"
-        icon: "fa-magnifying-glass-chart"
-        
-      - text: "Supported Plot Types"
-        href: "articles/supported_types.html"
-        icon: "fa-solid fa-square-poll-vertical"
-        
-      - text: "Adding An Extra plot2 Type"
-        href: "reference/add_type.html"
-        icon: "fa-solid fa-square-plus"
-        
-  right:
-    - text: "Changelog"
-      icon: "fa-solid fa-wand-magic-sparkles"
-      href: "news/"
-      
-    - text: "Source Code"
-      icon: "fab fa-github"
-      href: "https://github.com/msberends/plot2"
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+
+articles:
+  - title: Guides
+    navbar: ~
+    contents:
+      - supported_types
+      - articles/colours-and-themes
+      - articles/maps
+      - articles/fonts
+      - articles/plot2-for-ggplot2-users
 
 reference:
-  - title: Creating Plots
+  - title: Creating plots
     desc: >
-      Everything starts here. The `plot2()` function is the heart of this
-      package -- just pass in your data and it will figure out the best
-      way to visualise it. Whether you have a data frame, a matrix, a
-      statistical model, or even geographic data, `plot2()` knows what to
-      do. Want to layer extra elements on top? Use `add_type()` and its
-      convenient shortcuts to build up your plot step by step.
+      `plot2()` creates a complete plot from data in one call. Its methods
+      accept data frames, vectors, tables, formulas, matrices, models and
+      geographic data. `add_type()` and its shortcuts add layers to a plot.
     contents:
       - plot2
       - plot2-methods
       - add_type
 
-  - title: Customising Your Plot
+  - title: Changing plots
     desc: >
-      Already have a plot but want to fine-tune it? These functions let
-      you change which variables are mapped to visual properties like
-      colour or size, reorder the layers that make up your plot, or
-      switch to a spider (radar) chart layout. Small adjustments can make
-      a big difference in how clearly your data tells its story.
+      Change the mapping or the order of the layers of an existing plot, or
+      use the coordinate system of spider plots.
     contents:
       - add_mapping
       - move_layer
       - coord_spider
 
-  - title: Working with Colours
+  - title: Colours
     desc: >
-      Colour is one of the most powerful tools in data visualisation.
-      These functions give you access to a wide range of colour palettes
-      -- including colourblind-friendly options -- and let you define and
-      save your own custom colours for consistent use across all your
-      plots and projects.
+      Get colours from names and palettes, and register the colours of an
+      organisation for use in all plots.
     contents:
       - get_colour
 
-  - title: Themes and Labels
+  - title: Themes, titles and labels
     desc: >
-      Great plots deserve a clean, professional look. `theme_minimal2()`
-      gives your plots a modern, print-ready appearance with sensible
-      defaults. The other functions in this section help you use
-      **bold**, *italic*, and other rich formatting in your plot titles
-      and axis labels, and make it easy to extract or customise the
-      title of any plot.
+      The default theme of `plot2()`, markdown in titles, and labelling
+      functions for axes and data labels.
     contents:
       - theme_minimal2
       - md_to_expression
@@ -106,49 +72,37 @@ reference:
       - labellers
       - label_taxonomy
 
-  - title: Number Formatting
+  - title: Number formatting
     desc: >
-      Numbers on axes and in labels should be easy to read, regardless
-      of where in the world your audience is. These helpers automatically
-      format numbers with the right decimal separator and thousands
-      grouping for your locale, and can display values as euros or
-      dollars.
+      The decimal mark and thousands separator, determined from the
+      session or set with options.
     contents:
       - dec_mark
 
-  - title: Interactive Plots
+  - title: Interactive use
     desc: >
-      Want your audience to hover, zoom, and click on your plots? Turn
-      any plot into an interactive widget with `as_plotly()`, or use
-      `create_interactively()` to build a plot from scratch using a
-      point-and-click interface -- no code required.
+      Convert a plot to an interactive `plotly` widget, or build a plot in
+      a Shiny app.
     contents:
       - as_plotly
       - create_interactively
 
-  - title: Default Settings
+  - title: Options
     desc: >
-      Tired of setting the same options every time? Configure your
-      preferred defaults -- such as your go-to colour scheme, font, or
-      decimal format -- once, and every plot you create will
-      automatically use them.
+      Package options that set defaults for all plots in a session.
     contents:
       - plot2-options
 
-  - title: Example Datasets
+  - title: Data sets
     desc: >
-      These built-in datasets are ready to use for exploring `plot2()`
-      and trying out different plot types. No need to load external
-      files -- just type the dataset name and start plotting.
+      Example data sets used in the documentation.
     contents:
       - admitted_patients
       - netherlands
 
-  - title: Convenience Functions
+  - title: Re-exported functions
     desc: >
-      A handful of commonly used helper functions from other packages,
-      made available directly through `plot2` so you do not need to load
-      additional packages for everyday tasks like counting rows or
-      selecting columns.
+      Functions from `dplyr` and `tidyselect` that are often used in the
+      arguments of `plot2()`.
     contents:
       - reexports

@@ -1,231 +1,281 @@
 ---
-title: "Supported Plot Types"
+title: "Plot types"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{Supported Plot Types}
+  %\VignetteIndexEntry{Plot types}
   %\VignetteEngine{knitr::rmarkdown}
-toc: true
-editor_options: 
-  chunk_output_type: console
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.height = 6,
-  fig.width = 7
+  fig.width = 7,
+  fig.height = 4.2,
+  dpi = 72,
+  out.width = "100%"
 )
-library(plot2)
-diamonds <- ggplot2::diamonds
 # suggested packages are used conditionally, so that the vignette also builds without them (#114)
 has_sf <- requireNamespace("sf", quietly = TRUE)
 has_patchwork <- requireNamespace("patchwork", quietly = TRUE)
 has_beeswarm <- requireNamespace("ggbeeswarm", quietly = TRUE)
 has_ggforce <- requireNamespace("ggforce", quietly = TRUE)
-has_movies <- requireNamespace("ggplot2movies", quietly = TRUE)
-has_viridis <- requireNamespace("viridisLite", quietly = TRUE)
-if (has_movies) {
-  movies <- ggplot2movies::movies
-}
-if (has_viridis) {
-  options(plot2.colour = "viridis")
-}
 ```
 
-The following plot types are supported.
-
-Any `ggplot2` geom is supported, but we added support for some other, more advanced plots.
-
-# Column / Bar
-
-Used for comparing discrete categories through rectangular bars.
-
 ```{r}
-diamonds |> # from the ggplot2 package
-  plot2(x = cut,
-        y = n())
+library(plot2)
 ```
 
-In `plot2`, bar types are horizontal alternatives for column types (just like MS Excel):
+This vignette shows every plot type of `plot2()`, with the data that each type needs. The examples use the `admitted_patients` data set from this package and data sets from base R and `ggplot2`.
+
+## Choosing a type
+
+Without a `type`, `plot2()` chooses one from the data:
+
+- a boxplot if there is no `x`, or if every group of `x`, `category` and `facet` contains at least three values;
+- points if `x` and `y` are both numeric;
+- a histogram if `x` is the only numeric column;
+- columns otherwise (set the option `plot2.default_type` to change this).
+
+The `type` argument sets the type explicitly. It accepts the name of any `ggplot2` geom, with or without the prefix `geom_`, such as `"col"`, `"line"` or `"geom_point"`. Several types also have an abbreviation:
+
+| Type | `type` | Abbreviation | Requires |
+|:-----|:-------|:-------------|:---------|
+| [Column](#column-and-bar) | `"col"` | `"c"` | |
+| [Bar](#column-and-bar) (horizontal column) | `"bar"` | | |
+| [Bar with percentages](#bar-with-percentages) | `"barpercent"` | `"bp"` | |
+| [Line](#line) | `"line"` | `"l"` | |
+| [Line with points](#line) | `"linedot"` | `"ld"`, `"lp"` | |
+| [Area](#area) | `"area"` | `"a"` | |
+| [Point](#point-jitter-and-beeswarm) | `"point"` | `"p"` | |
+| [Jitter](#point-jitter-and-beeswarm) | `"jitter"` | `"j"` | |
+| [Beeswarm](#point-jitter-and-beeswarm) | `"beeswarm"` | `"bs"` | `ggbeeswarm` |
+| [Boxplot](#boxplot-and-violin) | `"boxplot"` | `"b"` | |
+| [Violin](#boxplot-and-violin) | `"violin"` | `"v"` | |
+| [Histogram](#histogram-and-density) | `"histogram"` | `"h"` | |
+| [Density](#histogram-and-density) | `"density"` | | |
+| [Dumbbell](#dumbbell) | `"dumbbell"` | `"d"`, `"db"` | |
+| [Back-to-back](#back-to-back) | `"back-to-back"` | `"b2b"` | `patchwork` |
+| [Heatmap](#heatmap) | `"tile"` | | |
+| [Sankey](#sankey) | `"sankey"` | `"s"` | `ggforce` |
+| [Spider](#spider) | `"spider"` | `"sp"` | |
+| [UpSet](#upset) | `"upset"` | `"u"` | |
+| [Map](#map) | `"sf"` | | `sf` |
+
+All other `ggplot2` geoms can be used as well, such as `"step"` or `"text"`. Arguments that `plot2()` does not know, such as `fill` or `outlier.shape`, are passed on to the geom through `...`.
+
+## Column and bar
+
+Columns compare a value between groups. `y` is often a calculation, such as `n()` for the number of rows, which `plot2()` computes per group:
+
 ```{r}
-diamonds |>
-  plot2(x = cut,
+admitted_patients |>
+  plot2(x = hospital, y = n())
+```
+
+In `ggplot2`, columns and bars are the same geom. Following the common use of these terms, `plot2()` draws bars horizontally:
+
+```{r}
+admitted_patients |>
+  plot2(x = hospital, y = n(), category = ward, type = "bar")
+```
+
+Columns of different categories are placed next to each other. Use `stacked = TRUE` to stack them, or `stacked_fill = TRUE` to stack them to 100%.
+
+## Bar with percentages
+
+`type = "barpercent"` shows the ten most frequent values as bars, with their counts and percentages. The remaining values are combined into one bar:
+
+```{r}
+ggplot2::mpg |>
+  plot2(x = manufacturer, type = "barpercent")
+```
+
+This type sets `type = "bar"`, `x.sort = "freq-desc"`, `x.max_items = 10` and `datalabels.format = "%n (%p)"`. Each of these can be changed.
+
+## Line
+
+Lines show a trend over an ordered `x`, such as time:
+
+```{r}
+admitted_patients |>
+  plot2(x = format(date, "%Y"), y = n(), category = ward, type = "line")
+```
+
+`type = "linedot"` adds points to the line, like `type = "b"` in base R's `plot()`:
+
+```{r}
+admitted_patients |>
+  plot2(x = format(date, "%Y"), y = n(), category = ward, type = "linedot")
+```
+
+## Area
+
+Stacked areas show how parts add up to a total over an ordered `x`. Not every hospital has admissions in every year, so `x.complete = 0` adds the missing years with a count of zero; without it, the areas would skip these years:
+
+```{r}
+admitted_patients |>
+  plot2(x = format(date, "%Y"),
         y = n(),
-        type = "bar")
+        category = hospital,
+        type = "area",
+        stacked = TRUE,
+        x.complete = 0)
 ```
 
-# Line
+## Point, jitter and beeswarm
 
-Used for visualising trends over ordered intervals.
+Points show the relation between two numeric variables. This is the automatic type when `x` and `y` are both numeric:
 
 ```{r}
-pressure |> # from base R
-  plot2(x = temperature,
-        y = pressure,
-        type = "line")
-pressure |>
-  plot2(x = temperature,
-        y = pressure,
-        type = "line-point")
+mtcars |>
+  plot2(x = wt, y = mpg, category = factor(cyl), category.title = "Cylinders")
 ```
 
-# Point
-
-Used for displaying individual observations in a two dimensional space.
+For a discrete `x`, points of the same group overlap. Jitter moves them randomly in the horizontal direction, and a beeswarm places them next to each other:
 
 ```{r}
-iris |> # from base R
-  plot2()
-diamonds |>
-  plot2(x = carat,
-        y = price,
-        category = cut,
-        type = "point")
+admitted_patients |>
+  plot2(x = ward, y = age, type = "jitter")
 ```
-
-# Area
-
-Used for emphasising cumulative magnitudes across continuous domains.
-
-```{r}
-pressure |>
-  plot2(x = temperature,
-        y = pressure,
-        type = "area")
-airquality |>
-  plot2(x = Day, 
-        y = Wind, 
-        category = Month,
-        category.character = TRUE,
-        stacked_fill= TRUE,
-        type = "area")
-```
-
-# Boxplot / Violin
-
-Used for summarising and comparing distributions with focus on spread and density.
-
-```{r}
-iris |>
-  plot2(x = Species,
-        type = "violin")
-iris |>
-  plot2(x = Species,
-        y = where(is.double),
-        type = "boxplot")
-```
-
-# Histogram
-
-Used for visualising the frequency distribution of continuous variables.
-
-```{r}
-diamonds |>
-  plot2(x = price,
-        type = "hist")
-```
-
-# Geo (sf)
-
-Used for mapping spatial data encoded as simple features.
-
-```{r, eval = has_sf}
-netherlands |> # from this plot2 package
-  plot2()
-```
-
-# Beeswarm
-
-Used for showing distributions of individual observations without overlap.
 
 ```{r, eval = has_beeswarm}
 iris |>
-  plot2(x = Species,
-        y = Sepal.Length,
-        type = "beeswarm")
+  plot2(x = Species, y = Sepal.Length, type = "beeswarm")
 ```
 
-# Back-to-back
+## Boxplot and violin
 
-Used for contrasting two mirrored groups across shared categories.
+Boxplots and violins summarise a distribution per group. A boxplot is the automatic type when every group contains at least three values:
+
+```{r}
+admitted_patients |>
+  plot2(x = hospital, y = age, category = gender)
+```
+
+`y` can also be several columns, which are then shown as a category:
+
+```{r}
+iris |>
+  plot2(x = Species, y = where(is.double))
+```
+
+A violin also shows the shape of the distribution, with lines at the quartiles:
+
+```{r}
+admitted_patients |>
+  plot2(x = ward, y = age, type = "violin")
+```
+
+## Histogram and density
+
+A histogram shows the distribution of one numeric variable. `plot2()` chooses the bin width from the data and adds the density as a line; set `binwidth` and `smooth = FALSE` to change this:
+
+```{r}
+admitted_patients |>
+  plot2(x = age, type = "histogram")
+```
+
+A density plot shows the distribution as a smooth curve, which makes it easier to compare groups. Transparency keeps overlapping groups visible:
+
+```{r}
+iris |>
+  plot2(x = Sepal.Length, category = Species, type = "density", colour_transparency = 0.5)
+```
+
+## Dumbbell
+
+A dumbbell plot compares two groups per value of `x`, with a line between the two points. The `category` must have exactly two values:
+
+```{r}
+admitted_patients |>
+  plot2(x = hospital, y = median(age), category = gender, type = "dumbbell")
+```
+
+## Back-to-back
+
+A back-to-back plot, also known as a butterfly plot or population pyramid, shows two groups on either side of a shared axis. The `facet` must have exactly two values:
 
 ```{r, eval = has_patchwork}
-admitted_patients |> # from this plot2 package
-  plot2(x = age_group,
-        y = n(),
-        facet = ward,
-        type = "back-to-back")
-admitted_patients |> # from this plot2 package
-  plot2(x = age_group,
-        y = n(),
-        y.limits = c(0, 60),
-        category = gender,
-        facet = ward,
-        type = "back-to-back")
+admitted_patients |>
+  plot2(x = age_group, y = n(), facet = gender, type = "back-to-back")
 ```
 
-# Sankey
+A `category` divides each side further:
 
-Used for depicting flows or transitions between connected stages.
+```{r, eval = has_patchwork}
+admitted_patients |>
+  plot2(x = age_group, y = n(), category = ward, facet = gender, type = "back-to-back")
+```
+
+## Heatmap
+
+A matrix with the same row and column names, such as a correlation matrix, becomes a heatmap. Three colours give a scale that diverges from the midpoint:
+
+```{r}
+mtcars |>
+  cor() |>
+  plot2(colour = c("#2166AC", "white", "#B2182B"),
+        category.title = "Correlation")
+```
+
+## Sankey
+
+A Sankey plot shows how observations flow between the values of several variables. `x` contains these variables, and `category` colours the flows:
 
 ```{r, eval = has_ggforce}
-Titanic |> # from base R
-  plot2(x = c(Age, Class, Survived),
-        category = Sex,
-        type = "sankey")
+Titanic |>
+  plot2(x = c(Class, Age, Survived), category = Sex, type = "sankey")
 ```
 
-# Spider
+`Titanic` is a table from base R. `plot2()` converts tables to a data frame with a column `Freq`, which it uses as `y`.
 
-Used for comparing multivariate values across categorical axes arranged radially, enabling pattern recognition and relative magnitude assessment between groups.
+## Spider
+
+A spider plot, also known as a radar chart, shows several values per group on axes that are arranged in a circle. `x` gives the axes, and `category` the groups:
 
 ```{r}
-diamonds |>
-    plot2(x = cut,
-          y = mean(price),
-          category = color,
-          type = "spider",
-          y.labels = dollars)
+admitted_patients |>
+  plot2(x = age_group, y = n(), category = hospital, type = "spider")
 ```
 
-```{r, eval = has_viridis}
-# spider plots can have a filling colour, but it's hardly ever useful
-diamonds |>
-    plot2(x = cut,
-          y = mean(price),
-          category = color,
-          type = "spider",
-          y.labels = dollars,
-          colour_fill = "viridis")
+The spider plot uses `coord_spider()`, a coordinate system of this package with straight grid lines between the axes.
+
+## UpSet
+
+An UpSet plot shows the sizes of the intersections of several sets. `x` contains logical columns or columns with 0 and 1, one per set. This example defines four sets of cars:
+
+```{r}
+mtcars |>
+  transform(manual = am == 1,
+            straight_engine = vs == 1,
+            four_gears = gear == 4,
+            economical = mpg > 20) |>
+  plot2(x = c(manual, straight_engine, four_gears, economical), type = "upset")
 ```
 
-# UpSet
+With a `y`, the bars show a summary of `y` per intersection instead of the counts:
 
-Used for analysing intersections among multiple sets with scalable clarity.
-
-```{r, eval = has_movies}
-movies |> # from the ggplot2movies package
-  plot2(x = c(Action, Animation, Comedy, Drama, Romance),
-        type = "upset")
-movies |>
-  plot2(x = c(Action, Animation, Comedy, Drama, Romance),
-        y = median(rating),
-        y.title = "Median Rating",
-        x.sort = TRUE,
+```{r}
+mtcars |>
+  transform(manual = am == 1,
+            straight_engine = vs == 1,
+            four_gears = gear == 4,
+            economical = mpg > 20) |>
+  plot2(x = c(manual, straight_engine, four_gears, economical),
+        y = median(hp),
+        y.title = "Median horsepower",
         type = "upset")
 ```
 
-# Dumbbell
+## Map
 
-Used for highlighting changes or differences between paired values.
+Geographic data of class `sf` become maps. The data set `netherlands` contains the provinces of the Netherlands, with their area:
 
-```{r}
-diamonds |>
-  dplyr::filter(cut %in% c("Fair", "Very Good")) |>
-  plot2(x = cut(carat, 6),
-        y = median(price),
-        category = cut,
-        type = "dumbbell")
+```{r, eval = has_sf}
+netherlands |>
+  plot2(category = area_km2, category.title = "Area (square kilometres)")
 ```
+
+The article *Maps* on the package website shows more examples, such as layers with `add_sf()`.

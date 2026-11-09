@@ -1,0 +1,90 @@
+---
+title: "Maps"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 6,
+  dpi = 72,
+  out.width = "100%"
+)
+```
+
+```{r}
+library(plot2)
+```
+
+Geographic data of class `sf`, from the [`sf` package](https://r-spatial.github.io/sf/), become maps in `plot2()`. This article uses the data set `netherlands`, which contains the twelve provinces of the Netherlands with their area:
+
+```{r}
+netherlands
+```
+
+## A first map
+
+Without other arguments, the first numeric column becomes the `category` and the first character column becomes the data labels. The labels are placed at the centre of each area:
+
+```{r}
+netherlands |>
+  plot2()
+```
+
+For maps, `plot2()` removes the axes, places the legend on the right and uses a continuous colour scale for a numeric `category`.
+
+## Category and colours
+
+`category` accepts a column or a calculation, as for other data:
+
+```{r}
+netherlands |>
+  plot2(category = ifelse(area_km2 > 3000, "Larger than 3 000 km²", "Smaller"),
+        colour_fill = c("#4E79A7", "#E8E8E8"),
+        category.title = "Area")
+```
+
+`colour_fill` sets the colours of the areas and `colour` sets the colour of the borders. The options `plot2.colour_sf_fill` and `plot2.colour_sf` set their defaults for all maps.
+
+## Data labels
+
+`datalabels` sets the text of the labels, or removes them with `datalabels = FALSE`:
+
+```{r}
+netherlands |>
+  plot2(category = area_km2,
+        category.title = "Area (km²)",
+        datalabels = paste0(province, "\n", round(area_km2), " km²"),
+        datalabels.size = 2.5,
+        colour_fill = "mako")
+```
+
+The labels are placed at the centre of each area (`sf::st_centroid()`). For areas with an irregular shape, the centre can lie outside the area; `datalabels.centroid = FALSE` places the labels at a point that is always on the area (`sf::st_point_on_surface()`).
+
+## Coordinate reference system
+
+`crs` transforms the data to another coordinate reference system with `sf::st_transform()`. The data set `netherlands` uses the Dutch national grid (EPSG:28992); this map uses the global longitude and latitude system (EPSG:4326):
+
+```{r}
+netherlands |>
+  plot2(crs = 4326, datalabels = FALSE)
+```
+
+## Adding layers
+
+`add_sf()` adds another layer of `sf` data to a map, for example to outline a selection of areas:
+
+```{r}
+northern_provinces <- netherlands[netherlands$province %in% c("Groningen", "Friesland", "Drenthe"), ]
+
+netherlands |>
+  plot2(datalabels = FALSE, colour_fill = "mako") |>
+  add_sf(northern_provinces,
+         colour = "#F28E2B",
+         colour_fill = NA,
+         linewidth = 1,
+         datalabels = province)
+```
+
+The result is a `ggplot` object, so `ggplot2::geom_sf()` and other `ggplot2` functions can be added as well.

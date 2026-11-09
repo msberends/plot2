@@ -14,17 +14,19 @@
 
 # A09: vignette 'Supported Plot Types'
 
-test_that("A09.01 every chunk of the supported types vignette runs without error or warning", {
+test_that("A09.01 every chunk of the plot types vignette runs without error or warning", {
   skip_on_cran()
-  for (pkg in c("ggplot2movies", "ggbeeswarm", "sf", "ggforce")) skip_if_not_installed(pkg)
+  for (pkg in c("ggbeeswarm", "sf", "ggforce", "patchwork")) skip_if_not_installed(pkg)
   withr::local_pdf(NULL)
   withr::local_options(plot2.colour = NULL)
-  res <- eval_chunks(source_file("vignettes", "supported_types.Rmd"))
+  res <- eval_chunks(source_file("vignettes", "supported_types.Rmd"), exclude = "opts_chunk")
   expect_identical(res$code[!is.na(res$error)], character(0))
   expect_identical(res$code[!is.na(res$warnings)], character(0))
 })
 
-test_that("A09.02 the vignette builds without its suggested data packages", {
-  src <- readLines(source_file("vignettes", "supported_types.Rmd"))
-  expect_true(any(grepl("requireNamespace\\(\"ggplot2movies\"", src)))
+test_that("A09.02 the plot types vignette lists every additional type of plot2()", {
+  src <- paste(readLines(source_file("vignettes", "supported_types.Rmd")), collapse = "\n")
+  for (type in c("barpercent", "dumbbell", "linedot", "back-to-back", "upset", "sankey", "spider", "beeswarm")) {
+    expect_true(grepl(paste0("`\"", type, "\"`"), src), label = type)
+  }
 })
