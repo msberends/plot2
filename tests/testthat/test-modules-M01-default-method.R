@@ -46,11 +46,13 @@ test_that("M01.05 the plot2.default_type option sets the type for vectors", {
 })
 
 test_that("M01.06 a one-dimensional table gives counts", {
+  skip_if_not_installed("broom")
   t <- table(c("a", "b", "b"))
   expect_identical(as.numeric(layer_df(expect_plot2(plot2(t)), "bar")$y), c(1, 2))
 })
 
 test_that("M01.07 an lm object is plotted via fortify", {
+  skip_if_not_installed("broom")
   m <- stats::lm(mpg ~ wt, data = mtcars)
   expect_geoms(expect_plot2(plot2(m)), "point")
 })

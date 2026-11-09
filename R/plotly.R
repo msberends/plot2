@@ -24,15 +24,18 @@
 #' @rdname plotly
 #' @export
 #' @examples 
-#' mtcars |>
-#'   plot2(mpg, hp) |> 
-#'   as_plotly()
-#'   
-#' mtcars |>
-#'   plot2(mpg, hp) |> 
-#'   as_plotly(dragmode = "pan") |>
-#'   plotly_style(marker.line.color = "red",
-#'                hoverinfo = "y")
+#' if (requireNamespace("plotly", quietly = TRUE)) {
+#'   mtcars |>
+#'     plot2(mpg, hp) |> 
+#'     as_plotly()
+#' }
+#' if (requireNamespace("plotly", quietly = TRUE)) {
+#'   mtcars |>
+#'     plot2(mpg, hp) |> 
+#'     as_plotly(dragmode = "pan") |>
+#'     plotly_style(marker.line.color = "red",
+#'                  hoverinfo = "y")
+#' }
 as_plotly <- function(plot, ...) {
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)

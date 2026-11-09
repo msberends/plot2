@@ -21,6 +21,7 @@ library(plot2)
 diamonds <- ggplot2::diamonds
 # suggested packages are used conditionally, so that the vignette also builds without them (#114)
 has_sf <- requireNamespace("sf", quietly = TRUE)
+has_patchwork <- requireNamespace("patchwork", quietly = TRUE)
 has_beeswarm <- requireNamespace("ggbeeswarm", quietly = TRUE)
 has_ggforce <- requireNamespace("ggforce", quietly = TRUE)
 has_movies <- requireNamespace("ggplot2movies", quietly = TRUE)
@@ -150,7 +151,7 @@ iris |>
 
 Used for contrasting two mirrored groups across shared categories.
 
-```{r}
+```{r, eval = has_patchwork}
 admitted_patients |> # from this plot2 package
   plot2(x = age_group,
         y = n(),

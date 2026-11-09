@@ -22,6 +22,7 @@ fx_upset <- data.frame(a = c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE),
                        w = c(1, 2, 3, 4, 5, 6))
 
 test_that("E05.01 result is a patchwork of four plots", {
+  skip_if_not_installed("patchwork")
   p <- expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
   expect_s3_class(p, "patchwork")
   expect_length(p, 4)
@@ -45,6 +46,7 @@ test_that("E05.04 y title: default 'Intersection size', replaced by y.title", {
 })
 
 test_that("E05.05 a category stacks the intersection bars", {
+  skip_if_not_installed("patchwork")
   p <- expect_plot2(plot2(fx_upset, x = c(a, b, c), category = g, type = "upset"))
   expect_identical(as.character(scale_breaks(p[[2]], "fill")), c("f", "m"))
 })
@@ -65,6 +67,7 @@ test_that("E05.08 a single x column errors", {
 })
 
 test_that("E05.09 x.sort as a vector (#83)", {
+  skip_if_not_installed("patchwork")
   expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = c("1", "2")))
 })
 
@@ -83,5 +86,6 @@ test_that("E05.11b the random-number stream is untouched (#14)", {
 })
 
 test_that("E05.12 no R warnings (#87)", {
+  skip_if_not_installed("patchwork")
   expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
 })

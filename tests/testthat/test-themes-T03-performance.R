@@ -43,6 +43,7 @@ test_that("T03.04 without y and without a numeric column, rows are counted", {
 })
 
 test_that("T03.05 a Sankey diagram can be drawn from raw rows", {
+  skip_if_not_installed("ggforce")
   d <- data.frame(h = c("a", "b", "b"), k = c("x", "y", "y"))
   p <- expect_plot2(plot2(d, x = c(h, k), category = h, type = "sankey"))
   expect_true(nrow(layer_df(p, 1)) > 0)

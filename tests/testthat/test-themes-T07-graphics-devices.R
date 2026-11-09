@@ -16,8 +16,14 @@
 
 render_warnings <- function(device, p) {
   f <- tempfile()
+  # a device that cannot start (e.g. Cairo without its system libraries on macOS) only
+  # warns, after which print() would draw on another device; skip in that case
+  before <- grDevices::dev.cur()
+  opened <- tryCatch({ suppressWarnings(device(f)); grDevices::dev.cur() != before },
+                     error = function(e) FALSE)
+  if (!isTRUE(opened)) testthat::skip("graphics device not available")
   w <- character(0)
-  withCallingHandlers({ device(f); print(p); grDevices::dev.off() },
+  withCallingHandlers({ print(p); grDevices::dev.off() },
                       warning = function(c) { w <<- c(w, conditionMessage(c)); invokeRestart("muffleWarning") })
   unique(w)
 }

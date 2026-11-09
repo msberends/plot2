@@ -51,6 +51,11 @@ test_that("S06.04 an app instance leaves the global state of plot2 alone", {
 })
 
 test_that("S06.05 the app object for deployment is returned with run = FALSE (#137)", {
+  skip_if_not_installed("shinyjs")
+  skip_if_not_installed("bslib")
+  skip_if_not_installed("DT")
+  skip_if_not_installed("pillar")
+  skip_if_not_installed("rio")
   skip_if_not_installed("shiny")
   app <- create_interactively(run = FALSE)
   withr::defer(if ("plot2res" %in% names(shiny::resourcePaths())) shiny::removeResourcePath("plot2res"))

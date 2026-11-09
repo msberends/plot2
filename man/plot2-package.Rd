@@ -10,7 +10,7 @@ A streamlined extension of 'ggplot2' designed to simplify and accelerate the cre
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://msberends.github.io/plot2}
+  \item \url{https://msberends.github.io/plot2/}
   \item \url{https://github.com/msberends/plot2}
 }
 

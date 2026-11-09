@@ -20,13 +20,16 @@ In case of \code{\link[=plotly_style]{plotly_style()}}: arguments to pass on to 
 Transform a \code{ggplot2}/\code{plot2} object to an interactive plot using the \href{https://plotly.com/r/}{Plotly R Open Source Graphing Library}.
 }
 \examples{
-mtcars |>
-  plot2(mpg, hp) |> 
-  as_plotly()
-  
-mtcars |>
-  plot2(mpg, hp) |> 
-  as_plotly(dragmode = "pan") |>
-  plotly_style(marker.line.color = "red",
-               hoverinfo = "y")
+if (requireNamespace("plotly", quietly = TRUE)) {
+  mtcars |>
+    plot2(mpg, hp) |> 
+    as_plotly()
+}
+if (requireNamespace("plotly", quietly = TRUE)) {
+  mtcars |>
+    plot2(mpg, hp) |> 
+    as_plotly(dragmode = "pan") |>
+    plotly_style(marker.line.color = "red",
+                 hoverinfo = "y")
+}
 }

@@ -49,6 +49,7 @@ test_that("02.06 two numbers place the legend inside the plot (#62)", {
 })
 
 test_that("02.07 a back-to-back plot honours the setting", {
+  skip_if_not_installed("patchwork")
   p <- plot2(admitted_patients, age_group, n(), ward, facet = gender, type = "back-to-back", legend.position = "bottom")
   expect_identical(p$theme$legend.position, "bottom")
 })

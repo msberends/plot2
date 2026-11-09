@@ -63,6 +63,7 @@ test_that("E15.08 a single x variable gives the friendly message (#83)", {
 })
 
 test_that("E15.09 no helper columns in p$data (#81)", {
+  skip_if_not_installed("ggforce")
   p <- plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey")
   expect_false(any(startsWith(colnames(p$data), "_sankey")))
 })

@@ -97,6 +97,7 @@ test_that("#79 category.focus keeps the focused category's own colour and greys 
 })
 
 test_that("#83 type requirements are checked before the data are prepared", {
+  skip_if_not_installed("ggforce")
   d <- data.frame(from = c("A", "A", "B"), to = c("X", "Y", "X"), n = 1:3, grp = c("A", "A", "B"))
   expect_error(plot2(d, x = from, y = n, category = grp, type = "sankey"), "at least two variables")
   # without y, a Sankey plot counts rows (#118)
