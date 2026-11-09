@@ -45,12 +45,15 @@ jobs:
           - {os: ubuntu-latest,  r: 'oldrel-1'}
           - {os: ubuntu-latest,  r: 'oldrel-2'}
           - {os: ubuntu-latest,  r: 'oldrel-3'}
-          # the minimum R version declared in DESCRIPTION
-          - {os: ubuntu-latest,  r: '4.1'}
+          # the minimum R version declared in DESCRIPTION; only the hard dependencies
+          # (Imports) are installed, since some suggested packages (e.g. arrow, readxl)
+          # need a newer R; tests and examples skip when a suggested package is missing
+          - {os: ubuntu-latest,  r: '4.1', hard-deps-only: true}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_FORCE_SUGGESTS_: ${{ matrix.config.hard-deps-only && 'false' || 'true' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -73,7 +76,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          dependencies: ${{ matrix.config.hard-deps-only && '"hard"' || '"all"' }}
+          extra-packages: ${{ matrix.config.hard-deps-only && 'any::rcmdcheck, any::testthat, any::knitr, any::rmarkdown' || 'any::rcmdcheck' }}
           needs: check
           upgrade: 'TRUE'
 
