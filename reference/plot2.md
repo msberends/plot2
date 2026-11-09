@@ -1212,19 +1212,7 @@ used as given.
 ## Examples
 
 ``` r
-options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
-
-head(iris)
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#> 1          5.1         3.5          1.4         0.2  setosa
-#> 2          4.9         3.0          1.4         0.2  setosa
-#> 3          4.7         3.2          1.3         0.2  setosa
-#> 4          4.6         3.1          1.5         0.2  setosa
-#> 5          5.0         3.6          1.4         0.2  setosa
-#> 6          5.4         3.9          1.7         0.4  setosa
-
-# no variables determined, so plot2() will try for itself -
-# the type will be points since the first two variables are numeric
+# without variables, plot2() determines them: two numeric columns give points
 iris |>
   plot2()
 #> Using x = Sepal.Length
@@ -1233,320 +1221,60 @@ iris |>
 #> Using type = "point" since both axes are numeric
 
 
-# if x and y are set, no additional mapping will be set:
-iris |> 
-  plot2(Sepal.Width, Sepal.Length)
-#> Using type = "point" since both axes are numeric
-
-iris |> 
-  plot2(Species, Sepal.Length)
-#> Using type = "boxplot" since all groups in Species contain at least three values
-
-
 # the arguments are in this order: x, y, category, facet
-iris |> 
-  plot2(Sepal.Length, Sepal.Width, Petal.Length, Species)
-#> Using type = "point" since both axes are numeric
-#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
-#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-
-
-iris |> 
-  plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-        colour = "viridis") # set the viridis colours
-#> Using type = "point" since both axes are numeric
-#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
-#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-
-
-# set your own colours
-iris |> 
-  plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-        colour = c("white", "red", "black"))
-#> Using type = "point" since both axes are numeric
-#> Using category.midpoint = 4 (the current category scale centre)
-#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
-#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-
-
-# y can also be multiple (named) columns
-iris |> 
-  plot2(x = Sepal.Length,
-        y = c(Length = Petal.Length, Width = Petal.Width),
-        category.title = "Petal property")
-#> Using type = "point" since both axes are numeric
-
 iris |>
-  # with included selection helpers such as where(), starts_with(), etc.:
+  plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
+        colour = "viridis")
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
+#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
+
+
+# y can be several columns, also with selection helpers
+iris |>
   plot2(x = Species, y = where(is.double))
 #> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
 #> Using type = "boxplot" since all groups in Species and category contain at least three values
 
-  
-# the category type can be one or more aesthetics
-iris |>
-  plot2(zoom = TRUE,
-        category.type = c("colour", "shape"),
-        size = 3)
-#> Using x = Sepal.Length
-#> Using y = Sepal.Width
-#> Using category = Species
-#> Using type = "point" since both axes are numeric
 
-iris |>
-  plot2(zoom = TRUE,
-        category = Petal.Length,
-        category.type = c("colour", "size"),
-        colour = "viridis")
-#> Using x = Sepal.Length
-#> Using y = Sepal.Width
-#> Using type = "point" since both axes are numeric
-
-
-# easily add a smooth
-iris |>
-  plot2(zoom = TRUE,
-        smooth = TRUE)
-#> Using x = Sepal.Length
-#> Using y = Sepal.Width
-#> Using category = Species
-#> Using type = "point" since both axes are numeric
-#> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
-
-iris |>
-  plot2(zoom = TRUE,
-        smooth = TRUE,
-        smooth.method = "lm")
-#> Using x = Sepal.Length
-#> Using y = Sepal.Width
-#> Using category = Species
-#> Using type = "point" since both axes are numeric
-#> `geom_smooth()` using formula = 'y ~ x'
-
-
-# support for secondary Y-axis
-mtcars |>
-  plot2(x = mpg,
-        y = hp,
-        y_secondary = disp ^ 2, 
-        y_secondary.scientific = TRUE,
-        title = "Secondary Y-axis sets colour to the axis titles")
-#> Using type = "point" since both axes are numeric
-
-
-
-admitted_patients
-#> # A tibble: 250 × 7
-#>    date       patient_id gender   age age_group hospital ward   
-#>    <date>          <dbl> <chr>  <dbl> <ord>     <fct>    <chr>  
-#>  1 2002-01-14          1 M         78 75+       D        Non-ICU
-#>  2 2002-03-17          2 M         78 75+       C        Non-ICU
-#>  3 2002-04-08          3 M         78 75+       A        ICU    
-#>  4 2002-04-14          4 M         72 55-74     C        Non-ICU
-#>  5 2002-05-07          5 M         83 75+       C        Non-ICU
-#>  6 2002-05-16          6 F         65 55-74     B        ICU    
-#>  7 2002-05-16          7 M         47 25-54     D        Non-ICU
-#>  8 2002-06-18          8 M         30 25-54     B        ICU    
-#>  9 2002-06-23          9 M         82 75+       D        Non-ICU
-#> 10 2002-06-23          9 M         82 75+       D        Non-ICU
-#> # ℹ 240 more rows
-
-# the arguments are in this order: x, y, category, facet
+# y can be any calculation; datalabels are added for columns
 admitted_patients |>
-  plot2(hospital, age)
-#> Using type = "boxplot" since all groups in hospital contain at least three values
-
-
-admitted_patients |>
-  plot2(hospital, age, gender)
-#> Using type = "boxplot" since all groups in hospital and gender contain at least three values
-
-  
-admitted_patients |>
-  plot2(hospital, age, gender, ward)
-#> Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values
-#> Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-
-  
-# or use any function for y
-admitted_patients |>
-  plot2(hospital, median(age), gender, ward)
-#> Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-
-admitted_patients |>
-  plot2(hospital, n(), gender, ward)
-#> Using free y scales per facet since the two y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)
-
-
-admitted_patients |>
-  plot2(x = hospital,
-        y = age,
-        category = gender,
-        colour = c("F" = "#3F681C", "M" = "#375E97"),
-        colour_fill = "#FFBB00AA",
-        linewidth = 1.25,
-        y.age = TRUE)
-#> Using type = "boxplot" since all groups in hospital and gender contain at least three values
-
-
-admitted_patients |>
-  plot2(age, type = "hist")
-#> Using type = "histogram"
-#> Using binwidth = 6.4 based on data
-#> Assuming smooth = TRUE for type = "histogram"
-
-
-# even titles support calculations, including support for {glue}
-admitted_patients |>
-  plot2(age, type = "hist",
-        title = paste("Based on n =", n_distinct(patient_id), "patients"),
-        subtitle = paste("Total rows:", n()),
-        caption = glue::glue("From {n_distinct(hospital)} hospitals"),
-        x.title = paste("Age ranging from", paste(range(age), collapse = " to ")))
-#> Using type = "histogram"
-#> Using binwidth = 6.4 based on data
-#> Assuming smooth = TRUE for type = "histogram"
-
- 
-# the default type is column, datalabels are automatically
-# set in non-continuous types:
-admitted_patients |> 
   plot2(hospital, n(), gender)
 
-  
-admitted_patients |> 
-  plot2(hospital, n(), gender,
-        stacked = TRUE)
 
-        
-admitted_patients |> 
-  plot2(hospital, n(), gender,
-        stacked_fill = TRUE)
-
-
-# two categories might benefit from a dumbbell plot:
-admitted_patients |> 
-  plot2(hospital, median(age), gender, type = "dumbbell")
-
- 
-# sort on any direction:
-admitted_patients |> 
+# sorting and stacking are single arguments
+admitted_patients |>
   plot2(hospital, n(), gender,
         x.sort = "freq-asc",
         stacked = TRUE)
 #> Applying x.sort = "freq-asc" using summarise_function = sum
 
 
-admitted_patients |> 
-  plot2(hospital, n(), gender,
-        x.sort = c("B", "D", "A"), # missing values ("C") will be added
-        category.sort = "alpha-desc",
-        stacked = TRUE)
-
-        
-# support for Sankey plots
-if (requireNamespace("ggforce", quietly = TRUE) && requireNamespace("broom", quietly = TRUE)) {
-  Titanic |> # a table from base R
-    plot2(x = c(Age, Class, Survived),
-          category = Sex,
-          type = "sankey")
-}
-#> Assuming sankey_remove_axes = TRUE
-#> Input class 'table' was transformed using `as.data.frame()`
-
-        
-# support for spider plots
-ggplot2::diamonds |>
-   plot2(x = cut,
-         y = mean(price),
-         category = color,
-         type = "spider",
-         y.labels = dollars)
+# set the plot type explicitly
+admitted_patients |>
+  plot2(hospital, median(age), gender, type = "dumbbell")
 
 
-# matrix support, such as for cor()
-correlation_matrix <- cor(mtcars)
-class(correlation_matrix)
-#> [1] "matrix" "array" 
-head(correlation_matrix)
-#>             mpg        cyl       disp         hp       drat         wt
-#> mpg   1.0000000 -0.8521620 -0.8475514 -0.7761684  0.6811719 -0.8676594
-#> cyl  -0.8521620  1.0000000  0.9020329  0.8324475 -0.6999381  0.7824958
-#> disp -0.8475514  0.9020329  1.0000000  0.7909486 -0.7102139  0.8879799
-#> hp   -0.7761684  0.8324475  0.7909486  1.0000000 -0.4487591  0.6587479
-#> drat  0.6811719 -0.6999381 -0.7102139 -0.4487591  1.0000000 -0.7124406
-#> wt   -0.8676594  0.7824958  0.8879799  0.6587479 -0.7124406  1.0000000
-#>             qsec         vs         am       gear       carb
-#> mpg   0.41868403  0.6640389  0.5998324  0.4802848 -0.5509251
-#> cyl  -0.59124207 -0.8108118 -0.5226070 -0.4926866  0.5269883
-#> disp -0.43369788 -0.7104159 -0.5912270 -0.5555692  0.3949769
-#> hp   -0.70822339 -0.7230967 -0.2432043 -0.1257043  0.7498125
-#> drat  0.09120476  0.4402785  0.7127111  0.6996101 -0.0907898
-#> wt   -0.17471588 -0.5549157 -0.6924953 -0.5832870  0.4276059
-mtcars |> 
+# titles support calculations too
+admitted_patients |>
+  plot2(age, type = "hist",
+        title = paste("Based on n =", n_distinct(patient_id), "patients"))
+#> Using type = "histogram"
+#> Using binwidth = 6.4 based on data
+#> Assuming smooth = TRUE for type = "histogram"
+
+
+# a correlation matrix becomes a heatmap
+mtcars |>
   cor() |>
   plot2()
 #> Assuming type = "tile" since the matrix contains identical row and column names
 #> Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
 
 
-mtcars |> 
-  cor() |>
-  plot2(colour = c("blue3", "white", "red3"),
-        datalabels = TRUE,
-        category.title = "*r*-value",
-        title =  "Correlation matrix")
-#> Assuming type = "tile" since the matrix contains identical row and column names
-#> Using category.midpoint = 0 (the current category scale centre)
-
-
-
-# plot2() supports all S3 extensions available through
-# ggplot2::fortify() and broom::augment(), such as regression models:
-if (requireNamespace("broom", quietly = TRUE)) {
-  lm(mpg ~ hp, data = mtcars) |> 
-    plot2(x = mpg ^ -3,
-          y = hp ^ 2,
-          smooth = TRUE,
-          smooth.method = "lm",
-          smooth.formula = "y ~ log(x)",
-          title = "Titles/captions *support* **markdown**",
-          subtitle = "Axis titles contain the square notation: x^2")
-}
-#> Using type = "point" since both axes are numeric
-
-
-# sf objects (geographic plots, 'simple features') are also supported
-if (requireNamespace("sf", quietly = TRUE)) {
-  netherlands |> 
-    plot2()
-}
-#> Using category = area_km2
-#> Using datalabels = province
-#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
-
-if (requireNamespace("sf", quietly = TRUE)) {
-  netherlands |> 
-    plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
-    add_sf(netherlands, colour = "black", colour_fill = NA)
-}
-#> Using category = area_km2
-#> Using datalabels = province
-#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
-
-
-# support for any system or Google font (a Google Font is downloaded once
-# into the user cache, see the 'font' argument)
-if (interactive() && requireNamespace("showtext", quietly = TRUE)) {
-  mtcars |>
-    plot2(mpg, hp,
-          font = "Rock Salt",
-          text_factor = 1.25,
-          title = "This plot uses a Google Font")
-}
+# many more examples, including Sankey, spider and geographic plots,
+# are in the vignettes:
+# vignette("plot2", package = "plot2")
+# vignette("supported_types", package = "plot2")
 ```

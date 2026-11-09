@@ -240,23 +240,12 @@ see *Examples*.
 ## Examples
 
 ``` r
-head(iris)
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#> 1          5.1         3.5          1.4         0.2  setosa
-#> 2          4.9         3.0          1.4         0.2  setosa
-#> 3          4.7         3.2          1.3         0.2  setosa
-#> 4          4.6         3.1          1.5         0.2  setosa
-#> 5          5.0         3.6          1.4         0.2  setosa
-#> 6          5.4         3.9          1.7         0.4  setosa
-                 
 p <- iris |>
   plot2(x = Sepal.Length,
         y = Sepal.Width,
         category = Species,
         zoom = TRUE)
 #> Using type = "point" since both axes are numeric
-p
-
   
 # if not specifying x or y, current plot data are taken
 p |> add_line()
@@ -293,24 +282,6 @@ iris |>
 #> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 
 
-iris |>
-  plot2(x = Sepal.Length,
-        y = Sepal.Width,
-        facet = Species) |>
-  add_line(y = range(Sepal.Width),
-           legend.value = "Range")
-#> Using type = "point" since both axes are numeric
-#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
-#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-
-
-
-p |> 
-  add_line(x = mean(Sepal.Length)) |> 
-  add_line(y = mean(Sepal.Width))
-
-  
 p |>
   add_point(x = median(Sepal.Length),
             y = median(Sepal.Width),
@@ -319,13 +290,7 @@ p |>
             show.legend = FALSE)
 
   
-# multiple values will just plot multiple lines
-p |> 
-  add_line(y = fivenum(Sepal.Width),
-           colour = "blue",
-           legend.value = "Tukey's Numbers")
-
-  
+# multiple values will plot multiple lines
 p |> 
   add_line(y = quantile(Sepal.Width, c(0.25, 0.5, 0.75)),
            colour = c("red", "black", "red"),
@@ -343,13 +308,6 @@ p |>
 p |> 
   add_point(y = 2:4,
             x = 5:7,
-            colour = "red",
-            size = 5)
-
-# even with expanded grid if x and y are not of the same length
-p |> 
-  add_point(y = 2:4,
-            x = 5:8,
             colour = "red",
             size = 5)
 
@@ -381,22 +339,6 @@ df2 <- df |>
   mutate(error1 = var_2 * 0.9,
          error2 = var_2 * 1.1)
 
-df2
-#> # A tibble: 25 × 5
-#>    var_1 var_2 var_3 error1 error2
-#>    <int> <dbl> <chr>  <dbl>  <dbl>
-#>  1     1  65.0 A       58.5   71.5
-#>  2     2 106.  B       95.7  117. 
-#>  3     3  39.1 C       35.2   43.0
-#>  4     4  99.9 D       89.9  110. 
-#>  5     5 116.  E      104.   127. 
-#>  6     6 129.  A      116.   142. 
-#>  7     7  54.5 B       49.0   59.9
-#>  8     8  93.8 C       84.4  103. 
-#>  9     9  93.9 D       84.5  103. 
-#> 10    10  92.9 E       83.6  102. 
-#> # ℹ 15 more rows
-
 df2 |> 
   plot2(var_1, var_2, var_3, type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
   # adding error bars was never easier - just reference the lower and upper values
@@ -406,22 +348,6 @@ df2 |>
 
 
 # adding sf objects is just as convenient as all else
-if (requireNamespace("sf", quietly = TRUE)) {
-  netherlands |> 
-    plot2()
-}
-#> Using category = area_km2
-#> Using datalabels = province
-#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
-
-if (requireNamespace("sf", quietly = TRUE)) {
-  netherlands |> 
-    plot2(colour_fill = "viridis", colour_transparency = 0.75)
-}
-#> Using category = area_km2
-#> Using datalabels = province
-#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
-
 if (requireNamespace("sf", quietly = TRUE)) {
   netherlands |> 
     plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
