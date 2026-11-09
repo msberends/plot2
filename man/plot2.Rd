@@ -511,202 +511,45 @@ A default of \code{NULL} means that \code{\link[=plot2]{plot2()}} determines the
 }
 
 \examples{
-options(plot2.colour = NULL, plot2.colour_sf_fill = NULL)
-
-head(iris)
-
-# no variables determined, so plot2() will try for itself -
-# the type will be points since the first two variables are numeric
+# without variables, plot2() determines them: two numeric columns give points
 iris |>
   plot2()
 
-# if x and y are set, no additional mapping will be set:
-iris |> 
-  plot2(Sepal.Width, Sepal.Length)
-iris |> 
-  plot2(Species, Sepal.Length)
-
 # the arguments are in this order: x, y, category, facet
-iris |> 
-  plot2(Sepal.Length, Sepal.Width, Petal.Length, Species)
-
-iris |> 
+iris |>
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-        colour = "viridis") # set the viridis colours
-
-# set your own colours
-iris |> 
-  plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
-        colour = c("white", "red", "black"))
-
-# y can also be multiple (named) columns
-iris |> 
-  plot2(x = Sepal.Length,
-        y = c(Length = Petal.Length, Width = Petal.Width),
-        category.title = "Petal property")
-iris |>
-  # with included selection helpers such as where(), starts_with(), etc.:
-  plot2(x = Species, y = where(is.double))
-  
-# the category type can be one or more aesthetics
-iris |>
-  plot2(zoom = TRUE,
-        category.type = c("colour", "shape"),
-        size = 3)
-iris |>
-  plot2(zoom = TRUE,
-        category = Petal.Length,
-        category.type = c("colour", "size"),
         colour = "viridis")
 
-# easily add a smooth
+# y can be several columns, also with selection helpers
 iris |>
-  plot2(zoom = TRUE,
-        smooth = TRUE)
-iris |>
-  plot2(zoom = TRUE,
-        smooth = TRUE,
-        smooth.method = "lm")
+  plot2(x = Species, y = where(is.double))
 
-# support for secondary Y-axis
-mtcars |>
-  plot2(x = mpg,
-        y = hp,
-        y_secondary = disp ^ 2, 
-        y_secondary.scientific = TRUE,
-        title = "Secondary Y-axis sets colour to the axis titles")
-
-
-admitted_patients
-
-# the arguments are in this order: x, y, category, facet
+# y can be any calculation; datalabels are added for columns
 admitted_patients |>
-  plot2(hospital, age)
-
-admitted_patients |>
-  plot2(hospital, age, gender)
-  
-admitted_patients |>
-  plot2(hospital, age, gender, ward)
-  
-# or use any function for y
-admitted_patients |>
-  plot2(hospital, median(age), gender, ward)
-admitted_patients |>
-  plot2(hospital, n(), gender, ward)
-
-admitted_patients |>
-  plot2(x = hospital,
-        y = age,
-        category = gender,
-        colour = c("F" = "#3F681C", "M" = "#375E97"),
-        colour_fill = "#FFBB00AA",
-        linewidth = 1.25,
-        y.age = TRUE)
-
-admitted_patients |>
-  plot2(age, type = "hist")
-
-# even titles support calculations, including support for {glue}
-admitted_patients |>
-  plot2(age, type = "hist",
-        title = paste("Based on n =", n_distinct(patient_id), "patients"),
-        subtitle = paste("Total rows:", n()),
-        caption = glue::glue("From {n_distinct(hospital)} hospitals"),
-        x.title = paste("Age ranging from", paste(range(age), collapse = " to ")))
- 
-# the default type is column, datalabels are automatically
-# set in non-continuous types:
-admitted_patients |> 
   plot2(hospital, n(), gender)
-  
-admitted_patients |> 
-  plot2(hospital, n(), gender,
-        stacked = TRUE)
-        
-admitted_patients |> 
-  plot2(hospital, n(), gender,
-        stacked_fill = TRUE)
 
-# two categories might benefit from a dumbbell plot:
-admitted_patients |> 
-  plot2(hospital, median(age), gender, type = "dumbbell")
- 
-# sort on any direction:
-admitted_patients |> 
+# sorting and stacking are single arguments
+admitted_patients |>
   plot2(hospital, n(), gender,
         x.sort = "freq-asc",
         stacked = TRUE)
 
-admitted_patients |> 
-  plot2(hospital, n(), gender,
-        x.sort = c("B", "D", "A"), # missing values ("C") will be added
-        category.sort = "alpha-desc",
-        stacked = TRUE)
-        
-# support for Sankey plots
-if (requireNamespace("ggforce", quietly = TRUE) && requireNamespace("broom", quietly = TRUE)) {
-  Titanic |> # a table from base R
-    plot2(x = c(Age, Class, Survived),
-          category = Sex,
-          type = "sankey")
-}
-        
-# support for spider plots
-ggplot2::diamonds |>
-   plot2(x = cut,
-         y = mean(price),
-         category = color,
-         type = "spider",
-         y.labels = dollars)
+# set the plot type explicitly
+admitted_patients |>
+  plot2(hospital, median(age), gender, type = "dumbbell")
 
-# matrix support, such as for cor()
-correlation_matrix <- cor(mtcars)
-class(correlation_matrix)
-head(correlation_matrix)
-mtcars |> 
+# titles support calculations too
+admitted_patients |>
+  plot2(age, type = "hist",
+        title = paste("Based on n =", n_distinct(patient_id), "patients"))
+
+# a correlation matrix becomes a heatmap
+mtcars |>
   cor() |>
   plot2()
 
-mtcars |> 
-  cor() |>
-  plot2(colour = c("blue3", "white", "red3"),
-        datalabels = TRUE,
-        category.title = "*r*-value",
-        title =  "Correlation matrix")
-
-
-# plot2() supports all S3 extensions available through
-# ggplot2::fortify() and broom::augment(), such as regression models:
-if (requireNamespace("broom", quietly = TRUE)) {
-  lm(mpg ~ hp, data = mtcars) |> 
-    plot2(x = mpg ^ -3,
-          y = hp ^ 2,
-          smooth = TRUE,
-          smooth.method = "lm",
-          smooth.formula = "y ~ log(x)",
-          title = "Titles/captions *support* **markdown**",
-          subtitle = "Axis titles contain the square notation: x^2")
-}
-
-# sf objects (geographic plots, 'simple features') are also supported
-if (requireNamespace("sf", quietly = TRUE)) {
-  netherlands |> 
-    plot2()
-}
-if (requireNamespace("sf", quietly = TRUE)) {
-  netherlands |> 
-    plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
-    add_sf(netherlands, colour = "black", colour_fill = NA)
-}
-
-# support for any system or Google font (a Google Font is downloaded once
-# into the user cache, see the 'font' argument)
-if (interactive() && requireNamespace("showtext", quietly = TRUE)) {
-  mtcars |>
-    plot2(mpg, hp,
-          font = "Rock Salt",
-          text_factor = 1.25,
-          title = "This plot uses a Google Font")
-}
+# many more examples, including Sankey, spider and geographic plots,
+# are in the vignettes:
+# vignette("plot2", package = "plot2")
+# vignette("supported_types", package = "plot2")
 }

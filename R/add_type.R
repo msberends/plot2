@@ -28,14 +28,11 @@
 #' @return a `ggplot` object
 #' @export
 #' @examples 
-#' head(iris)
-#'                  
 #' p <- iris |>
 #'   plot2(x = Sepal.Length,
 #'         y = Sepal.Width,
 #'         category = Species,
 #'         zoom = TRUE)
-#' p
 #'   
 #' # if not specifying x or y, current plot data are taken
 #' p |> add_line()
@@ -62,18 +59,6 @@
 #'   add_line(y = mean(Sepal.Width),
 #'            legend.value = "Average")
 #' 
-#' iris |>
-#'   plot2(x = Sepal.Length,
-#'         y = Sepal.Width,
-#'         facet = Species) |>
-#'   add_line(y = range(Sepal.Width),
-#'            legend.value = "Range")
-#'
-#'
-#' p |> 
-#'   add_line(x = mean(Sepal.Length)) |> 
-#'   add_line(y = mean(Sepal.Width))
-#'   
 #' p |>
 #'   add_point(x = median(Sepal.Length),
 #'             y = median(Sepal.Width),
@@ -81,12 +66,7 @@
 #'             size = 25,
 #'             show.legend = FALSE)
 #'   
-#' # multiple values will just plot multiple lines
-#' p |> 
-#'   add_line(y = fivenum(Sepal.Width),
-#'            colour = "blue",
-#'            legend.value = "Tukey's Numbers")
-#'   
+#' # multiple values will plot multiple lines
 #' p |> 
 #'   add_line(y = quantile(Sepal.Width, c(0.25, 0.5, 0.75)),
 #'            colour = c("red", "black", "red"),
@@ -102,12 +82,6 @@
 #' p |> 
 #'   add_point(y = 2:4,
 #'             x = 5:7,
-#'             colour = "red",
-#'             size = 5)
-#' # even with expanded grid if x and y are not of the same length
-#' p |> 
-#'   add_point(y = 2:4,
-#'             x = 5:8,
 #'             colour = "red",
 #'             size = 5)
 #'
@@ -134,22 +108,12 @@
 #'   mutate(error1 = var_2 * 0.9,
 #'          error2 = var_2 * 1.1)
 #' 
-#' df2
-#' 
 #' df2 |> 
 #'   plot2(var_1, var_2, var_3, type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
 #'   # adding error bars was never easier - just reference the lower and upper values
 #'   add_errorbar(error1, error2)
 #' 
 #' # adding sf objects is just as convenient as all else
-#' if (requireNamespace("sf", quietly = TRUE)) {
-#'   netherlands |> 
-#'     plot2()
-#' }
-#' if (requireNamespace("sf", quietly = TRUE)) {
-#'   netherlands |> 
-#'     plot2(colour_fill = "viridis", colour_transparency = 0.75)
-#' }
 #' if (requireNamespace("sf", quietly = TRUE)) {
 #'   netherlands |> 
 #'     plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
