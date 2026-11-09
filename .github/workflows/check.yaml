@@ -13,6 +13,7 @@
 # ===================================================================== #
 
 on:
+  workflow_dispatch:
   pull_request:
     # run in each PR in this repo
     branches: '**'
