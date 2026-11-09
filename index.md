@@ -3,26 +3,24 @@
 **[`plot()`](https://rdrr.io/r/graphics/plot.default.html) + `ggplot2` =
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)**
 
-`ggplot2` is an incredibly impressive piece of engineering: a grammar in
-which any plot is composed of layers, aesthetics, scales, coordinates
-and themes. That design serves developers really well. But
-unfortunately, users pay for it: hundreds of arguments spread over tens
-of functions, and a plot only looks right once the right ones are found
-and set. Someone who wants “counts per department, coloured by year”
-should not **necessarily** need to know about
+`ggplot2` composes any plot from layers, aesthetics, scales, coordinates
+and themes. This grammar makes it flexible and precise, but it also
+means that a plot often requires many functions and arguments: a plot of
+“counts per department, coloured by year” requires knowledge of
 [`geom_col()`](https://ggplot2.tidyverse.org/reference/geom_bar.html),
 `aes(fill = )`,
 [`position_dodge()`](https://ggplot2.tidyverse.org/reference/position_dodge.html),
-[`expansion()`](https://ggplot2.tidyverse.org/reference/expansion.html),
 `scale_fill_*()` and
-[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html). That
-gap is real, and we found that few packages close it well.
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html), and of
+the data steps that come before them.
 
-`plot2` sets out to close it entirely. Like base R’s
+`plot2` takes the opposite approach. Like base R’s
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html), one call gives
-a plot, even when you do not say which type of plot you want. `plot2`
-groups, aggregates, sorts, facets and labels, and chooses the plot type,
-colours, axes and theme. Users first:
+a complete plot, even when the type of plot is not given. You describe
+what you want to see, and
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+summarises, sorts and labels the data, and chooses the plot type,
+colours, axes and theme:
 
 ``` r
 
@@ -31,13 +29,10 @@ iris |> plot2(x = Species, y = mean(Sepal.Length))
 
 ![](reference/figures/README-unnamed-chunk-2-1.png)
 
-You will notice, also when reading below examples, that you spend less
-time copying or typing ‘ggplot overhead code’, and that you create plots
-much faster, with far more readable and concise code. Less typing, more
-plotting!
+The result is a standard `ggplot` object, so every `ggplot2` function
+and extension still works on it.
 
-Each result is a standard `ggplot` object, so every `ggplot2` layer and
-extension still works on it.
+## Installation
 
 `plot2` is not on CRAN yet. Install it from r-universe:
 
@@ -47,16 +42,14 @@ install.packages("plot2", repos = c("https://msberends.r-universe.dev",
                                     "https://cloud.r-project.org"))
 ```
 
-------------------------------------------------------------------------
+## The same plot, two ways
 
-## The same chart, two ways
-
-A sorted column chart of vehicle counts per class, with data labels. The
-dataset `mpg` is bundled in `ggplot2`.
+A sorted column plot of the number of cars per class, with data labels.
+The data set `mpg` comes with `ggplot2`.
 
 ``` r
 
-# ggplot2 + dplyr + forcats
+# ggplot2, dplyr and forcats
 library(ggplot2)
 library(dplyr)
 library(forcats)
@@ -82,160 +75,63 @@ mpg |> plot2(x = class, y = n(), x.sort = "freq-asc")
 
 ![](reference/figures/README-unnamed-chunk-5-1.png)
 
-Both produce a sorted column chart with data labels; `plot2` also
-chooses the axis titles, theme and axis expansion by itself. The
-difference is in how much you write.
+Both give a sorted column plot with data labels.
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) sets
+the axis titles, the theme and the axis expansion by itself.
 
-------------------------------------------------------------------------
-
-## What you stop writing
+## What plot2 replaces
 
 | Task | ggplot2 | plot2 |
 |----|----|----|
-| Aggregate then plot | [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) + [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) + [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) + [`geom_col()`](https://ggplot2.tidyverse.org/reference/geom_bar.html) | `plot2(x = a, y = mean(b))` |
+| Summarise, then plot | [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) + [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) + [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) + [`geom_col()`](https://ggplot2.tidyverse.org/reference/geom_bar.html) | `plot2(x = a, y = mean(b))` |
 | Sort bars | `mutate(fct_reorder(...))` | `x.sort = "freq-desc"` |
-| Group by colour | `aes(fill = var)` for bars, `aes(colour = var)` for points, each needing its own `scale_*` | `category = var` |
-| Set a colour palette | `scale_fill_manual(values = ...)` or `scale_colour_manual(values = ...)` depending on geom | `colour = c(...)` in all cases |
+| Group by colour | `aes(fill = var)` for bars, `aes(colour = var)` for points, each with its own `scale_*()` | `category = var` |
+| Set colours | `scale_fill_manual(values = ...)` or `scale_colour_manual(values = ...)`, depending on the geom | `colour = c(...)` |
 | Facet | `+ facet_wrap(~var)` | `facet = var` |
-| Data labels | `+ geom_text(aes(label = ...), vjust = ...)` | automatic on discrete axes |
-| Stacked / filled bars | `geom_col(position = "stack")` + scale | `stacked = TRUE` / `stacked_fill = TRUE` |
-| Clean axis expansion | `scale_y_continuous(expand = expansion(...))` | built-in default |
+| Data labels | `+ geom_text(aes(label = ...), vjust = ...)` | automatic for columns |
+| Stacked bars | `geom_col(position = "stack")` or `position = "fill"` | `stacked = TRUE` or `stacked_fill = TRUE` |
 
-------------------------------------------------------------------------
+## Plot types
+
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+supports all `ggplot2` geoms, and adds plot types such as dumbbell,
+back-to-back, Sankey, spider and UpSet plots. Each plot below is made
+with a single line of code:
+
+![Plot types of plot2()](reference/figures/plot_types.png)
+
+Plot types of plot2()
 
 ## Examples
 
-All examples below use datasets bundled in base R or `ggplot2`.
-
-### The four arguments: x, y, category, facet
-
-`plot2` is built around four named arguments. That is all you need for
-most plots:
+The four plotting directions `x`, `y`, `category` and `facet` describe
+most plots. They accept columns and calculations:
 
 ``` r
 
-# x and y: plot2 picks the type. Two numerics → scatter.
-iris |> plot2(x = Sepal.Width, y = Sepal.Length)
-#> Using type = "point" since both axes are numeric
+admitted_patients |>
+  plot2(x = age_group, y = n(), category = gender, facet = ward)
+#> Using free y scales per facet since the two y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)
 ```
 
 ![](reference/figures/README-unnamed-chunk-6-1.png)
 
+Titles can be calculated from the data as well:
+
 ``` r
 
-# category: colours the groups — works the same regardless of geom type.
-# In ggplot2 you would use aes(fill = ...) for bars and aes(colour = ...) for
-# points, each requiring its own scale_*. Here it is always category =.
-iris |> plot2(x = Sepal.Width, y = Sepal.Length, category = Species)
+mtcars |>
+  plot2(x = mpg,
+        y = hp,
+        category = factor(cyl),
+        category.title = "Cylinders",
+        title = paste("Horsepower of", n(), "cars"))
 #> Using type = "point" since both axes are numeric
 ```
 
 ![](reference/figures/README-unnamed-chunk-7-1.png)
 
-``` r
-
-# Categorical x → column with data labels. Inline aggregation in y.
-iris |> plot2(x = Species, y = mean(Sepal.Length))
-```
-
-![](reference/figures/README-unnamed-chunk-8-1.png)
-
-``` r
-
-# facet: splits into panels. Fourth argument, same idea.
-mpg |> plot2(x = class, y = mean(hwy), category = drv, facet = year)
-```
-
-### Sorting
-
-``` r
-
-mpg |> plot2(x = manufacturer, y = n(), x.sort = "freq-desc")
-```
-
-![](reference/figures/README-unnamed-chunk-10-1.png)
-
-### Colour
-
-`colour =` sets the palette for any plot type — no need to choose
-between `scale_fill_*` and `scale_colour_*`:
-
-``` r
-
-iris |> plot2(x = Sepal.Width, y = Sepal.Length, category = Species,
-              colour = "viridis")
-iris |> plot2(x = Sepal.Width, y = Sepal.Length, category = Species,
-              colour = c(setosa = "#3F681C", versicolor = "#375E97", virginica = "#FFBB00"))
-```
-
-When you need to distinguish the stroke from the fill (e.g. bars with a
-coloured border), `colour` controls the stroke and `colour_fill`
-controls the interior:
-
-``` r
-
-iris |> plot2(x = Species, y = mean(Sepal.Length), category = Species,
-              colour = "black",
-              colour_fill = c(setosa = "#3F681C", versicolor = "#375E97", virginica = "#FFBB00"))
-```
-
-### Inline aggregations
-
-Any summarising function works directly in the `y` argument — no
-[`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) or
-[`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html)
-needed:
-
-``` r
-
-mpg |> plot2(x = class, y = mean(hwy))
-mpg |> plot2(x = class, y = median(cty))
-mpg |> plot2(x = class, y = n())
-mpg |> plot2(x = class, y = n(), category = drv, stacked_fill = TRUE)
-```
-
-Titles accept the same inline expressions:
-
-``` r
-
-mpg |> plot2(
-  x = class, y = n(),
-  title = paste("Based on", n(), "vehicles from", n_distinct(manufacturer), "manufacturers"),
-  caption = paste("Highway mpg ranges from", paste(range(hwy), collapse = " to "))
-)
-```
-
-### Special plot types
-
-``` r
-
-# Dumbbell: compare two groups side by side (the category needs two values)
-mpg |> plot2(x = manufacturer, y = mean(hwy), category = year,
-             type = "dumbbell",
-             x.sort = "freq-desc")
-
-# Histogram with automatic bin width
-diamonds |> plot2(x = price, type = "hist")
-
-# Stacked column
-mpg |> plot2(x = class, y = n(), category = drv, stacked = TRUE)
-```
-
-### Sankey / alluvial diagram
-
-``` r
-
-Titanic |>
-  plot2(x = c(Age, Class, Survived),
-        category = Sex,
-        type = "sankey")
-#> Assuming sankey_remove_axes = TRUE
-#> Input class 'table' was transformed using `as.data.frame()`
-```
-
-![](reference/figures/README-unnamed-chunk-16-1.png)
-
-### Correlation matrix
+A correlation matrix becomes a heatmap:
 
 ``` r
 
@@ -243,77 +139,46 @@ mtcars |>
   cor() |>
   plot2(datalabels = TRUE,
         colour = c("steelblue", "white", "firebrick"),
-        title = "Correlation matrix of `mtcars`")
+        category.title = "Correlation")
 #> Assuming type = "tile" since the matrix contains identical row and column names
 #> Using category.midpoint = 0 (the current category scale centre)
 ```
 
-![](reference/figures/README-unnamed-chunk-17-1.png)
+![](reference/figures/README-unnamed-chunk-8-1.png)
 
-### Full ggplot2 compatibility
+## Learning more
 
-`plot2` returns a standard `ggplot` object. Any ggplot2 layer, scale, or
-extension can be appended:
+- [Introduction to
+  plot2](https://msberends.github.io/plot2/articles/plot2.html)
+  ([`vignette("plot2", package = "plot2")`](https://msberends.github.io/plot2/articles/plot2.md))
+  describes the main ideas.
+- [Plot
+  types](https://msberends.github.io/plot2/articles/supported_types.html)
+  ([`vignette("supported_types", package = "plot2")`](https://msberends.github.io/plot2/articles/supported_types.md))
+  shows every plot type.
+- The [package website](https://msberends.github.io/plot2/) has articles
+  on colours and themes, maps, fonts, and
+  [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) for
+  `ggplot2` users.
 
-``` r
-
-mpg |>
-  plot2(x = class, y = mean(hwy), x.sort = "freq-desc") +
-  geom_hline(yintercept = mean(mpg$hwy), linetype = "dashed") +
-  labs(caption = "Dashed line: overall mean")
-```
-
-------------------------------------------------------------------------
-
-## Going further
-
-`plot2` supports secondary y-axes, Google and system fonts, geographic
-plots via `sf` objects, regression model objects, viridis and custom
-colour palettes, and an interactive Shiny-based plot builder.
-
-The package ships with `admitted_patients`, a synthetic hospital dataset
-used throughout the [full
-vignette](https://msberends.github.io/plot2/articles/plot2.html). For an
-overview of every supported plot type, see the [supported types
-reference](https://msberends.github.io/plot2/articles/supported_types.html).
+[`create_interactively()`](https://msberends.github.io/plot2/reference/create_interactively.md)
+opens a Shiny app that builds a plot from a point-and-click interface
+and shows the code:
 
 ``` r
 
-# Build any plot interactively — all plot2 arguments available in the UI
 iris |> create_interactively()
 ```
 
-![Interactive Shiny builder](reference/figures/create_interactively.jpg)
+![The Shiny app of
+create_interactively()](reference/figures/create_interactively.jpg)
 
-Interactive Shiny builder
+The Shiny app of create_interactively()
 
-Ways to call `plot2()`
+## Contributing
 
-Like base [`plot()`](https://rdrr.io/r/graphics/plot.default.html), all
-input styles work:
-
-``` r
-
-# Formula
-plot2(hp ~ mpg, data = mtcars)
-
-# Pipe
-mtcars |> plot2(mpg, hp)
-
-# Named arguments
-plot2(mtcars, x = mpg, y = hp)
-
-# Positional
-plot2(mtcars, mpg, hp)
-```
-
-------------------------------------------------------------------------
-
-## Getting involved
-
-Issues, feature requests, and pull requests are welcome at
-<https://github.com/msberends/plot2>. Familiarity with `ggplot2` and the
-tidyverse is especially useful as the package continues to develop.
+Issues, feature requests and pull requests are welcome at
+<https://github.com/msberends/plot2>.
 
 ## Licence
 

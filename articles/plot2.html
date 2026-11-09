@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>An Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow • plot2</title>
+<title>Introduction to plot2 • plot2</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="An Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow">
+<meta property="og:title" content="Introduction to plot2">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,20 +34,25 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span> Home</a></li>
-<li class="nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-book-open"></span> Reference</a></li>
-<li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-solid fa-newspaper"></span> Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
-<li><a class="dropdown-item" href="../articles/plot2.html"><span class="fa fa-magnifying-glass-chart"></span> Introduction to plot2</a></li>
-    <li><a class="dropdown-item" href="../articles/supported_types.html"><span class="fa fa-solid fa-square-poll-vertical"></span> Supported Plot Types</a></li>
-    <li><a class="dropdown-item" href="../reference/add_type.html"><span class="fa fa-solid fa-square-plus"></span> Adding An Extra plot2 Type</a></li>
+<li class="active nav-item"><a class="nav-link" href="../articles/plot2.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/supported_types.html">Plot types</a></li>
+    <li><a class="dropdown-item" href="../articles/colours-and-themes.html">Colours and themes</a></li>
+    <li><a class="dropdown-item" href="../articles/maps.html">Maps</a></li>
+    <li><a class="dropdown-item" href="../articles/fonts.html">Fonts</a></li>
+    <li><a class="dropdown-item" href="../articles/plot2-for-ggplot2-users.html">plot2 for ggplot2 users</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="nav-link" href="../news/"><span class="fa fa-solid fa-wand-magic-sparkles"></span> Changelog</a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/msberends/plot2"><span class="fa fab fa-github"></span> Source Code</a></li>
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/msberends/plot2/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -60,7 +65,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>An Introduction to `plot2()`: Enhancing Your `ggplot2` Workflow</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Introduction to plot2</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/msberends/plot2/blob/main/vignettes/plot2.Rmd" class="external-link"><code>vignettes/plot2.Rmd</code></a></small>
@@ -69,897 +74,394 @@
 
     
     
-<div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h2>
-<p><code>ggplot2</code> is a developer’s masterpiece. Its grammar of
-graphics composes any plot from layers, aesthetics, scales, coordinates
-and themes, and that makes it flexible and precise. For the people who
-simply need a plot, the same design is a burden. A plot of “counts per
-ward, coloured by year” requires knowing about <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code>,
-<code>aes(fill = )</code>, <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge()</a></code>,
-<code>scale_fill_*()</code> and <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>, and about the data
-steps that come before them. That gap is real, and few packages close it
-well.</p>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> is written for users. Like base R’s
-<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, one call gives a plot, even when you do not say
-which type of plot you want: give it your data and it chooses the plot
-type, aggregates and sorts, and sets colours, axes, data labels and the
-theme. You state what you want to see (<code>x</code>, <code>y</code>,
-<code>category</code>, <code>facet</code>), not how <code>ggplot2</code>
-should build it. And since <code><a href="../reference/plot2.html">plot2()</a></code> returns a standard
-<code>ggplot</code> object, everything <code>ggplot2</code> offers
-remains available afterwards.</p>
-<p>In this vignette, we walk through <code><a href="../reference/plot2.html">plot2()</a></code> and its
-companion <code>add_*()</code> functions, from the basics to more
-advanced features such as Sankey diagrams.</p>
-<div class="section level3">
-<h3 id="the-plot2-philosophy-users-first">The Plot2 Philosophy: Users First<a class="anchor" aria-label="anchor" href="#the-plot2-philosophy-users-first"></a>
-</h3>
-<p>The concept is the opposite of <code>ggplot2</code>’s: you do not
-assemble a plot from parts, you describe it and <code><a href="../reference/plot2.html">plot2()</a></code>
-assembles the parts. Plot types, geoms and aesthetics stay in the
-background; the arguments are named after what users think in, such as
-<code>category</code> for groups shown in colour (whatever the geom),
-<code>x.sort</code> for the order of bars and <code>stacked</code> for
-stacked bars. Data transformations go directly into the arguments, as in
-<code>y = mean(age)</code> or <code>x = format(date, "%Y")</code>.</p>
-<p>This shows most in facetting, theming and in-line transformations:
-instead of managing several functions and layers, you set one argument
-of a single function.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="getting-started-with-plot2">Getting Started with <code>plot2()</code><a class="anchor" aria-label="anchor" href="#getting-started-with-plot2"></a>
-</h2>
-<p>Let’s start with the basics. The <code><a href="../reference/plot2.html">plot2()</a></code> function is a
-wrapper around <code>ggplot2</code> that simplifies many of the tasks
-you usually have to handle manually. To begin with, you don’t even need
-to specify what kind of plot you want: <code><a href="../reference/plot2.html">plot2()</a></code> will make an
-educated guess based on your data.</p>
-<div class="section level3">
-<h3 id="basic-usage-let-plot2-do-the-work">Basic Usage: Let <code>plot2()</code> Do the Work<a class="anchor" aria-label="anchor" href="#basic-usage-let-plot2-do-the-work"></a>
-</h3>
-<p>To get started, you can pass your data directly into
-<code><a href="../reference/plot2.html">plot2()</a></code> without specifying any additional arguments. For
-example:</p>
+<p><code><a href="../reference/plot2.html">plot2()</a></code> creates a complete <code>ggplot2</code> plot
+from a single function call. You describe what you want to see, and
+<code><a href="../reference/plot2.html">plot2()</a></code> determines how to draw it: it chooses the plot
+type, summarises the data, sorts, sets colours, axes and data labels,
+and applies a clean theme. The result is an ordinary <code>ggplot</code>
+object, so everything that <code>ggplot2</code> offers remains available
+afterwards.</p>
+<p>This vignette introduces the main ideas. It uses the
+<code>admitted_patients</code> data set that comes with the package, a
+fictitious set of 250 hospital admissions, and some data sets from base
+R.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load the package</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2/">plot2</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2/">plot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span>,</span>
-<span>                 values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">105</span>, <span class="fl">120</span>, <span class="fl">114</span>, <span class="fl">136</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Using y = values</span></span>
-<span><span class="co">#&gt; Using x = group</span></span></code></pre>
-<p><img src="plot2_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this simple example, <code><a href="../reference/plot2.html">plot2()</a></code> automatically generates
-a column plot because it recognises that the X-axis is categorical and
-the Y-axis is numeric. It even adds data labels by default because the
-X-axis is discrete. Also, at the top of the Y-axis there is a bit more
-space to better be able to read the plot, akin to how Microsoft Excel
-plots at default. This is <code><a href="../reference/plot2.html">plot2()</a></code> at its most basic — no
-need to specify a plot type or worry about details like labels and
-scales.</p>
-<p>You’ll also notice the clean, uncluttered appearance of the plot,
-especially when compared to a default <code>ggplot2</code> plot, thanks
-to <code><a href="../reference/theme_minimal2.html">theme_minimal2()</a></code>, which is applied by default in
-<code><a href="../reference/plot2.html">plot2()</a></code>. Unlike <code>ggplot2</code>’s default
-<code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_grey()</a></code> that features a grey background,
-<code><a href="../reference/theme_minimal2.html">theme_minimal2()</a></code> provides an even more spacious, white
-background that reduces visual clutter and is optimised for printing
-directly to production formats like PDFs. This makes
-<code><a href="../reference/plot2.html">plot2()</a></code> plots ideal for reports, publications, and
-presentations where a clean, professional look is essential.</p>
-</div>
-<div class="section level3">
-<h3 id="customising-the-plot-type">Customising the Plot Type<a class="anchor" aria-label="anchor" href="#customising-the-plot-type"></a>
-</h3>
-<p>But what if you want something different? Maybe a scatter plot or a
-line chart? No problem. You can easily specify the <code>type</code>
-argument to get exactly what you want.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = values</span></span>
-<span><span class="co">#&gt; Using x = group</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="672"></p>
-<p>Here, we’ve explicitly set <code>type = "l"</code> to create a line
-plot. <code><a href="../reference/plot2.html">plot2()</a></code> supports a wide range of plot types, and you
-can use either the full name (<code>type = "geom_line"</code>) or an
-abbreviation (<code>type = "line"</code>, <code>type = "l"</code>).</p>
-<p>This flexibility can save you from remembering multiple
-<code>ggplot2</code> functions like <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>,
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line()</a></code>, and <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code>. With
-<code><a href="../reference/plot2.html">plot2()</a></code>, these are all accessible through a simple
-<code>type</code> argument, making your workflow more intuitive.</p>
-</div>
-<div class="section level3">
-<h3 id="a-closer-look-at-the-axes">A Closer Look at the Axes<a class="anchor" aria-label="anchor" href="#a-closer-look-at-the-axes"></a>
-</h3>
-<p>One of the key strengths of <code><a href="../reference/plot2.html">plot2()</a></code> is how it handles
-axes. The <code>x</code> and <code>y</code> arguments are
-straightforward, but they come with a lot of flexibility. Let’s start
-with the basics and then build up to more advanced configurations.</p>
-<div class="section level4">
-<h4 id="setting-up-basic-axes">Setting Up Basic Axes<a class="anchor" aria-label="anchor" href="#setting-up-basic-axes"></a>
-</h4>
-<p>To create a simple scatter plot, you might pass a single variable to
-the <code>x</code> and <code>y</code> arguments:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre>
-<p><img src="plot2_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="672"></p>
-<p>This creates a scatter plot of miles per gallon (<code>mpg</code>)
-against horsepower (<code>hp</code>). This is as basic as it gets — two
-variables, one for each axis. Also, <code><a href="../reference/plot2.html">plot2()</a></code> always tries to
-start at zero for both <code>x</code> and <code>y</code> (which can be
-set with <code>x.expand</code> and <code>y.expand</code>). With
-<code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, the default plot is ‘zoomed in’ to the data
-region.</p>
-</div>
-<div class="section level4">
-<h4 id="working-with-multiple-variables">Working with Multiple Variables<a class="anchor" aria-label="anchor" href="#working-with-multiple-variables"></a>
-</h4>
-<p>Now, what if you want to compare multiple variables on the same plot?
-<code><a href="../reference/plot2.html">plot2()</a></code> makes this easy by allowing you to pass a vector of
-variables:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, <code><a href="../reference/plot2.html">plot2()</a></code> plots both <code>hp</code> and
-<code>disp</code> against <code>mpg</code> on the same graph, using
-different colours or other visual distinctions to separate them. This
-functionality replaces the need for pre-processing steps such as
-<code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">tidyr::pivot_longer()</a></code> for the selected variables,
-simplifying the code significantly.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="delving-into-categories">Delving into Categories<a class="anchor" aria-label="anchor" href="#delving-into-categories"></a>
-</h3>
-<p>Categories in <code><a href="../reference/plot2.html">plot2()</a></code> replace the <code>colour</code>
-and <code>fill</code> aesthetics from <code>ggplot2</code>. The
-<code>category</code> argument is where you define how your data should
-be grouped. Let’s start with a simple example and then explore how to
-take it further.</p>
-<div class="section level4">
-<h4 id="basic-grouping">Basic Grouping<a class="anchor" aria-label="anchor" href="#basic-grouping"></a>
-</h4>
-<p>A basic use of the <code>category</code> argument might look
-something like this:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="672"></p>
-<p>Here, the <code>cyl</code> variable is used to group the data by the
-number of cylinders, and <code><a href="../reference/plot2.html">plot2()</a></code> automatically assigns
-different colours to each group. This is particularly useful for
-comparing subsets of your data within the same plot.</p>
-<p>In <code>ggplot2</code>, this would typically involve specifying
-<code>aes(colour = ...)</code> or <code>aes(fill = ...)</code> within a
-<code>geom</code> function. <code><a href="../reference/plot2.html">plot2()</a></code> simplifies this by
-handling it directly through the <code>category</code> argument,
-reducing the need for manually setting aesthetics.</p>
-</div>
-<div class="section level4">
-<h4 id="customising-categories">Customising Categories<a class="anchor" aria-label="anchor" href="#customising-categories"></a>
-</h4>
-<p>But <code><a href="../reference/plot2.html">plot2()</a></code> doesn’t stop there. You can fully customise
-how categories are displayed. For instance, you might want to control
-the colours used for each category:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>,</span>
-<span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"6"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"8"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span><span class="co">#&gt; Using category.midpoint = 6 (the current category scale centre)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
-<p>Here, we’ve specified the exact colours to use for each category,
-giving you full control over the appearance of your plot.</p>
-<p>This approach mirrors what you would do with
-<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> or <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code>
-in <code>ggplot2</code>, but in a more streamlined and integrated
-manner.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="exploring-facets">Exploring Facets<a class="anchor" aria-label="anchor" href="#exploring-facets"></a>
-</h3>
-<p>Faceting in <code><a href="../reference/plot2.html">plot2()</a></code> allows you to split your plot into
-multiple panels, one for each level of a categorical variable. It’s an
-excellent way to compare data across different groups.</p>
-<div class="section level4">
-<h4 id="basic-faceting">Basic Faceting<a class="anchor" aria-label="anchor" href="#basic-faceting"></a>
-</h4>
-<p>A simple example of faceting might look like this:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, facet <span class="op">=</span> <span class="va">gear</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span><span class="co">#&gt; Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%</span></span>
-<span><span class="co">#&gt; Using free y scales per facet since the three y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="672"></p>
-<p>This command splits the plot by the number of gears, giving you a
-separate panel for each group. This is a quick way to see how
-relationships vary across different subsets of your data.</p>
-<p>In <code>ggplot2</code>, achieving this would typically require
-<code>facet_wrap(~ gear)</code> or <code>facet_grid(gear ~ .)</code>.
-With <code><a href="../reference/plot2.html">plot2()</a></code>, you achieve the same effect with a simple
-<code>facet</code> argument, making it more intuitive and easier to
-remember.</p>
-</div>
-<div class="section level4">
-<h4 id="advanced-faceting-options">Advanced Faceting Options<a class="anchor" aria-label="anchor" href="#advanced-faceting-options"></a>
-</h4>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> offers additional control over how facets are
-displayed. You can specify the number of rows in the facet grid, control
-whether scales are fixed or free, and more.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, facet <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"g"</span><span class="op">)</span>, facet.nrow <span class="op">=</span> <span class="fl">2</span>, facet.fixed_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span><span class="co">#&gt; Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%</span></span>
-<span><span class="co">#&gt; Assuming facet.repeat_labels_y = FALSE since y has fixed scales</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, we limit the facet grid to two rows and ensure that
-all y-axes have the same scale. This simplifies <code>ggplot2</code>’s
-more complex <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code> options like
-<code>scales = "free_y"</code> and <code>nrow</code>, which often
-require additional parameters.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="leveraging-in-line-transformations-with-plot2">Leveraging In-line Transformations with <code>plot2()</code><a class="anchor" aria-label="anchor" href="#leveraging-in-line-transformations-with-plot2"></a>
-</h3>
-<p>One of the standout features of <code><a href="../reference/plot2.html">plot2()</a></code> is its ability
-to perform transformations directly within the function call. This
-capability can dramatically reduce the need for additional data
-manipulation steps, allowing you to focus on the visualisation itself.
-Whether you’re calculating aggregates, formatting labels, or even
-applying mathematical transformations, <code><a href="../reference/plot2.html">plot2()</a></code> lets you do
-it all on the fly.</p>
-<div class="section level4">
-<h4 id="aggregations-made-easy">Aggregations Made Easy<a class="anchor" aria-label="anchor" href="#aggregations-made-easy"></a>
-</h4>
-<p>Suppose you want to count the number of unique patients admitted to
-each hospital. With <code><a href="../reference/plot2.html">plot2()</a></code>, there’s no need to
-pre-calculate these counts; you can simply use <code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct()</a></code>
-to get the unique numbers of patients directly within the function:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="672"></p>
-<p>This will produce a column plot showing the number of unique patients
-per hospital, calculated directly within <code><a href="../reference/plot2.html">plot2()</a></code>. Use
-<code>y = n()</code> instead to count the admissions (the rows).</p>
-</div>
-<div class="section level4">
-<h4 id="combining-data-with-in-line-transformations">Combining Data with In-line Transformations<a class="anchor" aria-label="anchor" href="#combining-data-with-in-line-transformations"></a>
-</h4>
-<p>The real power of <code><a href="../reference/plot2.html">plot2()</a></code> comes when you start combining
-these in-line transformations. Want to add more dimensions, like the
-period of admission and the ward? You can do that just as easily:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span>
-<span>          y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>,</span>
-<span>          category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span>, <span class="st">"Prior to 2010"</span>, <span class="st">"Since 2010"</span><span class="op">)</span>,</span>
-<span>          facet <span class="op">=</span> <span class="va">ward</span>,</span>
-<span>          title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Total of"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"patients"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">admitted_patients</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 250 × 7</span></span></span>
+<span><span class="co">#&gt;    date       patient_id gender   age age_group hospital ward   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 2002-01-14          1 M         78 75+       D        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 2002-03-17          2 M         78 75+       C        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 2002-04-08          3 M         78 75+       A        ICU    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 2002-04-14          4 M         72 55-74     C        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 2002-05-07          5 M         83 75+       C        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 2002-05-16          6 F         65 55-74     B        ICU    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 2002-05-16          7 M         47 25-54     D        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 2002-06-18          8 M         30 25-54     B        ICU    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 2002-06-23          9 M         82 75+       D        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 2002-06-23          9 M         82 75+       D        Non-ICU</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 240 more rows</span></span></span></code></pre></div>
+<div class="section level2">
+<h2 id="four-directions">Four directions<a class="anchor" aria-label="anchor" href="#four-directions"></a>
+</h2>
+<p>Every plot is described by up to four plotting directions, which are
+also the first four arguments of <code><a href="../reference/plot2.html">plot2()</a></code>:</p>
+<ul>
+<li>
+<code>x</code>: the values along the x axis;</li>
+<li>
+<code>y</code>: the values along the y axis;</li>
+<li>
+<code>category</code>: the groups within the plot, shown as colours
+(in <code>ggplot2</code> this is the <code>colour</code> or
+<code>fill</code> aesthetic, depending on the geom);</li>
+<li>
+<code>facet</code>: the groups shown in separate panels.</li>
+</ul>
+<p>Columns are given without quotes, as in <code>dplyr</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="va">age</span>, category <span class="op">=</span> <span class="va">gender</span>, facet <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values</span></span>
 <span><span class="co">#&gt; Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%</span></span>
 <span><span class="co">#&gt; Assuming facet.repeat_labels_y = FALSE since y has fixed scales</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="672"></p>
-<p>Here, the <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> in category adds the grouping on
-date, counting the number of unique patients per ward per hospital,
-again with no need for additional code outside of
-<code><a href="../reference/plot2.html">plot2()</a></code>.</p>
-<p>You didn’t need to <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> or
-<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code> your data beforehand — <code><a href="../reference/plot2.html">plot2()</a></code>
-takes care of it all, embedding the transformation directly into the
-plot creation process.</p>
-<p>In <code><a href="../reference/plot2.html">plot2()</a></code>, these tidyverse functions are available
-without loading other packages: <code>%&gt;%()</code>,
-<code><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of()</a></code>, <code><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of()</a></code>, <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with()</a></code>,
-<code><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">last()</a></code>,
-<code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct()</a></code>,
-<code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with()</a></code>, <code><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where()</a></code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">gender</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level4">
-<h4 id="in-line-math-transformations">In-line Math Transformations<a class="anchor" aria-label="anchor" href="#in-line-math-transformations"></a>
-</h4>
-<p>You can also apply mathematical transformations directly within
-<code><a href="../reference/plot2.html">plot2()</a></code>, making it easy to explore relationships in your
-data. For example, to plot the logarithm of patient ages across
-different wards, you can do this:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, y.transform <span class="op">=</span> <span class="st">"log2"</span>, category <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="672"></p>
-<p>In a traditional <code>ggplot2</code> approach, you might have to
-create a new variable in your data for the logarithmic transformation
-(<code>mutate(log_age = log(age))</code>) before plotting, and a
-<code>scale_y_continuous(transform = "log2")</code> for the Y-axis.
-<code><a href="../reference/plot2.html">plot2()</a></code> handles this seamlessly within the plotting
-function itself.</p>
-</div>
-<div class="section level4">
-<h4 id="advanced-formatting-on-the-fly">Advanced Formatting on the Fly<a class="anchor" aria-label="anchor" href="#advanced-formatting-on-the-fly"></a>
-</h4>
-<p>In addition to aggregations, <code><a href="../reference/plot2.html">plot2()</a></code> makes it easy to
-apply text transformations directly within the plotting function. For
-instance, you might want to format the date or combine different
-variables for the labels:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Hospital"</span>, <span class="va">hospital</span><span class="op">)</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Omitting printing of 60 datalabels - use datalabels = TRUE to force printing</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="672"></p>
-<p>This example creates a plot where the X-axis labels combine the text
-“Hospital” with the hospital name, and the categories are based on the
-year extracted from the <code>date</code> variable. This level of
-flexibility allows for highly customised plots without the need for
-extra preprocessing steps.</p>
-</div>
-<div class="section level4">
-<h4 id="combining-everything-together">Combining Everything Together<a class="anchor" aria-label="anchor" href="#combining-everything-together"></a>
-</h4>
-<p>Let’s put it all together in a more complex example. Suppose you want
-to examine the median age of patients per gender, with the year of
-admission as category and a facet per hospital:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">gender</span> <span class="op">==</span> <span class="st">"F"</span>, <span class="st">"Females"</span>, <span class="st">"Males"</span><span class="op">)</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>,</span>
-<span>        facet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Hospital"</span>, <span class="va">hospital</span><span class="op">)</span>,</span>
-<span>        x.title <span class="op">=</span> <span class="st">""</span>,</span>
-<span>        y.title <span class="op">=</span> <span class="st">"Median Patient Age"</span>,</span>
-<span>        y.labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"yrs"</span><span class="op">)</span>,</span>
-<span>        category.title <span class="op">=</span> <span class="st">"Year"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming facet.fixed_y = TRUE since the four y scales differ by less than 25%</span></span>
-<span><span class="co">#&gt; Assuming facet.repeat_labels_y = FALSE since y has fixed scales</span></span>
-<span><span class="co">#&gt; Omitting printing of 106 datalabels - use datalabels = TRUE to force printing</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this plot, we’re using multiple in-line transformations,
-showcasing the use of only 8 lines of code without using
-<code>dplyr</code> transformations manually. This level of complexity,
-achieved with just one <code><a href="../reference/plot2.html">plot2()</a></code> call, demonstrates the power
-and flexibility of in-line transformations.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="sorting-and-limiting-data">Sorting and Limiting Data<a class="anchor" aria-label="anchor" href="#sorting-and-limiting-data"></a>
-</h3>
-<p>Sorting is a crucial part of data visualisation, as it helps bring
-clarity and focus to your plots. With <code><a href="../reference/plot2.html">plot2()</a></code>, you have a
-variety of options to sort your data in different directions. Whether
-you want to sort by frequency, alphabetically, or by a custom order,
-<code><a href="../reference/plot2.html">plot2()</a></code> provides flexible and powerful tools to get the job
-done.</p>
-<p>Limiting your data helps in keeping plots clean. If you only want to
-display the top few items, <code>x.max_items</code> and
-<code>category.max_items</code>, and <code>facet.max_items</code> have
-got you covered.</p>
-<div class="section level4">
-<h4 id="basic-sorting">Basic Sorting<a class="anchor" aria-label="anchor" href="#basic-sorting"></a>
-</h4>
-<p>Let’s start with a simple sort based on frequency:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x.character = TRUE since x.sort is set</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, the data is sorted by the frequency of carburettor
-counts in descending order. This is particularly useful when you want to
-highlight the most common categories in your data.</p>
-<p>This command is akin to the functionality provided by
-<code>arrange(desc(...))</code> combined with
-<code>geom_bar(stat = "identity")</code>. However, <code><a href="../reference/plot2.html">plot2()</a></code>
-condenses this into a single, intuitive step.</p>
-</div>
-<div class="section level4">
-<h4 id="sorting-alphabetically">Sorting Alphabetically<a class="anchor" aria-label="anchor" href="#sorting-alphabetically"></a>
-</h4>
-<p>If you prefer to sort alphabetically, <code><a href="../reference/plot2.html">plot2()</a></code> makes it
-straightforward. You can use <code>"asc"</code> or <code>"alpha"</code>
-to sort your data in ascending alphabetical order:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"asc"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x.character = TRUE since x.sort is set</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="672"></p>
-<p>This command will sort the carburettor counts alphabetically, which
-is useful when your data naturally follows an alphabetical order.</p>
-<p>In <code>ggplot2</code>, achieving this often involves using
-<code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code> levels or reordering factors manually. With
-<code><a href="../reference/plot2.html">plot2()</a></code>, sorting becomes a simple matter of choosing the
-appropriate argument.</p>
-</div>
-<div class="section level4">
-<h4 id="sorting-with-a-custom-order">Sorting with a Custom Order<a class="anchor" aria-label="anchor" href="#sorting-with-a-custom-order"></a>
-</h4>
-<p>Sometimes, you may want to present your data in a specific order that
-doesn’t follow a standard sorting method. You can define a custom order
-by providing a manual vector of values:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x.character = TRUE since x.sort is set</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, the carburettor counts will be displayed in the
-order of 4, 1, 6, and 8, regardless of their frequency or alphabetical
-order. This approach is particularly useful when you want to highlight
-certain categories or follow a logical sequence.</p>
-<p>In <code>ggplot2</code>, this would typically involve setting
-<code>levels</code> manually within a factor, which can be cumbersome.
-<code><a href="../reference/plot2.html">plot2()</a></code> streamlines this by allowing custom orders directly
-within the <code><a href="../reference/plot2.html">plot2()</a></code> function call.</p>
-</div>
-<div class="section level4">
-<h4 id="limiting-data">Limiting Data<a class="anchor" aria-label="anchor" href="#limiting-data"></a>
-</h4>
-<p>You might not always want to show every single item in your plot. For
-example, if you’re dealing with a lot of categories, you can limit the
-number of items shown:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.max_items <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x.character = TRUE for discrete plot type (geom_col) since carb is numeric</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="672"></p>
-<p>This keeps the first four carburettor counts in their sorted order (1
-to 4) and combines all others into a fifth column, “(rest, x2)”, the
-number telling how many values were combined. Sorting is applied first,
-so to show the most frequent values, combine <code>x.max_items</code>
-with <code>x.sort = "freq-desc"</code>, as in the next example.</p>
-<p>In <code>ggplot2</code>, you might need to filter your data with
-<code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max()</a></code> before plotting, and summarise the rest
-yourself. <code><a href="../reference/plot2.html">plot2()</a></code> handles this within the plotting
-function, further reducing the need for external data manipulation.</p>
-</div>
-<div class="section level4">
-<h4 id="combining-sorting-with-limiting">Combining Sorting with Limiting<a class="anchor" aria-label="anchor" href="#combining-sorting-with-limiting"></a>
-</h4>
-<p>Sorting can be combined with other features in <code><a href="../reference/plot2.html">plot2()</a></code>
-to create more sophisticated plots. For example, you might want to sort
-by frequency and also limit the number of items displayed:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span>, x.max_items <span class="op">=</span> <span class="fl">5</span>, type <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x.character = TRUE for discrete plot type (geom_col) since carb is numeric</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="672"></p>
-<p>This plot will show the four most frequent carburettor counts, sorted
-in descending order, and the rest combined in a fifth column. This
-combination helps to declutter your visualisation and focus on the most
-significant parts of your data.</p>
-<p>In a <code>ggplot2</code> approach, this might involve combining
-<code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max()</a></code>, and
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code>. <code><a href="../reference/plot2.html">plot2()</a></code> consolidates these
-operations into a single, coherent function call.</p>
-</div>
-<div class="section level4">
-<h4 id="visualising-sorting-options">Visualising Sorting Options<a class="anchor" aria-label="anchor" href="#visualising-sorting-options"></a>
-</h4>
-<p>To illustrate the impact of different sorting options, let’s create a
-plot that uses a custom sort order and highlights the flexibility of
-<code><a href="../reference/plot2.html">plot2()</a></code>:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"55-74"</span>, <span class="st">"75+"</span>, <span class="st">"25-54"</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">hospital</span>, stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, the <code>age_group</code> axis is sorted in a
-custom order, with the “55-74” group first, followed by “75+” and then
-“25-54”. The bars are stacked by hospital, providing a clear comparison
-across the specified age groups.</p>
-<p>This functionality parallels <code>ggplot2</code>’s ability to
-reorder factors using <code><a href="https://forcats.tidyverse.org/reference/fct_relevel.html" class="external-link">forcats::fct_relevel()</a></code> or manually
-reordering levels within a factor, but with less effort and more
-clarity.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="customising-colours">Customising Colours<a class="anchor" aria-label="anchor" href="#customising-colours"></a>
-</h3>
-<p>Customising colours in <code><a href="../reference/plot2.html">plot2()</a></code> is intuitive and
-flexible. You can use pre-set colour scales like <code>viridis</code>,
-or define your own colours. The <code>colour</code> and
-<code>colour_fill</code> arguments control the appearance of your
-plot.</p>
-<div class="section level4">
-<h4 id="using-pre-set-colour-scales">Using Pre-set Colour Scales<a class="anchor" aria-label="anchor" href="#using-pre-set-colour-scales"></a>
-</h4>
-<p>For a quick and visually appealing colour scheme, you might use a
-<code>viridis</code> palette:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="672"></p>
-<p>This applies the <code>viridis</code> colour scale, which is
-particularly good for making sure your plot is accessible to those with
-colour vision deficiencies.</p>
-<p>This replaces the need for <code>ggplot2</code>’s
-<code><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_colour_viridis_c()</a></code> or
-<code><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c()</a></code>, providing a more straightforward
-interface.</p>
-</div>
-<div class="section level4">
-<h4 id="defining-custom-colours">Defining Custom Colours<a class="anchor" aria-label="anchor" href="#defining-custom-colours"></a>
-</h4>
-<p>If you want more control, you can define specific colours for each
-category:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, category <span class="op">=</span> <span class="va">cyl</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"6"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"8"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span><span class="co">#&gt; Using category.midpoint = 6 (the current category scale centre)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-26-1.png" class="r-plt" alt="" width="672"></p>
-<p>You can use any colour that the implemented <code><a href="../reference/colour.html">get_colour()</a></code>
-function can understand, such as colour names and HTML codes:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/colour.html">get_colour</a></span><span class="op">(</span><span class="st">"red"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "#FF0000"<span style="background-color: #FF0000;"> </span></span></span>
-<span><span class="fu"><a href="../reference/colour.html">get_colour</a></span><span class="op">(</span><span class="st">"#FF0000"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "#FF0000"<span style="background-color: #FF0000;"> </span></span></span>
-<span><span class="fu"><a href="../reference/colour.html">get_colour</a></span><span class="op">(</span><span class="st">"ff0000"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "#FF0000"<span style="background-color: #FF0000;"> </span></span></span>
-<span><span class="fu"><a href="../reference/colour.html">get_colour</a></span><span class="op">(</span><span class="st">"f00"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "#FF0000"<span style="background-color: #FF0000;"> </span></span></span></code></pre></div>
-<p>But most importantly, you can register new colours to the
-<code>plot2</code> package. Let’s assume these six colours are from the
-style of your university/company/etc.:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/colour.html">register_colour</a></span><span class="op">(</span>navy_blue <span class="op">=</span> <span class="st">"#1F3A93"</span>,</span>
-<span>                burnt_orange <span class="op">=</span> <span class="st">"#D35400"</span>,</span>
-<span>                forest_green <span class="op">=</span> <span class="st">"#2C6F47"</span>,</span>
-<span>                goldenrod_yellow <span class="op">=</span> <span class="st">"#DAA520"</span>,</span>
-<span>                slate_grey <span class="op">=</span> <span class="st">"#708090"</span>,</span>
-<span>                plum_purple <span class="op">=</span> <span class="st">"#8E4585"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 6 colours registered.</span></span>
-<span></span>
-<span><span class="co"># Then register the whole colour list too:</span></span>
-<span><span class="fu"><a href="../reference/colour.html">register_colour</a></span><span class="op">(</span>OurOrganisation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"navy_blue"</span>, <span class="st">"burnt_orange"</span>,</span>
-<span>                                    <span class="st">"forest_green"</span>, <span class="st">"goldenrod_yellow"</span>,</span>
-<span>                                    <span class="st">"slate_grey"</span>, <span class="st">"plum_purple"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1 colour set registered.</span></span></code></pre></div>
-<p>You can now use these colours in your plots!</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<p><img src="plot2_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Since these are the first four arguments, the names can be left out.
+The following call gives the same plot:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span>, <span class="va">gender</span>, <span class="va">ward</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/plot2.html">plot2()</a></code> fills in what is not given. The
+<code>iris</code> data have four numeric columns and a factor, so a call
+without any directions plots the first two numeric columns as points,
+coloured by the factor:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"OurOrganisation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
-<span><span class="co">#&gt; Using type = "boxplot" since all groups in Species and category contain at least three values</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-29-1.png" class="r-plt" alt="" width="672"></p>
-<p>This approach mirrors <code>ggplot2</code>’s
-<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> but with an added layer of
-flexibility through the <code><a href="../reference/colour.html">register_colour()</a></code> function. This
-makes it easier to maintain consistent branding or theme-specific
-colours across multiple plots.</p>
-</div>
-<div class="section level4">
-<h4 id="default-colours">Default Colours<a class="anchor" aria-label="anchor" href="#default-colours"></a>
-</h4>
-<p>At default, <code><a href="../reference/plot2.html">plot2()</a></code> sets no colours, meaning that it
-uses ggplot2 colours. With some simple R options, it is very easy to
-switch to another colour set.</p>
-<p>Default:</p>
-<p><img src="plot2_files/figure-html/unnamed-chunk-31-1.png" class="r-plt" alt="" width="672"></p>
-<p>Using any <a href="https://sjmgarnier.github.io/viridis/articles/intro-to-viridis.html" class="external-link">viridis
-colour palette</a>:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-33-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># our previously set manual colour set:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"OurOrganisation"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-37-1.png" class="r-plt" alt="" width="672"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="advanced-plot-types">Advanced Plot Types<a class="anchor" aria-label="anchor" href="#advanced-plot-types"></a>
-</h3>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> shines when it comes to more complex plot types,
-such as geography plots, spider plots, UpSet plots, back-to-back
-(butterfly) plots, dumbbell plots and Sankey diagrams.</p>
-<p>You can read about them in <strong>our <a href="https://msberends.github.io/plot2/articles/supported_types.html">plot
-type overview here</a></strong>.</p>
-</div>
-<div class="section level3">
-<h3 id="adding-elements-with-add_-functions">Adding Elements with <code>add_*()</code> Functions<a class="anchor" aria-label="anchor" href="#adding-elements-with-add_-functions"></a>
-</h3>
-<p>Beyond the basics, <code><a href="../reference/plot2.html">plot2()</a></code> allows you to add layers and
-elements to your plots with the <code>add_*()</code> functions. These
-are designed to integrate seamlessly with <code><a href="../reference/plot2.html">plot2()</a></code> and
-<code>ggplot2</code>.</p>
-<div class="section level4">
-<h4 id="adding-lines-points-and-columns">Adding Lines, Points, and Columns<a class="anchor" aria-label="anchor" href="#adding-lines-points-and-columns"></a>
-</h4>
-<p>Adding a line to an existing plot is as easy as calling
-<code><a href="../reference/add_type.html">add_line()</a></code>:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>,</span>
-<span>        category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span></span>
-<span><span class="co"># Notice how plot2() adds 3 lines here, since `category` is set</span></span>
-<span><span class="va">p</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-39-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">p</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, legend.value <span class="op">=</span> <span class="st">"Average HP"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-39-2.png" class="r-plt" alt="" width="672"></p>
-<p>This adds a line at the mean horsepower. The <code>add_*()</code>
-functions automatically correct for <code>category</code>, removing the
-need for pre-processing steps to determine (in this case) the mean. A
-legend item can also be added by just setting
-<code>legend.value</code>.</p>
-<p>In <code>ggplot2</code>, this would typically require adding
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline()</a></code> with an aesthetic mapping.
-<code><a href="../reference/plot2.html">plot2()</a></code> simplifies this to a single function call.</p>
-</div>
-<div class="section level4">
-<h4 id="adding-points">Adding Points<a class="anchor" aria-label="anchor" href="#adding-points"></a>
-</h4>
-<p>Points can be added to highlight specific values or observations:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">4</span>, size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-40-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, we add a point at the median <code>mpg</code> and
-<code>hp</code>, using a cross shape and a larger size for emphasis.
-This mirrors <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> in <code>ggplot2</code> but is
-more tightly integrated with <code><a href="../reference/plot2.html">plot2()</a></code>’s streamlined
-interface.</p>
-</div>
-<div class="section level4">
-<h4 id="adding-columns">Adding Columns<a class="anchor" aria-label="anchor" href="#adding-columns"></a>
-</h4>
-<p>Adding columns is just as straightforward, and can be used to create
-bar charts or other similar visualisations:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_col</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cyl</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-41-1.png" class="r-plt" alt="" width="672"></p>
-<p>Here, we add columns based on the number of cylinders, making it easy
-to compare the counts across different groups. This replaces
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col()</a></code> or <code>geom_bar(stat = "identity")</code> in
-<code>ggplot2</code>, maintaining simplicity and directness.</p>
-</div>
-<div class="section level4">
-<h4 id="plotting-error-bars">Plotting Error Bars<a class="anchor" aria-label="anchor" href="#plotting-error-bars"></a>
-</h4>
-<p>Plotting error bars is just as simple:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_errorbar</a></span><span class="op">(</span>min <span class="op">=</span> <span class="va">hp</span> <span class="op">-</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="va">hp</span> <span class="op">+</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-42-1.png" class="r-plt" alt="" width="672"></p>
-<p>This adds error bars to the plot, showing a range of ±10 around the
-<code>hp</code> values. <code><a href="../reference/plot2.html">plot2()</a></code> abstracts away the
-complexities of <code><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_errorbar()</a></code>, offering a more intuitive
-syntax.</p>
-</div>
-<div class="section level4">
-<h4 id="adding-spatial-features-with-add_sf">Adding Spatial Features with <code>add_sf()</code><a class="anchor" aria-label="anchor" href="#adding-spatial-features-with-add_sf"></a>
-</h4>
-<p>For those working with geographic data, <code><a href="../reference/add_type.html">add_sf()</a></code> makes
-it easy to integrate spatial features:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">netherlands</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/add_type.html">add_sf</a></span><span class="op">(</span><span class="va">netherlands</span>, colour_fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using category = area_km2</span></span>
-<span><span class="co">#&gt; Using datalabels = province</span></span>
-<span><span class="co">#&gt; Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-43-1.png" class="r-plt" alt="" width="672"></p>
-<p>This example adds spatial features to a plot of the Netherlands, with
-an extra border around the provinces. <code>ggplot2</code> users would
-typically use <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf()</a></code> for this purpose, but
-<code><a href="../reference/plot2.html">plot2()</a></code> integrates this directly, making geographic
-plotting more accessible.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="customising-fonts-in-plot2">Customising Fonts in <code>plot2()</code><a class="anchor" aria-label="anchor" href="#customising-fonts-in-plot2"></a>
-</h3>
-<p>Another powerful feature of <code><a href="../reference/plot2.html">plot2()</a></code> is its flexibility
-with fonts. Whether you’re aiming for a professional look, something
-playful, or anything in between, <code><a href="../reference/plot2.html">plot2()</a></code> allows you to
-easily customise fonts to suit your needs.</p>
-<div class="section level4">
-<h4 id="using-system-fonts-and-google-fonts">Using System Fonts and Google Fonts<a class="anchor" aria-label="anchor" href="#using-system-fonts-and-google-fonts"></a>
-</h4>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> supports all installed system fonts, as well as
-over 1,400 Google Fonts, giving you an extensive range of choices for
-your plots. Missing fonts will be downloaded automatically, and the
-required DPI will be set for you. In R Markdown, set the chunk option
-<code>fig.showtext = TRUE</code> in chunks that use another font, as in
-the examples below.</p>
-<p>Here’s how you can apply a custom font from Google Fonts, which will
-be downloaded automatically:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, <span class="va">wt</span> <span class="op">*</span> <span class="fl">1000</span>,</span>
-<span>        facet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">0</span>, <span class="st">"V-shaped Engine"</span>, <span class="st">"Straight Engine"</span><span class="op">)</span>,</span>
-<span>        font <span class="op">=</span> <span class="st">"Rock Salt"</span>,</span>
-<span>        title <span class="op">=</span> <span class="st">"Custom Font Example"</span>, </span>
-<span>        x.title <span class="op">=</span> <span class="st">"Miles per US gallon"</span>,</span>
-<span>        y.title <span class="op">=</span> <span class="st">"Gross Horsepower"</span>,</span>
-<span>        category.title <span class="op">=</span> <span class="st">"Weight (lbs)"</span>,</span>
-<span>        facet.fixed_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span><span class="co">#&gt; Downloaded font https://fonts.google.com/specimen/Rock+Salt from Google Fonts into /tmp/RtmpLKrdT7/R/plot2/fonts</span></span>
-<span><span class="co">#&gt; Assuming facet.fixed_x = TRUE since the two x scales differ by less than 25%</span></span>
-<span><span class="co">#&gt; Assuming facet.repeat_labels_y = FALSE since y has fixed scales</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-44-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, the <code>Rock Salt</code> font, a playful and
-hand-drawn style, is applied across the plot.</p>
-<p>In <code>ggplot2</code>, using custom fonts often requires extra
-handling using the <code>showtext</code> package with manual adjustments
-in theme settings. <code><a href="../reference/plot2.html">plot2()</a></code> simplifies this by integrating
-<code>showtext</code> into its core, including automatic downloading and
-font scaling.</p>
-</div>
-<div class="section level4">
-<h4 id="creating-consistent-themes-with-fonts">Creating Consistent Themes with Fonts<a class="anchor" aria-label="anchor" href="#creating-consistent-themes-with-fonts"></a>
-</h4>
-<p>By setting font options globally through R options, you can maintain
-consistent styling across multiple plots. This is particularly useful
-when preparing a series of visualisations for a report or
-presentation.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="st">"Lobster"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span>, title <span class="op">=</span> <span class="st">"Consistent Font Example"</span>,</span>
-<span>        text_factor <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
-<span><span class="co">#&gt; Downloaded font https://fonts.google.com/specimen/Lobster from Google Fonts into /tmp/RtmpLKrdT7/R/plot2/fonts</span></span></code></pre></div>
-<p><img src="plot2_files/figure-html/unnamed-chunk-45-1.png" class="r-plt" alt="" width="672"></p>
-<p>In this example, all plots will now use the <code>Lobster</code>
-font, ensuring a consistent appearance across your visualisations. The
-<code>text_factor</code> argument shows that it can be used to scale the
-text size of all plot elements, ensuring readability and aesthetic
-balance.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># reset again</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.font <span class="op">=</span> <span class="cn">NULL</span>, plot2.colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p>Customising fonts in <code><a href="../reference/plot2.html">plot2()</a></code> is both flexible and
-straightforward, allowing you to tailor the typography of your plots to
-match your project’s style. Whether you’re using a system font or one of
-the many Google Fonts, <code><a href="../reference/plot2.html">plot2()</a></code> makes it easy to create
-visually appealing and consistent plots with minimal effort.</p>
-</div>
-</div>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using x = Sepal.Length</span></span>
+<span><span class="co">#&gt; Using y = Sepal.Width</span></span>
+<span><span class="co">#&gt; Using category = Species</span></span>
+<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Each automatic decision follows a fixed rule. In an interactive
+session, <code><a href="../reference/plot2.html">plot2()</a></code> reports these decisions in a message, such
+as <code>Using category = Species</code>; set
+<code>options(plot2.silent = TRUE)</code> to hide them. Any decision is
+overridden by setting the argument concerned. The section <em>Automatic
+choices</em> in <code><a href="../reference/plot2.html">?plot2</a></code> lists all rules.</p>
 </div>
 <div class="section level2">
-<h2 id="discussion">Discussion<a class="anchor" aria-label="anchor" href="#discussion"></a>
+<h2 id="calculations-in-arguments">Calculations in arguments<a class="anchor" aria-label="anchor" href="#calculations-in-arguments"></a>
 </h2>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> is more than just a wrapper for
-<code>ggplot2</code>; it embodies a philosophy of simplifying and
-streamlining the plotting process while building on the robust
-foundation that <code>ggplot2</code> provides. If you’re familiar with
-<code>ggplot2</code>, you know that its explicit, detailed approach to
-plot creation is one of its greatest strengths, allowing for
-unparalleled control over every aspect of a visualisation. However, with
-that power comes the need for repetitive coding and a certain level of
-complexity that can be challenging, especially for beginners.</p>
-<div class="section level4">
-<h4 id="enhancing-workflow-efficiency">Enhancing Workflow Efficiency<a class="anchor" aria-label="anchor" href="#enhancing-workflow-efficiency"></a>
-</h4>
-<p>The primary goal of <code><a href="../reference/plot2.html">plot2()</a></code> is to make data
-visualisation faster and more intuitive by automating many of the
-routine tasks involved in creating plots. Whether you’re working with
-simple data or complex datasets requiring advanced transformations,
-<code><a href="../reference/plot2.html">plot2()</a></code> helps you get to the final visualisation with fewer
-lines of code and less cognitive load. This not only speeds up your
-workflow but also makes your code more readable and maintainable.</p>
-<p>For instance, the ability to perform in-line transformations directly
-within the plotting function eliminates the need for pre-processing
-steps that would otherwise require additional code blocks using, e.g.,
-<code>dplyr</code> or <code>tidyr</code>. This feature of
-<code><a href="../reference/plot2.html">plot2()</a></code> alone can drastically reduce the complexity of your
-code, especially when working with large and multifaceted datasets.</p>
+<p>The directions accept calculations on the columns of the data. For
+<code>y</code>, this means that the data are summarised per group,
+without a separate <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code>
+step:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Every value of <code>x</code> is now one bar, so <code><a href="../reference/plot2.html">plot2()</a></code>
+chose a column plot and added data labels. Use <code>y = n()</code> to
+count rows, or any other function that returns a single value per group,
+such as <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code>, <code><a href="https://rdrr.io/r/stats/median.html" class="external-link">median()</a></code> or
+<code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max()</a></code>.</p>
+<p>The other directions accept calculations too:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">ward</span> <span class="op">==</span> <span class="st">"ICU"</span>, <span class="st">"Intensive care"</span>, <span class="st">"Other wards"</span><span class="op">)</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct()</a></code> are re-exported from
+<code>dplyr</code>, together with the <code>tidyselect</code> helpers
+such as <code><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where()</a></code> and <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with()</a></code>, so they
+work without loading other packages. A helper can select several columns
+for <code>y</code>, which are then shown as a category:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
+<span><span class="co">#&gt; Using type = "boxplot" since all groups in Species and category contain at least three values</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Titles accept calculations as well, which keeps them correct when the
+data change. <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> also works here:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"histogram"</span>,</span>
+<span>        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Age of"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>, <span class="st">"patients"</span><span class="op">)</span>,</span>
+<span>        subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Based on"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"admissions"</span><span class="op">)</span>,</span>
+<span>        caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Admitted between"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"and"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using binwidth = 6.4 based on data</span></span>
+<span><span class="co">#&gt; Assuming smooth = TRUE for type = "histogram"</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
-<div class="section level4">
-<h4 id="a-natural-extension-of-ggplot2">A Natural Extension of <code>ggplot2</code><a class="anchor" aria-label="anchor" href="#a-natural-extension-of-ggplot2"></a>
-</h4>
-<p><code>ggplot2</code> has established itself as a cornerstone of data
-visualisation in R, and for good reason. Its layer-based approach and
-extensive customisation options make it incredibly powerful.
-<code><a href="../reference/plot2.html">plot2()</a></code> is designed to complement these strengths by
-offering a more streamlined interface that automates many of the common
-tasks in <code>ggplot2</code>. Think of <code><a href="../reference/plot2.html">plot2()</a></code> as a
-natural extension of <code>ggplot2</code> — one that retains the
-underlying power while simplifying the process, especially for users who
-prefer a more direct path from data to visualisation.</p>
-<p>The <code>add_*()</code> functions exemplify this philosophy by
-allowing users to add layers and elements with minimal code, maintaining
-the flexibility of <code>ggplot2</code> while reducing the need for
-repetitive boilerplate. This makes it easier to experiment with
-different visualisations and iterate quickly on your designs.</p>
+<div class="section level2">
+<h2 id="plot-types">Plot types<a class="anchor" aria-label="anchor" href="#plot-types"></a>
+</h2>
+<p>Without a <code>type</code>, <code><a href="../reference/plot2.html">plot2()</a></code> chooses one from
+the data: a boxplot if every group contains at least three values,
+points if both axes are numeric, and columns otherwise. The
+<code>type</code> argument sets it explicitly. It accepts the name of
+any <code>ggplot2</code> geom, with or without the <code>geom_</code>
+prefix, and abbreviations such as <code>"l"</code> for lines and
+<code>"b"</code> for boxplots:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code><a href="../reference/plot2.html">plot2()</a></code> also adds types that <code>ggplot2</code> does
+not provide directly, such as dumbbell, back-to-back, Sankey, spider and
+UpSet plots. A dumbbell plot compares two groups:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code><a href="../articles/supported_types.html">vignette("supported_types", package = "plot2")</a></code> shows
+every type with its data requirements.</p>
 </div>
-<div class="section level4">
-<h4 id="flexibility-without-complexity">Flexibility Without Complexity<a class="anchor" aria-label="anchor" href="#flexibility-without-complexity"></a>
-</h4>
-<p>One of the key advantages of <code><a href="../reference/plot2.html">plot2()</a></code> is that it retains
-the flexibility of <code>ggplot2</code> while reducing the need for
-detailed specification. The automatic handling of plot types, axis
-settings, and scales means that you can create sophisticated plots with
-minimal input. Yet, when you need to take control, <code><a href="../reference/plot2.html">plot2()</a></code>
-offers all the options you would expect, from custom sorting to precise
-colour control and font selection.</p>
-<p>This balance between flexibility and simplicity is what makes
-<code><a href="../reference/plot2.html">plot2()</a></code> a powerful tool for both beginners and experienced
-users. Beginners can quickly produce high-quality plots without getting
-bogged down in the details, while advanced users can still leverage the
-full power of <code>ggplot2</code> when necessary.</p>
+<div class="section level2">
+<h2 id="sorting-and-limiting">Sorting and limiting<a class="anchor" aria-label="anchor" href="#sorting-and-limiting"></a>
+</h2>
+<p>Each direction can be sorted with one argument: <code>x.sort</code>,
+<code>category.sort</code> and <code>facet.sort</code>. They accept
+<code>TRUE</code> (alphabetical, with numbers in their numeric order),
+<code>"freq-desc"</code> and <code>"freq-asc"</code> (by the values of
+<code>y</code>), <code>FALSE</code> (in the order of the data), or a
+vector with the desired order:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using x.character = TRUE since x.sort is set</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
+<p>A vector does not need to contain all values; the remaining values
+follow in their usual order:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
+<span>        x.sort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>        category.sort <span class="op">=</span> <span class="st">"alpha-desc"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code>x.max_items</code>, <code>category.max_items</code> and
+<code>facet.max_items</code> limit the number of values shown. The
+values beyond the limit are combined into one item, which is placed
+last:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span>, x.max_items <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using x.character = TRUE since x.sort is set</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
-<div class="section level4">
-<h4 id="philosophical-underpinnings">Philosophical Underpinnings<a class="anchor" aria-label="anchor" href="#philosophical-underpinnings"></a>
-</h4>
-<p>At the heart of <code><a href="../reference/plot2.html">plot2()</a></code> is a commitment to making data
-visualisation more accessible and less intimidating. The goal is to
-lower the barriers to entry for creating professional-quality plots,
-thereby empowering more people to engage with data in a meaningful way.
-This aligns with the broader trend in the R community and the tidyverse
-towards creating tools that are both powerful and easy to use.</p>
-<p><code><a href="../reference/plot2.html">plot2()</a></code> is also designed with the understanding that not
-every user needs — or wants — to be an expert in the intricacies of
-<code>ggplot2</code>. By providing sensible defaults and automating
-common tasks, <code><a href="../reference/plot2.html">plot2()</a></code> allows users to focus on the most
-important part of the visualisation process: interpreting and
-communicating their data.</p>
+<div class="section level2">
+<h2 id="stacking">Stacking<a class="anchor" aria-label="anchor" href="#stacking"></a>
+</h2>
+<p>Columns of different categories are placed next to each other.
+<code>stacked = TRUE</code> stacks them, and
+<code>stacked_fill = TRUE</code> stacks them to 100%:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">hospital</span>, stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">hospital</span>, stacked_fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
-<div class="section level4">
-<h4 id="reflecting-on-usage-scenarios">Reflecting on Usage Scenarios<a class="anchor" aria-label="anchor" href="#reflecting-on-usage-scenarios"></a>
-</h4>
-<p>The real value of <code><a href="../reference/plot2.html">plot2()</a></code> becomes evident in real-world
-usage scenarios. Whether you’re creating a quick exploratory plot or
-preparing a polished visualisation for publication, <code><a href="../reference/plot2.html">plot2()</a></code>
-adapts to your needs. Its versatility makes it suitable for a wide range
-of applications, from routine data analysis to sophisticated data
-storytelling.</p>
-<p>Moreover, <code><a href="../reference/plot2.html">plot2()</a></code> integrates seamlessly with the broader
-tidyverse ecosystem. It works effortlessly with other tidyverse
-packages, allowing you to incorporate it into your existing workflows
-without disruption. This ensures that you can continue to use the tools
-you’re familiar with while benefiting from the efficiencies that
-<code><a href="../reference/plot2.html">plot2()</a></code> brings.</p>
+<div class="section level2">
+<h2 id="axes-and-data-labels">Axes and data labels<a class="anchor" aria-label="anchor" href="#axes-and-data-labels"></a>
+</h2>
+<p>All settings of a direction share its name as a prefix, such as
+<code>x.title</code>, <code>y.limits</code> or
+<code>category.title</code>. The y axis starts at zero where possible;
+<code>y.zoom = TRUE</code> (or <code>zoom = TRUE</code> for both axes)
+limits it to the range of the data. <code>horizontal = TRUE</code> turns
+the plot, and a <code>type = "bar"</code> gives horizontal columns:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"bar"</span>,</span>
+<span>        x.title <span class="op">=</span> <span class="st">"Age group"</span>,</span>
+<span>        y.title <span class="op">=</span> <span class="st">"Number of admissions"</span>,</span>
+<span>        category.title <span class="op">=</span> <span class="st">"Gender"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Axis values can be formatted with functions, such as
+<code>y.percent = TRUE</code> for percentages or <code>y.labels</code>
+for any labelling function. A secondary y axis is set with
+<code>y_secondary</code>. This example uses the <code>economics</code>
+data set from <code>ggplot2</code>:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/economics.html" class="external-link">economics</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>,</span>
+<span>        y <span class="op">=</span> <span class="va">unemploy</span> <span class="op">/</span> <span class="fl">1000</span>,</span>
+<span>        y_secondary <span class="op">=</span> <span class="va">psavert</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"line"</span>,</span>
+<span>        colour <span class="op">=</span> <span class="st">"#4E79A7"</span>,</span>
+<span>        y_secondary.colour <span class="op">=</span> <span class="st">"#F28E2B"</span>,</span>
+<span>        x.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        y.title <span class="op">=</span> <span class="st">"Unemployed (millions)"</span>,</span>
+<span>        y_secondary.title <span class="op">=</span> <span class="st">"Personal savings rate (%)"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using x.date_breaks = "5 years" based on data</span></span>
+<span><span class="co">#&gt; Using x.date_labels = "yyyy" based on data</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Data labels are added automatically to column plots with at most 25
+values. <code>datalabels = TRUE</code> always shows them,
+<code>datalabels = FALSE</code> hides them, and
+<code>datalabels.format</code> sets their text. In this format,
+<code>%n</code> is the value and <code>%p</code> its percentage:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, datalabels.format <span class="op">=</span> <span class="st">"%n (%p)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
-<div class="section level4">
-<h4 id="looking-forward">Looking Forward<a class="anchor" aria-label="anchor" href="#looking-forward"></a>
-</h4>
-<p>As the R community continues to evolve, so too will the tools we use
-for data visualisation. <code><a href="../reference/plot2.html">plot2()</a></code> represents a step towards a
-more user-friendly and efficient future, where the focus is on insights
-and communication rather than technical details. It’s a tool that grows
-with you — whether you’re just starting out or pushing the boundaries of
-what’s possible with data visualisation.</p>
-<p>In the end, the success of any tool is measured by how well it meets
-the needs of its users. <code><a href="../reference/plot2.html">plot2()</a></code> has been designed with a
-deep understanding of the challenges and frustrations that come with
-creating complex plots in R. By addressing these challenges head-on,
-<code><a href="../reference/plot2.html">plot2()</a></code> aims to make your data visualisation journey
-smoother, more enjoyable, and ultimately more productive.</p>
+<div class="section level2">
+<h2 id="colours">Colours<a class="anchor" aria-label="anchor" href="#colours"></a>
+</h2>
+<p><code>colour</code> sets the colours for every plot type. In
+<code>ggplot2</code>, this requires either the <code>colour</code> or
+the <code>fill</code> aesthetic with its matching scale function,
+depending on the geom. <code>colour</code> accepts colour names,
+hexadecimal codes, palette names such as <code>"viridis"</code>, and
+named vectors that match the values of <code>category</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
+<span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>F <span class="op">=</span> <span class="st">"#4E79A7"</span>, M <span class="op">=</span> <span class="st">"#F28E2B"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code>category.focus</code> highlights one value and shows the others
+in grey:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">hospital</span>,</span>
+<span>        category.focus <span class="op">=</span> <span class="st">"B"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="100%"></p>
+<p>The article <em>Colours and themes</em> on the package website
+describes palettes, custom organisation colours and themes in more
+detail.</p>
 </div>
+<div class="section level2">
+<h2 id="adding-layers">Adding layers<a class="anchor" aria-label="anchor" href="#adding-layers"></a>
+</h2>
+<p>The <code>add_*()</code> functions add a layer to an existing plot.
+They use the data of the plot unless other data are given, and they take
+the <code>category</code> of the plot into account:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="va">hp</span>, category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, legend.value <span class="op">=</span> <span class="st">"Mean per group"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code><a href="../reference/add_type.html">add_line()</a></code>, <code><a href="../reference/add_type.html">add_point()</a></code>,
+<code><a href="../reference/add_type.html">add_col()</a></code>, <code><a href="../reference/add_type.html">add_errorbar()</a></code> and
+<code><a href="../reference/add_type.html">add_smooth()</a></code> cover the most common layers, and
+<code><a href="../reference/add_type.html">add_type()</a></code> adds any other geom. A smooth can also be set
+directly with the <code>smooth</code> argument of
+<code><a href="../reference/plot2.html">plot2()</a></code>:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="va">hp</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span>, smooth.method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span>
+<span><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="other-kinds-of-input">Other kinds of input<a class="anchor" aria-label="anchor" href="#other-kinds-of-input"></a>
+</h2>
+<p><code><a href="../reference/plot2.html">plot2()</a></code> is an S3 generic. Besides data frames, it plots
+vectors, tables, formulas, matrices, and models and other objects that
+<code><a href="https://ggplot2.tidyverse.org/reference/fortify.html" class="external-link">ggplot2::fortify()</a></code> or <code><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">broom::augment()</a></code> convert
+to a data frame. A formula has the form
+<code>y ~ x + category | facet</code>:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hp</span> <span class="op">~</span> <span class="va">mpg</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="100%"></p>
+<p>A correlation matrix becomes a heatmap:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"white"</span>, <span class="st">"#B2182B"</span><span class="op">)</span>,</span>
+<span>        datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        category.title <span class="op">=</span> <span class="st">"Correlation"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Assuming type = "tile" since the matrix contains identical row and column names</span></span>
+<span><span class="co">#&gt; Using category.midpoint = 0 (the current category scale centre)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="100%"></p>
+<p>A model is converted with <code><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">broom::augment()</a></code>, which adds
+columns such as the fitted values (<code>.fitted</code>) and the
+residuals (<code>.resid</code>) to the data of the model. This gives a
+residual plot:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">hp</span> <span class="op">~</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.fitted</span>, y <span class="op">=</span> <span class="va">.resid</span>, x.title <span class="op">=</span> <span class="st">"Fitted values"</span>, y.title <span class="op">=</span> <span class="st">"Residuals"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-26-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Geographic data of class <code>sf</code> become maps; the article
+<em>Maps</em> on the package website describes them.
+<code>?plot2-methods</code> lists all methods.</p>
+</div>
+<div class="section level2">
+<h2 id="continuing-with-ggplot2">Continuing with ggplot2<a class="anchor" aria-label="anchor" href="#continuing-with-ggplot2"></a>
+</h2>
+<p>The result of <code><a href="../reference/plot2.html">plot2()</a></code> is a <code>ggplot</code> object.
+Any <code>ggplot2</code> layer, scale, coordinate system or theme
+element can be added with <code>+</code>:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, y.title <span class="op">=</span> <span class="st">"Mean age"</span>, datalabels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">admitted_patients</span><span class="op">$</span><span class="va">age</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot2_files/figure-html/unnamed-chunk-27-1.png" class="r-plt" alt="" width="100%"></p>
+<p>By default, <code><a href="../reference/plot2.html">plot2()</a></code> uses <code><a href="../reference/theme_minimal2.html">theme_minimal2()</a></code>,
+a variant of <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">ggplot2::theme_minimal()</a></code> with fewer lines and
+more white space. The <code>theme</code> argument sets another theme,
+and <code>theme = NULL</code> uses the default <code>ggplot2</code>
+theme.</p>
+</div>
+<div class="section level2">
+<h2 id="settings-for-all-plots">Settings for all plots<a class="anchor" aria-label="anchor" href="#settings-for-all-plots"></a>
+</h2>
+<p>Package options set defaults for all plots in a session, such as the
+colours (<code>plot2.colour</code>), the font (<code>plot2.font</code>),
+the theme (<code>plot2.theme</code>) and the decimal mark
+(<code>plot2.decimal.mark</code>). Set them with <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>,
+for example in an <code>.Rprofile</code> file:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>plot2.colour <span class="op">=</span> <span class="st">"viridis"</span>,</span>
+<span>        plot2.decimal.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span></span></code></pre></div>
+<p><code>?plot2-options</code> lists all options.</p>
+</div>
+<div class="section level2">
+<h2 id="learning-more">Learning more<a class="anchor" aria-label="anchor" href="#learning-more"></a>
+</h2>
+<ul>
+<li>
+<code><a href="../articles/supported_types.html">vignette("supported_types", package = "plot2")</a></code> shows
+all plot types.</li>
+<li>
+<code><a href="../reference/plot2.html">?plot2</a></code> documents every argument. Its section
+<em>Automatic choices</em> describes how missing arguments are
+determined.</li>
+<li>The package website, <a href="https://msberends.github.io/plot2/" class="uri">https://msberends.github.io/plot2/</a>, has articles on
+colours and themes, fonts and maps, and on <code><a href="../reference/plot2.html">plot2()</a></code> for
+users of <code>ggplot2</code>.</li>
+<li>
+<code><a href="../reference/create_interactively.html">create_interactively()</a></code> opens a Shiny app that builds a
+<code><a href="../reference/plot2.html">plot2()</a></code> call from a point-and-click interface and shows the
+resulting code.</li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -2,6 +2,30 @@
 
 ## plot2 1.99.1
 
+- Calculations in titles (`title`, `subtitle`, `caption`, `tag`,
+  `x.title`, `y.title` and `category.title`) now always use the columns
+  of the data first. Before, an object with the same name in the calling
+  environment took precedence, so that
+  e.g. `caption = min(format(date, "%Y"))` used the function
+  [`date()`](https://rdrr.io/r/base/date.html) instead of the column
+  `date`, and a global object `age` was used instead of the column
+  `age`.
+- In maps (sf objects), `colour_fill` now also sets the colours of a
+  discrete `category`; before, the colours of `ggplot2` were always
+  used.
+- The percentage breaks of density plots now follow the computed
+  density. Before, they were based on the values of `x`, which could
+  give a single, odd break such as `99%`.
+- The vignettes were rewritten: ‘Introduction to plot2’
+  ([`vignette("plot2")`](https://msberends.github.io/plot2/articles/plot2.md))
+  and ‘Plot types’
+  ([`vignette("supported_types")`](https://msberends.github.io/plot2/articles/supported_types.md)).
+  The package website has new articles on colours and themes, maps,
+  fonts, and
+  [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) for
+  `ggplot2` users. The examples in
+  [`?plot2`](https://msberends.github.io/plot2/reference/plot2.md) were
+  reduced to the core usage.
 - In [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
   for sf objects, the arguments `crs` and `datalabels.centroid` now come
   after `...`, so they must be named (e.g. `crs = 28992`). This makes

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Supported Plot Types • plot2</title>
+<title>Plot types • plot2</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Supported Plot Types">
+<meta property="og:title" content="Plot types">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,20 +34,25 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span> Home</a></li>
-<li class="nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-book-open"></span> Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/plot2.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-solid fa-newspaper"></span> Vignettes</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
-<li><a class="dropdown-item" href="../articles/plot2.html"><span class="fa fa-magnifying-glass-chart"></span> Introduction to plot2</a></li>
-    <li><a class="dropdown-item" href="../articles/supported_types.html"><span class="fa fa-solid fa-square-poll-vertical"></span> Supported Plot Types</a></li>
-    <li><a class="dropdown-item" href="../reference/add_type.html"><span class="fa fa-solid fa-square-plus"></span> Adding An Extra plot2 Type</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/supported_types.html">Plot types</a></li>
+    <li><a class="dropdown-item" href="../articles/colours-and-themes.html">Colours and themes</a></li>
+    <li><a class="dropdown-item" href="../articles/maps.html">Maps</a></li>
+    <li><a class="dropdown-item" href="../articles/fonts.html">Fonts</a></li>
+    <li><a class="dropdown-item" href="../articles/plot2-for-ggplot2-users.html">plot2 for ggplot2 users</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="nav-link" href="../news/"><span class="fa fa-solid fa-wand-magic-sparkles"></span> Changelog</a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/msberends/plot2"><span class="fa fab fa-github"></span> Source Code</a></li>
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/msberends/plot2/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -60,7 +65,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Supported Plot Types</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Plot types</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/msberends/plot2/blob/main/vignettes/supported_types.Rmd" class="external-link"><code>vignettes/supported_types.Rmd</code></a></small>
@@ -69,242 +74,439 @@
 
     
     
-<p>The following plot types are supported.</p>
-<p>Any <code>ggplot2</code> geom is supported, but we added support for
-some other, more advanced plots.</p>
-<div class="section level2">
-<h2 id="column-bar">Column / Bar<a class="anchor" aria-label="anchor" href="#column-bar"></a>
-</h2>
-<p>Used for comparing discrete categories through rectangular bars.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span> <span class="co"># from the ggplot2 package</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="672"></p>
-<p>In <code>plot2</code>, bar types are horizontal alternatives for
-column types (just like MS Excel):</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2/">plot2</a></span><span class="op">)</span></span></code></pre></div>
+<p>This vignette shows every plot type of <code><a href="../reference/plot2.html">plot2()</a></code>, with the
+data that each type needs. The examples use the
+<code>admitted_patients</code> data set from this package and data sets
+from base R and <code>ggplot2</code>.</p>
+<div class="section level2">
+<h2 id="choosing-a-type">Choosing a type<a class="anchor" aria-label="anchor" href="#choosing-a-type"></a>
+</h2>
+<p>Without a <code>type</code>, <code><a href="../reference/plot2.html">plot2()</a></code> chooses one from
+the data:</p>
+<ul>
+<li>a boxplot if there is no <code>x</code>, or if every group of
+<code>x</code>, <code>category</code> and <code>facet</code> contains at
+least three values;</li>
+<li>points if <code>x</code> and <code>y</code> are both numeric;</li>
+<li>a histogram if <code>x</code> is the only numeric column;</li>
+<li>columns otherwise (set the option <code>plot2.default_type</code> to
+change this).</li>
+</ul>
+<p>The <code>type</code> argument sets the type explicitly. It accepts
+the name of any <code>ggplot2</code> geom, with or without the prefix
+<code>geom_</code>, such as <code>"col"</code>, <code>"line"</code> or
+<code>"geom_point"</code>. Several types also have an abbreviation:</p>
+<table class="table">
+<colgroup>
+<col width="15%">
+<col width="21%">
+<col width="36%">
+<col width="26%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Type</th>
+<th align="left"><code>type</code></th>
+<th align="left">Abbreviation</th>
+<th align="left">Requires</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="#column-and-bar">Column</a></td>
+<td align="left"><code>"col"</code></td>
+<td align="left"><code>"c"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">
+<a href="#column-and-bar">Bar</a> (horizontal
+column)</td>
+<td align="left"><code>"bar"</code></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#bar-with-percentages">Bar with
+percentages</a></td>
+<td align="left"><code>"barpercent"</code></td>
+<td align="left"><code>"bp"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#line">Line</a></td>
+<td align="left"><code>"line"</code></td>
+<td align="left"><code>"l"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#line">Line with points</a></td>
+<td align="left"><code>"linedot"</code></td>
+<td align="left">
+<code>"ld"</code>, <code>"lp"</code>
+</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#area">Area</a></td>
+<td align="left"><code>"area"</code></td>
+<td align="left"><code>"a"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#point-jitter-and-beeswarm">Point</a></td>
+<td align="left"><code>"point"</code></td>
+<td align="left"><code>"p"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#point-jitter-and-beeswarm">Jitter</a></td>
+<td align="left"><code>"jitter"</code></td>
+<td align="left"><code>"j"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#point-jitter-and-beeswarm">Beeswarm</a></td>
+<td align="left"><code>"beeswarm"</code></td>
+<td align="left"><code>"bs"</code></td>
+<td align="left"><code>ggbeeswarm</code></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#boxplot-and-violin">Boxplot</a></td>
+<td align="left"><code>"boxplot"</code></td>
+<td align="left"><code>"b"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#boxplot-and-violin">Violin</a></td>
+<td align="left"><code>"violin"</code></td>
+<td align="left"><code>"v"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#histogram-and-density">Histogram</a></td>
+<td align="left"><code>"histogram"</code></td>
+<td align="left"><code>"h"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#histogram-and-density">Density</a></td>
+<td align="left"><code>"density"</code></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#dumbbell">Dumbbell</a></td>
+<td align="left"><code>"dumbbell"</code></td>
+<td align="left">
+<code>"d"</code>, <code>"db"</code>
+</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#back-to-back">Back-to-back</a></td>
+<td align="left"><code>"back-to-back"</code></td>
+<td align="left"><code>"b2b"</code></td>
+<td align="left"><code>patchwork</code></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#heatmap">Heatmap</a></td>
+<td align="left"><code>"tile"</code></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#sankey">Sankey</a></td>
+<td align="left"><code>"sankey"</code></td>
+<td align="left"><code>"s"</code></td>
+<td align="left"><code>ggforce</code></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#spider">Spider</a></td>
+<td align="left"><code>"spider"</code></td>
+<td align="left"><code>"sp"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#upset">UpSet</a></td>
+<td align="left"><code>"upset"</code></td>
+<td align="left"><code>"u"</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#map">Map</a></td>
+<td align="left"><code>"sf"</code></td>
+<td align="left"></td>
+<td align="left"><code>sf</code></td>
+</tr>
+</tbody>
+</table>
+<p>All other <code>ggplot2</code> geoms can be used as well, such as
+<code>"step"</code> or <code>"text"</code>. Arguments that
+<code><a href="../reference/plot2.html">plot2()</a></code> does not know, such as <code>fill</code> or
+<code>outlier.shape</code>, are passed on to the geom through
+<code>...</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="column-and-bar">Column and bar<a class="anchor" aria-label="anchor" href="#column-and-bar"></a>
+</h2>
+<p>Columns compare a value between groups. <code>y</code> is often a
+calculation, such as <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code> for the number of rows, which
+<code><a href="../reference/plot2.html">plot2()</a></code> computes per group:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="100%"></p>
+<p>In <code>ggplot2</code>, columns and bars are the same geom.
+Following the common use of these terms, <code><a href="../reference/plot2.html">plot2()</a></code> draws bars
+horizontally:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Columns of different categories are placed next to each other. Use
+<code>stacked = TRUE</code> to stack them, or
+<code>stacked_fill = TRUE</code> to stack them to 100%.</p>
+</div>
+<div class="section level2">
+<h2 id="bar-with-percentages">Bar with percentages<a class="anchor" aria-label="anchor" href="#bar-with-percentages"></a>
+</h2>
+<p><code>type = "barpercent"</code> shows the ten most frequent values
+as bars, with their counts and percentages. The remaining values are
+combined into one bar:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">manufacturer</span>, type <span class="op">=</span> <span class="st">"barpercent"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using y = n() to count rows, since type = "barpercent" shows frequencies</span></span>
+<span><span class="co">#&gt; Summarising values for type = "barpercent" using summarise_function = sum</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
+<p>This type sets <code>type = "bar"</code>,
+<code>x.sort = "freq-desc"</code>, <code>x.max_items = 10</code> and
+<code>datalabels.format = "%n (%p)"</code>. Each of these can be
+changed.</p>
 </div>
 <div class="section level2">
 <h2 id="line">Line<a class="anchor" aria-label="anchor" href="#line"></a>
 </h2>
-<p>Used for visualising trends over ordered intervals.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span> <span class="co"># from base R</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
-<span>        y <span class="op">=</span> <span class="va">pressure</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
-<span>        y <span class="op">=</span> <span class="va">pressure</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"line-point"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level2">
-<h2 id="point">Point<a class="anchor" aria-label="anchor" href="#point"></a>
-</h2>
-<p>Used for displaying individual observations in a two dimensional
-space.</p>
+<p>Lines show a trend over an ordered <code>x</code>, such as time:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="co"># from base R</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x = Sepal.Length</span></span>
-<span><span class="co">#&gt; Using y = Sepal.Width</span></span>
-<span><span class="co">#&gt; Using category = Species</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code>type = "linedot"</code> adds points to the line, like
+<code>type = "b"</code> in base R’s <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carat</span>,</span>
-<span>        y <span class="op">=</span> <span class="va">price</span>,</span>
-<span>        category <span class="op">=</span> <span class="va">cut</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-5-2.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"linedot"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="area">Area<a class="anchor" aria-label="anchor" href="#area"></a>
 </h2>
-<p>Used for emphasising cumulative magnitudes across continuous
-domains.</p>
+<p>Stacked areas show how parts add up to a total over an ordered
+<code>x</code>. Not every hospital has admissions in every year, so
+<code>x.complete = 0</code> adds the missing years with a count of zero;
+without it, the areas would skip these years:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pressure</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temperature</span>,</span>
-<span>        y <span class="op">=</span> <span class="va">pressure</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">airquality</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Day</span>, </span>
-<span>        y <span class="op">=</span> <span class="va">Wind</span>, </span>
-<span>        category <span class="op">=</span> <span class="va">Month</span>,</span>
-<span>        category.character <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        stacked_fill<span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-6-2.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">hospital</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"area"</span>,</span>
+<span>        stacked <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        x.complete <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="boxplot-violin">Boxplot / Violin<a class="anchor" aria-label="anchor" href="#boxplot-violin"></a>
+<h2 id="point-jitter-and-beeswarm">Point, jitter and beeswarm<a class="anchor" aria-label="anchor" href="#point-jitter-and-beeswarm"></a>
 </h2>
-<p>Used for summarising and comparing distributions with focus on spread
-and density.</p>
+<p>Points show the relation between two numeric variables. This is the
+automatic type when <code>x</code> and <code>y</code> are both
+numeric:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span>, category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
+<p>For a discrete <code>x</code>, points of the same group overlap.
+Jitter moves them randomly in the horizontal direction, and a beeswarm
+places them next to each other:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = Sepal.Length</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ward</span>, y <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"jitter"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"boxplot"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-7-2.png" class="r-plt" alt="" width="672"></p>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="va">Sepal.Length</span>, type <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="histogram">Histogram<a class="anchor" aria-label="anchor" href="#histogram"></a>
+<h2 id="boxplot-and-violin">Boxplot and violin<a class="anchor" aria-label="anchor" href="#boxplot-and-violin"></a>
 </h2>
-<p>Used for visualising the frequency distribution of continuous
-variables.</p>
+<p>Boxplots and violins summarise a distribution per group. A boxplot is
+the automatic type when every group contains at least three values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">price</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "histogram"</span></span>
-<span><span class="co">#&gt; Using binwidth = 841 based on data</span></span>
-<span><span class="co">#&gt; Assuming smooth = TRUE for type = "histogram"</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level2">
-<h2 id="geo-sf">Geo (sf)<a class="anchor" aria-label="anchor" href="#geo-sf"></a>
-</h2>
-<p>Used for mapping spatial data encoded as simple features.</p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="va">age</span>, category <span class="op">=</span> <span class="va">gender</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using type = "boxplot" since all groups in hospital and gender contain at least three values</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code>y</code> can also be several columns, which are then shown as a
+category:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">netherlands</span> <span class="op">|&gt;</span> <span class="co"># from this plot2 package</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using category = area_km2</span></span>
-<span><span class="co">#&gt; Using datalabels = province</span></span>
-<span><span class="co">#&gt; Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level2">
-<h2 id="beeswarm">Beeswarm<a class="anchor" aria-label="anchor" href="#beeswarm"></a>
-</h2>
-<p>Used for showing distributions of individual observations without
-overlap.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>,</span>
-<span>        y <span class="op">=</span> <span class="va">Sepal.Length</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
+<span><span class="co">#&gt; Using type = "boxplot" since all groups in Species and category contain at least three values</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="100%"></p>
+<p>A violin also shows the shape of the distribution, with lines at the
+quartiles:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ward</span>, y <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="back-to-back">Back-to-back<a class="anchor" aria-label="anchor" href="#back-to-back"></a>
+<h2 id="histogram-and-density">Histogram and density<a class="anchor" aria-label="anchor" href="#histogram-and-density"></a>
 </h2>
-<p>Used for contrasting two mirrored groups across shared
-categories.</p>
+<p>A histogram shows the distribution of one numeric variable.
+<code><a href="../reference/plot2.html">plot2()</a></code> chooses the bin width from the data and adds the
+density as a line; set <code>binwidth</code> and
+<code>smooth = FALSE</code> to change this:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="co"># from this plot2 package</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        facet <span class="op">=</span> <span class="va">ward</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; This additional argument was given to the geom: show.legend</span></span>
-<span><span class="co">#&gt; Assuming y.expand = 0 since y.limits is set</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"histogram"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using binwidth = 6.4 based on data</span></span>
+<span><span class="co">#&gt; Assuming smooth = TRUE for type = "histogram"</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%"></p>
+<p>A density plot shows the distribution as a smooth curve, which makes
+it easier to compare groups. Transparency keeps overlapping groups
+visible:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="co"># from this plot2 package</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        y.limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
-<span>        facet <span class="op">=</span> <span class="va">ward</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; This additional argument was given to the geom: show.legend</span></span>
-<span><span class="co">#&gt; Assuming y.expand = 0 since y.limits is set</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-11-2.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level2">
-<h2 id="sankey">Sankey<a class="anchor" aria-label="anchor" href="#sankey"></a>
-</h2>
-<p>Used for depicting flows or transitions between connected stages.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Titanic</span> <span class="op">|&gt;</span> <span class="co"># from base R</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Age</span>, <span class="va">Class</span>, <span class="va">Survived</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="va">Sex</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming sankey_remove_axes = TRUE</span></span>
-<span><span class="co">#&gt; Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level2">
-<h2 id="spider">Spider<a class="anchor" aria-label="anchor" href="#spider"></a>
-</h2>
-<p>Used for comparing multivariate values across categorical axes
-arranged radially, enabling pattern recognition and relative magnitude
-assessment between groups.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span>
-<span>          y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
-<span>          category <span class="op">=</span> <span class="va">color</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"spider"</span>,</span>
-<span>          y.labels <span class="op">=</span> <span class="va">dollars</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># spider plots can have a filling colour, but it's hardly ever useful</span></span>
-<span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cut</span>,</span>
-<span>          y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
-<span>          category <span class="op">=</span> <span class="va">color</span>,</span>
-<span>          type <span class="op">=</span> <span class="st">"spider"</span>,</span>
-<span>          y.labels <span class="op">=</span> <span class="va">dollars</span>,</span>
-<span>          colour_fill <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="672"></p>
-</div>
-<div class="section level2">
-<h2 id="upset">UpSet<a class="anchor" aria-label="anchor" href="#upset"></a>
-</h2>
-<p>Used for analysing intersections among multiple sets with scalable
-clarity.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">movies</span> <span class="op">|&gt;</span> <span class="co"># from the ggplot2movies package</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Action</span>, <span class="va">Animation</span>, <span class="va">Comedy</span>, <span class="va">Drama</span>, <span class="va">Romance</span><span class="op">)</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = 1</span></span>
-<span><span class="co">#&gt; Using summarise_function = sum for UpSet plot</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="672"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">movies</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Action</span>, <span class="va">Animation</span>, <span class="va">Comedy</span>, <span class="va">Drama</span>, <span class="va">Romance</span><span class="op">)</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">rating</span><span class="op">)</span>,</span>
-<span>        y.title <span class="op">=</span> <span class="st">"Median Rating"</span>,</span>
-<span>        x.sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using summarise_function = sum for UpSet plot</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-15-2.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Sepal.Length</span>, category <span class="op">=</span> <span class="va">Species</span>, type <span class="op">=</span> <span class="st">"density"</span>, colour_transparency <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="dumbbell">Dumbbell<a class="anchor" aria-label="anchor" href="#dumbbell"></a>
 </h2>
-<p>Used for highlighting changes or differences between paired
-values.</p>
+<p>A dumbbell plot compares two groups per value of <code>x</code>, with
+a line between the two points. The <code>category</code> must have
+exactly two values:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="back-to-back">Back-to-back<a class="anchor" aria-label="anchor" href="#back-to-back"></a>
+</h2>
+<p>A back-to-back plot, also known as a butterfly plot or population
+pyramid, shows two groups on either side of a shared axis. The
+<code>facet</code> must have exactly two values:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; This additional argument was given to the geom: show.legend</span></span>
+<span><span class="co">#&gt; Assuming y.expand = 0 since y.limits is set</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="100%"></p>
+<p>A <code>category</code> divides each side further:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; This additional argument was given to the geom: show.legend</span></span>
+<span><span class="co">#&gt; Assuming y.expand = 0 since y.limits is set</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="heatmap">Heatmap<a class="anchor" aria-label="anchor" href="#heatmap"></a>
+</h2>
+<p>A matrix with the same row and column names, such as a correlation
+matrix, becomes a heatmap. Three colours give a scale that diverges from
+the midpoint:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"white"</span>, <span class="st">"#B2182B"</span><span class="op">)</span>,</span>
+<span>        category.title <span class="op">=</span> <span class="st">"Correlation"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Assuming type = "tile" since the matrix contains identical row and column names</span></span>
+<span><span class="co">#&gt; Using category.midpoint = 0 (the current category scale centre)</span></span>
+<span><span class="co">#&gt; Omitting printing of 121 datalabels - use datalabels = TRUE to force printing</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="sankey">Sankey<a class="anchor" aria-label="anchor" href="#sankey"></a>
+</h2>
+<p>A Sankey plot shows how observations flow between the values of
+several variables. <code>x</code> contains these variables, and
+<code>category</code> colours the flows:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Titanic</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Assuming sankey_remove_axes = TRUE</span></span>
+<span><span class="co">#&gt; Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="100%"></p>
+<p><code>Titanic</code> is a table from base R. <code><a href="../reference/plot2.html">plot2()</a></code>
+converts tables to a data frame with a column <code>Freq</code>, which
+it uses as <code>y</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="spider">Spider<a class="anchor" aria-label="anchor" href="#spider"></a>
+</h2>
+<p>A spider plot, also known as a radar chart, shows several values per
+group on axes that are arranged in a circle. <code>x</code> gives the
+axes, and <code>category</code> the groups:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diamonds</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">cut</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fair"</span>, <span class="st">"Very Good"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">carat</span>, <span class="fl">6</span><span class="op">)</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="va">cut</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="supported_types_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="672"></p>
+<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">hospital</span>, type <span class="op">=</span> <span class="st">"spider"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="100%"></p>
+<p>The spider plot uses <code><a href="../reference/coord_spider.html">coord_spider()</a></code>, a coordinate system
+of this package with straight grid lines between the axes.</p>
+</div>
+<div class="section level2">
+<h2 id="upset">UpSet<a class="anchor" aria-label="anchor" href="#upset"></a>
+</h2>
+<p>An UpSet plot shows the sizes of the intersections of several sets.
+<code>x</code> contains logical columns or columns with 0 and 1, one per
+set. This example defines four sets of cars:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>manual <span class="op">=</span> <span class="va">am</span> <span class="op">==</span> <span class="fl">1</span>,</span>
+<span>            straight_engine <span class="op">=</span> <span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span>,</span>
+<span>            four_gears <span class="op">=</span> <span class="va">gear</span> <span class="op">==</span> <span class="fl">4</span>,</span>
+<span>            economical <span class="op">=</span> <span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">manual</span>, <span class="va">straight_engine</span>, <span class="va">four_gears</span>, <span class="va">economical</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using y = 1</span></span>
+<span><span class="co">#&gt; Using summarise_function = sum for UpSet plot</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="100%"></p>
+<p>With a <code>y</code>, the bars show a summary of <code>y</code> per
+intersection instead of the counts:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>manual <span class="op">=</span> <span class="va">am</span> <span class="op">==</span> <span class="fl">1</span>,</span>
+<span>            straight_engine <span class="op">=</span> <span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span>,</span>
+<span>            four_gears <span class="op">=</span> <span class="va">gear</span> <span class="op">==</span> <span class="fl">4</span>,</span>
+<span>            economical <span class="op">=</span> <span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">manual</span>, <span class="va">straight_engine</span>, <span class="va">four_gears</span>, <span class="va">economical</span><span class="op">)</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>,</span>
+<span>        y.title <span class="op">=</span> <span class="st">"Median horsepower"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using summarise_function = sum for UpSet plot</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="map">Map<a class="anchor" aria-label="anchor" href="#map"></a>
+</h2>
+<p>Geographic data of class <code>sf</code> become maps. The data set
+<code>netherlands</code> contains the provinces of the Netherlands, with
+their area:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">netherlands</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">area_km2</span>, category.title <span class="op">=</span> <span class="st">"Area (square kilometres)"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using datalabels = province</span></span>
+<span><span class="co">#&gt; Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.</span></span></code></pre></div>
+<p><img src="supported_types_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="100%"></p>
+<p>The article <em>Maps</em> on the package website shows more examples,
+such as layers with <code><a href="../reference/add_type.html">add_sf()</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
