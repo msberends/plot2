@@ -72,3 +72,21 @@ test_that("14.10 a title that refers to a missing column warns, and the plot is 
 test_that("14.11 an expression title is passed through", {
   expect_identical(label_text(plot2(fx_xy, x, y, title = expression(alpha^2)), "title"), "alpha^2")
 })
+
+test_that("14.12 a column takes precedence over an object of the same name in the calling environment", {
+  # `date` is also a base R function, and `y` is a global object here
+  df <- data.frame(x = 1:3, y = c(4, 5, 6), date = as.Date(c("2001-01-01", "2002-01-01", "2003-01-01")))
+  y <- 1000
+  p <- plot2(df, x, y,
+             title = paste("From", min(format(date, "%Y"))),
+             subtitle = paste("Maximum", max(y)))
+  expect_identical(label_text(p, "title"), "From 2001")
+  expect_identical(label_text(p, "subtitle"), "Maximum 6")
+})
+
+test_that("14.13 a title from an object in the calling environment is still used", {
+  my_title <- "A title from a variable"
+  my_expression <- expression(beta^2)
+  expect_identical(label_text(plot2(fx_xy, x, y, title = my_title), "title"), "A title from a variable")
+  expect_identical(label_text(plot2(fx_xy, x, y, title = my_expression), "title"), "beta^2")
+})

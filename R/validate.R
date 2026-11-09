@@ -1086,6 +1086,10 @@ validate_y_scale <- function(df,
             to = max(x, na.rm = TRUE),
             by = y_percent_break)
       }
+    } else if (isTRUE(y.percent) && geom_is_continuous_x(type) && isTRUE(misses_y.percent_break)) {
+      # the y values of a density plot are computed by its stat and are not in the data,
+      # so the breaks follow the computed range instead of the values of the data
+      scales::breaks_pretty(n = ifelse(is.null(y.n_breaks), 5, y.n_breaks))
     } else if (isTRUE(y.percent)) {
       # calculate how many labels will be printed, keep around 10
       if (is.null(y.limits)) {
@@ -2031,42 +2035,54 @@ validate_markdown <- function(markdown,
 
 #' @importFrom dplyr mutate pull first
 validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
-  if (isTRUE(try(is_empty(x), silent = TRUE))) {
-    x <- NULL
-  }
-  suppressWarnings(
-    if (isTRUE(try(is.expression(x), silent = TRUE)) ||
-        isTRUE(try(is.null(x), silent = TRUE)) ||
-        isTRUE(try(isTRUE(x), silent = TRUE))) {
-      return(x)
-    }
-  )
-  
-  # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`;
+  # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`: a symbol or call is
+  # evaluated over the data before `x` itself is evaluated, so that columns take precedence over objects
+  # of the same name in the calling environment, such as the column `date` over the function date();
   # a constant, such as a plain text, needs no evaluation over the data (#37)
+  x_expr <- substitute(x)
   title_quo <- rlang::enquo(x)
-  if (!is.null(df) && !rlang::quo_is_symbol(title_quo) && !rlang::quo_is_call(title_quo)) {
-    df <- NULL
-  }
-  if (!is.null(df)) {
+  evaluated_over_data <- FALSE
+  if (!is.null(df) && (rlang::quo_is_symbol(title_quo) || rlang::quo_is_call(title_quo))) {
     out <- tryCatch(
       suppressWarnings(
         df |> 
           # no tibbles, data.tables, sf, etc. objects:
           as.data.frame(stringsAsFactors = FALSE) |>
-          mutate(`_new_title` = {{ x }}) |> 
+          mutate(`_new_title` = !!title_quo) |> 
           pull(`_new_title`) |> 
           unique() |> 
           first()
-      ), error = function(e) {
-        plot2_warning(format_error(e,
+      ), error = function(e) e)
+    if (inherits(out, "error")) {
+      # not a calculation over the data, such as an expression object or a vector of titles
+      x <- tryCatch(rlang::eval_tidy(title_quo), error = function(e) e)
+      if (inherits(x, "error")) {
+        plot2_warning(format_error(out,
                                    replace = c("`_new_title = ", "`_new_title`"),
                                    by = c("`", "A title")))
-        NULL
-      })
-    if (is.null(out)) {
-      out <- ""
+        return("")
+      }
+    } else {
+      x <- out
+      evaluated_over_data <- TRUE
     }
+  }
+  
+  if (!evaluated_over_data) {
+    if (isTRUE(try(is_empty(x), silent = TRUE))) {
+      x <- NULL
+    }
+    suppressWarnings(
+      if (isTRUE(try(is.expression(x), silent = TRUE)) ||
+          isTRUE(try(is.null(x), silent = TRUE)) ||
+          isTRUE(try(isTRUE(x), silent = TRUE))) {
+        return(x)
+      }
+    )
+  }
+  
+  if (evaluated_over_data) {
+    out <- x
   } else {
     out <- paste0(as.character(x), collapse = "", sep = "")
   }
@@ -2091,7 +2107,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   # support overly lengthy titles
   if (!is.null(max_length) && isTRUE(nchar(out_plain, type = "width") > as.double(max_length))) {
     if (is.expression(out)) {
-      x_deparsed <- trimws(deparse(substitute(x)))
+      x_deparsed <- trimws(deparse(x_expr))
       x_deparsed <- x_deparsed[!x_deparsed %in% c("{", "}")]
       plot2_warning("Multiple lines in ", font_blue(x_deparsed), 
                     " cannot be set since it is an expression (does it contain markdown characters?)")

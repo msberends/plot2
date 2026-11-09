@@ -137,3 +137,10 @@ test_that("06.20 rendering the plot queues no plot2 messages", {
   invisible(rendered(p))
   expect_identical(setdiff(ls(plot2:::plot2_env), "reg_cols"), character(0))
 })
+
+test_that("06.21 the percentage breaks of a density plot follow the computed density, not the x values", {
+  p <- plot2(iris, Sepal.Length, category = Species, type = "density")
+  expect_equal(axis_breaks(p, "y"), c(0, 0.5, 1, 1.5))
+  p <- plot2(iris, Sepal.Length, type = "density")
+  expect_equal(axis_breaks(p, "y"), c(0, 0.1, 0.2, 0.3, 0.4))
+})

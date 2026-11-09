@@ -1740,7 +1740,7 @@ plot2_exec <- function(.data, ...) {
                               font = font,
                               colour_fill = colour_fill,
                               original_colours = original_colours)
-  } else if (type != "geom_sf") {
+  } else if (has_category(df) || type != "geom_sf") {
     category_txt <- get_category(df)
     if (is.null(category.labels) &&
         any(has_markdown(category_txt), na.rm = TRUE)) {
@@ -1748,7 +1748,8 @@ plot2_exec <- function(.data, ...) {
       category.labels <- md_to_expression
     }
     
-    for (cat_type in category.type) {
+    # on maps, `category` sets the fill of the areas, while `colour` is the single colour of the borders
+    for (cat_type in if (type == "geom_sf") setdiff(category.type, "colour") else category.type) {
       if (original_colours == TRUE || !cat_type %in% c("colour", "fill")) {
         # these scale functions do not have 'values' set
         discrete_scale <- getExportedValue(paste0("scale_", cat_type, "_discrete"), ns = asNamespace("ggplot2"))

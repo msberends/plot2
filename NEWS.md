@@ -1,5 +1,8 @@
 # plot2 1.99.1
 
+* Calculations in titles (`title`, `subtitle`, `caption`, `tag`, `x.title`, `y.title` and `category.title`) now always use the columns of the data first. Before, an object with the same name in the calling environment took precedence, so that e.g. `caption = min(format(date, "%Y"))` used the function `date()` instead of the column `date`, and a global object `age` was used instead of the column `age`.
+* In maps (sf objects), `colour_fill` now also sets the colours of a discrete `category`; before, the colours of `ggplot2` were always used.
+* The percentage breaks of density plots now follow the computed density. Before, they were based on the values of `x`, which could give a single, odd break such as `99%`.
 * In `plot2()` for sf objects, the arguments `crs` and `datalabels.centroid` now come after `...`, so they must be named (e.g. `crs = 28992`). This makes the method consistent with the generic, as R CMD check requires.
 * Long rotated datalabels no longer run beyond the plot: unless `y.expand` or `y.limits` is set, the value axis gets extra room for them, estimated for a typical figure size.
 * The whiskers of boxplots with a category now get their colours from the colour scale, which removes an internal workaround that repeated colour vectors.

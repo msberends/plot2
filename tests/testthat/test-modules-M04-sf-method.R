@@ -46,3 +46,11 @@ test_that("M04.06 x given: caution instead of an error (#92)", {
   skip_if_not_installed("sf")
   expect_plot2_message(plot2(netherlands, x = province), "will be ignored", type = "caution")
 })
+
+test_that("M04.07 colour_fill sets the colours of a discrete category", {
+  skip_if_not_installed("sf")
+  p <- expect_plot2(plot2(netherlands,
+                          category = ifelse(area_km2 > 3000, "large", "small"),
+                          colour_fill = c(large = "#4E79A7", small = "#E8E8E8")))
+  expect_identical(col_hex(scale_values(p, "fill")), c(large = "#4E79A7", small = "#E8E8E8"))
+})
