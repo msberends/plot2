@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M07: coord_spider()
-# review_and_overhaul/reviews/R04_modules/M07_coord-spider.md
+# M07: coord_spider()
 
 fx_radar <- data.frame(dim = c("a", "b", "c", "d"), score = c(3, 5, 2, 4))
 radar <- function(..., data = fx_radar) {
@@ -64,12 +63,12 @@ test_that("M07.06 theta = 'y' works", {
   expect_plot2(p)
 })
 
-test_that("M07.07 facets work in plain ggplot2 (I003)", {
+test_that("M07.07 facets work in plain ggplot2 (#158)", {
   df <- rbind(transform(fx_radar, g = "p"), transform(fx_radar, g = "q"))
   expect_plot2(radar(data = df) + ggplot2::facet_wrap(~g))
 })
 
-test_that("M07.08 radial labels follow start (F086)", {
+test_that("M07.08 radial labels follow start (#98)", {
   b <- built(radar(start = pi / 2))
   bg <- b$layout$coord$render_bg(b$layout$panel_params[[1]], ggplot2::theme_grey())
   txt <- Filter(function(k) inherits(k, "text"), bg$children)

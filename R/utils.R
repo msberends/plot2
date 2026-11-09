@@ -76,7 +76,7 @@ globalVariables(c(".",
 
 like <- function(x, pattern) {
   # case-insensitive with ignore.case: lowercasing the pattern would change its meaning,
-  # e.g. "\\D" would become "\\d" (F017)
+  # e.g. "\\D" would become "\\d" (#29)
   if (length(pattern) == 1) {
     # only one pattern
     grepl(pattern, x, ignore.case = TRUE, fixed = FALSE,  perl = TRUE)
@@ -136,7 +136,7 @@ font_white <- function(..., collapse = " ") {
   }
 }
 
-# Per-call state and diagnostics (F001, F014) ---------------------------------
+# Per-call state and diagnostics (#13, #26) ---------------------------------
 #
 # plot2_env holds the state of the plot2() call that is running. Every plot2()
 # method calls call_state_enter() first: it saves and clears the state of an
@@ -321,7 +321,7 @@ summarise_variable <- function(df, var, sep) {
   # combined with add_direction(), this will add support for multiple vars in one direction:
   # e.g., `category = c(col1, col2)`
   cols <- colnames(df)
-  # column names are data, not patterns (F017)
+  # column names are data, not patterns (#29)
   old_vars <- cols[grepl(paste0(var, "_"), cols, fixed = TRUE)]
   if (length(old_vars) == 0) {
     return(df)
@@ -383,7 +383,7 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
 
 #' @importFrom dplyr pull
 get_column_name <- function(df, column_var) {
-  # take the target column once, not once per compared column (F025)
+  # take the target column once, not once per compared column (#37)
   target <- df |> pull({{column_var}})
   out <- vapply(FUN.VALUE = logical(1), df, function(col) identical(col, target))
   if (all(out[names(out) %unlike% "^_var_"] == FALSE)) {
@@ -621,7 +621,7 @@ unify_years <- function(x, as_leap_year = NULL) {
   if (inherits(x, "Date")) {
     as.Date(paste0(ifelse(as_leap_year, "1972", "1970"), x |> format() |> substr(5, 10)))
   } else {
-    # keep the time zone (F029)
+    # keep the time zone (#41)
     tz <- attr(as.POSIXct(x), "tzone")
     tz <- if (is.null(tz)) "" else tz[1]
     as.POSIXct(paste0(ifelse(as_leap_year, "1972", "1970"), format(x, tz = tz) |> substr(5, 99)), tz = tz)
@@ -660,7 +660,7 @@ group_sizes <- function(df) {
 
 # The expression for a column name, or for the label of a selection of several
 # columns such as "c(a, b)". Only names, and c() of names, are parsed; anything
-# else is taken as one name, so that names from data are never run as code (F136).
+# else is taken as one name, so that names from data are never run as code (#148).
 column_selection_expr <- function(x) {
   e <- tryCatch(str2lang(x), error = function(e) NULL)
   if (is.symbol(e) ||
@@ -690,7 +690,7 @@ setup_aes <- function(current = aes(), ..., as_symbol = FALSE) {
       x <- as.symbol(x)
     } else {
       # a column name becomes a symbol and a number a constant; text is never
-      # parsed as code, since column names can come from data (F136)
+      # parsed as code, since column names can come from data (#148)
       x <- as.character(x)
       if (x %like% "^[0-9.]+$" && !is.na(suppressWarnings(as.numeric(x)))) {
         x <- as.numeric(x)
@@ -741,13 +741,13 @@ restore_mapping <- function(p, df) {
     p$layers[[i]]$mapping <- fn_new_mapping(mapping = p$layers[[i]]$mapping, df = df)
   }
   
-  # the facet already refers to the readable column, see validate_facet() (F037)
+  # the facet already refers to the readable column, see validate_facet() (#49)
   
   # now remove these anonymous`_var_*` columns from the data
   p$data <- p$data[, colnames(p$data)[colnames(p$data) %unlike% "^_var_(x|y|category|facet)$"], drop = FALSE]
 
   # give the remaining internal columns (such as `_var_datalabels` and `_sankey_x`) readable names,
-  # or remove them if no layer uses them (F069)
+  # or remove them if no layer uses them (#81)
   internal <- colnames(p$data)[startsWith(colnames(p$data), "_")]
   if (length(internal) > 0) {
     # mapping entries are quosures or, after the renaming above, plain symbols
@@ -847,7 +847,7 @@ is_date <- function(x) {
 }
 
 data_is_numeric <- function(x) {
-  # the unique values suffice (F025)
+  # the unique values suffice (#37)
   all(unique(x) %like% "^[0-9.,-]+(e[+][0-9.,-]+)?$", na.rm = TRUE)
 }
 
@@ -892,7 +892,7 @@ format_error <- function(e, replace = character(0), by = character(0)) {
 #' @importFrom ggplot2 fortify
 #' @importFrom dplyr select mutate
 fortify_df <- function(df, y = NULL) {
-  # broom is in Suggests (F108): use broom::augment() for model objects when it is installed
+  # broom is in Suggests (#120): use broom::augment() for model objects when it is installed
   augment_classes <- function() {
     m <- suppressMessages(utils::methods(broom::augment))
     gsub("augment.", "", as.character(m), fixed = TRUE)
@@ -981,7 +981,7 @@ natural_sort <- function(x, decreasing = FALSE) {
 }
 
 # The language of the words that plot2 generates (titles, y.24h, y.age) and of
-# date labels: option plot2.language, "en" (default) or "nl" (F003)
+# date labels: option plot2.language, "en" (default) or "nl" (#15)
 plot2_language <- function() {
   lang <- getOption("plot2.language", default = "en")
   lang <- tolower(substr(trimws(as.character(lang)[1L]), 1, 2))
@@ -992,7 +992,7 @@ plot2_language <- function() {
   lang
 }
 
-# Split a formula into plot2 directions (F019): y ~ x + category + facet, or
+# Split a formula into plot2 directions (#31): y ~ x + category + facet, or
 # y ~ x + category | facet. Only top-level `+` separates terms; `|` gives the facet.
 formula_terms <- function(form) {
   split_plus <- function(e) {

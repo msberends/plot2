@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E05: UpSet plots
-# review_and_overhaul/reviews/R03_plot2_exec/E05_upset.md
+# E05: UpSet plots
 
 # intersections: a&b x2, a x1, b&c x1, a&c x1, c x1; set sizes a 4, b 3, c 3
 fx_upset <- data.frame(a = c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE),
@@ -65,11 +64,11 @@ test_that("E05.08 a single x column errors", {
   expect_error(plot2(fx_upset, x = a, type = "upset"))
 })
 
-test_that("E05.09 x.sort as a vector (F071)", {
+test_that("E05.09 x.sort as a vector (#83)", {
   expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = c("1", "2")))
 })
 
-test_that("E05.10 print = TRUE returns the plot invisibly (F010)", {
+test_that("E05.10 print = TRUE returns the plot invisibly (#22)", {
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
   expect_s3_class(plot2(fx_upset, x = c(a, b, c), type = "upset", print = TRUE), "patchwork")
@@ -79,10 +78,10 @@ test_that("E05.11 no internal state left behind", {
   expect_clean_state(plot2(fx_upset, x = c(a, b, c), type = "upset"), check = c("state", "locale"))
 })
 
-test_that("E05.11b the random-number stream is untouched (F002)", {
+test_that("E05.11b the random-number stream is untouched (#14)", {
   expect_clean_state(plot2(fx_upset, x = c(a, b, c), type = "upset"), check = "rng")
 })
 
-test_that("E05.12 no R warnings (F075)", {
+test_that("E05.12 no R warnings (#87)", {
   expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
 })

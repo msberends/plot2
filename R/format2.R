@@ -101,7 +101,7 @@ format2.percentage <- function(x,
   if (length(x) == 0) {
     return(character())
   }
-  # formats like cleaner's percentage class did, without depending on cleaner (F108)
+  # formats like cleaner's percentage class did, without depending on cleaner (#120)
   out <- trimws(format_percentage(x,
                                   digits = round,
                                   decimal.mark = decimal.mark,
@@ -155,7 +155,7 @@ format2.difftime <- function(x,
 coerce_datetime <- function(x, format, locale, ...) {
   format <- posix_date_format(format)
   
-  # format in the requested language; any change of LC_TIME is restored on exit (F003)
+  # format in the requested language; any change of LC_TIME is restored on exit (#15)
   local_time_locale(locale)
   
   if (inherits(x, c("hms", "difftime", "POSIXlt"))) {
@@ -163,7 +163,7 @@ coerce_datetime <- function(x, format, locale, ...) {
       x <- paste("1970-01-01", x)
     }
   }
-  # keep the time zone of date-times (F029)
+  # keep the time zone of date-times (#41)
   tz <- if (inherits(x, "POSIXt")) attr(as.POSIXct(x), "tzone") else NULL
   dat <- if (is.null(tz)) as.POSIXct(x) else as.POSIXct(x, tz = tz[1])
   
@@ -181,7 +181,7 @@ coerce_datetime <- function(x, format, locale, ...) {
   if (identical(format, "%s")) {
     as.double(form)
   } else {
-    # always character, also for month names (F029)
+    # always character, also for month names (#41)
     form
   }
 }
@@ -254,13 +254,13 @@ format2_scientific <- function(x,
     mant <- trimws(format(mant, decimal.mark = decimal.mark))
     
     # Build expression
-    # plotmath %*% gives a multiplication sign on every device and console (F107)
+    # plotmath %*% gives a multiplication sign on every device and console (#119)
     out[[i]] <- bquote(.(mant) %*% 10^.(expn))
   }
   out
 }
 
-# Translate plot2's date format tokens (e.g. "d mmmm yyyy") to strftime() codes (F029).
+# Translate plot2's date format tokens (e.g. "d mmmm yyyy") to strftime() codes (#41).
 # A run of letters is converted only if it consists entirely of tokens, so that
 # words such as "Week" or "Month" stay as they are; text in single quotes is
 # always kept literally. Tokens are case-insensitive, except "MM" (minutes)
@@ -308,7 +308,7 @@ posix_date_format <- function(format) {
   out
 }
 
-# percentages, formerly from the cleaner package (F108); the class name "percentage"
+# percentages, formerly from the cleaner package (#120); the class name "percentage"
 # is kept, so that format2() also formats percentages made with cleaner
 as_percentage <- function(x) {
   if (inherits(x, "percentage")) {

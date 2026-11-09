@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E10: axis labels and scale assembly
-# review_and_overhaul/reviews/R03_plot2_exec/E10_labels-and-scales.md
+# E10: axis labels and scale assembly
 
 test_that("E10.01 axis titles are the column names; y = n() gives 'n()'", {
   expect_labels(plot2(fx_counts, group, n), x = "group", y = "n")
@@ -24,7 +23,7 @@ test_that("E10.02 histogram y title is 'Count'", {
   expect_labels(plot2(fx_xy, x, type = "histogram"), y = "Count")
 })
 
-test_that("E10.03 density y title is 'Density' (F070)", {
+test_that("E10.03 density y title is 'Density' (#82)", {
   expect_labels(plot2(fx_xy, x, type = "density"), y = "Density")
 })
 
@@ -40,7 +39,7 @@ test_that("E10.05 category values with markdown are shown as expressions", {
   expect_false(identical(as.character(labs), c("*E. coli*", "*S. aureus*")))
 })
 
-test_that("E10.06 without x, the x-axis has no labels (F079)", {
+test_that("E10.06 without x, the x-axis has no labels (#91)", {
   p <- expect_plot2(plot2(data.frame(v = c(1, 2, 3, 4, 10)), y = v))
   l <- axis_labels(p, "x")
   expect_true(length(l) == 0 || all(is.na(l) | l == ""))

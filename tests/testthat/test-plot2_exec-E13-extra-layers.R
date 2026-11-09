@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E13: additional layers for linedot, dumbbell and spider
-# review_and_overhaul/reviews/R03_plot2_exec/E13_extra-layers.md
+# E13: additional layers for linedot, dumbbell and spider
 
 fx_dumbbell <- data.frame(x = rep(c("a", "b", "c"), 2),
                           y = c(1, 4, 2, 3, 6, 5),

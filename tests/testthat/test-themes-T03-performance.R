@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T03: performance (structural checks; timings are in review_and_overhaul/repro/perf_r06.R)
-# review_and_overhaul/reviews/R06_themes/T03_performance.md
+# T03: performance (structural checks)
 
 
 test_that("T03.01 datalabels are not formatted for a scatter plot, which never shows them", {
@@ -49,7 +48,7 @@ test_that("T03.05 a Sankey diagram can be drawn from raw rows", {
   expect_true(nrow(layer_df(p, 1)) > 0)
 })
 
-test_that("T03.06 the complete default theme is built once per session (F110)", {
+test_that("T03.06 the complete default theme is built once per session (#122)", {
   tiny <- data.frame(g = letters[1:5], v = 1:5)
   invisible(plot2(tiny, g, v))
   n <- 0L
@@ -59,9 +58,9 @@ test_that("T03.06 the complete default theme is built once per session (F110)", 
   expect_identical(n, 0L)
 })
 
-test_that("T03.07 the fixed overhead per call stays bounded (F110 benchmark guard)", {
+test_that("T03.07 the fixed overhead per call stays bounded (#122 benchmark guard)", {
   # timing guard: local runs only, with a generous bound (0.058 s per call on the
-  # installed build in 2026-11, 0.11 s before F110); it catches regressions of a
+  # installed build in 2026-11, 0.11 s before #122); it catches regressions of a
   # different order, such as rebuilding the complete theme on every call
   skip_on_cran()
   skip_on_ci()

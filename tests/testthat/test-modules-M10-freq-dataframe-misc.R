@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M10: plot2.freq(), the data.frame wrapper, re-exports and data
-# review_and_overhaul/reviews/R04_modules/M10_freq-dataframe-small-files.md
+# M10: plot2.freq(), the data.frame wrapper, re-exports and data
 
 test_that("M10.01 freq object: frequency order, titles Item and Count", {
   skip_if_not_installed("cleaner")

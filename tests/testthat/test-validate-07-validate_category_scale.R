@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 07: validate_category_scale()
-# review_and_overhaul/reviews/R02_validate/07_validate_category_scale.md
+# 07: validate_category_scale() (#157)
 
 cat_cols <- function(p, aes = "colour", at = c(0.1, 0.5, 0.9)) {
   unname(col_hex(scale_of(p, aes)$map(at)))
@@ -28,7 +27,7 @@ test_that("07.01 a numeric category with default colours gives a colour bar on t
 
 test_that("07.02 one colour gives a gradient from white", {
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = "red"))
-  # limits are 0 to 1, the data range rounded to pretty values (F059)
+  # limits are 0 to 1, the data range rounded to pretty values (#71)
   cols <- cat_cols(p, at = c(0.1, 1))
   expect_identical(cols[2], "#FF0000")
   expect_gt(sum(grDevices::col2rgb(cols[1])), sum(grDevices::col2rgb(cols[2])))
@@ -59,10 +58,10 @@ test_that("07.06 category.percent = TRUE gives percent labels", {
 test_that("07.07 a date category gets sensible breaks; a POSIXct category likewise", {
   d <- data.frame(x = c(1.5, 2, 3, 4, 5), y = c(2, 1, 4, 3, 5), d = as.Date("2024-01-01") + c(0, 30, 60, 90, 120))
   p <- expect_plot2_message(plot2(d, x, y, d), "category.date_breaks = \"2 weeks\"", type = "info")
-  b <- suppressWarnings(built(p)) # the Dutch default locale warns on systems without it (F003)
+  b <- suppressWarnings(built(p)) # the Dutch default locale warns on systems without it (#15)
   expect_lte(length(scale_breaks(b, "colour")), 12)
   d$d <- as.POSIXct(d$d)
-  p <- expect_plot2(plot2(d, x, y, d), allow_warnings = TRUE) # Dutch default locale (F003)
+  p <- expect_plot2(plot2(d, x, y, d), allow_warnings = TRUE) # Dutch default locale (#15)
   expect_lte(length(suppressWarnings(scale_breaks(p, "colour"))), 12)
 })
 

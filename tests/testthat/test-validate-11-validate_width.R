@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 11: validate_width()
-# review_and_overhaul/reviews/R02_validate/11_validate_width.md
+# 11: validate_width() (#157)
 
 bar_width <- function(p, geom) {
   l <- layer_df(p, layer_index(p, geom))

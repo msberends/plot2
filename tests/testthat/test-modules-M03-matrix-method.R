@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M03: plot2.matrix()
-# review_and_overhaul/reviews/R04_modules/M03_matrix-method.md
+# M03: plot2.matrix()
 
 test_that("M03.01 correlation matrix: tiles and datalabels, one tile per cell", {
   m <- cor(mtcars[, 1:3])
@@ -34,7 +33,7 @@ test_that("M03.03 plain matrix: row names on the x-axis", {
   expect_identical(axis_labels(expect_plot2(plot2(m)), "x"), c("r1", "r2", "r3"))
 })
 
-test_that("M03.04 plain matrix: all columns, and titles from named dimensions (F089)", {
+test_that("M03.04 plain matrix: all columns, and titles from named dimensions (#101)", {
   m <- matrix(1:6, nrow = 3, dimnames = list(c("r1", "r2", "r3"), c("A", "B")))
   p <- expect_plot2(plot2(m))
   expect_identical(as.character(scale_breaks(p, "fill")), c("A", "B"))

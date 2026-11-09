@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S04: running the code, messages and errors
-# review_and_overhaul/reviews/R07_shiny/S04_evaluation-and-messages.md
+# S04: running the code, messages and errors
 
 test_that("S04.01 the plot is rendered", {
   app <- shiny_app()

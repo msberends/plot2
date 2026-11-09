@@ -12,14 +12,14 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Single argument definition (F035) ------------------------------------
+# Single argument definition (#47) ------------------------------------
 #
 # The arguments of plot2() are defined once, in the generic in R/plot2.R. The methods in
 # R/plot2-methods.R and plot2_exec() are written as `function(.data, ...)` and receive the
 # generic's arguments here, with their method-specific defaults. Each method forwards all
 # arguments with `eval(plot2_exec_call())`, which builds the call to plot2_exec() and is
 # evaluated in the method's own frame, so that `{{ }}` refers to the user's call. Automatic
-# defaults are NULL (F094), so plot2_exec() needs no record of which arguments were missing.
+# defaults are NULL (#106), so plot2_exec() needs no record of which arguments were missing.
 #
 # This file is named zzz.R so that it is collated after all other files.
 
@@ -83,7 +83,7 @@ plot2_exec_call <- function(...) {
 
 #' Default title of an argument
 #'
-#' Derives a title from the code the user wrote, after resolving `{{ }}`, `!!` and `.data` pronouns, so that `{{ col }}`, `.data[[v]]` and `!!sym(v)` in functions and loops give the column name (F105).
+#' Derives a title from the code the user wrote, after resolving `{{ }}`, `!!` and `.data` pronouns, so that `{{ col }}`, `.data[[v]]` and `!!sym(v)` in functions and loops give the column name (#117).
 #' @noRd
 plot2_label <- function(quo) {
   # a missing argument gives the code of its default, e.g. "NULL"
@@ -168,7 +168,7 @@ formals(plot2.matrix) <- plot2_method_formals(x.title = FALSE,
                                               y.title = FALSE)
 formals(plot2_exec) <- plot2_method_formals()
 
-# arguments renamed or removed before the first CRAN release (D001) ----
+# arguments renamed or removed before the first CRAN release (API decisions in CLAUDE.md)
 plot2_old_args <- c(colour_opacity = "was renamed to `colour_transparency`",
                     x.lbl_angle = "was renamed to `x.label_angle`",
                     x.lbl_align = "was renamed to `x.label_align`",

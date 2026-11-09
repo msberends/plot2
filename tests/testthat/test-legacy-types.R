@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Legacy smoke tests from the former test_plot2.R (F038), split by topic. They
+# Legacy smoke tests from the former test_plot2.R (#50), split by topic. They
 # mostly check the class and are skipped on CRAN; the content tests are in the
 # test-plot2_exec-*, test-modules-*, test-api-* and test-validate-* files.
 

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 05: validate_x_scale()
-# review_and_overhaul/reviews/R02_validate/05_validate_x_scale.md
+# 05: validate_x_scale() (#157)
 
 test_that("05.01 a character x gives a discrete scale; x.drop = FALSE keeps unused levels", {
   d <- data.frame(x = factor(c("a", "b"), levels = c("a", "b", "c")), y = 1:2)
@@ -89,7 +88,7 @@ test_that("05.12 x.position = 'top' puts the axis on top", {
   expect_identical(scale_of(p, "x")$position, "top")
 })
 
-test_that("05.13 facets with similar x ranges share the x range, dissimilar ones do not; both with a message (F052)", {
+test_that("05.13 facets with similar x ranges share the x range, dissimilar ones do not; both with a message (#64)", {
   d <- data.frame(x = rep(1:3, 2), y = 1:6, f = rep(c("a", "b"), each = 3))
   p <- expect_plot2_message(plot2(d, x, y, facet = f, type = "point"), "facet.fixed_x = TRUE", type = "info")
   expect_identical(axis_range(p, "x", panel = 1), axis_range(p, "x", panel = 2))
@@ -102,7 +101,7 @@ test_that("05.14 x.zoom = TRUE makes the axis follow the data", {
   d <- data.frame(x = c(5, 6, 9), y = 1:3)
   p <- expect_plot2(plot2(d, x, y, x.zoom = TRUE))
   expect_false(0 %in% axis_breaks(p, "x"))
-  # 5% expansion on both sides (F092)
+  # 5% expansion on both sides (#104)
   expect_equal(axis_range(p, "x"), c(4.8, 9.2))
 })
 
@@ -112,7 +111,7 @@ test_that("05.15 x.breaks and an x.labels function are honoured", {
   expect_axis_labels(p, "x", c("1!", "3!", "5!"))
 })
 
-test_that("05.16 the MIC scale of the AMR package can be added to a plot (D001.3)", {
+test_that("05.16 the MIC scale of the AMR package can be added to a plot (API decisions in CLAUDE.md)", {
   skip_if_not_installed("AMR")
   d <- data.frame(mic = AMR::as.mic(c("0.25", "1", "4", "1")), n = c(2, 5, 3, 1))
   p <- expect_plot2(suppressMessages(plot2(d, mic, n) + AMR::scale_x_mic()))

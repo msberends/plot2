@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ) 
 # load these, so that function names will get tidyverse links on the web page
 library(ggplot2, warn.conflicts = FALSE)
-# suggested packages are used conditionally, so that the vignette also builds without them (F102)
+# suggested packages are used conditionally, so that the vignette also builds without them (#114)
 has_patchwork <- requireNamespace("patchwork", quietly = TRUE)
 has_sf <- requireNamespace("sf", quietly = TRUE)
 has_viridis <- requireNamespace("viridisLite", quietly = TRUE)

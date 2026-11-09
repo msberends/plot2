@@ -49,7 +49,7 @@ theme_minimal2 <- function(...,
   colour_font_axis <- get_colour(colour_font_axis, length = 1)
   colour_background <- get_colour(colour_background, length = 1)
   
-  # the complete theme is the same for the same colours, so build it once per session (F110)
+  # the complete theme is the same for the same colours, so build it once per session (#122)
   cache_key <- paste(colour_font_primary, colour_font_secondary, colour_font_axis, colour_background,
                      utils::packageVersion("ggplot2"), sep = "|")
   t <- plot2_session$theme_cache[[cache_key]]
@@ -65,14 +65,14 @@ theme_minimal2 <- function(...,
   }
   
   if (length(list(...)) > 0) {
-    # merge like `+ theme(...)`, so only the given properties change (F087)
+    # merge like `+ theme(...)`, so only the given properties change (#99)
     t <- t + theme(...)
   }
   
   t
 }
 
-#' Build the complete theme of theme_minimal2() (cached per session by theme_minimal2(), F110)
+#' Build the complete theme of theme_minimal2() (cached per session by theme_minimal2(), #122)
 #' @importFrom ggplot2 element_text theme_bw theme margin element_line element_blank unit element_rect
 #' @noRd
 theme_minimal2_build <- function(colour_font_primary, colour_font_secondary, colour_font_axis, colour_background) {

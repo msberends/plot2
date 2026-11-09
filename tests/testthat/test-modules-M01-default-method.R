@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M01: plot2.default()
-# review_and_overhaul/reviews/R04_modules/M01_default-method.md
+# M01: plot2.default()
 
 test_that("M01.01 numeric vector: columns with index and values", {
   v <- c(3, 1, 2)
@@ -60,12 +59,12 @@ test_that("M01.08 a function errors clearly", {
   expect_error(plot2(mean), "does not yet support functions")
 })
 
-test_that("M01.09 numeric vector with y given (F030)", {
+test_that("M01.09 numeric vector with y given (#42)", {
   v <- c(3, 1, 2)
   expect_plot2(plot2(v, y = c(1, 2, 3)))
 })
 
-test_that("M01.10 a single string names a data frame only in the calling environment (F030)", {
+test_that("M01.10 a single string names a data frame only in the calling environment (#42)", {
   mydf <- data.frame(x = c("a", "b"), y = 1:2)
   expect_identical(nrow(plot_data(plot2("mydf"))), 2L)
   # not found in the calling environment (package data, search path): a value

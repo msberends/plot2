@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S02: data sets and the upload tab
-# review_and_overhaul/reviews/R07_shiny/S02_data-and-upload.md
+# S02: data sets and the upload tab
 
 csv_file <- function(lines = c("g,v", "a,1", "b,3", "a,2")) {
   f <- tempfile(fileext = ".csv")

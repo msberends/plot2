@@ -46,7 +46,7 @@ move_layer <- function(plot, move = -1, layer = length(plot$layers)) {
   # clamp the new position to the existing layers
   layer_new <- min(length(layers), max(1, layer + move))
   
-  # new order by index: take out layer_old and insert it at layer_new (F083)
+  # new order by index: take out layer_old and insert it at layer_new (#95)
   ord <- append(setdiff(seq_along(layers), layer_old), layer_old, after = layer_new - 1)
   layers <- layers[ord]
   plot$layers <- layers

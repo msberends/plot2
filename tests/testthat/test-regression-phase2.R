@@ -12,10 +12,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Regression tests for Phase 2 findings (state and messaging).
-# Each test_that() starts with the finding ID; see review_and_overhaul/findings/.
+# Regression tests for Phase 2 issues (state and messaging).
+# Each test_that() starts with the GitHub issue number.
 
-test_that("F001 a failing back-to-back plot leaves no state for the next call", {
+test_that("#13 a failing back-to-back plot leaves no state for the next call", {
   try(suppressWarnings(plot2(data.frame(a = c("x", "y"), v = 1:2, f = c("m", "m")), a, v, facet = f, type = "b2b")), silent = TRUE)
   expect_identical(setdiff(ls(plot2:::plot2_env), "reg_cols"), character(0))
   expect_identical(length(plot2:::plot2_session$call_stack), 0L)
@@ -23,7 +23,7 @@ test_that("F001 a failing back-to-back plot leaves no state for the next call", 
   expect_labels(p, x = "g")
 })
 
-test_that("F001 a nested call restores the state of the outer call", {
+test_that("#13 a nested call restores the state of the outer call", {
   withr::defer(plot2:::clear_plot2_env())
   env <- plot2:::plot2_env
   plot2:::call_state_enter()
@@ -37,25 +37,25 @@ test_that("F001 a nested call restores the state of the outer call", {
   expect_identical(length(plot2:::plot2_session$call_stack), 0L)
 })
 
-test_that("F001 a back-to-back plot keeps its labels and leaves a clean state", {
+test_that("#13 a back-to-back plot keeps its labels and leaves a clean state", {
   d <- data.frame(age = rep(c("0-9", "10-19"), 2), n = c(5, 7, 6, 8), sex = rep(c("F", "M"), each = 2))
   expect_clean_state(plot2(d, age, n, facet = sex, type = "back-to-back"))
 })
 
-test_that("F001 diagnostics at render time are emitted at once, not with the next call", {
+test_that("#13 diagnostics at render time are emitted at once, not with the next call", {
   p <- plot2(data.frame(x = letters[1:3], y = c(1e7, 2e7, 3e7)), x, y)
   suppressMessages(invisible(rendered(p)))
   expect_null(plot2:::plot2_env$infos)
 })
 
-test_that("F014 messages are conditions of class plot2_message and can be muffled", {
+test_that("#26 messages are conditions of class plot2_message and can be muffled", {
   df <- data.frame(g = c("a", "b", "c"), v = 1:3)
   expect_message(plot2(df), class = "plot2_message")
   withr::local_envvar(IN_PKGDOWN = "true") # prints messages, as in an interactive session
   expect_silent(suppressMessages(plot2(df)))
 })
 
-test_that("F014 plot2.silent = TRUE prints no messages but keeps them catchable", {
+test_that("#26 plot2.silent = TRUE prints no messages but keeps them catchable", {
   withr::local_envvar(IN_PKGDOWN = "true")
   withr::local_options(plot2.silent = TRUE)
   df <- data.frame(g = c("a", "b", "c"), v = 1:3)
@@ -64,13 +64,13 @@ test_that("F014 plot2.silent = TRUE prints no messages but keeps them catchable"
   expect_message(plot2(df), class = "plot2_message")
 })
 
-test_that("F014 plot2 warnings are R warnings of class plot2_warning", {
+test_that("#26 plot2 warnings are R warnings of class plot2_warning", {
   expect_warning(plot2(data.frame(g = character(0), v = numeric(0)), g, v), "No observations", class = "plot2_warning")
   expect_warning(withr::with_options(list(plot2.silent = TRUE), plot2(data.frame(g = character(0), v = numeric(0)), g, v)),
                  class = "plot2_warning")
 })
 
-test_that("F014 diagnostics come grouped at the end of the call, in order of occurrence", {
+test_that("#26 diagnostics come grouped at the end of the call, in order of occurrence", {
   types <- character(0)
   texts <- character(0)
   withCallingHandlers(
@@ -92,8 +92,8 @@ test_that("F014 diagnostics come grouped at the end of the call, in order of occ
   expect_false(anyDuplicated(texts) > 0)
 })
 
-test_that("F014 a long plotmath title does not warn about line wrapping", {
-  # the source of a $...$ expression is not its drawn width; this warning was invisible before F014
+test_that("#26 a long plotmath title does not warn about line wrapping", {
+  # the source of a $...$ expression is not its drawn width; this warning was invisible before #26
   expect_plot2(plot2(mtcars, mpg, hp,
                      title = "$f[X](x)==frac(1, sigma*sqrt(2*pi))*plain(e)^{frac(-(x-mu)^2, 2*sigma^2)}$"))
 })

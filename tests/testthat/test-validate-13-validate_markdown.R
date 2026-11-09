@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 13: validate_markdown()
-# review_and_overhaul/reviews/R02_validate/13_validate_markdown.md
+# 13: validate_markdown() (#157)
 
 test_that("13.01 markdown = FALSE keeps the text literal", {
   p <- plot2(fx_xy, x, y, title = "*text*", markdown = FALSE)
@@ -32,7 +31,7 @@ test_that("13.03 markdown = NULL with a superscript in the y name: guessed TRUE,
   expect_identical(label_text(plot2(df, x, `y^2`, markdown = NULL), "y"), "paste(\"y\"^\"2\")")
 })
 
-test_that("13.04 markdown = NULL with one underscore in each of two titles is not guessed TRUE (F018)", {
+test_that("13.04 markdown = NULL with one underscore in each of two titles is not guessed TRUE (#30)", {
   expect_no_plot2_message(plot2(fx_xy, x, y, title = "a_b", subtitle = "c_d", markdown = NULL), "Assuming markdown")
   expect_identical(plot2(fx_xy, x, y, title = "a_b", subtitle = "c_d", markdown = NULL)$labels$title, "a_b")
 })

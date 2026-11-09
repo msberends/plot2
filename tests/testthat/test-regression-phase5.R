@@ -12,10 +12,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Regression tests for the findings fixed in Phase 5 of the review and overhaul
-# (review_and_overhaul/plans/roadmap.md)
+# Regression tests for the issues fixed in Phase 5 of the review and overhaul.
+# Each test_that() starts with the GitHub issue number.
 
-test_that("F035 the methods and plot2_exec() take their arguments from the generic", {
+test_that("#47 the methods and plot2_exec() take their arguments from the generic", {
   generic <- formals(plot2)
   generic$data <- NULL
   for (m in c("plot2.default", "plot2.data.frame", "plot2.formula", "plot2.matrix", "plot2.sf", "plot2.freq", "plot2_exec")) {
@@ -31,7 +31,7 @@ test_that("F035 the methods and plot2_exec() take their arguments from the gener
   expect_false(anyDuplicated(names(cl)[nzchar(names(cl))]) > 0)
 })
 
-test_that("F105 titles show the column name in functions and loops", {
+test_that("#117 titles show the column name in functions and loops", {
   h <- function(v) plot2(iris, !!rlang::sym(v), n())
   expect_labels(h("Species"), x = "Species")
   ps <- lapply(c("Sepal.Length", "Sepal.Width"), function(v) plot2(iris, Species, .data[[v]]))
@@ -42,12 +42,12 @@ test_that("F105 titles show the column name in functions and loops", {
   expect_labels(plot2(iris, Species, mean(.data$Sepal.Length)), y = "mean(Sepal.Length)")
 })
 
-test_that("F034 the generic shows the defaults the methods use; matrix plots say that x, y and category are ignored", {
+test_that("#46 the generic shows the defaults the methods use; matrix plots say that x, y and category are ignored", {
   expect_identical(formals(plot2)$y_secondary.colour, formals(plot2:::plot2.data.frame)$y_secondary.colour)
   expect_message(plot2(matrix(1:6, 2), x = 1), class = "plot2_caution")
 })
 
-test_that("F094 automatic defaults are NULL, and explicit values mean what they say", {
+test_that("#106 automatic defaults are NULL, and explicit values mean what they say", {
   d <- data.frame(x = paste0("v", 1:30), y = 1:30)
   n_labels <- function(p) length(datalabels_of(p))
   expect_identical(n_labels(plot2(d, x, y)), 0L)
@@ -72,7 +72,7 @@ test_that("F094 automatic defaults are NULL, and explicit values mean what they 
   expect_true(all(vapply(formals(plot2)[auto], is.null, logical(1))))
 })
 
-test_that("D001 renamed and removed arguments give a clear error", {
+test_that("API decisions: renamed and removed arguments give a clear error", {
   expect_error(plot2(iris, colour_opacity = 0.5), "renamed to `colour_transparency`")
   expect_error(plot2(iris, x.lbl_angle = 90), "renamed to `x.label_angle`")
   expect_error(plot2(iris, facet.fill = "red"), "renamed to `facet.colour_fill`")
@@ -82,37 +82,37 @@ test_that("D001 renamed and removed arguments give a clear error", {
   expect_identical(names(formals(get_colour)), c("x", "length", "transparency"))
 })
 
-test_that("D001 options plot2.decimal.mark and plot2.big.mark", {
+test_that("API decisions: options plot2.decimal.mark and plot2.big.mark", {
   withr::local_options(plot2.decimal.mark = ",", plot2.big.mark = ".")
   expect_identical(c(dec_mark(), big_mark()), c(",", "."))
 })
 
-test_that("D001.10 legend = FALSE hides the legend, TRUE conflicts with legend.position = 'none'", {
+test_that("API decisions: legend = FALSE hides the legend, TRUE conflicts with legend.position = 'none'", {
   expect_identical(theme_el(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = FALSE), "legend.position"), "none")
   expect_identical(theme_el(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = TRUE), "legend.position"), "top")
   expect_error(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = TRUE, legend.position = "none"), "legend = TRUE")
   expect_error(plot2(iris, Sepal.Length, Sepal.Width, Species, legend = "yes"), "NULL, TRUE or FALSE")
 })
 
-test_that("D001.15 stacked = 'fill' equals stacked_fill = TRUE", {
+test_that("API decisions: stacked = 'fill' equals stacked_fill = TRUE", {
   d <- data.frame(x = rep(c("a", "b"), each = 2), y = c(1, 3, 2, 2), g = rep(c("p", "q"), 2))
   expect_identical(layer_df(plot2(d, x, y, g, stacked = "fill"), 1)$ymax,
                    layer_df(plot2(d, x, y, g, stacked_fill = TRUE), 1)$ymax)
   expect_error(plot2(d, x, y, g, stacked = "yes"), "TRUE, FALSE or")
 })
 
-test_that("D001.12 category.title and legend.title cannot both be given", {
+test_that("API decisions: category.title and legend.title cannot both be given", {
   expect_error(plot2(iris, Sepal.Length, Sepal.Width, Species, category.title = "A", legend.title = "B"), "same setting")
   expect_labels(plot2(iris, Sepal.Length, Sepal.Width, Species, legend.title = "B"), colour = "B")
 })
 
-test_that("D001.3 label_taxonomy() italicises taxonomic names", {
+test_that("API decisions: label_taxonomy() italicises taxonomic names", {
   skip_if_not_installed("AMR")
   out <- label_taxonomy(c("Escherichia coli", "Other", "S. aureus"))
   expect_true(is.expression(out))
   expect_match(as.character(out[[1]]), "italic", all = FALSE)
   expect_identical(label_taxonomy(c("a", "b")), c("a", "b"))
-  # species names only after a genus (F058)
+  # species names only after a genus (#70)
   out <- label_taxonomy(c("coli alone", "Escherichia coli"))
   expect_false(grepl("italic", deparse(out[[1]])))
   expect_true(grepl("italic", deparse(out[[2]])))
@@ -120,7 +120,7 @@ test_that("D001.3 label_taxonomy() italicises taxonomic names", {
   expect_plot2(plot2(d, name, n, x.labels = label_taxonomy))
 })
 
-test_that("F025 datalabels are formatted once, on the final rows, with all placeholders", {
+test_that("#37 datalabels are formatted once, on the final rows, with all placeholders", {
   d <- data.frame(x = rep(c("a", "b"), each = 50), y = 1:100)
   counter <- new.env()
   counter$n <- integer(0)
@@ -131,7 +131,7 @@ test_that("F025 datalabels are formatted once, on the final rows, with all place
   expect_identical(datalabels_of(p), c("1 275 (25.2%) of 1 275", "3 775 (74.8%) of 3 775"))
 })
 
-test_that("F110 the default theme and the list of geoms are built once per session", {
+test_that("#122 the default theme and the list of geoms are built once per session", {
   invisible(plot2(data.frame(g = "a", v = 1), g, v))
   expect_true(length(plot2:::plot2_session$theme_cache) >= 1)
   expect_true(length(plot2:::plot2_session$validated_themes) >= 1)

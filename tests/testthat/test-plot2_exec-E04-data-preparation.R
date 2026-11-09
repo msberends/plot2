@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E04: data preparation (direction columns, y variants)
-# review_and_overhaul/reviews/R03_plot2_exec/E04_data-preparation.md
+# E04: data preparation (direction columns, y variants)
 
 test_that("E04.01 y = c(a, b): one category per column, no y title", {
   p <- expect_plot2(plot2(fx_wide, group, c(first, second)))
@@ -67,19 +66,19 @@ test_that("E04.09 facet = where(is.character) combines columns", {
   expect_facets(p, n_panels = 4L)
 })
 
-test_that("E04.10 numeric y values are not taken as column positions (F065)", {
+test_that("E04.10 numeric y values are not taken as column positions (#77)", {
   df <- data.frame(x = c("a", "b"), y = c(2, 3), z = c("p", "q"))
   p <- plot2(df, x, c(2, 3))
   expect_identical(as.numeric(layer_df(p, "bar")$y), c(2, 3))
 })
 
-test_that("E04.11 column names with regex characters in y = c(...) (F017)", {
+test_that("E04.11 column names with regex characters in y = c(...) (#29)", {
   df <- data.frame(g = c("a", "b"), `a.b` = c(1, 2), `a+b` = c(3, 4), check.names = FALSE)
   p <- expect_plot2(plot2(df, g, c(`a.b`, `a+b`)))
   # both columns are found; category.sort = TRUE sorts them ("+" before ".")
   expect_identical(as.character(scale_breaks(p, "fill")), c("a+b", "a.b"))
 })
 
-test_that("E04.12 numeric x and y with identical values give points, not a histogram (F074)", {
+test_that("E04.12 numeric x and y with identical values give points, not a histogram (#86)", {
   expect_geoms(plot2(data.frame(x = 1:4, y = 1:4), x, y), "point", exact = TRUE)
 })

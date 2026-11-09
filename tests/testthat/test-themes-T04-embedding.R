@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T04: plot2 inside functions, knitr, Quarto and Shiny
-# review_and_overhaul/reviews/R06_themes/T04_embedding.md
+# T04: plot2 inside functions, knitr, Quarto and Shiny
 
 f_embrace <- function(df, col) plot2(df, {{ col }}, n())
 f_data <- function(df, v) plot2(df, .data[[v]], n())

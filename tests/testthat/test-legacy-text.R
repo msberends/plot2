@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Legacy smoke tests from the former test_plot2.R (F038), split by topic. They
+# Legacy smoke tests from the former test_plot2.R (#50), split by topic. They
 # mostly check the class and are skipped on CRAN; the content tests are in the
 # test-plot2_exec-*, test-modules-*, test-api-* and test-validate-* files.
 
@@ -61,7 +61,7 @@ test_that("md to expression works", {
 
 test_that("messaging works", {
   skip_on_cran()
-  # outside a plot2() call, diagnostics are signalled at once as conditions (F014)
+  # outside a plot2() call, diagnostics are signalled at once as conditions (#26)
   expect_message(plot2_message("test"), "test", class = "plot2_message")
   expect_message(plot2_caution("test"), "test", class = "plot2_caution")
   expect_warning(plot2_warning("test"), "test", class = "plot2_warning")

@@ -172,7 +172,7 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
     data <- args$data
   }
   args$data <- NULL
-  # without data in the plot and in this call, there is nothing to draw (F040)
+  # without data in the plot and in this call, there is nothing to draw (#52)
   plot_data <- attr(plot, "data", exact = TRUE) %or% plot$data
   if (is.null(data) && (inherits(plot_data, "waiver") || NROW(plot_data) == 0)) {
     plot2_warning("The plot has no data and no ", font_blue("data"), " was given, so no ",
@@ -203,7 +203,7 @@ new_geom_data <- function(plot, x, y, ..., colour_missing, inherit.aes) {
     colour_unique <- ""
   }
   
-  # the public vars() method of the facet, not its internal params (F037)
+  # the public vars() method of the facet, not its internal params (#49)
   if (length(plot$facet$vars()) > 0) {
     facet_name <- plot$facet$vars()[1]
     facet_unique <- unique(plot$data[[facet_name]])
@@ -532,7 +532,7 @@ add_errorbar <- function(plot, min, max, colour = getOption("plot2.colour", "ggp
     new_df[[facet_name]] <- plot$data[[facet_name]]
   }
   
-  # never inherit the plot mapping by default: it refers to columns that new_df lacks, such as `group` (F082)
+  # never inherit the plot mapping by default: it refers to columns that new_df lacks, such as `group` (#94)
   if (isTRUE(inherit.aes)) {
     mapping <- setup_aes(x = "x", ymin = "ymin", ymax = "ymax")
   } else if (!is.null(category_name)) {
@@ -658,7 +658,7 @@ add_sf <- function(plot,
   if (!is_ggplot(plot)) {
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
-  # the geometry column can have any name (F084)
+  # the geometry column can have any name (#96)
   geometry_col <- names(plot$data)[vapply(plot$data, inherits, logical(1), what = "sfc")][1]
   if (is.na(geometry_col)) {
     stop("`plot` must be a ggplot2 object based on geographic data.", call. = FALSE)
@@ -711,7 +711,7 @@ add_sf <- function(plot,
                      suppressWarnings(sf::st_point_on_surface(sf::st_zm(x)))
                    })
     if (!identical(datalabels.font, "")) {
-      # a custom font: showtext is switched on when the plot is drawn (F011)
+      # a custom font: showtext is switched on when the plot is drawn (#23)
       p <- as_plot2_font(p)
     }
   }
@@ -719,7 +719,7 @@ add_sf <- function(plot,
 }
 
 legend_dummy_x <- function(plot) {
-  # an invisible x value for legend-only layers, of the same class as the x axis (F085)
+  # an invisible x value for legend-only layers, of the same class as the x axis (#97)
   x <- tryCatch(plot$data[[rlang::as_label(plot$mapping$x)]], error = function(e) NULL)
   if (inherits(x, "Date")) {
     as.Date(Inf)

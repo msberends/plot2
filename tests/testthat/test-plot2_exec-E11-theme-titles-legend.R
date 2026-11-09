@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E11: theme, titles and legend
-# review_and_overhaul/reviews/R03_plot2_exec/E11_theme-titles-legend.md
+# E11: theme, titles and legend
 
 guide_param <- function(p, aes, param) {
   plot_of(p)$guides$guides[[aes]]$params[[param]]

@@ -41,7 +41,7 @@ get_plot_title <- function(plot,
     stop("`plot` must be a ggplot2 object.", call. = FALSE)
   }
   
-  # public accessor for the labels (F037)
+  # public accessor for the labels (#49)
   plot_labels <- ggplot2::get_labs(plot)
   current_title <- plot_labels$title
   default_title <- get_default_title(plot = plot, default = NULL)

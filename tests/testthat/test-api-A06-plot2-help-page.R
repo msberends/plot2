@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A06: plot2() description, details and examples
-# review_and_overhaul/reviews/R05_api/A06_plot2-help-page.md
+# A06: plot2() description, details and examples
 
 run_rd_examples <- function(rd, exclude = NULL) {
   ex <- tempfile(fileext = ".R")

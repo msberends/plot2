@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 14: validate_title()
-# review_and_overhaul/reviews/R02_validate/14_validate_title.md
+# 14: validate_title() (#157)
 
 long <- paste(rep("word", 30), collapse = " ")
 
@@ -43,7 +42,7 @@ test_that("14.05 '>=' becomes a symbol with markdown, not without", {
   expect_identical(label_text(plot2(fx_xy, x, y, title = "a >= b", markdown = FALSE), "title"), "a >= b")
 })
 
-test_that("14.06 long titles are wrapped at title.linelength, accented ones too (F056)", {
+test_that("14.06 long titles are wrapped at title.linelength, accented ones too (#68)", {
   plain <- label_text(plot2(fx_xy, x, y, title = long, title.linelength = 40), "title")
   accented <- label_text(plot2(fx_xy, x, y, title = gsub("o", "ó", long), title.linelength = 40), "title")
   expect_true(all(nchar(strsplit(plain, "\n")[[1]]) <= 40))
@@ -56,7 +55,7 @@ test_that("14.07 a markdown title longer than the limit warns and is not wrapped
   expect_no_match(label_text(p, "title"), "\n")
 })
 
-test_that("14.08 an apostrophe in a markdown title is kept (F018)", {
+test_that("14.08 an apostrophe in a markdown title is kept (#30)", {
   expect_identical(label_text(plot2(fx_xy, x, y, title = "Patient's *E. coli*"), "title"),
                    "paste(\"Patient's \", italic(\"E. coli\"))")
 })

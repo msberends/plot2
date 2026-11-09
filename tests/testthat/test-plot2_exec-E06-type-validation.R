@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E06: taxonomy, type validation and cleaning steps
-# review_and_overhaul/reviews/R03_plot2_exec/E06_type-validation-and-cleaning.md
+# E06: taxonomy, type validation and cleaning steps
 
 test_that("E06.01 discrete type with duplicate x: values are summed", {
   p <- expect_plot2(plot2(fx_cat, x, y))
@@ -35,7 +34,7 @@ test_that("E06.04 point plots have no datalabels unless asked", {
   expect_true("GeomText" %in% geoms(plot2(fx_xy, x, y, datalabels = TRUE)))
 })
 
-test_that("E06.04b datalabels = TRUE with an explicit continuous type (F076)", {
+test_that("E06.04b datalabels = TRUE with an explicit continuous type (#88)", {
   expect_true("GeomText" %in% geoms(plot2(fx_xy, x, y, type = "point", datalabels = TRUE)))
   expect_true("GeomText" %in% geoms(plot2(fx_xy, x, y, type = "line", datalabels = y)))
 })

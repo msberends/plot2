@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S01: building the app (arguments, logo, inputs)
-# review_and_overhaul/reviews/R07_shiny/S01_construction.md
+# S01: building the app (arguments, logo, inputs)
 
 test_that("S01.01 create_interactively() returns an app object outside an interactive session", {
   app <- shiny_app()
@@ -24,7 +23,7 @@ test_that("S01.02 every plot2() argument has an input in the app", {
   app <- shiny_app()
   html <- as.character(shiny_app_env(app)$ui)
   ids <- gsub('id=|"', "", regmatches(html, gregexpr('id="[^"]+"', html))[[1]])
-  # legend.title is left out on purpose: category.title is the same setting (D001.12)
+  # legend.title is left out on purpose: category.title is the same setting (API decisions in CLAUDE.md)
   args <- setdiff(names(formals(plot2)), c(".data", "data", "...", "print", "legend.title"))
   expect_identical(setdiff(args, ids), character(0))
 })

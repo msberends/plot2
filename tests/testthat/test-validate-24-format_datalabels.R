@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 24: format_datalabels()
-# review_and_overhaul/reviews/R02_validate/24_format_datalabels.md
+# 24: format_datalabels() (#157)
 
 dl <- data.frame(x = c("a", "b", "c"), y = c(1.234, 2.5, 10))
 
@@ -52,7 +51,7 @@ test_that("24.07 character datalabels are kept as they are", {
   expect_identical(datalabels_of(plot2(d, x, y, datalabels = name)), c("first", "second"))
 })
 
-test_that("24.08 labels are not formatted when none are drawn (F025)", {
+test_that("24.08 labels are not formatted when none are drawn (#37)", {
   n <- 0L
   trace("format_datalabels", tracer = function() n <<- n + 1L, print = FALSE, where = asNamespace("plot2"))
   withr::defer(untrace("format_datalabels", where = asNamespace("plot2")))

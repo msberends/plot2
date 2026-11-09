@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Every automatic choice documented in the section 'Automatic choices' of ?plot2 (F036):
+# Every automatic choice documented in the section 'Automatic choices' of ?plot2 (#48):
 # one test per rule, checking both the choice and its message
 
 msg <- function(expr) {

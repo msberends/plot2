@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 02: validate_legend.position()
-# review_and_overhaul/reviews/R02_validate/02_validate_legend.position.md
+# 02: validate_legend.position() (#157)
 
 test_that("02.01 default: top for a discrete category, right for a numeric category", {
   expect_identical(legend_position(plot2(fx_cat_unique, x, y, category)), "top")
@@ -29,7 +28,7 @@ test_that("02.02 abbreviations, case and spaces are normalised", {
   }
 })
 
-test_that("02.03 NA hides the legend, NULL is automatic (F094)", {
+test_that("02.03 NA hides the legend, NULL is automatic (#106)", {
   expect_identical(legend_position(plot2(fx_cat_unique, x, y, category, legend.position = NA)), "none")
   expect_identical(legend_position(plot2(fx_cat_unique, x, y, category, legend.position = NULL)), "top")
 })
@@ -39,11 +38,11 @@ test_that("02.04 an invalid value errors and lists the allowed values", {
   expect_error(plot2(fx_cat_unique, x, y, category, legend.position = c(2, 0.5)), "two values between 0 and 1")
 })
 
-test_that("02.05 FALSE hides the legend (F050)", {
+test_that("02.05 FALSE hides the legend (#62)", {
   expect_identical(legend_position(plot2(fx_cat_unique, x, y, category, legend.position = FALSE)), "none")
 })
 
-test_that("02.06 two numbers place the legend inside the plot (F050)", {
+test_that("02.06 two numbers place the legend inside the plot (#62)", {
   p <- expect_plot2(plot2(fx_cat_unique, x, y, category, legend.position = c(0.9, 0.8)))
   expect_identical(legend_position(p), "inside")
   expect_equal(theme_el(p, "legend.position.inside"), c(0.9, 0.8))

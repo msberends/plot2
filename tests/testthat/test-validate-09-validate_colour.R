@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 09: validate_colour()
-# review_and_overhaul/reviews/R02_validate/09_validate_colour.md
+# 09: validate_colour() (#157)
 
 d_three <- data.frame(x = c("a", "b", "c"), y = 1:3, k = c("a", "b", "c"))
 
@@ -68,7 +67,7 @@ test_that("09.09 a registered colour set with a numeric category gives a gradien
   register_colour(testset_0909 = c("#111111", "#555555", "#999999", "#DDDDDD"))
   withr::defer(unregister_colour("testset_0909"))
   p <- expect_plot2(plot2(fx_numcat, x, y, value, colour = "testset_0909"))
-  # the scale ends at 1, the data range (0.1 to 0.9) rounded to pretty values (F059)
+  # the scale ends at 1, the data range (0.1 to 0.9) rounded to pretty values (#71)
   expect_identical(unname(col_hex(scale_of(p, "colour")$map(1))), "#DDDDDD")
 })
 
@@ -84,7 +83,7 @@ test_that("09.11 an invalid colour name is reported and replaced by the default 
   expect_identical(length(unique(scale_values(p, "fill"))), 2L)
 })
 
-test_that("09.12 boxplot whiskers take their colours from the scale, without expanding colour vectors (F061)", {
+test_that("09.12 boxplot whiskers take their colours from the scale, without expanding colour vectors (#73)", {
   p <- expect_plot2(plot2(admitted_patients, hospital, age, gender,
                           colour = c(F = "#3F681C", M = "#375E97"), colour_fill = "#FFBB00AA"))
   whiskers <- layer_df(p, layer_index(p, "GeomErrorbar"))

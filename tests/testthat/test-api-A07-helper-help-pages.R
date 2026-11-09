@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A07: help pages of the exported helpers, options and data
-# review_and_overhaul/reviews/R05_api/A07_helper-help-pages.md
+# A07: help pages of the exported helpers, options and data
 
 test_that("A07.01 md_to_expression() converts every element, as its return value says", {
   res <- md_to_expression(c("*a*", "**b**"))

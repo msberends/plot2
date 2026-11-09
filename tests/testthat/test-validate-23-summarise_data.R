@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 23: summarise_data()
-# review_and_overhaul/reviews/R02_validate/23_summarise_data.md
+# 23: summarise_data() (#157)
 
 test_that("23.01 duplicate x values are summed by default", {
   p <- expect_plot2(plot2(fx_cat, x, y))

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M09: get_colour() methods and colour registration
-# review_and_overhaul/reviews/R04_modules/M09_colour-class.md
+# M09: get_colour() methods and colour registration
 
 local_registered <- function(..., .env = parent.frame()) {
   before <- plot2:::plot2_env$reg_cols
@@ -64,16 +63,16 @@ test_that("M09.06 registered colours survive the internal clean-up", {
   expect_true("test_keep" %in% names(plot2:::plot2_env$reg_cols))
 })
 
-test_that("M09.07 one invalid colour does not replace the valid ones (F088)", {
+test_that("M09.07 one invalid colour does not replace the valid ones (#100)", {
   expect_warning(x <- get_colour(c(a = "red", b = "nope", c = "blue")), "nope", class = "plot2_warning")
   expect_length(x, 3)
   expect_identical(as.character(unname(x[c(1, 3)])), c("#FF0000", "#0000FF"))
 })
 
-test_that("M09.08 registering an invalid colour errors (F088)", {
+test_that("M09.08 registering an invalid colour errors (#100)", {
   expect_error(register_colour(test_bad = "notacolour"))
 })
 
-test_that("M09.09 subsetting keeps the class (F090)", {
+test_that("M09.09 subsetting keeps the class (#102)", {
   expect_s3_class(get_colour(c("red", "blue"))[1], "colour")
 })

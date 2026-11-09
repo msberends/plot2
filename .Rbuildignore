@@ -12,6 +12,5 @@
 ^README\.Rmd$
 ^README\.html$
 ^CLAUDE\.md$
-^review_and_overhaul$
 ^Rplots\.pdf$
 ^\.claude$

@@ -80,7 +80,7 @@ dollars <- function(x,
 label_taxonomy <- function(x, ...) {
   rlang::check_installed("AMR", reason = "for `label_taxonomy()`.")
   if (is.null(plot2_session$taxonomic_names)) {
-    # cached for the session, the data set has about 78,000 rows (F058)
+    # cached for the session, the data set has about 78,000 rows (#70)
     plot2_session$taxonomic_names <- list(
       higher = unique(c(AMR::microorganisms$family, AMR::microorganisms$genus)),
       epithets = unique(c(AMR::microorganisms$species, AMR::microorganisms$subspecies)))
@@ -95,7 +95,7 @@ label_taxonomy <- function(x, ...) {
                      }
                      # families and genera anywhere; species and subspecies only after a genus,
                      # an abbreviated genus such as "S.", or a species, so that ordinary words that
-                     # are also species names (such as "coli" or "group") stay upright (F058)
+                     # are also species names (such as "coli" or "group") stay upright (#70)
                      italic <- words %in% nms$higher
                      abbreviated <- grepl("^[A-Z][.]$", words)
                      for (i in seq_along(words)[-1]) {

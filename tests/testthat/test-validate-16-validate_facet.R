@@ -12,12 +12,11 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 16: validate_facet()
-# review_and_overhaul/reviews/R02_validate/16_validate_facet.md
+# 16: validate_facet() (#157)
 
 free <- function(p) unlist(facet_info(p)[c("free_x", "free_y")])
 
-test_that("16.01 facets with different maxima: free x and free y, with a message (F052)", {
+test_that("16.01 facets with different maxima: free x and free y, with a message (#64)", {
   expect_identical(free(plot2(fx_facet, x, y, facet = facet)), c(free_x = TRUE, free_y = TRUE))
   expect_plot2_message(plot2(fx_facet, x, y, facet = facet), "facet.fixed_y")
 })
@@ -72,7 +71,7 @@ test_that("16.10 facet.drop drops empty factor levels", {
   expect_identical(facet_info(plot2(d, x, y, facet = facet, facet.drop = FALSE))$n_panels, 3L)
 })
 
-test_that("16.10b an empty panel renders without R warnings, with a shared x scale (F139)", {
+test_that("16.10b an empty panel renders without R warnings, with a shared x scale (#151)", {
   d <- fx_facet
   d$facet <- factor(d$facet, levels = c("f1", "f2", "f3"))
   p <- expect_plot2(plot2(d, x, y, facet = facet, facet.drop = FALSE))

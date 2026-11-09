@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A02: plot2() arguments for directions, type and titles
-# review_and_overhaul/reviews/R05_api/A02_directions-type-titles.md
+# A02: plot2() arguments for directions, type and titles
 
 test_that("A02.01 type left blank: two numeric axes give points", {
   expect_geoms(plot2(iris, Sepal.Length, Sepal.Width), "point", exact = TRUE)

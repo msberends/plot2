@@ -24,7 +24,7 @@ validate_type <- function(type, df = NULL) {
                     font_black(" since there is no X-axis"))
     } else if (has_x(df) && is.numeric(get_x(df))) {
       if (identical(get_x_name(df), get_y_name(df))) {
-        # x and y refer to the same column, so use a histogram; compare names, not values (F074)
+        # x and y refer to the same column, so use a histogram; compare names, not values (#86)
         # see plot_message below 'since the variable ... is the only numeric variable'
         type <- "geom_histogram"
       } else {
@@ -44,7 +44,7 @@ validate_type <- function(type, df = NULL) {
                              collapse = font_black(" and ")), 
                       " contain at least three values")
       } else {
-        # otherwise: the default, normalised like `type` so that e.g. "line" and "l" work (F095)
+        # otherwise: the default, normalised like `type` so that e.g. "line" and "l" work (#107)
         type <- validate_type(getOption("plot2.default_type", "geom_col"), df = NULL)
         if (!is.null(df) && has_x(df) && has_category(df) && n_distinct(get_category(df)) == 2) {
           count_nrs <- df |>
@@ -93,7 +93,7 @@ validate_type <- function(type, df = NULL) {
     rlang::check_installed("ggbeeswarm", reason = paste0("for `type = \"", type.bak, "\"`"))
     plot2_session$valid_geoms <- NULL
   }
-  # the list of geoms is the same for the whole session (F110)
+  # the list of geoms is the same for the whole session (#122)
   valid_geoms <- plot2_session$valid_geoms
   if (is.null(valid_geoms)) {
     valid_geoms <- ls(pattern = "^geom_", envir = asNamespace("ggplot2"))
@@ -106,7 +106,7 @@ validate_type <- function(type, df = NULL) {
   }
   if (!type %in% valid_geoms) {
     # an abbreviation must be the start of a geom name, not any part of it, and must be
-    # unambiguous: "hist" is histogram, "dens" is density (a prefix of all its variants) (F031)
+    # unambiguous: "hist" is histogram, "dens" is density (a prefix of all its variants) (#43)
     candidates <- if (type == "geom_") character(0) else valid_geoms[startsWith(valid_geoms, type)]
     shortest <- candidates[which.min(nchar(candidates))]
     if (length(candidates) > 0 && all(startsWith(candidates, shortest))) {
@@ -129,7 +129,7 @@ validate_type <- function(type, df = NULL) {
 }
 
 validate_legend.position <- function(legend.position) {
-  # FALSE means no legend; numeric coordinates place it inside the plot (F050)
+  # FALSE means no legend; numeric coordinates place it inside the plot (#62)
   if (is.null(legend.position) || isFALSE(legend.position) || is.na(legend.position[1L])) {
     legend.position <- "none"
   }
@@ -156,7 +156,7 @@ validate_legend.position <- function(legend.position) {
   legend.position
 }
 
-# theme elements for a validated legend.position (F050)
+# theme elements for a validated legend.position (#62)
 legend_position_theme <- function(legend.position) {
   if (!is.null(attr(legend.position, "inside"))) {
     ggplot2::theme(legend.position = "inside", legend.position.inside = attr(legend.position, "inside"))
@@ -280,7 +280,7 @@ validate_data <- function(df,
   }
   
   if (misses_x && !has_x(df)) {
-    # only the user's columns are eligible, and not the column used for y; compare names, not values (F079)
+    # only the user's columns are eligible, and not the column used for y; compare names, not values (#91)
     eligible_cols <- colnames(df)[!startsWith(colnames(df), "_")]
     eligible_cols <- setdiff(eligible_cols, c(get_y_name(df), get_category_name(df), get_facet_name(df)))
     if (length(eligible_cols) > 0) {
@@ -333,7 +333,7 @@ validate_data <- function(df,
   }
   if (has_datalabels(df) && is_switch(get_datalabels(df), FALSE)) {
     # remove datalabels if `datalabels = FALSE`; for continuous types, plot2_exec() removes them
-    # only when `datalabels` was not given (F076)
+    # only when `datalabels` was not given (#88)
     df <- df |> select(-`_var_datalabels`)
   }
   
@@ -341,7 +341,7 @@ validate_data <- function(df,
   # so store the factor in which they change, and transform the data accordingly
   if (has_y_secondary(df)) {
     # map the range of the secondary values (including 0) linearly onto that of the primary
-    # values, also for negative values; zero ranges are not rescaled (F022)
+    # values, also for negative values; zero ranges are not rescaled (#34)
     rng_primary <- range(c(0, get_y(df)), na.rm = TRUE, finite = TRUE)
     rng_secondary <- range(c(0, get_y_secondary(df)), na.rm = TRUE, finite = TRUE)
     if (diff(rng_primary) > 0 && diff(rng_secondary) > 0) {
@@ -414,12 +414,12 @@ validate_data <- function(df,
       df <- df |> 
         mutate(`_var_datalabels` = as.double(`_var_datalabels`))
     }
-    # the labels are formatted in generate_datalabels(), on the final rows and only when drawn (F025)
+    # the labels are formatted in generate_datalabels(), on the final rows and only when drawn (#37)
   }
   
   # turn x to character if data seems to suggest so; years and months are only guessed for
   # whole numbers and for discrete or automatic types, so that e.g. a scatter plot of
-  # weights from 2000 to 2050 keeps a numeric x (F013)
+  # weights from 2000 to 2050 keeps a numeric x (#25)
   guess_discrete <- !type %in% c("geom_point", "geom_line", "geom_area", "geom_ribbon", "geom_path", "geom_step",
                                 "geom_smooth", "geom_histogram", "geom_density", "geom_polygon", "geom_rect", "geom_sf")
   if (has_x(df) &&!isTRUE(dots$x.character)) {
@@ -746,7 +746,7 @@ validate_x_scale <- function(df,
     x.limits <- c(NA_real_, NA_real_)
     plot2_env$x_lim <- x.limits
     if (is.null(x.expand)) {
-      # zoom to the data with ggplot2's usual 5% expansion (F092)
+      # zoom to the data with ggplot2's usual 5% expansion (#104)
       x.expand <- c(0.05, 0.05)
     }
   }
@@ -787,7 +787,7 @@ validate_x_scale <- function(df,
                       font_blue("x"), " scales differ by less than 25%")
         facet.fixed_x <- TRUE
       } else if (isTRUE(coeff_of_variation >= 0.25)) {
-        # report the data-dependent choice, so that readers know panels are not comparable (F052)
+        # report the data-dependent choice, so that readers know panels are not comparable (#64)
         plot2_message("Using free ", font_blue("x"), " scales per facet since the ",
                       digit_to_text(nrow(x_maxima)), " ", font_blue("x"),
                       " scales differ by 25% or more (use ", font_blue("facet.fixed_x = TRUE"),
@@ -798,7 +798,7 @@ validate_x_scale <- function(df,
   
   x_discrete <- !is.numeric(values) && !inherits(values, c("Date", "POSIXt"))
   if (!is.null(x.limits) && x_discrete && (is.character(x.limits) || is.factor(x.limits))) {
-    # discrete x: the limits are the items to show, in this order (F054)
+    # discrete x: the limits are the items to show, in this order (#66)
     x.limits <- as.character(x.limits)
     not_in_x <- setdiff(x.limits, as.character(values))
     if (length(not_in_x) > 0) {
@@ -813,7 +813,7 @@ validate_x_scale <- function(df,
       plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
     }
     if (length(x.limits) != 2) {
-      # a single value used to become a zero-width axis (F130)
+      # a single value used to become a zero-width axis (#142)
       stop("`x.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `x.limits = c(0, NA)`", call. = FALSE)
     }
     if (inherits(values, "Date")) {
@@ -858,7 +858,7 @@ validate_x_scale <- function(df,
   }
   plot2_env$x_lim <- x.limits
   if (inherits(values, "Date")) {
-    # format2() formats the labels, so that plot2's tokens (e.g. quarters) and plot2.language apply (F003)
+    # format2() formats the labels, so that plot2's tokens (e.g. quarters) and plot2.language apply (#15)
     scale_x_date(position = x.position,
                  date_breaks = x.date_breaks,
                  expand = x.expand,
@@ -995,7 +995,7 @@ validate_y_scale <- function(df,
     y.limits <- c(NA_real_, NA_real_)
     plot2_env$y_lim <- y.limits
     if (is.null(y.expand)) {
-      # zoom to the data with ggplot2's usual 5% expansion (F092)
+      # zoom to the data with ggplot2's usual 5% expansion (#104)
       y.expand <- c(0.05, 0.05)
     }
   }
@@ -1012,7 +1012,7 @@ validate_y_scale <- function(df,
     }
   }
   if (!is.null(y.limits) && !is.function(y.limits) && length(y.limits) != 2) {
-    # a single value used to become a zero-width axis (F130)
+    # a single value used to become a zero-width axis (#142)
     stop("`y.limits` must be of length 2, use `NA` for a limit that follows the data, e.g. `y.limits = c(0, NA)`", call. = FALSE)
   }
   
@@ -1040,7 +1040,7 @@ validate_y_scale <- function(df,
         facet.fixed_y <- TRUE
         plot2_env$facet.fixed_y <- TRUE
       } else if (isTRUE(coeff_of_variation >= 0.25)) {
-        # report the data-dependent choice, so that readers know panels are not comparable (F052)
+        # report the data-dependent choice, so that readers know panels are not comparable (#64)
         plot2_message("Using free ", font_blue("y"), " scales per facet since the ",
                       digit_to_text(nrow(y_maxima)), " ", font_blue("y"),
                       " scales differ by 25% or more (use ", font_blue("facet.fixed_y = TRUE"),
@@ -1101,7 +1101,7 @@ validate_y_scale <- function(df,
         plot2_message("Using ", font_blue("y.percent_break =", y.percent_break),
                       " (", y.percent_break * 100, "%) to keep a maximum of ~10 labels")
       }
-      # an explicit y.percent_break is kept as given (F094)
+      # an explicit y.percent_break is kept as given (#106)
       if (isTRUE(misses_y.percent_break) && !all(is.na(y.limits)) && (y.percent_break >= max(y.limits, na.rm = TRUE) || labels_n <= 3)) {
         y.percent_break.bak <- y.percent_break
         y.percent_break <- max(y.limits, na.rm = TRUE) / 6.5
@@ -1155,14 +1155,14 @@ validate_y_scale <- function(df,
     } else {
       function(x, dec = decimal.mark, big = big.mark, ...) {
         # scientific notation only for very large or very small values, so that e.g. population
-        # counts and costs keep big marks (F063)
+        # counts and costs keep big marks (#75)
         nonzero <- abs(x[!is.na(x) & is.finite(x) & x != 0])
         is_scientific <- length(nonzero) > 0 && (max(nonzero) >= 1e9 || min(nonzero) < 1e-4)
         is_unique <- function(r) {
           lbls <- format2(x[!is.na(x)], round = r)
           length(unique(lbls)) == length(lbls)
         }
-        # labels that are equal after rounding get more decimals first (F063)
+        # labels that are equal after rounding get more decimals first (#75)
         digits <- 2
         while (!isTRUE(is_scientific) && !is_unique(digits) && digits < 6) {
           digits <- digits + 1
@@ -1217,7 +1217,7 @@ validate_y_scale <- function(df,
     } else {
       function(x, min_val = min_value, ...) {
         if (!is.numeric(x) || all(is.na(x))) {
-          # no data on this axis, e.g. when a stat dropped all groups (F131)
+          # no data on this axis, e.g. when a stat dropped all groups (#143)
           return(c(0, 1))
         }
         if (all(x == 0, na.rm = TRUE)) {
@@ -1262,7 +1262,7 @@ validate_y_scale <- function(df,
     br <- y_secondary.breaks
     if (!is.null(plot2_env$y_secondary_map)) {
       # we previously mapped this variable onto the range of the primary Y-axis,
-      # so now map back for the labels and the breaks (F022)
+      # so now map back for the labels and the breaks (#34)
       slope <- plot2_env$y_secondary_map[["slope"]]
       intercept <- plot2_env$y_secondary_map[["intercept"]]
       fun <- function(x) (x - intercept) / slope
@@ -1465,7 +1465,7 @@ validate_category_scale <- function(values,
       # for dates, take the outer range
       c(min(values, na.rm = TRUE) - 1, max(values, na.rm = TRUE) + 1)
     } else {
-      # the data range, rounded outwards to pretty values, e.g. 12 to 87 gives 0 to 100 (F059)
+      # the data range, rounded outwards to pretty values, e.g. 12 to 87 gives 0 to 100 (#71)
       rng <- range(values, na.rm = TRUE, finite = TRUE)
       range(pretty(rng))
     }
@@ -1571,7 +1571,7 @@ validate_category_scale <- function(values,
       mid_point <- as.double(category.midpoint)
       if (is.null(category.limits) && is.numeric(args$limits) && !anyNA(args$limits)) {
         # a diverging scale is symmetric around its midpoint, so that equal distances to the
-        # midpoint get equally strong colours (F059)
+        # midpoint get equally strong colours (#71)
         half <- max(abs(args$limits - mid_point))
         args$limits <- mid_point + c(-half, half)
       }
@@ -1639,7 +1639,7 @@ generate_geom <- function(type,
     # areas must stay at their x values: overlay them (dodging shifts them sideways)
     position <- "identity"
   } else if (!has_category(df)) {
-    # nothing to dodge; position_dodge2() would also warn on empty facet panels (F139)
+    # nothing to dodge; position_dodge2() would also warn on empty facet panels (#151)
     position <- "identity"
   } else {
     # small whitespace between columns:
@@ -1714,7 +1714,7 @@ generate_geom <- function(type,
                                       outlier.alpha = 0.75,
                                       width = width,
                                       linewidth = linewidth, # line width of whole box
-                                      # median thicker than the box; `fatten` is deprecated since ggplot2 4.0.0 (F078)
+                                      # median thicker than the box; `fatten` is deprecated since ggplot2 4.0.0 (#90)
                                       median.linewidth = (linewidth %or% 0.5) * ifelse((linewidth %or% 0.5) < 1, 1.5, (linewidth %or% 0.5) + 0.5),
                                       na.rm = na.rm),
                                  list(colour = cols$colour)[!has_category(df) & !isTRUE(original_colours)],
@@ -1802,7 +1802,7 @@ generate_geom <- function(type,
   } else {
     # try to put some arguments into the requested geom
     plot2_caution(font_blue("type = \"", type, "\"", collapse = ""), " is currently only loosely supported")
-    # pass only what this geom accepts as a parameter or aesthetic (F060)
+    # pass only what this geom accepts as a parameter or aesthetic (#72)
     probe <- tryCatch(geom_fn(), error = function(e) NULL)
     accepted <- if (inherits(probe, "LayerInstance")) {
       unique(c(names(formals(geom_fn)),
@@ -1938,7 +1938,7 @@ validate_colour <- function(df,
        colour_fill = get_colour(colour_fill))
 }
 
-# a clear error for sizes that ggplot2 would only reject when drawing (F138)
+# a clear error for sizes that ggplot2 would only reject when drawing (#150)
 check_non_negative <- function(x, name) {
   if (!is.null(x) && (!is.numeric(x) || length(x) == 0 || anyNA(x) || any(x < 0))) {
     stop("`", name, "` must be a non-negative number", call. = FALSE)
@@ -2013,7 +2013,7 @@ validate_markdown <- function(markdown,
   } else {
     df_titles <- NULL
   }
-  # check each title on its own, so that patterns cannot match across titles (F018)
+  # check each title on its own, so that patterns cannot match across titles (#30)
   txt <- c(tryCatch(as.character(x.title), error = function(e) ""),
            tryCatch(as.character(y.title), error = function(e) ""),
            tryCatch(as.character(legend.title), error = function(e) ""),
@@ -2043,7 +2043,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   )
   
   # support for calculations, e.g. `title = paste("Total number =", n(), "rows")`;
-  # a constant, such as a plain text, needs no evaluation over the data (F025)
+  # a constant, such as a plain text, needs no evaluation over the data (#37)
   title_quo <- rlang::enquo(x)
   if (!is.null(df) && !rlang::quo_is_symbol(title_quo) && !rlang::quo_is_call(title_quo)) {
     df <- NULL
@@ -2072,7 +2072,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
   }
   
   out <- gsub("<br>", "\n", out, fixed = TRUE)
-  # strip only markup, so that accented, Greek, Cyrillic or CJK characters still count (F056)
+  # strip only markup, so that accented, Greek, Cyrillic or CJK characters still count (#68)
   # plotmath between $...$ is not drawn as its source text, so it does not count for the length
   out_plain <- gsub("<[^>]+>|[*_^{}$]", "", gsub("\\$[^$]*\\$", "", out))
   
@@ -2107,7 +2107,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
 
 validate_theme <- function(...) {
   # the theme only depends on its arguments, the registered colours and the plot2 options, so
-  # it is built once per combination and session (F110); a theme object is never cached, so
+  # it is built once per combination and session (#122); a theme object is never cached, so
   # that its validation messages are always shown
   args <- list(...)
   if (!is.null(args$theme) && !is.character(args$theme)) {
@@ -2182,7 +2182,7 @@ validate_theme_build <- function(theme,
   if (!is.null(theme) && !isTRUE(attr(theme, "complete"))) {
     # a partial theme, e.g. theme(panel.background = element_blank()), is added on top of the
     # default theme at the end, so that all elements exist while they are edited below and
-    # the user's elements win (F032)
+    # the user's elements win (#44)
     user_partial <- theme
     theme <- theme_minimal2()
   }
@@ -2235,10 +2235,10 @@ validate_theme_build <- function(theme,
     theme$axis.title.y.right$face <- "bold"
   }
   
-  # the x axis labels are on the vertical axis after coord_flip() (F051)
+  # the x axis labels are on the vertical axis after coord_flip() (#63)
   x_text <- ifelse(isTRUE(horizontal), "axis.text.y", "axis.text.x")
   # rotated labels are justified by guide_axis(angle = ) in plot2_exec(), which anchors them at
-  # their ticks for every angle and axis position (F142); only a user-set x.label_align uses the theme
+  # their ticks for every angle and axis position (#154); only a user-set x.label_align uses the theme
   if (x.label_angle != 0 && !is.null(x.label_align)) {
     theme[[x_text]]$angle <- x.label_angle
   }
@@ -2268,7 +2268,7 @@ validate_theme_build <- function(theme,
     theme$strip.text$face <- "plain"
   }
   theme$strip.text$margin <- margin(t = facet.margin, b = facet.margin / 2)
-  # a plain number, as for all text sizes in ggplot2 (F032)
+  # a plain number, as for all text sizes in ggplot2 (#44)
   theme$strip.text$size <- as.double(facet.size)
   
   # set the font family and font size, taking text_factor into account
@@ -2277,7 +2277,7 @@ validate_theme_build <- function(theme,
     if (inherits(el, "element_text")) {
       el$family <- font
       # absolute sizes are multiplied; rel() sizes are relative to their parent element, so they
-      # scale through inheritance and stay as they are (F057)
+      # scale through inheritance and stay as they are (#69)
       if (text_factor != 1 && !is.null(el$size) && is.numeric(el$size) && !inherits(el$size, "rel")) {
         el$size <- as.double(el$size) * text_factor
       }
@@ -2355,7 +2355,7 @@ validate_facet <- function(df,
   if (isTRUE(facet.repeat_labels_x) && !isTRUE(facet.drop) && is.factor(facet_values) &&
       !all(levels(facet_values) %in% facet_values) && has_x(df) && !is.numeric(get_x(df)) &&
       !type %in% c("geom_sf", "geom_spider")) {
-    # a free discrete scale on an empty panel makes ggplot2 warn when drawing (F139)
+    # a free discrete scale on an empty panel makes ggplot2 warn when drawing (#151)
     plot2_message("Using a shared x scale (", font_blue("facet.repeat_labels_x = FALSE"), ") since ",
                   font_blue("facet.drop = FALSE"), " leaves empty panels")
     facet.repeat_labels_x <- FALSE
@@ -2381,7 +2381,7 @@ validate_facet <- function(df,
     scales <- "fixed"
   }
   
-  # refer to the readable column, so that the facet needs no editing afterwards (F037)
+  # refer to the readable column, so that the facet needs no editing afterwards (#49)
   facet_var <- vars(!!rlang::sym(get_facet_name(df)))
   
   if (any(is.na(get_facet(df)))) {
@@ -2456,8 +2456,8 @@ generate_datalabels <- function(p,
     return(p)
   }
   
-  # format only now: on the final rows, and only when the labels are drawn (F025);
-  # %p is relative to the group set in datalabels.percent_by (F028)
+  # format only now: on the final rows, and only when the labels are drawn (#37);
+  # %p is relative to the group set in datalabels.percent_by (#40)
   p$data$`_var_datalabels` <- format_datalabels(p$data$`_var_datalabels`,
                                                 datalabels.round = datalabels.round,
                                                 datalabels.format = datalabels.format,
@@ -2501,7 +2501,7 @@ generate_datalabels <- function(p,
   label_vertical <- -0.1
   # rotated text (or any text in a horizontal plot) is anchored exactly at the end of the bar,
   # with a fixed padding inside the label, so that the gap is the same for short and long
-  # labels; a relative offset would grow with the length of the label (F140)
+  # labels; a relative offset would grow with the length of the label (#152)
   pad_side <- datalabels_pad_side(angle = datalabels.angle,
                                   horizontal = horizontal,
                                   reversed = transform_name(y.transform) == "reverse")
@@ -2561,7 +2561,7 @@ generate_datalabels <- function(p,
     # set background label
     do.call(geom_label_fn,
             # the padded label is computed from the data column, not from a vector of this
-            # function, so that it follows the layer data (F055)
+            # function, so that it follows the layer data (#67)
             args = c(list(mapping = if (!is.null(pad_side) && !is_offset_free) {
                             aes(label = datalabels_pad(`_var_datalabels`, side = pad_side))
                           } else {
@@ -2663,7 +2663,7 @@ validate_font <- function(font) {
            call. = FALSE)
     }
   }
-  # showtext is switched on only while the plot is drawn, see print.plot2_font() (F011)
+  # showtext is switched on only while the plot is drawn, see print.plot2_font() (#23)
   rlang::check_installed(c("showtext", "showtextdb", "sysfonts"), reason = "to use custom fonts")
   
   font.bak <- font
@@ -2681,7 +2681,7 @@ validate_font <- function(font) {
   fonts <- plot2_session$fonts[which(tolower(plot2_session$fonts$family) == trimws(tolower(font)[1L])), , drop = FALSE]
   
   if (NROW(fonts) == 0) {
-    # not installed: use the cached copy, or download it from Google Fonts into the user cache (F011)
+    # not installed: use the cached copy, or download it from Google Fonts into the user cache (#23)
     if (!font_from_cache(font.bak)) {
       if (font_from_google(font.bak)) {
         plot2_message("Downloaded font ", font_blue(font_url(paste0("https://fonts.google.com/specimen/", gsub(" ", "+", font.bak)), font.bak)),
@@ -2728,7 +2728,7 @@ complete_direction <- function(df, direction, has_direction, filler) {
     fill_list <- list(`_var_y` = filler,
                       y_name = filler)
     names(fill_list)[2] <- get_y_name(df)
-    # the values to complete, per class (F048)
+    # the values to complete, per class (#60)
     if (is.factor(direction_data)) {
       values <- factor(levels(direction_data), levels = levels(direction_data))
     } else if (is.character(direction_data) || is.logical(direction_data)) {
@@ -2818,7 +2818,7 @@ sort_data <- function(values,
   }
   
   # sort as for a vertical plot; for a horizontal plot, the levels are reversed at the end,
-  # so that the values read from top to bottom as they would read from left to right (F141)
+  # so that the values read from top to bottom as they would read from left to right (#153)
   out <- sort_data_vertical(values = values,
                             original_values = original_values,
                             sort_method = sort_method,
@@ -2939,7 +2939,7 @@ set_max_items <- function(df,
   
   # helper function: n_max is the number of items including the item for the rest,
   # %n is the number of values merged into that item and %p their share of the
-  # total of y (F062), or of the rows when y is not numeric
+  # total of y (#74), or of the rows when y is not numeric
   set_max <- function(values, n_max, txt, horizontal) {
     if (is.null(n_max) || is.infinite(n_max)) {
       return(values)
@@ -3039,14 +3039,14 @@ summarise_data <- function(df,
   if (!is.null(category)) df$`_var_category` <- df[, category, drop = TRUE]
   if (!is.null(facet)) df$`_var_facet` <- df[, facet, drop = TRUE]
   if (isTRUE(has_datalbls)) {
-    # formatted in generate_datalabels() (F025)
+    # formatted in generate_datalabels() (#37)
     df$`_var_datalabels` <- df$`_var_y`
   }
   df
 }
 
 summarise_single <- function(values, fn) {
-  # apply summarise_function to one group and check that it returns one value (F053)
+  # apply summarise_function to one group and check that it returns one value (#65)
   out <- fn(values)
   if (length(out) != 1) {
     stop("'summarise_function' must return a single value per group, but returned ", length(out),
@@ -3091,7 +3091,7 @@ format_datalabels <- function(datalabels,
              mode(datalabels) == "numeric" &&
              !inherits(datalabels, c("factor", "Date", "POSIXt"))) {
     datalabels <- as.double(datalabels)
-    # fill in the placeholders of the one format for all labels at once, not row by row (F025)
+    # fill in the placeholders of the one format for all labels at once, not row by row (#37)
     tokens <- regmatches(datalabels.format, gregexpr("%n|%p", datalabels.format), invert = NA)[[1]]
     values <- list()
     if ("%p" %in% tokens) {
@@ -3117,18 +3117,18 @@ format_datalabels <- function(datalabels,
   datalabels_out
 }
 
-# whole numbers from 2000 to 2050 (F013)
+# whole numbers from 2000 to 2050 (#25)
 looks_like_years <- function(x) {
   x <- x[!is.na(x)]
   is.numeric(x) && length(x) > 0 && all(x == round(x)) && all(x >= 2000 & x <= 2050)
 }
 
-# exactly the whole numbers 1 to 12 (F013)
+# exactly the whole numbers 1 to 12 (#25)
 looks_like_months <- function(x) {
   is.numeric(x) && isTRUE(all.equal(sort(unique(as.double(x[!is.na(x)]))), as.double(seq_len(12))))
 }
 
-# Groups within which "%p" datalabels sum to 100% (F028). "x" means each x value within its
+# Groups within which "%p" datalabels sum to 100% (#40). "x" means each x value within its
 # facet, so that stacked or dodged bars of one x value sum to 100%; without a category every
 # x value has a single bar, so then "x" is the same as "facet".
 percent_group <- function(df, percent_by = "x") {
@@ -3153,7 +3153,7 @@ percent_group <- function(df, percent_by = "x") {
   interaction(lapply(cols, function(col) ifelse(is.na(df[[col]]), "\001NA", as.character(df[[col]]))), drop = TRUE)
 }
 
-# the function of a validated geom type, from ggplot2 or ggbeeswarm (F040)
+# the function of a validated geom type, from ggplot2 or ggbeeswarm (#52)
 geom_function <- function(type) {
   if (type %in% c("geom_beeswarm", "geom_quasirandom")) {
     rlang::check_installed("ggbeeswarm")
@@ -3163,7 +3163,7 @@ geom_function <- function(type) {
   }
 }
 
-# on which side of a datalabel the bar is, or NULL for unrotated labels above the bar (F140)
+# on which side of a datalabel the bar is, or NULL for unrotated labels above the bar (#152)
 datalabels_pad_side <- function(angle, horizontal, reversed) {
   angle <- angle %% 360
   if (isTRUE(horizontal)) {
@@ -3183,14 +3183,14 @@ datalabels_pad_side <- function(angle, horizontal, reversed) {
   if (starts_at_bar) "start" else "end"
 }
 
-# a fixed gap between bar and datalabel: padding on the side of the bar (F140)
+# a fixed gap between bar and datalabel: padding on the side of the bar (#152)
 datalabels_pad <- function(x, side, pad = "  ") {
   ifelse(is.na(x),
          NA_character_,
          if (side == "start") paste0(pad, x) else paste0(x, pad))
 }
 
-# Enlarge the upper expansion of the value axis so that rotated datalabels fit (F143). The
+# Enlarge the upper expansion of the value axis so that rotated datalabels fit (#155). The
 # length of a label on the page is estimated from its number of characters and the label size,
 # for a typical panel height; the room is only ever increased.
 fit_rotated_datalabels <- function(p, type, angle, size, horizontal, stacked, y.transform,

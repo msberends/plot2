@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A05: plot2() arguments for data handling, datalabels, geoms and appearance
-# review_and_overhaul/reviews/R05_api/A05_data-labels-geoms-appearance.md
+# A05: plot2() arguments for data handling, datalabels, geoms and appearance
 
 d30 <- data.frame(x = paste0("v", sprintf("%02d", 1:30)), y = 1:30)
 

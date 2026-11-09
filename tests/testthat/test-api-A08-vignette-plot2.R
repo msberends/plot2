@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A08: vignette 'An Introduction to plot2()'
-# review_and_overhaul/reviews/R05_api/A08_vignette-plot2.md
+# A08: vignette 'An Introduction to plot2()'
 
 test_that("A08.01 every chunk of the main vignette runs without error (font chunks excluded)", {
   skip_on_cran()

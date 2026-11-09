@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M08: theme_minimal2() and package options
-# review_and_overhaul/reviews/R04_modules/M08_theme-and-options.md
+# M08: theme_minimal2() and package options
 
 el <- function(t, name) ggplot2::calc_element(name, ggplot2::complete_theme(t))
 
@@ -45,7 +44,7 @@ test_that("M08.04 + theme(...) merges with plot2's settings", {
   expect_equal(as.numeric(S7::prop(el(t, "plot.title"), "size")), 13)
 })
 
-test_that("M08.05 theme_minimal2(...) merges as well (F087)", {
+test_that("M08.05 theme_minimal2(...) merges as well (#99)", {
   t <- theme_minimal2(plot.title = ggplot2::element_text(face = "italic"))
   expect_equal(as.numeric(S7::prop(el(t, "plot.title"), "size")), 13)
 })

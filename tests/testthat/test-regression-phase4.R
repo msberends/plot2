@@ -12,23 +12,23 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Regression tests for Phase 4 findings (input handling and parsing).
-# Each test_that() starts with the finding ID; see review_and_overhaul/findings/.
+# Regression tests for Phase 4 issues (input handling and parsing).
+# Each test_that() starts with the GitHub issue number.
 
-test_that("F017 like() is case-insensitive without changing the meaning of the pattern", {
+test_that("#29 like() is case-insensitive without changing the meaning of the pattern", {
   expect_true(plot2:::like("ABC", "\\D"))
   expect_false(plot2:::like("123", "\\D"))
   expect_true(plot2:::like("abc", "^A"))
   expect_identical(plot2:::like("x", c("X", "y")), c(TRUE, FALSE))
 })
 
-test_that("F017 column names with regex characters can be plotted", {
+test_that("#29 column names with regex characters can be plotted", {
   d <- data.frame(g = c("a", "b"), `rate (%)` = 1:2, `n[1` = 3:4, check.names = FALSE)
   p <- expect_plot2(plot2(d, g, c(`rate (%)`, `n[1`)))
   expect_setequal(as.character(scale_breaks(p, "fill")), c("rate (%)", "n[1"))
 })
 
-test_that("F018 apostrophes and backslashes in markdown text are kept", {
+test_that("#30 apostrophes and backslashes in markdown text are kept", {
   expect_identical(deparse(md_to_expression("Children's *E. coli* isolates")[[1]]),
                    deparse(quote(paste("Children's ", italic("E. coli"), " isolates"))))
   expect_identical(deparse(md_to_expression("it's $omega$")[[1]]),
@@ -38,21 +38,21 @@ test_that("F018 apostrophes and backslashes in markdown text are kept", {
   expect_true(is.expression(ggplot2::get_labs(p)$title))
 })
 
-test_that("F018 a single or currency $ is text, paired $...$ is plotmath", {
+test_that("#30 a single or currency $ is text, paired $...$ is plotmath", {
   df <- data.frame(g = c("a", "b", "c"), v = 1:3)
   expect_type(ggplot2::get_labs(plot2(df, g, v, title = "Costs in $ per patient"))$title, "character")
   expect_type(ggplot2::get_labs(plot2(df, g, v, title = "From $5 to $10"))$title, "character")
   expect_identical(deparse(md_to_expression("$a$ and $b$")[[1]]), deparse(quote(paste(a, " and ", b))))
 })
 
-test_that("F018 markdown is not detected across titles", {
+test_that("#30 markdown is not detected across titles", {
   expect_false(plot2:::validate_markdown(NULL, x.title = "a*b", y.title = "c*d", legend.title = NULL,
                                          title = NULL, subtitle = NULL, tag = NULL, caption = NULL))
   expect_true(plot2:::validate_markdown(NULL, x.title = "*ab*", y.title = NULL, legend.title = NULL,
                                         title = NULL, subtitle = NULL, tag = NULL, caption = NULL))
 })
 
-test_that("F019 formula terms are expressions, evaluated in the formula's environment", {
+test_that("#31 formula terms are expressions, evaluated in the formula's environment", {
   k <- 2
   p <- expect_plot2(plot2(I(mpg * k) ~ I(hp + 1), data = mtcars))
   expect_equal(sort(layer_df(p, "point")$y), sort(mtcars$mpg * 2))
@@ -60,23 +60,23 @@ test_that("F019 formula terms are expressions, evaluated in the formula's enviro
   expect_labels(p, x = "I(hp + 1)", y = "I(mpg * k)")
 })
 
-test_that("F019 `|` in a formula gives the facet, and too many terms error clearly", {
+test_that("#31 `|` in a formula gives the facet, and too many terms error clearly", {
   m <- transform(mtcars, cyl = as.character(cyl), am = as.character(am))
   p <- expect_plot2(plot2(mpg ~ wt + cyl | am, data = m))
   expect_facets(p, n_panels = 2L)
   expect_error(plot2(mpg ~ wt + cyl + am + gear, data = m), "at most")
 })
 
-test_that("F081 a formula after a pipe keeps the other arguments", {
+test_that("#93 a formula after a pipe keeps the other arguments", {
   p <- expect_plot2(mtcars |> plot2(mpg ~ wt, title = "Fuel"))
   expect_labels(p, x = "wt", y = "mpg", title = "Fuel")
 })
 
-test_that("F020 `data` outside formula notation errors clearly", {
+test_that("#32 `data` outside formula notation errors clearly", {
   expect_error(plot2(iris, Species, Sepal.Length, data = mtcars), "only used in formula notation")
 })
 
-test_that("F031 types match exactly or by an unambiguous start, otherwise error with suggestions", {
+test_that("#43 types match exactly or by an unambiguous start, otherwise error with suggestions", {
   expect_identical(plot2:::validate_type("hist"), "geom_histogram")
   expect_identical(plot2:::validate_type("dens"), "geom_density")
   expect_identical(plot2:::validate_type("seg"), "geom_segment")
@@ -87,7 +87,7 @@ test_that("F031 types match exactly or by an unambiguous start, otherwise error 
   expect_error(plot2:::validate_type("ine"), "invalid")
 })
 
-test_that("F013 years and months become discrete only for discrete or automatic types and whole numbers", {
+test_that("#25 years and months become discrete only for discrete or automatic types and whole numbers", {
   years <- data.frame(year = 2015:2024, n = 1:10)
   expect_identical(axis_class(plot2(years, year, n), "x"), "discrete")
   expect_identical(axis_class(plot2(years, year, n, type = "col"), "x"), "discrete")
@@ -98,7 +98,7 @@ test_that("F013 years and months become discrete only for discrete or automatic 
   expect_true(plot2:::looks_like_months(c(1:12, NA)))
 })
 
-test_that("F028 %p datalabels sum to 100% per x value by default, or per datalabels.percent_by", {
+test_that("#40 %p datalabels sum to 100% per x value by default, or per datalabels.percent_by", {
   d <- data.frame(x = rep(c("a", "b"), each = 2), c = rep(c("p", "q"), 2), f = "z", y = c(1, 3, 2, 2))
   pct <- function(p) as.double(sub("%", "", datalabels_of(p))) / 100
   p <- expect_plot2(plot2(d, x, y, c, datalabels.format = "%p", stacked = TRUE))
@@ -114,7 +114,7 @@ test_that("F028 %p datalabels sum to 100% per x value by default, or per datalab
   expect_error(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "row"), "must be")
 })
 
-test_that("F022 the secondary axis maps the full range, also for zero and negative values", {
+test_that("#34 the secondary axis maps the full range, also for zero and negative values", {
   sec_labels <- function(p) ggplot2::ggplot_build(p)$layout$panel_params[[1]]$y.sec$get_labels()
   d <- data.frame(x = c("a", "b", "c"), y = c(10, 20, 30), z = c(0, 0, 0))
   expect_plot2(plot2(d, x, y, y_secondary = z))
@@ -125,7 +125,7 @@ test_that("F022 the secondary axis maps the full range, also for zero and negati
   expect_equal(range(layer_df(p, "line")$y), c(0, 30))
 })
 
-test_that("F068 the secondary series of a column plot is a line with points in the secondary colour", {
+test_that("#80 the secondary series of a column plot is a line with points in the secondary colour", {
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   p <- expect_plot2(plot2(df, x, y, y_secondary = z))
   expect_geoms(p, c("bar", "line", "point"))
@@ -141,7 +141,7 @@ test_that("F068 the secondary series of a column plot is a line with points in t
   expect_geoms(plot2(df, x, y, y_secondary = z, type = "point"), c("point", "point"), exact = TRUE)
 })
 
-test_that("F050 legend.position accepts FALSE, \"inside\" and coordinates", {
+test_that("#62 legend.position accepts FALSE, \"inside\" and coordinates", {
   d <- data.frame(g = c("a", "b"), v = 1:2, c = c("x", "y"))
   expect_identical(legend_position(expect_plot2(plot2(d, g, v, c, legend.position = FALSE))), "none")
   p <- expect_plot2(plot2(d, g, v, c, legend.position = c(0.9, 0.8)))
@@ -153,13 +153,13 @@ test_that("F050 legend.position accepts FALSE, \"inside\" and coordinates", {
   expect_error(plot2(d, g, v, c, legend.position = c(2, 1)), "between 0 and 1")
 })
 
-test_that("F052 the data-dependent choice of facet scales is reported", {
+test_that("#64 the data-dependent choice of facet scales is reported", {
   expect_plot2_message(plot2(admitted_patients, hospital, n(), facet = ward), "Using free y scales per facet", type = "info")
   d <- data.frame(x = rep(c("a", "b"), 2), f = rep(c("p", "q"), each = 2), y = c(10, 11, 10, 12))
   expect_plot2_message(plot2(d, x, y, facet = f), "facet.fixed_y = TRUE", type = "info")
 })
 
-test_that("F063 scientific notation only from 1e9 or below 1e-4, otherwise big marks or more decimals", {
+test_that("#75 scientific notation only from 1e9 or below 1e-4, otherwise big marks or more decimals", {
   lab <- function(v) axis_labels(plot2(data.frame(g = c("a", "b"), v = v), g, v), "y")
   expect_true(all(grepl("^[0-9 ]+$", lab(c(500000, 2500000)))))
   expect_true(any(grepl("10^9", lab(c(5e8, 2.5e9)), fixed = TRUE)))
@@ -167,7 +167,7 @@ test_that("F063 scientific notation only from 1e9 or below 1e-4, otherwise big m
   expect_true("0.001" %in% lab(c(0.001, 0.005)))
 })
 
-test_that("F032 a partial theme is added on top of the default theme and wins", {
+test_that("#44 a partial theme is added on top of the default theme and wins", {
   d <- data.frame(g = c("a", "b", "c"), v = 1:3)
   p <- expect_plot2(plot2(d, g, v, theme = ggplot2::theme(panel.background = ggplot2::element_rect(fill = "pink"))))
   expect_identical(theme_el(p, "panel.background")$fill, "pink")
@@ -176,7 +176,7 @@ test_that("F032 a partial theme is added on top of the default theme and wins", 
   expect_type(theme_el(plot2(d, g, v, facet = g), "strip.text")$size, "double")
 })
 
-test_that("F057 text_factor multiplies every text size exactly", {
+test_that("#69 text_factor multiplies every text size exactly", {
   els <- c("axis.text.x", "axis.title.y", "plot.title", "legend.text", "strip.text")
   sizes <- function(p) vapply(els, function(el) theme_el(p, el)$size, double(1))
   for (th in c("theme_minimal2", "theme_bw")) {
@@ -185,14 +185,14 @@ test_that("F057 text_factor multiplies every text size exactly", {
   }
 })
 
-test_that("F055 the datalabel background follows the layer data", {
+test_that("#67 the datalabel background follows the layer data", {
   p <- plot2(data.frame(g = c("a", "b", "c"), v = 1:3), g, v)
   p$data <- data.frame(g = c("a", "b"), v = 4:5, datalabels = c("4", "5"))
   b <- ggplot2::ggplot_build(p)
   expect_identical(b$data[[1]]$label, c("4-", "5-"))
 })
 
-test_that("F040 add_type() adds a layer when data is given, and warns when there is no data at all", {
+test_that("#52 add_type() adds a layer when data is given, and warns when there is no data at all", {
   d <- data.frame(x = 1:3, y = 1:3)
   p <- ggplot2::ggplot() + ggplot2::geom_point(ggplot2::aes(x, y), data = d)
   expect_length(add_type(p, type = "line", mapping = ggplot2::aes(x, y), data = d)$layers, 2L)
@@ -203,7 +203,7 @@ test_that("F040 add_type() adds a layer when data is given, and warns when there
   expect_s3_class(p3$layers[[length(p3$layers)]]$position, "PositionBeeswarm")
 })
 
-test_that("F088 invalid colours are replaced one by one with a warning; registration is strict and names are case-insensitive", {
+test_that("#100 invalid colours are replaced one by one with a warning; registration is strict and names are case-insensitive", {
   expect_warning(x <- get_colour(c(a = "red", b = "nope", c = "blue")), "nope", class = "plot2_warning")
   expect_identical(names(x), c("a", "b", "c"))
   expect_identical(as.character(unname(x)), c("#FF0000", "#595959", "#0000FF"))
@@ -213,7 +213,7 @@ test_that("F088 invalid colours are replaced one by one with a warning; registra
   expect_identical(as.character(get_colour("TEST_RED")), "#AA0000")
 })
 
-test_that("F059 numeric category limits are the data range rounded to pretty values; diverging scales are symmetric", {
+test_that("#71 numeric category limits are the data range rounded to pretty values; diverging scales are symmetric", {
   lim <- function(...) scale_of(plot2(...), "colour")$get_limits()
   d <- function(v) data.frame(x = seq_along(v), y = 1, c = v)
   expect_equal(lim(d(c(12, 50, 87)), x, y, c, type = "point"), c(0, 100))
@@ -222,7 +222,7 @@ test_that("F059 numeric category limits are the data range rounded to pretty val
                    colour = c("blue", "white", "red"), category.midpoint = 0), c(-0.6, 0.6))
 })
 
-test_that("F130 limits must be of length 2", {
+test_that("#142 limits must be of length 2", {
   d <- data.frame(x = c("a", "b", "c"), y = c(10, 50, 100))
   expect_error(plot2(d, x, y, y.limits = 50), "must be of length 2")
   expect_error(plot2(data.frame(x = 1:3, y = 1:3), x, y, x.limits = 2), "must be of length 2")

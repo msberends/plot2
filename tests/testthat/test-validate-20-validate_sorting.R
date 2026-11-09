@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 20: validate_sorting()
-# review_and_overhaul/reviews/R02_validate/20_validate_sorting.md
+# 20: validate_sorting() (#157)
 
 srt <- data.frame(x = c("b", "A10", "c", "A2"), y = c(5, 1, 9, 3))
 srt_fct <- transform(srt, x = factor(x, levels = c("c", "A2", "b", "A10")))
@@ -42,7 +41,7 @@ test_that("20.01 every accepted spelling gives the documented order", {
   }
 })
 
-test_that("20.02 horizontal plots read from top to bottom in the same order (F141)", {
+test_that("20.02 horizontal plots read from top to bottom in the same order (#153)", {
   for (nm in names(expected)) {
     expect_identical(read_order(srt, as_sort(nm), horizontal = TRUE), expected[[nm]], label = paste0("x.sort = ", nm, ", horizontal"))
   }

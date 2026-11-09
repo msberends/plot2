@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E14: restoring the mapping and returning the plot
-# review_and_overhaul/reviews/R03_plot2_exec/E14_restore-mapping-and-return.md
+# E14: restoring the mapping and returning the plot
 
 all_mapping_text <- function(p) {
   p <- plot_of(p)
@@ -36,7 +35,7 @@ test_that("E14.02 p$data has no internal direction columns", {
   expect_true(all(c("x", "y", "facet") %in% colnames(p$data)))
 })
 
-test_that("E14.03 no internal columns or mappings at all (F069)", {
+test_that("E14.03 no internal columns or mappings at all (#81)", {
   p <- plot2(fx_counts, group, n)
   expect_false(any(startsWith(colnames(p$data), "_")))
   expect_false(any(grepl("_var_", all_mapping_text(p))))

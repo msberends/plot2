@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Visual snapshots, one per plot type (F038). Skipped on CRAN and without vdiffr.
+# Visual snapshots, one per plot type (#50). Skipped on CRAN and without vdiffr.
 # After an intended visual change, review with testthat::snapshot_review().
 
 test_that("SNAP.01 column, stacked, horizontal and percentage bars", {

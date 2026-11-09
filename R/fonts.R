@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Fonts (F011) ------------------------------------------------------------------
+# Fonts (#23) ------------------------------------------------------------------
 #
 # Custom fonts are rendered with 'showtext'. Fonts that are not installed are
 # downloaded from Google Fonts into the user cache, tools::R_user_dir("plot2",

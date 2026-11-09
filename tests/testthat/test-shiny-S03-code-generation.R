@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S03: generating the plot2() code
-# review_and_overhaul/reviews/R07_shiny/S03_code-generation.md
+# S03: generating the plot2() code
 
 test_that("S03.01 without changes the code is a bare plot2() call on the data set", {
   app <- shiny_app()
@@ -115,7 +114,7 @@ test_that("S03.10 the generated code reproduces the plot in the app", {
   })
 })
 
-test_that("S03.11 the first value of an input is in the code (F123)", {
+test_that("S03.11 the first value of an input is in the code (#135)", {
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session)
@@ -124,7 +123,7 @@ test_that("S03.11 the first value of an input is in the code (F123)", {
   })
 })
 
-test_that("S03.12 the code follows the inputs also after another data set is chosen (F123)", {
+test_that("S03.12 the code follows the inputs also after another data set is chosen (#135)", {
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session)
@@ -134,7 +133,7 @@ test_that("S03.12 the code follows the inputs also after another data set is cho
   })
 })
 
-test_that("S03.13 values, labels and formulas are typed by their argument (F118)", {
+test_that("S03.13 values, labels and formulas are typed by their argument (#130)", {
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session)
@@ -165,7 +164,7 @@ test_that("S03.14 values that are not valid for their input are left out and rep
   })
 })
 
-test_that("S03.15 the secondary axis can be set (F119)", {
+test_that("S03.15 the secondary axis can be set (#131)", {
   app <- shiny_app()
   shiny::testServer(app, {
     shiny_init(session, dataset = "mtcars")

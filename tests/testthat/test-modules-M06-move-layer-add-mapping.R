@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M06: move_layer() and add_mapping()
-# review_and_overhaul/reviews/R04_modules/M06_move-layer-add-mapping.md
+# M06: move_layer() and add_mapping()
 
 fx_two_layers <- function() {
   ggplot2::ggplot(fx_xy, ggplot2::aes(x, y)) + ggplot2::geom_point() + ggplot2::geom_line()
@@ -32,7 +31,7 @@ test_that("M06.03 a non-existing layer errors", {
   expect_error(move_layer(fx_two_layers(), layer = 5), "does not exist")
 })
 
-test_that("M06.04 a positive move keeps all layers (F083)", {
+test_that("M06.04 a positive move keeps all layers (#95)", {
   expect_identical(geoms(move_layer(fx_two_layers(), layer = 1, move = 1)), c("GeomLine", "GeomPoint"))
 })
 

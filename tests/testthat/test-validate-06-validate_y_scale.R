@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 06: validate_y_scale()
-# review_and_overhaul/reviews/R02_validate/06_validate_y_scale.md
+# 06: validate_y_scale() (#157)
 
 d100 <- data.frame(x = c("a", "b", "c"), y = c(12, 55, 97))
 
@@ -71,7 +70,7 @@ test_that("06.09 y.limits = c(0, 10) with negative data keeps 0 as the lower lim
   expect_equal(suppressWarnings(axis_range(p, "y")), c(0, 10))
 })
 
-test_that("06.10 y.limits must be of length 2 (F130)", {
+test_that("06.10 y.limits must be of length 2 (#142)", {
   expect_error(plot2(d100, x, y, y.limits = c(1, 2, 3)), "must be of length 2")
   expect_error(plot2(d100, x, y, y.limits = 50), "must be of length 2")
 })

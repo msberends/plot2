@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 03: validate_data()
-# review_and_overhaul/reviews/R02_validate/03_validate_data.md
+# 03: validate_data() (#157)
 
 test_that("03.01 without y, a column named n is used as y, with a message", {
   p <- expect_plot2_message(plot2(fx_counts), "Using y = n", type = "info")

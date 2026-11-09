@@ -140,7 +140,7 @@ test_that("plot2 diagnostics are captured and classified", {
   expect_identical(Sys.getenv("IN_PKGDOWN"), "")
 })
 
-test_that("rendering catches messages queued at print time (F001)", {
+test_that("rendering catches messages queued at print time (#13)", {
   # plot2's default y labels decide on scientific notation at render time
   d <- plot2_diagnostics(plot2(data.frame(x = c("a", "b"), y = c(1e7, 3e7)), x, y))
   expect_true(is.data.frame(d$messages))
@@ -160,7 +160,7 @@ test_that("col_hex() normalises colour names and hex codes", {
 
 test_that("local_known_deprecation() silences lifecycle warnings locally", {
   f <- function() {
-    local_known_deprecation("F000")
+    local_known_deprecation("#0")
     getOption("lifecycle_verbosity")
   }
   before <- getOption("lifecycle_verbosity")

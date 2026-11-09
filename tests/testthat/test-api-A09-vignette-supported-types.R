@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A09: vignette 'Supported Plot Types'
-# review_and_overhaul/reviews/R05_api/A09_vignette-supported-types.md
+# A09: vignette 'Supported Plot Types'
 
 test_that("A09.01 every chunk of the supported types vignette runs without error or warning", {
   skip_on_cran()

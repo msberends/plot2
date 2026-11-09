@@ -12,13 +12,12 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T02: internationalisation (locale, dates, decimal marks, Unicode)
-# review_and_overhaul/reviews/R06_themes/T02_i18n.md
+# T02: internationalisation (locale, dates, decimal marks, Unicode)
 
 fx_two_dates <- data.frame(x = c("a", "b", "a", "b"), dt = as.Date(c("2024-01-01", "2024-01-01", "2024-02-01", "2024-02-01")), v = 1:4)
 
 test_that("T02.01 plot2 leaves the session locale unchanged, also with date formatting", {
-  # the OS warning about "nl_NL" is F003, tested in T02.09
+  # the OS warning about "nl_NL" is #15, tested in T02.09
   suppressWarnings(expect_clean_state(plot2(fx_two_dates, x, v, dt), check = "locale"))
 })
 
@@ -28,7 +27,7 @@ test_that("T02.02 date category labels follow the session locale, not Dutch", {
 })
 
 test_that("T02.03 a date category with two dates gives two legend entries", {
-  expect_length(suppressWarnings(scale_labels(plot2(fx_two_dates, x, v, dt), "fill")), 2) # locale warning: F003
+  expect_length(suppressWarnings(scale_labels(plot2(fx_two_dates, x, v, dt), "fill")), 2) # locale warning: #15
 })
 
 test_that("T02.04 OutDec = ',' gives comma decimals and full-stop thousands", {

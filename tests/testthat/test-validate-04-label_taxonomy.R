@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 04: validate_taxonomy(), replaced by label_taxonomy() (F058)
-# review_and_overhaul/reviews/R02_validate/04_validate_taxonomy.md
+# 04: validate_taxonomy(), replaced by label_taxonomy() (#70) (#157)
 
 bugs <- data.frame(name = c("Escherichia coli", "E. coli", "Other", "Klebsiella pneumoniae"),
                    n = c(25, 18, 6, 12),
@@ -34,7 +33,7 @@ test_that("04.03 mixed labels: only the taxonomic names are italic", {
   lbl <- label_taxonomy(c("Other", "Klebsiella pneumoniae", "group coli"))
   expect_identical(deparse(lbl[[1]]), "paste(\"Other\")")
   expect_match(deparse(lbl[[2]]), "italic")
-  # an ordinary word that is also an epithet stays upright (F058)
+  # an ordinary word that is also an epithet stays upright (#70)
   expect_no_match(deparse(lbl[[3]]), "italic")
   # nothing taxonomic: plain character
   expect_identical(label_taxonomy(c("a", "b")), c("a", "b"))

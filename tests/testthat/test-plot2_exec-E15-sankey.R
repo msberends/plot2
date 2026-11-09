@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E15: Sankey plots
-# review_and_overhaul/reviews/R03_plot2_exec/E15_sankey.md
+# E15: Sankey plots
 
 fx_sankey <- data.frame(from = c("A", "A", "B", "B"),
                         to = c("X", "Y", "X", "Y"),
@@ -59,11 +58,11 @@ test_that("E15.07 sankey_alpha reaches the flow layer", {
   expect_identical(unique(layer_df(p, "GeomShape")$alpha), 0.3)
 })
 
-test_that("E15.08 a single x variable gives the friendly message (F071)", {
+test_that("E15.08 a single x variable gives the friendly message (#83)", {
   expect_error(plot2(fx_sankey, x = from, y = n, category = grp, type = "sankey"), "at least two")
 })
 
-test_that("E15.09 no helper columns in p$data (F069)", {
+test_that("E15.09 no helper columns in p$data (#81)", {
   p <- plot2(fx_sankey, x = c(from, to), y = n, category = grp, type = "sankey")
   expect_false(any(startsWith(colnames(p$data), "_sankey")))
 })

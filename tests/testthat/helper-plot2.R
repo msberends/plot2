@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Test helpers for plot2 (see review_and_overhaul/ideas/I001).
+# Test helpers for plot2 (see #156).
 #
 # All accessors take either a ggplot object or an already built plot
 # (ggplot_build() output), so a test can build once and query many times:
@@ -22,7 +22,7 @@
 #   expect_equal(axis_breaks(b, "y"), c(0, 5, 10))
 #
 # Accessors only use the public ggplot2 API where it exists, so tests keep
-# working across ggplot2 releases (finding F037).
+# working across ggplot2 releases (#49).
 #
 # Naming: accessors are nouns (geoms(), axis_breaks()), expectations start
 # with expect_ and return their input invisibly so they can be piped.
@@ -94,11 +94,11 @@ layer_params <- function(x, i = 1) {
 datalabels_of <- function(x) {
   i <- which(geoms(x) %in% c("GeomText", "GeomSfText"))
   if (length(i) == 0) return(character(0))
-  # without the fixed padding that separates rotated labels from their bar (F140)
+  # without the fixed padding that separates rotated labels from their bar (#152)
   trimws(as.character(layer_df(x, max(i))$label))
 }
 
-#' Angle of the axis guide at a position ("x" or "y"), NULL if none is set (F142).
+#' Angle of the axis guide at a position ("x" or "y"), NULL if none is set (#154).
 axis_guide_angle <- function(x, position = "x") {
   g <- plot_of(x)$guides$guides[[position]]
   if (is.null(g)) NULL else g$params$angle
@@ -250,7 +250,7 @@ facet_info <- function(x) {
 #' and `warnings` (R warnings, character). `type` is "info", "caution" or
 #' "warning" for plot2's own output, derived from the condition class.
 plot2_diagnostics <- function(expr, build = TRUE) {
-  # plot2 signals its diagnostics as conditions (F014): messages of class
+  # plot2 signals its diagnostics as conditions (#26): messages of class
   # "plot2_message" (cautions also "plot2_caution") and warnings of class
   # "plot2_warning"; other messages and warnings are reported as "other"
   msgs <- data.frame(type = character(0), text = character(0), stringsAsFactors = FALSE)
@@ -296,7 +296,7 @@ col_hex <- function(x) {
 #' gtable, see rendered()) without R warnings or errors. Returns the plot
 #' invisibly.
 #'
-#' plot2's own warnings are R warnings (F014) and therefore fail this
+#' plot2's own warnings are R warnings (#26) and therefore fail this
 #' expectation unless `allow_warnings = TRUE`; use expect_plot2_message() to
 #' test for a specific diagnostic.
 expect_plot2 <- function(object, allow_warnings = FALSE) {
@@ -434,10 +434,10 @@ expect_no_plot2_message <- function(object, regexp = NULL, type = c("any", "info
 
 #' Expect that evaluating (and building) leaves no trace in the session:
 #' plot2's internal state holds only registered colours, the random-number
-#' stream is untouched, and LC_TIME is unchanged (findings F001, F002, F003).
+#' stream is untouched, and LC_TIME is unchanged (#13, #14, #15).
 #' Errors in `object` are ignored on purpose: state must also be clean after
 #' a failed call. `check` selects the aspects, so that a test of the internal
-#' state is not hidden behind a known RNG problem (F002) and vice versa.
+#' state is not hidden behind a known RNG problem (#14) and vice versa.
 expect_clean_state <- function(object, check = c("state", "rng", "locale")) {
   check <- match.arg(check, several.ok = TRUE)
   label <- rlang::as_label(rlang::enquo(object))
@@ -460,7 +460,7 @@ expect_clean_state <- function(object, check = c("state", "rng", "locale")) {
   if ("locale" %in% check && !identical(locale_before, Sys.getlocale("LC_TIME"))) {
     problems <- c(problems, sprintf("`%s` changed LC_TIME from %s to %s.", label, locale_before, Sys.getlocale("LC_TIME")))
   }
-  # clean up so that one failing test does not contaminate the next (F001)
+  # clean up so that one failing test does not contaminate the next (#13)
   plot2:::clear_plot2_env()
   testthat::expect(length(problems) == 0, paste(problems, collapse = "\n"))
   invisible(value)
@@ -475,24 +475,24 @@ expect_plot2_snapshot <- function(title, p) {
   vdiffr::expect_doppelganger(title, p)
 }
 
-# Skips for open findings ------------------------------------------------------
+# Skips for open issues --------------------------------------------------------
 
 #' Silence soft deprecations (lifecycle) caused by plot2 itself, for the rest
 #' of the calling test, so that tests of other behaviour stay clean. Always name
-#' the finding; remove the call when the finding is fixed. The finding's own
-#' test must not use this.
+#' the GitHub issue (e.g. "#123"); remove the call when the issue is fixed. The
+#' issue's own test must not use this.
 local_known_deprecation <- function(id, .env = parent.frame()) {
   stopifnot(is.character(id), length(id) == 1)
   withr::local_options(lifecycle_verbosity = "quiet", .local_envir = .env)
 }
 
-#' Skip a test that describes the desired behaviour for an open finding.
-#' Remove the call when the finding is fixed (see review_and_overhaul/README.md).
-skip_open_finding <- function(id) {
-  testthat::skip(paste0("open finding ", id, " (review_and_overhaul/findings)"))
+#' Skip a test that describes the desired behaviour for an open GitHub issue,
+#' e.g. skip_open_issue("#123"). Remove the call when the issue is fixed.
+skip_open_issue <- function(id) {
+  testthat::skip(paste0("open issue ", id))
 }
 
-# Package sources (R05) -------------------------------------------------------
+# Package sources -------------------------------------------------------------
 
 #' Path to a file in the package source tree (README.Rmd, vignettes/, man/,
 #' R/). Skips the test when the source tree is not available, e.g. during
@@ -543,14 +543,14 @@ eval_chunks <- function(file, exclude = NULL, include_unevaluated = TRUE) {
   do.call(rbind, out)
 }
 
-# Shiny app (R07) -------------------------------------------------------------
+# Shiny app -------------------------------------------------------------------
 
 #' The app object of create_interactively() for shiny::testServer(). Skips
 #' when a package of the app is missing. With run = FALSE,
 #' create_interactively() returns the app instead of running it. The served
 #' logo folder is removed when the calling test ends.
 shiny_app <- function(..., .env = parent.frame()) {
-  # the server tests take about 40 seconds, so they are not part of the CRAN core (F038)
+  # the server tests take about 40 seconds, so they are not part of the CRAN core (#50)
   testthat::skip_on_cran()
   for (p in c("shiny", "shinyjs", "bslib", "DT", "pillar", "rio")) {
     testthat::skip_if_not_installed(p)

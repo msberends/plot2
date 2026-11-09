@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 01: validate_type()
-# review_and_overhaul/reviews/R02_validate/01_validate_type.md
+# 01: validate_type() (#157)
 
 test_that("01.01 without x, a numeric y gives a boxplot with a message", {
   df <- data.frame(y = c(1, 3, 2, 5, 4))
@@ -40,7 +39,7 @@ test_that("01.04 character x: boxplot when every group has three values, columns
 test_that("01.05 the plot2.default_type option is respected", {
   withr::local_options(plot2.default_type = "geom_point")
   expect_geoms(plot2(fx_cat_unique, x, y), "point", exact = TRUE)
-  # normalised like `type` (F095)
+  # normalised like `type` (#107)
   withr::local_options(plot2.default_type = "l")
   expect_geoms(plot2(fx_cat_unique, x, y), "line", exact = TRUE)
 })
@@ -62,16 +61,16 @@ test_that("01.07 type names are normalised", {
   expect_geoms(plot2(fx_cat, x, y, type = "ggplot2::geom_col()"), "bar")
 })
 
-test_that("01.08 an unknown type errors and names the type (F031)", {
+test_that("01.08 an unknown type errors and names the type (#43)", {
   expect_error(plot2(fx_xy, x, y, type = "xyz"), "plot type \"xyz\" is invalid")
 })
 
-test_that("01.09 empty or symbol-only types error (F031)", {
+test_that("01.09 empty or symbol-only types error (#43)", {
   expect_error(plot2(fx_xy, x, y, type = " "), "is invalid")
   expect_error(plot2(fx_xy, x, y, type = "()"), "is invalid")
 })
 
-test_that("01.10 a type of length 2 warns and uses the first (F137)", {
+test_that("01.10 a type of length 2 warns and uses the first (#149)", {
   expect_warning(p <- plot2(fx_cat_unique, x, y, type = c("col", "line")), "can only be of length 1", class = "plot2_warning")
   expect_geoms(p, "bar")
   expect_false("GeomLine" %in% geoms(p))

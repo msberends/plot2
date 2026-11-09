@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T08: CI workflows
-# review_and_overhaul/reviews/R06_themes/T08_ci-workflows.md
+# T08: CI workflows
 
 test_that("T08.01 the CI matrix includes the declared minimum R version", {
   wf <- paste(readLines(source_file(".github", "workflows", "check.yaml")), collapse = "\n")

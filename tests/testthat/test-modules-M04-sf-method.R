@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M04: plot2.sf()
-# review_and_overhaul/reviews/R04_modules/M04_sf-method.md
+# M04: plot2.sf()
 
 test_that("M04.01 plot2(netherlands): sf layer plus labels", {
   skip_if_not_installed("sf")
@@ -43,7 +42,7 @@ test_that("M04.05 colour without colour_fill: caution about borders", {
   expect_plot2_message(plot2(netherlands, colour = "red"), "will set the borders", type = "caution")
 })
 
-test_that("M04.06 x given: caution instead of an error (F080)", {
+test_that("M04.06 x given: caution instead of an error (#92)", {
   skip_if_not_installed("sf")
   expect_plot2_message(plot2(netherlands, x = province), "will be ignored", type = "caution")
 })

@@ -592,7 +592,7 @@ plot2 <- function(.data,
                   data = NULL,
                   ...) {
   
-  # `data` only exists for formula notation (F020)
+  # `data` only exists for formula notation (#32)
   if (!is.null(data) && !inherits(.data, "formula")) {
     stop("`data` is only used in formula notation, e.g. `plot2(mpg ~ wt, data = mtcars)`; ",
          "otherwise pass the data as the first argument, e.g. `mtcars |> plot2(wt, mpg)`", call. = FALSE)
@@ -661,7 +661,7 @@ plot2 <- function(.data,
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @importFrom tidyselect everything matches
 plot2_exec <- function(.data, ...) {
-  # arguments: the same as plot2(), see plot2_method_formals() in R/zzz.R (F035)
+  # arguments: the same as plot2(), see plot2_method_formals() in R/zzz.R (#47)
   if (call_depth() == 0) {
     # called directly instead of through a plot2() method
     call_state_enter()
@@ -678,7 +678,7 @@ plot2_exec <- function(.data, ...) {
                   paste0(font_blue(names(dots_geom), collapse = NULL), collapse = font_black(", ")))
   }
   
-  # automatic defaults (F094) ----
+  # automatic defaults (#106) ----
   # NULL means that plot2 decides; explicit values mean what they say
   misses_x <- rlang::quo_is_null(rlang::enquo(x))
   misses_y <- rlang::quo_is_null(rlang::enquo(y))
@@ -719,7 +719,7 @@ plot2_exec <- function(.data, ...) {
   misses_facet.fixed_x <- is.null(facet.fixed_x)
   misses_summarise_function <- is.null(summarise_function)
   
-  # stacked = "fill" is the same as stacked_fill = TRUE (D001.15)
+  # stacked = "fill" is the same as stacked_fill = TRUE (API decisions in CLAUDE.md)
   if (identical(stacked, "fill")) {
     stacked <- FALSE
     stacked_fill <- TRUE
@@ -729,7 +729,7 @@ plot2_exec <- function(.data, ...) {
   if (!is.null(legend) && !isTRUE(legend) && !isFALSE(legend)) {
     stop("`legend` must be NULL, TRUE or FALSE", call. = FALSE)
   }
-  # category.title and legend.title are one setting (D001.12)
+  # category.title and legend.title are one setting (API decisions in CLAUDE.md)
   if (!rlang::quo_is_null(rlang::enquo(category.title)) && !rlang::quo_is_null(rlang::enquo(legend.title))) {
     stop("`category.title` and `legend.title` are the same setting; use only one of them", call. = FALSE)
   }
@@ -771,7 +771,7 @@ plot2_exec <- function(.data, ...) {
   }
   if (!is.null(type)) {
     if (length(type) > 1) {
-      # warn here, before the type is shortened (F137)
+      # warn here, before the type is shortened (#149)
       plot2_warning(font_blue("type"), " can only be of length 1, using ", font_blue("type = \"", type[1L], "\"", collapse = NULL))
     }
     type <- tolower(type[1L])
@@ -837,12 +837,12 @@ plot2_exec <- function(.data, ...) {
     type_backup <- ""
   }
   
-  # check type-specific requirements before any data preparation (F071)
+  # check type-specific requirements before any data preparation (#83)
   if (type_backup == "sankey" &&
       (isTRUE(misses_x) || tryCatch(NCOL(select(as.data.frame(.data), {{ x }})) < 2, error = function(e) FALSE))) {
     stop("Sankey plots require an X-axis of at least two variables", call. = FALSE)
   }
-  # count rows when y is missing and counting is the only sensible meaning (F097, F106)
+  # count rows when y is missing and counting is the only sensible meaning (#109, #118)
   if (isTRUE(misses_y) && is.data.frame(.data) && type_backup != "back-to-back") {
     has_numeric <- any(vapply(FUN.VALUE = logical(1), .data,
                               function(col) mode(col) == "numeric" && !inherits(col, c("Date", "POSIXt", "factor"))))
@@ -950,7 +950,7 @@ plot2_exec <- function(.data, ...) {
                                ""))
         }
         
-        # category values are data, not patterns (F017)
+        # category values are data, not patterns (#29)
         if (!any(vapply(unique(as.character(new_df$category)), grepl, logical(1), x = plot2_env$mapping_y, fixed = TRUE))) {
           plot2_message("Using ", font_blue("y = c(", paste(unique(new_df$category), collapse = ", "), ")", collapse = NULL))
         }
@@ -1298,7 +1298,7 @@ plot2_exec <- function(.data, ...) {
   y_secondary_points <- FALSE
   if (has_y_secondary(df)) {
     if (is.null(y_secondary.type) || identical(y_secondary.type, "")) {
-      # bars on bars would hide the primary bars, so draw a line with points (F068)
+      # bars on bars would hide the primary bars, so draw a line with points (#80)
       if (type %in% c("geom_col", "geom_bar")) {
         y_secondary.type <- "geom_line"
         y_secondary_points <- TRUE
@@ -1330,12 +1330,12 @@ plot2_exec <- function(.data, ...) {
   
   if ((is.character(x.limits) || is.factor(x.limits)) && has_x(df) &&
       !is.numeric(get_x(df)) && !inherits(get_x(df), c("Date", "POSIXt"))) {
-    # discrete x.limits select the items to show; drop the others here instead of letting ggplot2 warn (F054)
+    # discrete x.limits select the items to show; drop the others here instead of letting ggplot2 warn (#66)
     df <- df[as.character(get_x(df)) %in% as.character(x.limits), , drop = FALSE]
   }
   
   if (isTRUE(zoom)) {
-    # exactly the same as x.zoom = TRUE and y.zoom = TRUE (F092)
+    # exactly the same as x.zoom = TRUE and y.zoom = TRUE (#104)
     x.zoom <- TRUE
     y.zoom <- TRUE
   }
@@ -1395,7 +1395,7 @@ plot2_exec <- function(.data, ...) {
       (identical(colour_fill, "ggplot2") || (is.null(colour_fill) && (is.null(colour) || identical(colour, "ggplot2"))))
   }
   if (isTRUE(original_colours) && isTRUE(as.double(colour_transparency) > 0)) {
-    # ggplot2's own colours have no opacity, so set them via get_colour() (F096)
+    # ggplot2's own colours have no opacity, so set them via get_colour() (#108)
     original_colours <- FALSE
   }
   if (!any(c("colour", "fill") %in% category.type)) {
@@ -1423,13 +1423,13 @@ plot2_exec <- function(.data, ...) {
       cols <- rep(as.character(get_colour("grey85")), length(category_unique))
       nms <- as.character(category_unique)
       if (length(colour) == 1) {
-        # keep the colour this category has without focus, e.g. its ggplot2 or viridis colour (F067)
+        # keep the colour this category has without focus, e.g. its ggplot2 or viridis colour (#79)
         cols[which(nms == category.focus)] <- get_colour(colour, length(category_unique))[which(nms == category.focus)]
       } else {
         cols[which(nms == category.focus)] <- get_colour(colour[1L])
       }
       colour <- stats::setNames(cols, nms)
-      # the focus colours must be used, also with the default colours (F067)
+      # the focus colours must be used, also with the default colours (#79)
       original_colours <- !any(c("colour", "fill") %in% category.type)
     }
   }
@@ -1663,7 +1663,7 @@ plot2_exec <- function(.data, ...) {
                        coef = 1.5, # 1.5 * IQR
                        width = width * ifelse(has_category(df), 1, 0.75),
                        linewidth = linewidth),
-                  # with a category, the colours come from the colour scale, otherwise one fixed colour (F061)
+                  # with a category, the colours come from the colour scale, otherwise one fixed colour (#73)
                   list(colour = cols$colour[1L])[!(has_category(df) && "colour" %in% names(mapping))]))
     }
   }
@@ -1749,7 +1749,7 @@ plot2_exec <- function(.data, ...) {
                       binwidth = binwidth,
                       cols = list(colour = y_secondary.colour,
                                   colour_fill = y_secondary.colour_fill),
-                      # an explicit y_secondary.colour always applies (F077)
+                      # an explicit y_secondary.colour always applies (#89)
                       original_colours = original_colours && misses_y_secondary.colour && !y_secondary_points,
                       dots_geom = dots_geom,
                       mapping = mapping_secondary)
@@ -2052,7 +2052,7 @@ plot2_exec <- function(.data, ...) {
                    col_y_secondary = y_secondary.colour,
                    sankey_remove_axes = sankey_remove_axes)
   
-  # rotated x labels, anchored at their ticks (F142); after coord_flip() they are on the left axis
+  # rotated x labels, anchored at their ticks (#154); after coord_flip() they are on the left axis
   if (x.label_angle != 0 && is.null(x.label_align)) {
     p <- p + do.call(guides, stats::setNames(list(guide_axis(angle = x.label_angle)),
                                              if (isTRUE(horizontal)) "y" else "x"))
@@ -2073,7 +2073,7 @@ plot2_exec <- function(.data, ...) {
     if (type == "geom_histogram") {
       y.title <- "Count"
     } else if (type == "geom_density") {
-      # y is a copy of x for density plots (F070)
+      # y is a copy of x for density plots (#82)
       y.title <- "Density"
     } else {
       y.title <- validate_title(get_y_name(df), markdown = isTRUE(markdown), df = df)
@@ -2154,7 +2154,7 @@ plot2_exec <- function(.data, ...) {
     # this must follow after setting the y scale, since plot2_env$facet.fixed_y might have changed
     p <- p +
       validate_facet(df = df,
-                     # spider plots need fixed scales in all facets (I003)
+                     # spider plots need fixed scales in all facets (#158)
                      type = if (type_backup == "spider") "geom_spider" else type,
                      facet.repeat_labels_x = facet.repeat_labels_x,
                      facet.repeat_labels_y = facet.repeat_labels_y,
@@ -2192,7 +2192,7 @@ plot2_exec <- function(.data, ...) {
                         decimal.mark = decimal.mark,
                         big.mark = big.mark,
                         y.percent = y.percent)
-    # rotated labels need room for their length, not for one line of text (F143)
+    # rotated labels need room for their length, not for one line of text (#155)
     if (is.null(y.expand) && is.null(y.limits)) {
       p <- fit_rotated_datalabels(p,
                                   type = type,
@@ -2211,7 +2211,7 @@ plot2_exec <- function(.data, ...) {
   if (type != "geom_sf" && type_backup != "spider" && (isTRUE(horizontal) || has_datalabels(df))) {
     x.limits <- x.limits %or% plot2_env$x_lim
     if (is.character(x.limits) || is.factor(x.limits)) {
-      # discrete limits are set in the scale, not in the coordinates (F054)
+      # discrete limits are set in the scale, not in the coordinates (#66)
       x.limits <- NULL
     }
     y.limits <- y.limits %or% plot2_env$y_lim
@@ -2292,7 +2292,7 @@ plot2_exec <- function(.data, ...) {
     p$data <- as_tibble(p$data)
   }
   
-  # a custom font: showtext is switched on when the plot is drawn (F011)
+  # a custom font: showtext is switched on when the plot is drawn (#23)
   if (!identical(font, "")) {
     p <- as_plot2_font(p)
   }

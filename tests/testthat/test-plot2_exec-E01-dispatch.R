@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E01: generic plot2(), dispatch and empty data
-# review_and_overhaul/reviews/R03_plot2_exec/E01_dispatch-and-empty-data.md
+# E01: generic plot2(), dispatch and empty data
 
 test_that("E01.01 data.frame input dispatches; grouped data give the same result", {
   p <- expect_plot2(plot2(fx_cat, x, y))
@@ -37,7 +36,7 @@ test_that("E01.04 empty data: axis titles only when given", {
   expect_labels(p, x = "X axis", y = "Y axis")
 })
 
-test_that("E01.05 empty data with print = TRUE returns the plot invisibly (F010)", {
+test_that("E01.05 empty data with print = TRUE returns the plot invisibly (#22)", {
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
   expect_warning(p <- plot2(fx_xy[0, ], x, y, print = TRUE), "No observations", class = "plot2_warning")
@@ -56,10 +55,10 @@ test_that("E01.07 an atomic character vector gives counted columns", {
   expect_identical(sort(layer_df(p, 1)$y), c(1, 2, 3))
 })
 
-test_that("E01.07b a character vector given as a long expression (F072)", {
+test_that("E01.07b a character vector given as a long expression (#84)", {
   expect_plot2(plot2(c("a", "b", "b", "c", "c", "c")))
 })
 
-test_that("E01.08 empty data leaves no internal state behind (F002)", {
+test_that("E01.08 empty data leaves no internal state behind (#14)", {
   expect_clean_state(suppressWarnings(plot2(fx_xy[0, ], x, y)))
 })

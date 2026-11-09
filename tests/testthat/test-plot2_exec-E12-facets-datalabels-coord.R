@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E12: facets, datalabels and coordinates
-# review_and_overhaul/reviews/R03_plot2_exec/E12_facets-datalabels-coordinates.md
+# E12: facets, datalabels and coordinates
 
 test_that("E12.01 one panel per facet value; facet keeps its original name", {
   p <- expect_plot2(plot2(fx_facet, x, y, facet = facet))

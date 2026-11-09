@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T01: ggplot2 4.x internals and compatibility
-# review_and_overhaul/reviews/R06_themes/T01_ggplot2-internals.md
+# T01: ggplot2 4.x internals and compatibility
 
 test_that("T01.01 plots of all main types build and render without warnings", {
   withr::local_pdf(NULL)

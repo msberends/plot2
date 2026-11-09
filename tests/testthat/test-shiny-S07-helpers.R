@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S07: helpers of the app
-# review_and_overhaul/reviews/R07_shiny/S07_helpers.md
+# S07: helpers of the app
 
 spec_row <- function(arg) {
   spec <- shiny_input_spec()
@@ -30,7 +29,7 @@ test_that("S07.01 logical arguments get a switch, sizes a slider, sorting a sele
   inp <- make_input(spec_row("x.sort"), NULL, FALSE)
   expect_match(as.character(inp$tag), "freq-desc", fixed = TRUE)
   expect_identical(inp$initial, "NULL")
-  # a default that depends on other arguments is shown as empty, not as a guess (F119)
+  # a default that depends on other arguments is shown as empty, not as a guess (#131)
   inp <- make_input(spec_row("datalabels.size"), quote(3 * text_factor), FALSE)
   expect_identical(inp$initial, NA_real_)
 })
@@ -60,7 +59,7 @@ test_that("S07.04 install_shiny_deps() lists every package the app calls", {
   expect_identical(setdiff(setdiff(used, base), listed), character(0))
 })
 
-test_that("S07.05 every argument of plot2() has exactly one row in the input specification (F124)", {
+test_that("S07.05 every argument of plot2() has exactly one row in the input specification (#136)", {
   spec <- shiny_input_spec()
   expect_identical(sort(spec$arg), sort(setdiff(names(formals(plot2)), "...")))
   expect_false(anyDuplicated(spec$arg) > 0)

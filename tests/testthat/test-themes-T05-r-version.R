@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T05: support of the declared minimum R version
-# review_and_overhaul/reviews/R06_themes/T05_r-version.md
+# T05: support of the declared minimum R version
 
 
 test_that("T05.01 R/ uses no base R function newer than the declared minimum R version", {

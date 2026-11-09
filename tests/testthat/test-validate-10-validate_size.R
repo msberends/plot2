@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 10: validate_size()
-# review_and_overhaul/reviews/R02_validate/10_validate_size.md
+# 10: validate_size() (#157)
 
 test_that("10.01 points have size 2 by default", {
   expect_identical(unique(layer_df(plot2(fx_xy, x, y), "point")$size), 2)
@@ -34,7 +33,7 @@ test_that("10.04 size on a line plot warns and is used as linewidth", {
   expect_identical(unique(layer_df(p, "line")$linewidth), 3)
 })
 
-test_that("10.05 a negative or character size gives a clear error (F138)", {
+test_that("10.05 a negative or character size gives a clear error (#150)", {
   expect_error(plot2(fx_xy, x, y, size = -1), "`size` must be a non-negative number", fixed = TRUE)
   expect_error(plot2(fx_xy, x, y, size = "a"), "`size` must be a non-negative number", fixed = TRUE)
 })

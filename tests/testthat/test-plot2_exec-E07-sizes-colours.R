@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E07: sizes, widths and colour vectors
-# review_and_overhaul/reviews/R03_plot2_exec/E07_sizes-and-colours.md
+# E07: sizes, widths and colour vectors
 
 fx_focus <- data.frame(x = c("p", "q", "r"), y = c(1, 3, 2), category = c("b", "a", "c"))
 
@@ -34,7 +33,7 @@ test_that("E07.03 category.focus with an explicit colour greys out the rest", {
   expect_true(all(col_hex(v[c("b", "c")]) == col_hex("grey85")))
 })
 
-test_that("E07.04 category.focus with default colours (F067)", {
+test_that("E07.04 category.focus with default colours (#79)", {
   v <- scale_values(plot2(fx_focus, x, y, category, category.focus = "a"), "fill")
   expect_true(all(col_hex(v[c("b", "c")]) == col_hex("grey85")))
   expect_false(col_hex(v[["a"]]) == col_hex("grey85"))
@@ -55,7 +54,7 @@ test_that("E07.07 the secondary y-axis series takes y_secondary.colour (with col
   expect_identical(unique(col_hex(as.character(layer_df(p, "line")$colour))), "#FF0000")
 })
 
-test_that("E07.07b y_secondary.colour applies without colour (F077)", {
+test_that("E07.07b y_secondary.colour applies without colour (#89)", {
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   p <- plot2(df, x, y, y_secondary = z, y_secondary.type = "line", y_secondary.colour = "red")
   expect_identical(unique(col_hex(as.character(layer_df(p, "line")$colour))), "#FF0000")

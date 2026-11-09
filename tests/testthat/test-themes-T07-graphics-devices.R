@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T07: graphics devices
-# review_and_overhaul/reviews/R06_themes/T07_graphics-devices.md
+# T07: graphics devices
 
 render_warnings <- function(device, p) {
   f <- tempfile()
@@ -34,7 +33,7 @@ test_that("T07.02 plot2's own labels render on the default pdf() device without 
   expect_identical(render_warnings(function(f) grDevices::pdf(f), p_sci()), character(0))
 })
 
-test_that("T07.02b euros() advises cairo_pdf, where its labels render (F134: documentation only)", {
+test_that("T07.02b euros() advises cairo_pdf, where its labels render (#146: documentation only)", {
   skip_if_not(capabilities("cairo"))
   rd <- paste(readLines(source_file("man", "labellers.Rd")), collapse = " ")
   expect_true(grepl("cairo_pdf", rd))

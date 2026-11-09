@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Small, canonical data sets for tests (see review_and_overhaul/ideas/I001).
+# Small, canonical data sets for tests (see #156).
 # All are deterministic. Keep them small: a test should be readable with the
 # fixture in mind. Add new fixtures here rather than inline in test files when
 # more than one test needs them.

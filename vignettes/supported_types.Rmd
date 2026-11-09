@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 library(plot2)
 diamonds <- ggplot2::diamonds
-# suggested packages are used conditionally, so that the vignette also builds without them (F102)
+# suggested packages are used conditionally, so that the vignette also builds without them (#114)
 has_sf <- requireNamespace("sf", quietly = TRUE)
 has_beeswarm <- requireNamespace("ggbeeswarm", quietly = TRUE)
 has_ggforce <- requireNamespace("ggforce", quietly = TRUE)

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E02: argument handling, missing-argument flags, title evaluation
-# review_and_overhaul/reviews/R03_plot2_exec/E02_arguments-and-titles.md
+# E02: argument handling, missing-argument flags, title evaluation
 
 test_that("E02.01 an extra argument reaches the geom, with a message", {
   p <- expect_plot2_message(plot2(fx_xy, x, y, type = "point", alpha = 0.3), "additional argument.*alpha")
@@ -30,7 +29,7 @@ test_that("E02.03 summarise_function must be a function", {
   expect_error(plot2(fx_cat, x, y, summarise_function = "mean"), "summarise_function")
 })
 
-test_that("E02.04 summarise_function = FALSE keeps duplicates (F073)", {
+test_that("E02.04 summarise_function = FALSE keeps duplicates (#85)", {
   expect_identical(nrow(plot_data(plot2(fx_cat, x, y))), 3L)
   expect_identical(nrow(plot_data(plot2(fx_cat, x, y, summarise_function = FALSE))), 6L)
 })
@@ -45,7 +44,7 @@ test_that("E02.06 category.title is used as legend title", {
 })
 
 test_that("E02.07 a title referring to a missing column does not stop the plot", {
-  # plot2 warns that the title cannot be evaluated (an R warning since F014)
+  # plot2 warns that the title cannot be evaluated (an R warning since #26)
   p <- expect_plot2_message(plot2(fx_cat, x, y, title = nonexistent), "nonexistent", type = "warning")
   expect_true(label_text(p, "title") %in% c("", NA_character_))
 })

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A10: README, NEWS, DESCRIPTION and pkgdown
-# review_and_overhaul/reviews/R05_api/A10_readme-and-package-files.md
+# A10: README, NEWS, DESCRIPTION and pkgdown
 
 test_that("A10.01 the evaluated README chunks run without error or warning", {
   skip_on_cran()

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E03: type shortcuts and early normalisation
-# review_and_overhaul/reviews/R03_plot2_exec/E03_type-shortcuts.md
+# E03: type shortcuts and early normalisation
 
 test_that("E03.01 barpercent: horizontal, sorted by frequency, labels n (p%)", {
   p <- expect_plot2(plot2(fx_counts, group, n, type = "barpercent"))
@@ -71,7 +70,7 @@ test_that("E03.08 upset: patchwork of four plots", {
   expect_length(p, 4)
 })
 
-test_that("E03.09 'errorbar' is not turned into horizontal columns (F009)", {
+test_that("E03.09 'errorbar' is not turned into horizontal columns (#21)", {
   df <- data.frame(x = c("a", "b"), y = c(2, 3))
   # without ymin and ymax this plot cannot be drawn, so it is not rendered here
   expect_message(p <- plot2(df, x, y, type = "errorbar"), "loosely supported", class = "plot2_caution")

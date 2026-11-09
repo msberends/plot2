@@ -12,12 +12,11 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 22: set_max_items()
-# review_and_overhaul/reviews/R02_validate/22_set_max_items.md
+# 22: set_max_items() (#157)
 
 d5 <- data.frame(x = c("a", "b", "c", "d", "e"), y = c(50, 40, 30, 20, 10))
 
-test_that("22.01 five values with x.max_items = 3: two values plus the rest item (F062)", {
+test_that("22.01 five values with x.max_items = 3: two values plus the rest item (#74)", {
   expect_identical(axis_labels(plot2(d5, x, y, x.max_items = 3), "x"), c("a", "b", "(rest, x3)"))
 })
 
@@ -26,7 +25,7 @@ test_that("22.02 the rest item holds the summed y of the merged values", {
   expect_identical(p$data$y[as.character(p$data$x) == "(rest, x3)"], 60)
 })
 
-test_that("22.03 x.max_txt with the number of merged values and their share of y (F062)", {
+test_that("22.03 x.max_txt with the number of merged values and their share of y (#74)", {
   expect_identical(axis_labels(plot2(d5, x, y, x.max_items = 3, x.max_txt = "Other (%n, %p)"), "x"),
                    c("a", "b", "Other (3, 40%)"))
 })

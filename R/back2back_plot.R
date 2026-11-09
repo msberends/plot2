@@ -169,7 +169,7 @@ back2back_plot <- function(df,
                             datapoints = facet_values,
                             summarise_function = NULL,
                             summarise_fn_name = "",
-                            # reversed, except for the order in the data (as before F141)
+                            # reversed, except for the order in the data (as before #153)
                             horizontal = !identical(validate_sorting(facet.sort, horizontal = FALSE), "inorder"),
                             drop = FALSE,
                             argument = "facet")
@@ -199,7 +199,7 @@ back2back_plot <- function(df,
   legend.position <- validate_legend.position(legend.position)
   
   # one colour per category for both halves, from all data, so that a category has
-  # the same colour on both sides also when it is missing on one side (F066)
+  # the same colour on both sides also when it is missing on one side (#78)
   if (has_category(df) && !data_is_numeric(get_category(df))) {
     category_levels <- levels(as.factor(get_category(df)))
     colour <- b2b_named_colours(colour, category_levels, colour_transparency)
@@ -336,7 +336,7 @@ back2back_plot <- function(df,
             theme = theme,
             background = background,
             markdown = markdown,
-            # keys for all categories, also those missing in this half (F066)
+            # keys for all categories, also those missing in this half (#78)
             show.legend = if (has_category(df)) TRUE else NA
       ) +
       ggplot2::theme(axis.text.y = element_blank(),
@@ -470,7 +470,7 @@ back2back_plot <- function(df,
             theme = theme,
             background = background,
             markdown = markdown,
-            # keys for all categories, also those missing in this half (F066)
+            # keys for all categories, also those missing in this half (#78)
             show.legend = if (has_category(df)) TRUE else NA
       ) +
       ggplot2::theme(axis.text.y = element_text(hjust = 0.5,
@@ -482,7 +482,7 @@ back2back_plot <- function(df,
   right_plot <- make_right(y.limits)
   category_levels <- if (has_category(df) && !data_is_numeric(get_category(df))) levels(as.factor(get_category(df))) else NULL
   if (is.null(y.limits)) {
-    # one value scale for both halves, so that equal lengths mean equal values (F064)
+    # one value scale for both halves, so that equal lengths mean equal values (#76)
     y_max <- max(b2b_max_value(left_plot), b2b_max_value(right_plot))
     if (is.finite(y_max) && y_max > 0) {
       left_plot <- make_left(c(0, y_max))
@@ -569,7 +569,7 @@ b2b_max_value <- function(p) {
 }
 
 # the same categories in the legend of both halves, so that patchwork collects one
-# legend (F066): a copy of each discrete colour scale with all levels as limits
+# legend (#78): a copy of each discrete colour scale with all levels as limits
 b2b_all_levels <- function(p, levels) {
   for (aes in c("colour", "fill")) {
     sc <- p$scales$get_scales(aes)

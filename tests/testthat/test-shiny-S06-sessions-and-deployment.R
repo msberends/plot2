@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S06: several sessions and server deployment
-# review_and_overhaul/reviews/R07_shiny/S06_sessions-and-deployment.md
+# S06: several sessions and server deployment
 
 test_that("S06.01 a session never sees the plot of another session", {
   app <- shiny_app()
@@ -51,7 +50,7 @@ test_that("S06.04 an app instance leaves the global state of plot2 alone", {
   expect_identical(setdiff(ls(plot2_env), "reg_cols"), character(0))
 })
 
-test_that("S06.05 the app object for deployment is returned with run = FALSE (F125)", {
+test_that("S06.05 the app object for deployment is returned with run = FALSE (#137)", {
   skip_if_not_installed("shiny")
   app <- create_interactively(run = FALSE)
   withr::defer(if ("plot2res" %in% names(shiny::resourcePaths())) shiny::removeResourcePath("plot2res"))

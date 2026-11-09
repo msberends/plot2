@@ -12,13 +12,12 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A03: plot2() arguments for axes and scales
-# review_and_overhaul/reviews/R05_api/A03_axes-and-scales.md
+# A03: plot2() arguments for axes and scales
 
 x_range <- function(p) axis_range(p, "x")
 y_range <- function(p) axis_range(p, "y")
 
-# F092 (maintainer's decision): zoomed axes cover the data with ggplot2's usual 5% expansion
+# #104 (maintainer's decision): zoomed axes cover the data with ggplot2's usual 5% expansion
 expand5 <- function(x) range(x) + c(-1, 1) * 0.05 * diff(range(x))
 
 test_that("A03.01 x.zoom covers the data range with a 5% expansion, as documented", {

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 21: sort_data()
-# review_and_overhaul/reviews/R02_validate/21_sort_data.md
+# 21: sort_data() (#157)
 
 srt <- data.frame(x = c("A10", "b", "A2", "c", "b"), y = c(1, 2, 3, 4, 10))
 
@@ -52,7 +51,7 @@ test_that("21.07 x.drop = FALSE keeps unused factor levels on the axis", {
   expect_identical(axis_labels(plot2(d, x, y, x.drop = FALSE), "x"), c("a", "b", "zz"))
 })
 
-test_that("21.08 natural sorting does not need stringr (F008)", {
+test_that("21.08 natural sorting does not need stringr (#20)", {
   expect_no_match(paste(deparse(plot2:::natural_sort), collapse = " "), "stringr")
   expect_identical(plot2:::natural_sort(c("A10", "a2", "A2", "b")), c("a2", "A2", "A10", "b"))
 })

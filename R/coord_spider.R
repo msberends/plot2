@@ -387,7 +387,7 @@ CoordSpider <- ggproto(
       aligned <- ifelse(self$r_label_pad_mm == 0,
                         "center",
                         ifelse(self$r_label_pad_mm > 0, "left", "right"))
-      # place the labels along the first spoke, which starts at angle `start` (F086)
+      # place the labels along the first spoke, which starts at angle `start` (#98)
       x_pos  <- (rr * sin(panel_params$start) + 1) / 2
       y_pos  <- (rr * cos(panel_params$start) + 1) / 2
       # font family and colour follow the theme
@@ -428,6 +428,6 @@ ggplot_add.CoordSpider <- function(object, plot, ...) {
   plot$coordinates <- object
   
   # prevent ggplot2 from regenerating default axis titles at build time; through labs(),
-  # not by editing the labels directly (F037)
+  # not by editing the labels directly (#49)
   plot + ggplot2::labs(x = "", y = "")
 }

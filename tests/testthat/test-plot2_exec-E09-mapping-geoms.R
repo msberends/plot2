@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R03 sheet E09: mapping and geom generation
-# review_and_overhaul/reviews/R03_plot2_exec/E09_mapping-and-geoms.md
+# E09: mapping and geom generation
 
 fx_spider <- data.frame(dim = c("a", "b", "c", "d", "e"), score = c(3, 5, 2, 4, 1))
 
@@ -41,18 +40,18 @@ test_that("E09.04 boxplot: whiskers drawn first, in the set colour", {
   expect_identical(unique(col_hex(as.character(layer_df(p, "errorbar")$colour))), "#FF0000")
 })
 
-test_that("E09.04b boxplots raise no deprecation warning (F078)", {
+test_that("E09.04b boxplots raise no deprecation warning (#90)", {
   expect_plot2(plot2(iris, Species, Sepal.Length))
 })
 
-test_that("E09.05 secondary y adds layers for the secondary series (a line with points for columns, F068)", {
+test_that("E09.05 secondary y adds layers for the secondary series (a line with points for columns, #80)", {
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   n_primary <- length(geoms(plot2(df, x, y)))
   expect_identical(length(geoms(plot2(df, x, y, y_secondary = z))), n_primary + 2L)
   expect_identical(length(geoms(plot2(df, x, y, y_secondary = z, y_secondary.type = "col"))), n_primary + 1L)
 })
 
-test_that("E09.06 secondary series of a column plot is not drawn over the bars (F068)", {
+test_that("E09.06 secondary series of a column plot is not drawn over the bars (#80)", {
   df <- data.frame(x = c("a", "b", "c"), y = c(1, 2, 3), z = c(10, 30, 20))
   expect_geoms(plot2(df, x, y, y_secondary = z), "line")
 })
@@ -62,7 +61,7 @@ test_that("E09.07 spider: extra coord_spider() arguments are passed on", {
   expect_equal(plot_of(p)$coordinates$start, pi / 2)
 })
 
-test_that("E09.08 spider: facets work with fixed scales (I003); fewer than three x values error", {
+test_that("E09.08 spider: facets work with fixed scales (#158); fewer than three x values error", {
   df <- rbind(transform(fx_spider, f = "p"), transform(fx_spider, f = "q"))
   p <- expect_plot2(plot2(df, dim, score, facet = f, type = "spider", datalabels = TRUE))
   expect_facets(p, n_panels = 2L)

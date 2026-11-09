@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 08: generate_geom()
-# review_and_overhaul/reviews/R02_validate/08_generate_geom.md
+# 08: generate_geom() (#157)
 
 # several observations per x and category, for distribution types
 d_dist <- data.frame(x = rep(c("a", "b"), each = 6),

@@ -12,10 +12,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Regression tests for Phase 3 findings (dependencies, locale, fonts).
-# Each test_that() starts with the finding ID; see review_and_overhaul/findings/.
+# Regression tests for Phase 3 issues (dependencies, locale, fonts).
+# Each test_that() starts with the GitHub issue number.
 
-test_that("F029 date formats keep words and quoted text, and always return character", {
+test_that("#41 date formats keep words and quoted text, and always return character", {
   d <- as.Date(c("2024-01-15", "2024-05-03"))
   withr::local_locale(c(LC_TIME = "C"))
   expect_identical(format2(d, format = "Week ww"), c("Week 03", "Week 18"))
@@ -29,14 +29,14 @@ test_that("F029 date formats keep words and quoted text, and always return chara
   expect_identical(format2(as.Date(NA), format = "mmmm"), NA_character_)
 })
 
-test_that("F029 unify_years() keeps the time zone", {
+test_that("#41 unify_years() keeps the time zone", {
   x <- as.POSIXct("2024-03-01 14:30", tz = "America/New_York")
   u <- plot2:::unify_years(x)
   expect_identical(attr(u, "tzone"), "America/New_York")
   expect_identical(format(u, "%m-%d %H:%M"), "03-01 14:30")
 })
 
-test_that("F003 dates follow the system locale unless plot2.language is set, and LC_TIME is restored", {
+test_that("#15 dates follow the system locale unless plot2.language is set, and LC_TIME is restored", {
   withr::local_locale(c(LC_TIME = "C"))
   d <- as.Date("2024-05-01")
   expect_identical(format2(d, format = "d mmmm"), "1 May")
@@ -47,7 +47,7 @@ test_that("F003 dates follow the system locale unless plot2.language is set, and
   expect_identical(Sys.getlocale("LC_TIME"), "C")
 })
 
-test_that("F003 generated words follow plot2.language, not the machine's locale", {
+test_that("#15 generated words follow plot2.language, not the machine's locale", {
   d <- data.frame(x = c("a", "b"), y = c(5, 20))
   withr::local_locale(c(LC_COLLATE = "C"))
   expect_true(all(grepl("yrs$", axis_labels(plot2(d, x, y, y.age = TRUE), "y")[-1])))
@@ -55,18 +55,18 @@ test_that("F003 generated words follow plot2.language, not the machine's locale"
   expect_true(all(grepl("jr$", axis_labels(plot2(d, x, y, y.age = TRUE), "y")[-1])))
 })
 
-test_that("F003 an unsupported plot2.language warns and falls back to English", {
+test_that("#15 an unsupported plot2.language warns and falls back to English", {
   withr::local_options(plot2.language = "de")
   expect_warning(plot2:::plot2_language(), "plot2.language", class = "plot2_warning")
 })
 
-test_that("F003 the x axis formats dates with plot2's tokens", {
+test_that("#15 the x axis formats dates with plot2's tokens", {
   d <- data.frame(dt = as.Date(c("2024-01-15", "2024-04-15", "2024-07-15")), v = 1:3)
   withr::local_locale(c(LC_TIME = "C"))
   expect_true(all(grepl("^Q[1-4] 2024$", stats::na.omit(axis_labels(plot2(d, dt, v, x.date_labels = "qq yyyy", x.date_breaks = "3 months"), "x")))))
 })
 
-test_that("F011 fonts unused for 90 days are pruned from the cache", {
+test_that("#23 fonts unused for 90 days are pruned from the cache", {
   d <- withr::local_tempdir()
   dir.create(file.path(d, "old_font"))
   dir.create(file.path(d, "new_font"))
@@ -76,7 +76,7 @@ test_that("F011 fonts unused for 90 days are pruned from the cache", {
   expect_identical(list.files(d), "new_font")
 })
 
-test_that("F011 the font cache is in the user cache folder, and a cached font is registered", {
+test_that("#23 the font cache is in the user cache folder, and a cached font is registered", {
   skip_if_not_installed("sysfonts")
   ttf <- "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
   skip_if_not(file.exists(ttf))
@@ -90,7 +90,7 @@ test_that("F011 the font cache is in the user cache folder, and a cached font is
   expect_true(file.exists(file.path(d, "plot2_test_font", ".last_used")))
 })
 
-test_that("F011 a custom font is used only while its plot is drawn", {
+test_that("#23 a custom font is used only while its plot is drawn", {
   skip_if_not_installed("showtext")
   skip_if_not_installed("sysfonts")
   skip_if_not("Plot2 Test Font" %in% sysfonts::font_families())

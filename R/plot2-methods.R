@@ -49,8 +49,8 @@
 #'   plot2(netherlands)
 #' }
 plot2.default <- function(.data, ...) {
-  # arguments: see plot2_method_formals() in R/zzz.R (F035)
-  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  # arguments: see plot2_method_formals() in R/zzz.R (#47)
+  # per-call state and diagnostics, restored or emitted on exit (#13, #26)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
   if (is.function(.data)) {
@@ -59,7 +59,7 @@ plot2.default <- function(.data, ...) {
   
   # the name of a data frame in the caller's environment, e.g. plot2("df"), as used by
   # tool calling (ellmer::tool()); only the caller's own environment is searched, not the
-  # search path or plot2's namespace (F030)
+  # search path or plot2's namespace (#42)
   if (is.character(.data) && length(.data) == 1 && !is.na(.data) &&
       exists(.data, envir = parent.frame(), inherits = FALSE) &&
       is.data.frame(get(.data, envir = parent.frame(), inherits = FALSE))) {
@@ -70,7 +70,7 @@ plot2.default <- function(.data, ...) {
     # an atomic vector, such as numeric, character, factor
     y_deparse <- paste0(trimws(deparse(substitute(.data))), collapse = " ")
     if (nchar(y_deparse) > 30) {
-      # fall back to "x", never to the name of the count column "y" (F072)
+      # fall back to "x", never to the name of the count column "y" (#84)
       y_deparse <- "x"
     }
     y_given <- !missing(y)
@@ -87,7 +87,7 @@ plot2.default <- function(.data, ...) {
       new_df <- data.frame(x = seq_len(length(.data)),
                            y = .data, stringsAsFactors = FALSE)
     } else if (is.numeric(.data) && missing(x)) {
-      # the vector is x, the values of y are given (F030)
+      # the vector is x, the values of y are given (#42)
       new_df <- data.frame(x = .data, stringsAsFactors = FALSE)
     } else if (!is.numeric(.data) && missing(x)) {
       new_df <- data.frame(x = .data, stringsAsFactors = FALSE) |> count(x, name = "y")
@@ -110,8 +110,8 @@ plot2.default <- function(.data, ...) {
 #' @rdname plot2-methods
 #' @export
 plot2.formula <- function(.data, ...) {
-  # arguments: see plot2_method_formals() in R/zzz.R (F035)
-  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  # arguments: see plot2_method_formals() in R/zzz.R (#47)
+  # per-call state and diagnostics, restored or emitted on exit (#13, #26)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
   if (is.null(data)) {
@@ -119,7 +119,7 @@ plot2.formula <- function(.data, ...) {
   }
   form <- .data
   .data <- data
-  # walk the formula as a call tree, so that terms such as log(y) or I(x + 1) are kept (F019)
+  # walk the formula as a call tree, so that terms such as log(y) or I(x + 1) are kept (#31)
   terms <- formula_terms(form)
   as_term <- function(e) if (is.null(e)) NULL else rlang::new_quosure(e, env = rlang::f_env(form))
   x <- as_term(terms$x)
@@ -138,11 +138,11 @@ plot2.formula <- function(.data, ...) {
 #' @rdname plot2-methods
 #' @export
 plot2.freq <- function(.data, ...) {
-  # arguments: see plot2_method_formals() in R/zzz.R (F035)
-  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  # arguments: see plot2_method_formals() in R/zzz.R (#47)
+  # per-call state and diagnostics, restored or emitted on exit (#13, #26)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
-  # legend.title replaces the method's default category.title (D001.12)
+  # legend.title replaces the method's default category.title (API decisions in CLAUDE.md)
   if (missing(category.title) && !missing(legend.title)) {
     category.title <- NULL
   }
@@ -159,8 +159,8 @@ plot2.freq <- function(.data, ...) {
 #' @param datalabels.centroid A [logical] to indicate whether datalabels must be centred on the polygon (using [sf::st_centroid()], the default), or be placed on the 'best' spot on the surface (using [sf::st_point_on_surface()]).
 #' @export
 plot2.sf <- function(.data, ...) {
-  # arguments: see plot2_method_formals() in R/zzz.R (F035)
-  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  # arguments: see plot2_method_formals() in R/zzz.R (#47)
+  # per-call state and diagnostics, restored or emitted on exit (#13, #26)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
   
@@ -175,7 +175,7 @@ plot2.sf <- function(.data, ...) {
     .data <- sf::st_transform(.data, crs = crs)
   }
   
-  # use missing(), since x and y are column names that cannot be evaluated here (F080)
+  # use missing(), since x and y are column names that cannot be evaluated here (#92)
   if (!missing(x)) {
     plot2_caution("In 'sf' plots, ", font_blue("x"), " will be ignored - did you mean ", font_blue("category"), "?")
   }
@@ -212,8 +212,8 @@ plot2.sf <- function(.data, ...) {
 #' @importFrom dplyr is_grouped_df ungroup
 #' @export
 plot2.data.frame <- function(.data, ...) {
-  # arguments: see plot2_method_formals() in R/zzz.R (F035)
-  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  # arguments: see plot2_method_formals() in R/zzz.R (#47)
+  # per-call state and diagnostics, restored or emitted on exit (#13, #26)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
   
@@ -221,7 +221,7 @@ plot2.data.frame <- function(.data, ...) {
     .data <- ungroup(.data)
   }
   
-  # a formula after the data, e.g. mtcars |> plot2(mpg ~ wt), goes to the formula method (F081)
+  # a formula after the data, e.g. mtcars |> plot2(mpg ~ wt), goes to the formula method (#93)
   if (rlang::quo_is_call(rlang::enquo(x), "~")) {
     args <- as.list(match.call())[-1]
     args$.data <- rlang::eval_tidy(rlang::enquo(x))
@@ -238,11 +238,11 @@ plot2.data.frame <- function(.data, ...) {
 #' @importFrom dplyr rename
 #' @export
 plot2.matrix <- function(.data, ...) {
-  # arguments: see plot2_method_formals() in R/zzz.R (F035)
-  # per-call state and diagnostics, restored or emitted on exit (F001, F014)
+  # arguments: see plot2_method_formals() in R/zzz.R (#47)
+  # per-call state and diagnostics, restored or emitted on exit (#13, #26)
   call_state_enter()
   on.exit(call_state_exit(), add = TRUE)
-  # x, y and category follow from the matrix (F034)
+  # x, y and category follow from the matrix (#46)
   ignored <- c(x = !missing(x), y = !missing(y), category = !missing(category))
   if (any(ignored)) {
     plot2_caution("In matrix plots, ", paste0(font_blue(names(ignored)[ignored], collapse = NULL), collapse = font_black(" and ")),
@@ -271,7 +271,7 @@ plot2.matrix <- function(.data, ...) {
       pivot_longer(-rowname, names_to = "y", values_to = "category") |> 
       rename(x = rowname)
   } else {
-    # a plain matrix: rows on x, every column as a category (F089)
+    # a plain matrix: rows on x, every column as a category (#101)
     if (identical(rownames(df), as.character(seq_len(nrow(df))))) {
       df$x <- seq_len(nrow(df))
       rownames(df) <- NULL

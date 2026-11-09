@@ -78,7 +78,7 @@ get_colour <- function(x, length = 1, transparency = 0) {
   
   if (length(x) == 1) {
     
-    # registered names are matched case-insensitively, like R's colour names (F088)
+    # registered names are matched case-insensitively, like R's colour names (#100)
     if (tolower(x) %in% tolower(names(plot2_env$reg_cols))) {
       x <- plot2_env$reg_cols[[match(tolower(x), tolower(names(plot2_env$reg_cols)))]]
       if (length(x) < length) {
@@ -86,7 +86,7 @@ get_colour <- function(x, length = 1, transparency = 0) {
         # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
       }
       x <- x[seq_len(length)]
-      # no early return: transparency and NA handling below apply to every branch (F096)
+      # no early return: transparency and NA handling below apply to every branch (#108)
       
     } else if (x %in% viridisLite_colours) {
       rlang::check_installed("viridisLite")
@@ -113,7 +113,7 @@ get_colour <- function(x, length = 1, transparency = 0) {
           # plot2_caution("Colour palette expanded using grDevices::colorRampPalette()")
         }
       }
-      # no early return: transparency and NA handling below apply to every branch (F096)
+      # no early return: transparency and NA handling below apply to every branch (#108)
       x <- unname(new_cols)
       
     } else if (x == "topo") {
@@ -171,7 +171,7 @@ get_colour <- function(x, length = 1, transparency = 0) {
       plot2_warning("Invalid colour (\"", inv, "\") replaced with the default colours")
       x <- unname(as.character(get_colour("ggplot2", length = length(x))))
     } else {
-      # replace only the invalid colours, keeping the valid ones, the names and the length (F088)
+      # replace only the invalid colours, keeping the valid ones, the names and the length (#100)
       plot2_warning("Invalid colour", ifelse(length(inv) != 1, "s", ""), " (", toString(paste0('"', inv, '"')), ") replaced with grey")
       x[invalid] <- "#595959"
     }
@@ -302,7 +302,7 @@ register_colour <- function(...) {
     if (anyNA(dots[[i]])) {
       stop("Input must not be NA, and must be known, valid colours", call. = FALSE)
     }
-    # an invalid colour is an error here, not a grey replacement (F088)
+    # an invalid colour is an error here, not a grey replacement (#100)
     out <- tryCatch(as.character(suppressMessages(get_colour(dots[[i]]))),
                     plot2_warning = function(w) {
                       stop("`", name, "` must contain known, valid colours, not: ",
@@ -437,7 +437,7 @@ rev.colour <- function(x) {
 #' @noRd
 #' @export
 `[.colour` <- function(x, i, ...) {
-  # keep the class when subsetting (F090)
+  # keep the class when subsetting (#102)
   structure(unclass(x)[i], class = class(x))
 }
 

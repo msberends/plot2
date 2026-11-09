@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 19: complete_direction()
-# review_and_overhaul/reviews/R02_validate/19_complete_direction.md
+# 19: complete_direction() (#157)
 
 gaps <- data.frame(x = c(1L, 2L, 5L), y = c(3, 4, 6))
 
@@ -33,12 +32,12 @@ test_that("19.03 dates are completed per day", {
   expect_identical(plot2(d, x, y, x.complete = TRUE)$data$x, as.Date("2024-01-01") + 0:4)
 })
 
-test_that("19.04 date-times are completed per sensible period, not per second (F048)", {
+test_that("19.04 date-times are completed per sensible period, not per second (#60)", {
   d <- data.frame(x = as.POSIXct("2024-01-01 00:00", tz = "UTC") + 3600 * c(0, 1, 5), y = c(1, 2, 3))
   expect_identical(nrow(plot2(d, x, y, x.complete = TRUE)$data), 6L)
 })
 
-test_that("19.05 character x is completed over the observed values within categories (F048)", {
+test_that("19.05 character x is completed over the observed values within categories (#60)", {
   d <- data.frame(x = c("a", "b", "a", "c"), y = 1:4, cat = c("u", "u", "v", "v"))
   p <- plot2(d, x, y, cat, x.complete = TRUE)
   expect_identical(nrow(p$data), 6L)

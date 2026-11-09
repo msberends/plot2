@@ -12,7 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Data and accessors of the legacy smoke tests in test-legacy-*.R (F038).
+# Data and accessors of the legacy smoke tests in test-legacy-*.R (#50).
 
 plotdata <- data.frame(x = seq_len(8) + 10,
                        x_char = letters[1:8],

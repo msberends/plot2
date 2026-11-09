@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M05: add_type() and the add_*() helpers
-# review_and_overhaul/reviews/R04_modules/M05_add-helpers.md
+# M05: add_type() and the add_*() helpers
 
 fx_pts <- function() plot2(fx_xy, x, y, type = "point")
 last_layer_df <- function(p) layer_df(p, length(geoms(p)))
@@ -64,7 +63,7 @@ test_that("M05.09 add_errorbar() with a category: one bar per row", {
   expect_identical(nrow(layer_df(p, "errorbar")), 6L)
 })
 
-test_that("M05.10 add_errorbar() without a category (F082)", {
+test_that("M05.10 add_errorbar() without a category (#94)", {
   d <- data.frame(g = c("a", "b"), n = c(3, 4))
   p <- expect_plot2(add_errorbar(plot2(d, g, n), min = n - 1, max = n + 1))
   expect_identical(layer_df(p, "errorbar")$ymin, c(2, 3))
@@ -75,7 +74,7 @@ test_that("M05.11 add_smooth() adds a smooth layer", {
   expect_identical(geoms(expect_plot2(add_smooth(plot2(df, x, y, type = "point")))), c("GeomPoint", "GeomSmooth"))
 })
 
-test_that("M05.12 add_smooth(legend.value) on a discrete x-axis (F085)", {
+test_that("M05.12 add_smooth(legend.value) on a discrete x-axis (#97)", {
   d <- data.frame(g = sprintf("g%02d", 1:12), n = c(3, 5, 4, 6, 8, 7, 9, 11, 10, 12, 14, 13))
   p <- expect_plot2(add_smooth(plot2(d, g, n, type = "point"), legend.value = "Trend"))
   expect_true("GeomSmooth" %in% geoms(p))
@@ -104,7 +103,7 @@ test_that("M05.15 add_sf() adds an sf layer", {
   expect_identical(geoms(p), c("GeomSf", "GeomSf"))
 })
 
-test_that("M05.16 add_sf(): datalabels.colour and other geometry names (F084)", {
+test_that("M05.16 add_sf(): datalabels.colour and other geometry names (#96)", {
   skip_if_not_installed("sf")
   q <- add_sf(plot2(netherlands), netherlands[1:2, ], datalabels = province, datalabels.colour = "red", datalabels.nudge_y = 0)
   expect_identical(unique(col_hex(as.character(last_layer_df(q)$colour))), "#FF0000")

@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 18: validate_font()
-# review_and_overhaul/reviews/R02_validate/18_validate_font.md
+# 18: validate_font() (#157)
 
 skip_without_font <- function(family) {
   skip_if_not_installed("showtext")
@@ -36,7 +35,7 @@ test_that("18.02 an installed system font is used without a download", {
   expect_s3_class(p, "plot2_font")
 })
 
-test_that("18.03 an unknown font that cannot be found or downloaded warns and uses the default (F011)", {
+test_that("18.03 an unknown font that cannot be found or downloaded warns and uses the default (#23)", {
   skip_if_not_installed("showtext")
   skip_if_not_installed("showtextdb")
   skip_if_not_installed("sysfonts")
@@ -50,7 +49,7 @@ test_that("18.04 in knitr without fig.showtext, a custom font gives an informati
   expect_error(plot2(fx_counts, group, n, font = "Nimbus Sans"), "requires `fig.showtext`")
 })
 
-test_that("18.05 showtext is not left switched on after drawing (F011)", {
+test_that("18.05 showtext is not left switched on after drawing (#23)", {
   skip_without_font("Nimbus Sans")
   p <- plot2(fx_counts, group, n, font = "Nimbus Sans")
   hooks <- getHook("grid.newpage")

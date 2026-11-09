@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R06 sheet T06: dependency footprint
-# review_and_overhaul/reviews/R06_themes/T06_dependencies.md
+# T06: dependency footprint
 
 desc_deps <- function(field) {
   desc <- read.dcf(source_file("DESCRIPTION"))
@@ -28,7 +27,7 @@ test_that("T06.01 every package imported in NAMESPACE is listed in Imports", {
 
 test_that("T06.02 packages called on the default code path are in Imports", {
   expect_true(all(c("cli", "rlang", "scales", "grid", "grDevices") %in% desc_deps("Imports")))
-  # stringr is no longer used: sorting uses the internal natural_sort() (F008)
+  # stringr is no longer used: sorting uses the internal natural_sort() (#20)
   src <- unlist(lapply(list.files(source_file("R"), full.names = TRUE), readLines))
   expect_false(any(grepl("stringr::", src[!grepl("^\\s*#", src)])))
 })

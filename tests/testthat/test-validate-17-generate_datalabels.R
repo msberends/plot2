@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 17: generate_datalabels()
-# review_and_overhaul/reviews/R02_validate/17_generate_datalabels.md
+# 17: generate_datalabels() (#157)
 
 test_that("17.01 columns get a label and a text layer, with the formatted y values", {
   p <- plot2(fx_counts, group, n)
@@ -46,12 +45,12 @@ test_that("17.05 horizontal: labels beyond the end of the bars", {
   t <- layer_df(p, "text")
   expect_s3_class(p$coordinates, "CoordFlip")
   expect_equal(sort(t$y), sort(layer_df(p, "bar")$ymax))
-  # anchored at the bar, with a fixed padding instead of a gap relative to the label length (F140)
+  # anchored at the bar, with a fixed padding instead of a gap relative to the label length (#152)
   expect_identical(unique(t$hjust), 0)
   expect_true(all(startsWith(t$label, "  ")))
 })
 
-test_that("17.06 rotated labels are anchored at the bar with the same gap for every length (F140)", {
+test_that("17.06 rotated labels are anchored at the bar with the same gap for every length (#152)", {
   d <- data.frame(g = c("a", "b", "c"), n = c(1, 4567, 1234567))
   t90 <- layer_df(plot2(d, g, n, datalabels.angle = 90), "text")
   t270 <- layer_df(plot2(d, g, n, datalabels.angle = 270), "text")
@@ -94,7 +93,7 @@ test_that("17.09 the background label layer comes before the text layer", {
   expect_lt(match("GeomLabel", g), match("GeomText", g))
 })
 
-test_that("17.10 replacing the plot data afterwards updates the labels (F055)", {
+test_that("17.10 replacing the plot data afterwards updates the labels (#67)", {
   p <- plot2(fx_counts, group, n)
   new <- p$data
   new$n <- new$n * 2
@@ -111,7 +110,7 @@ test_that("17.11 sf: labels at centroids, or on the surface with datalabels.cent
   expect_match(fun_text(plot2(netherlands, datalabels.centroid = FALSE)), "st_point_on_surface")
 })
 
-test_that("17.12 rotated datalabels get room for their length on the value axis (F143)", {
+test_that("17.12 rotated datalabels get room for their length on the value axis (#155)", {
   d <- data.frame(g = c("a", "b", "c"), n = c(1, 4567, 1234567))
   upper <- function(p) scale_of(p, "y")$expand[3]
   expect_gt(upper(plot2(d, g, n, datalabels.angle = 90)), upper(plot2(d, g, n)))

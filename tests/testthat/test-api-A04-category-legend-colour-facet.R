@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R05 sheet A04: plot2() arguments for category, legend, colours and facets
-# review_and_overhaul/reviews/R05_api/A04_category-legend-colour-facet.md
+# A04: plot2() arguments for category, legend, colours and facets
 
 bar_fill <- function(p) layer_df(p, layer_index(p, "GeomBar"))$fill
 

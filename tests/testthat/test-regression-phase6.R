@@ -12,10 +12,10 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# Phase 6 of the review and overhaul: the Shiny app and its security
-# (review_and_overhaul/plans/roadmap.md)
+# Phase 6 of the review and overhaul: the Shiny app and its security.
+# Each test_that() starts with the GitHub issue number.
 
-test_that("F136 column names are never parsed as code", {
+test_that("#148 column names are never parsed as code", {
   skip_if_not_installed("patchwork")
   marker <- tempfile()
   nm <- sprintf('writeLines("x", "%s")', marker)
@@ -32,14 +32,14 @@ test_that("F136 column names are never parsed as code", {
   expect_identical(rlang::eval_tidy(setup_aes(x = "2")$x), 2)
 })
 
-test_that("F136 a selection label is parsed only into column names", {
+test_that("#148 a selection label is parsed only into column names", {
   expect_identical(column_selection_expr("c(a, b)"), quote(c(a, b)))
   expect_identical(column_selection_expr("a"), quote(a))
   expect_identical(column_selection_expr("my col"), as.name("my col"))
   expect_identical(column_selection_expr('c(a, system("x"))'), as.name('c(a, system("x"))'))
 })
 
-test_that("F062 max_items counts the rest item, %p is the share of y, %n the number of merged values", {
+test_that("#74 max_items counts the rest item, %p is the share of y, %n the number of merged values", {
   d <- data.frame(g = letters[1:5], v = c(50, 20, 10, 10, 10))
   p <- plot2(d, g, v, x.max_items = 3, x.max_txt = "rest (%p, %n)")
   expect_identical(levels(p$data$g), c("a", "b", "rest (30%, 3)"))

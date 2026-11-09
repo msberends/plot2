@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R04 sheet M02: plot2.formula()
-# review_and_overhaul/reviews/R04_modules/M02_formula-method.md
+# M02: plot2.formula()
 
 fx_mtcars <- transform(mtcars, cyl = as.character(cyl), am = as.character(am))
 
@@ -37,11 +36,11 @@ test_that("M02.04 missing data errors clearly", {
   expect_error(plot2(mpg ~ wt), "requires the `data` argument")
 })
 
-test_that("M02.05 a formula after a pipe (F081)", {
+test_that("M02.05 a formula after a pipe (#93)", {
   expect_geoms(expect_plot2(mtcars |> plot2(mpg ~ wt)), "point")
 })
 
-test_that("M02.06 computed terms (F019)", {
+test_that("M02.06 computed terms (#31)", {
   p <- expect_plot2(plot2(log(mpg) ~ wt, data = mtcars))
   expect_equal(sort(layer_df(p, "point")$y), sort(log(mtcars$mpg)))
 })

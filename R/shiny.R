@@ -80,7 +80,7 @@ create_interactively <- function(data = NULL,
     rlang::check_installed("readxl")
   }
   
-  # serve a copy of the logo from a folder of its own, never the folder of the logo (F113)
+  # serve a copy of the logo from a folder of its own, never the folder of the logo (#125)
   if (!is.null(logo_path)) {
     logo_dir <- tempfile("plot2logo")
     dir.create(logo_dir)
@@ -89,7 +89,7 @@ create_interactively <- function(data = NULL,
     shiny::addResourcePath("plot2res", logo_dir)
   }
   
-  # Data sets (F114): a registry of objects, looked up by the value of the selector
+  # Data sets (#126): a registry of objects, looked up by the value of the selector
   # with `[[`, never by evaluating text. `code` is how the generated code refers to it.
   data_registry <- list()
   register_data <- function(group, value, label, code, object) {
@@ -142,7 +142,7 @@ create_interactively <- function(data = NULL,
   }
 
   # the choices of the selector: groups of value = label; without the upload tab
-  # there is no way to upload (F111)
+  # there is no way to upload (#123)
   data_groups <- unique(vapply(data_registry, function(x) x$group, character(1)))
   data_sets <- lapply(stats::setNames(data_groups, data_groups), function(g) {
     in_group <- Filter(function(x) x$group == g, data_registry)
@@ -154,7 +154,7 @@ create_interactively <- function(data = NULL,
   }
   default_dataset <- if ("Provided" %in% names(data_registry)) "Provided" else "iris"
 
-  # Inputs (F124): one explicit specification of every argument of plot2(), see
+  # Inputs (#136): one explicit specification of every argument of plot2(), see
   # shiny_input_spec(). The starting value of each input stands for plot2's default;
   # an argument appears in the code only when its input differs from it.
   spec <- shiny_input_spec()
@@ -197,7 +197,7 @@ create_interactively <- function(data = NULL,
     "XML (.xml)"                       = "xml",
     "HTML table (.html)"               = "html"
   )
-  # the encodings the readers accept (F120): fread() of data.table for text, haven for the others
+  # the encodings the readers accept (#132): fread() of data.table for text, haven for the others
   upload_encodings_text <- c("UTF-8" = "UTF-8", "Latin-1 (ISO-8859-1)" = "Latin-1", "Unknown" = "unknown")
   upload_encodings_stat <- c("As stored in the file" = "", "UTF-8" = "UTF-8", "Latin-1 (ISO-8859-1)" = "latin1", "Windows-1252" = "CP1252")
   upload_delims <- c("Comma (,)" = ",", "Semicolon (;)" = ";", "Tab" = "\t", "Pipe (|)" = "|", "Space" = " ", "Colon (:)" = ":")
@@ -298,7 +298,7 @@ create_interactively <- function(data = NULL,
           id = "settings_tabs",
           selected = ifelse(isTRUE(upload_tab), "Upload", "Main"),
 
-          # --- Upload tab, only with upload_tab = TRUE (F111)
+          # --- Upload tab, only with upload_tab = TRUE (#123)
           if (isTRUE(upload_tab)) shiny::tabPanel("Upload",
             shiny::p(
               "Upload your data file to get started, or visit the",
@@ -491,7 +491,7 @@ create_interactively <- function(data = NULL,
                             shiny::p("Generated code:"),
                             shiny::tags$div(
                               class = "copy-container",
-                              # copied in the browser, not on the server (F117)
+                              # copied in the browser, not on the server (#129)
                               shiny::actionButton("copy_btn", "Copy", class = "copy-button", onclick = shiny_copy_js()),
                               shiny::verbatimTextOutput("code"),
                               shiny::uiOutput("plot2_msgs")
@@ -534,9 +534,9 @@ create_interactively <- function(data = NULL,
     imported_data <- shiny::reactiveVal(NULL)
     preview_data  <- shiny::reactiveVal(NULL)  # Upload tab staging area
     
-    # Uploading exists only with upload_tab = TRUE (F111); all values sent by the
-    # browser are checked against the choices of the inputs (F120), and reading
-    # errors become notifications (F115)
+    # Uploading exists only with upload_tab = TRUE (#123); all values sent by the
+    # browser are checked against the choices of the inputs (#132), and reading
+    # errors become notifications (#127)
     if (isTRUE(upload_tab)) {
       shiny::observeEvent(input$dataset, {
         if (identical(input$dataset, "import")) {
@@ -709,7 +709,7 @@ create_interactively <- function(data = NULL,
     }, options = list(dom = "t", scrollX = TRUE, pageLength = 5),
        rownames = FALSE)
     
-    # the selected data set, looked up by key (F114): the object as it is used in
+    # the selected data set, looked up by key (#126): the object as it is used in
     # the call, its columns for the selectors, and how the code refers to it
     current_data <- shiny::reactive({
       key <- input$dataset
@@ -782,10 +782,10 @@ create_interactively <- function(data = NULL,
       })
     })
 
-    # The call (F006, F118): every input becomes an R value or a checked expression,
+    # The call (#18, #130): every input becomes an R value or a checked expression,
     # and the call is built as a language object. Nothing typed or sent by the browser
     # is parsed and run as code. An argument is included only when its input differs
-    # from its starting value (F112, F123).
+    # from its starting value (#124, #135).
     plot_call <- shiny::reactive({
       cd <- current_data()
       shiny::req(cd)
@@ -828,7 +828,7 @@ create_interactively <- function(data = NULL,
       shiny_code_text(pc$data$code, pc$args)
     })
 
-    # The plot, with plot2's messages, warnings and errors (F121). Evaluated in an
+    # The plot, with plot2's messages, warnings and errors (#133). Evaluated in an
     # environment that only reaches base R and a few functions for calculations.
     plot_result <- shiny::reactive({
       pc <- plot_call()
@@ -894,7 +894,7 @@ create_interactively <- function(data = NULL,
       }
     })
 
-    # the plot of this session (F112)
+    # the plot of this session (#124)
     export_plot <- function() {
       p <- plot_result()$plot
       if (is.null(p)) {
@@ -902,7 +902,7 @@ create_interactively <- function(data = NULL,
       }
       p
     }
-    # the size of an export, checked on the server (F122): the limits of the inputs
+    # the size of an export, checked on the server (#134): the limits of the inputs
     # in the browser can be bypassed, and a raster image must stay within a budget
     export_refuse <- function(msg) {
       shiny::showNotification(msg, type = "error", duration = 8)
@@ -999,7 +999,7 @@ create_interactively <- function(data = NULL,
   }
 }
 
-# Inputs of the app (F124) ------------------------------------------------------
+# Inputs of the app (#136) ------------------------------------------------------
 
 # One row per argument of plot2(): the tab it is shown in, its widget, its label, and
 # for the widget its range ("min,max" or "min,max,step"), its set of choices (see
@@ -1515,7 +1515,7 @@ shiny_code_text <- function(data_code, args) {
 
 # The size of an export in cm, and for raster images the DPI and pixels. Returns
 # list(width, height, dpi, px, problem); problem is set when a value is outside the
-# limits of the inputs or a raster image would exceed the pixel budget (F122).
+# limits of the inputs or a raster image would exceed the pixel budget (#134).
 shiny_export_size <- function(width, height, dpi = NULL, max_pixels = 40e6) {
   number <- function(x) {
     x <- suppressWarnings(as.numeric(x))
@@ -1546,7 +1546,7 @@ shiny_export_size <- function(width, height, dpi = NULL, max_pixels = 40e6) {
 }
 
 # JavaScript of the copy button: copies the generated code in the browser and reports
-# to the server whether that worked (F117)
+# to the server whether that worked (#129)
 shiny_copy_js <- function() {
   paste0(
     "(function() {",

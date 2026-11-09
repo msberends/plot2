@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# R07 sheet S05: export and the copy button
-# review_and_overhaul/reviews/R07_shiny/S05_export-and-copy.md
+# S05: export and the copy button
 
 test_that("S05.01 PNG and JPG export have the size and resolution asked for", {
   app <- shiny_app()

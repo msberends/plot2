@@ -12,8 +12,7 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-# I002, R02 sheet 12: validate_linewidth()
-# review_and_overhaul/reviews/R02_validate/12_validate_linewidth.md
+# 12: validate_linewidth() (#157)
 
 test_that("12.01 lines 0.5, areas 0.25, maps 0.1 by default", {
   expect_identical(unique(layer_df(plot2(fx_xy, x, y, type = "line"), "line")$linewidth), 0.5)
