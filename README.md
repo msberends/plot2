@@ -4,31 +4,36 @@
 
 # `plot2`
 
-**Plots for users, not for developers.**
+**`plot()` + `ggplot2` = `plot2()`**
 
-`ggplot2` is a remarkable piece of engineering: a grammar in which any
-plot is composed of layers, aesthetics, scales, coordinates and themes.
-That design serves developers well. Users pay for it: hundreds of
-arguments spread over tens of functions, and a plot only looks right
-once the right ones are found and set. Someone who wants “counts per
-ward, coloured by year” should not need to know about `geom_col()`,
-`aes(fill = )`, `position_dodge()`, `scale_fill_*()` and `theme()`. That
-gap is real, and few packages close it well.
+`ggplot2` is an incredibly impressive piece of engineering: a grammar in
+which any plot is composed of layers, aesthetics, scales, coordinates
+and themes. That design serves developers really well. But
+unfortunately, users pay for it: hundreds of arguments spread over tens
+of functions, and a plot only looks right once the right ones are found
+and set. Someone who wants “counts per department, coloured by year”
+should not **necessarily** need to know about `geom_col()`,
+`aes(fill = )`, `position_dodge()`, `expansion()`, `scale_fill_*()` and
+`theme()`. That gap is real, and we found that few packages close it
+well.
 
-`plot2` sets out to close it. Like base R’s `plot()`, one call gives a
-plot, even when you do not say which type of plot you want. `plot2`
-groups, aggregates, sorts, facets and labels, and chooses the plot type,
-colours, axes and theme. Users first:
+`plot2` sets out to close it entirely. Like base R’s `plot()`, one call
+gives a plot, even when you do not say which type of plot you want.
+`plot2` groups, aggregates, sorts, facets and labels, and chooses the
+plot type, colours, axes and theme. Users first:
 
 ``` r
-admitted_patients |>
-  subset(date >= as.Date("2015-01-01")) |>
-  plot2(ward, n(), format(date, "%Y"), category.title = "Year")
+iris |> plot2(x = Species, y = mean(Sepal.Length))
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
-The result is a standard `ggplot` object, so every `ggplot2` layer and
+You will notice, also when reading below examples, that you spend less
+time copying or typing ‘ggplot overhead code’, and that you create plots
+much faster, with far more readable and concise code. Less typing, more
+plotting!
+
+Each result is a standard `ggplot` object, so every `ggplot2` layer and
 extension still works on it.
 
 `plot2` is not on CRAN yet. Install it from r-universe:
