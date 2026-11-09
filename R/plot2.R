@@ -423,11 +423,15 @@
 #'         subtitle = "Axis titles contain the square notation: x^2")
 #' 
 #' # sf objects (geographic plots, 'simple features') are also supported
-#' netherlands |> 
-#'   plot2()
-#' netherlands |> 
-#'   plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
-#'   add_sf(netherlands, colour = "black", colour_fill = NA)
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#'   netherlands |> 
+#'     plot2()
+#' }
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#'   netherlands |> 
+#'     plot2(colour_fill = "viridis", colour_transparency = 0.75) |>
+#'     add_sf(netherlands, colour = "black", colour_fill = NA)
+#' }
 #' 
 #' # support for any system or Google font (a Google Font is downloaded once
 #' # into the user cache, see the 'font' argument)

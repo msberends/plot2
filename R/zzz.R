@@ -38,9 +38,9 @@ plot2_arg_names <- function() {
 
 #' Formals of a plot2() method
 #'
-#' The generic's formals, with method-specific defaults in `...` (as expressions, e.g. `x = quote(.data$item)`) and method-only arguments in `.extra`, placed before `...`.
+#' The generic's formals, with method-specific defaults in `...` (as expressions, e.g. `x = quote(.data$item)`). Method-only arguments go in `.extra`, placed before `...`, or in `.after_dots`, placed after `...`. Arguments that the generic does not have must go after `...`: R CMD check requires the arguments before `...` to have the same positions as in the generic, which has `data` there.
 #' @noRd
-plot2_method_formals <- function(..., .extra = list(), .data_default = quote(expr = )) {
+plot2_method_formals <- function(..., .extra = list(), .after_dots = list(), .data_default = quote(expr = )) {
   f <- formals(plot2)
   f$data <- NULL
   f$`...` <- NULL
@@ -53,7 +53,7 @@ plot2_method_formals <- function(..., .extra = list(), .data_default = quote(exp
   for (n in names(overrides)) {
     f[n] <- list(overrides[[n]])
   }
-  c(f, .extra, alist(... = ))
+  c(f, .extra, alist(... = ), .after_dots)
 }
 
 #' Call from a plot2() method to plot2_exec()
@@ -150,7 +150,7 @@ plot2_sf_formals <- function() {
                                                     axis.text = element_blank(),
                                                     axis.line = element_blank(),
                                                     axis.ticks = element_blank())),
-                       .extra = alist(crs = NULL, datalabels.centroid = NULL))
+                       .after_dots = alist(crs = NULL, datalabels.centroid = NULL))
 }
 
 # formals of the methods and of plot2_exec() ----

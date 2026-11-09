@@ -498,7 +498,12 @@ skip_open_issue <- function(id) {
 #' R/). Skips the test when the source tree is not available, e.g. during
 #' R CMD check on an installed package.
 source_file <- function(...) {
-  p <- file.path(testthat::test_path(), "..", "..", ...)
+  root <- file.path(testthat::test_path(), "..", "..")
+  # under R CMD check, the tests run in <pkg>.Rcheck/tests, which is not a source tree
+  if (!file.exists(file.path(root, "DESCRIPTION")) || !dir.exists(file.path(root, "R"))) {
+    testthat::skip("package source tree not available")
+  }
+  p <- file.path(root, ...)
   if (!file.exists(p)) testthat::skip(paste("source file not available:", file.path(...)))
   normalizePath(p)
 }

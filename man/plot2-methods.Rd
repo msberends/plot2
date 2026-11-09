@@ -631,9 +631,9 @@
     element_blank(), axis.ticks = element_blank()),
   background = getOption("plot2.colour_background", "white"),
   markdown = TRUE,
+  ...,
   crs = NULL,
-  datalabels.centroid = NULL,
-  ...
+  datalabels.centroid = NULL
 )
 
 \method{plot2}{data.frame}(

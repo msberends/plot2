@@ -26,16 +26,22 @@ Format numbers as currency, rounding values to dollars or cents using a convenie
 The euro sign of \code{\link[=euros]{euros()}} cannot be encoded by the default \link[grDevices:pdf]{pdf()} device. To save such plots as PDF, use the Cairo device, e.g. \code{ggplot2::ggsave("plot.pdf", device = grDevices::cairo_pdf)}, or in R Markdown the chunk option \code{dev = "cairo_pdf"}.
 }
 \examples{
+euros(c(1500, 2499.5))
+dollars(c(1500, 2499.5))
+
 profit <- data.frame(group = LETTERS[1:4],
                      profit = runif(4, 10000, 25000))
 
-profit |>
-  plot2(y.labels = euros,
-        datalabels = FALSE)
-        
-profit |>
-  plot2(y.labels = euros,
-        datalabels.format = euros)
-
-dollars(c(1500, 2499.5))
+# the default pdf() and postscript() devices cannot draw the euro sign;
+# use e.g. cairo_pdf(), png() or the RStudio plot pane instead
+if (!names(grDevices::dev.cur()) \%in\% c("pdf", "postscript")) {
+  profit |>
+    plot2(y.labels = euros,
+          datalabels = FALSE)
+}
+if (!names(grDevices::dev.cur()) \%in\% c("pdf", "postscript")) {
+  profit |>
+    plot2(y.labels = euros,
+          datalabels.format = euros)
+}
 }

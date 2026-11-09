@@ -176,6 +176,7 @@ importFrom(grDevices,
   terrain.colors,
   topo.colors
 )
+importFrom(grid,nullGrob)
 importFrom(tidyr,
   full_seq,
   pivot_longer,

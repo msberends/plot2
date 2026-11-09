@@ -33,8 +33,6 @@ test_that("SNAP.02 point, line, area and smooth", {
 
 test_that("SNAP.03 distributions", {
   expect_plot2_snapshot("boxplot", plot2(iris, Species, Sepal.Length, type = "boxplot"))
-  expect_plot2_snapshot("violin", plot2(iris, Species, Sepal.Length, type = "violin"))
-  expect_plot2_snapshot("histogram", plot2(iris, Sepal.Length, type = "histogram"))
   expect_plot2_snapshot("jitter", plot2(iris, Species, Sepal.Length, type = "jitter", jitter_seed = 1))
 })
 
@@ -50,4 +48,11 @@ test_that("SNAP.05 special types", {
   expect_plot2_snapshot("heatmap-matrix", plot2(cor(mtcars[, 1:5])))
   skip_if_not_installed("ggforce")
   expect_plot2_snapshot("sankey", plot2(admitted_patients, x = c(hospital, ward), category = gender, type = "sankey"))
+})
+
+test_that("SNAP.06 distributions with a density estimate", {
+  # stats::density() gives different coordinates before R 4.4.0 (its 'old.coords' argument)
+  skip_if(getRversion() < "4.4.0", "density() coordinates differ before R 4.4.0")
+  expect_plot2_snapshot("violin", plot2(iris, Species, Sepal.Length, type = "violin"))
+  expect_plot2_snapshot("histogram", plot2(iris, Sepal.Length, type = "histogram"))
 })

@@ -277,7 +277,7 @@ create_interactively <- function(data = NULL,
           shiny::HTML(paste0(
             "From ",
             shiny::a(
-              href = "https://msberends.github.io/plot2",
+              href = "https://msberends.github.io/plot2/",
               target = "_blank",
               shiny::HTML(paste0("<code>plot2</code> v", utils::packageVersion("plot2")))
             ),

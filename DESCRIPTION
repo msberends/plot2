@@ -19,7 +19,7 @@ Description: A streamlined extension of 'ggplot2' designed to simplify and accel
   publication-ready plots with minimal code. It integrates seamlessly with the tidyverse
   and retains full compatibility with 'ggplot2', while offering additional conveniences like
   enhanced sorting, faceting, and custom theming.
-URL: https://msberends.github.io/plot2, https://github.com/msberends/plot2
+URL: https://msberends.github.io/plot2/, https://github.com/msberends/plot2
 Depends: 
   R (>= 4.1.0)
 Imports: 
@@ -36,10 +36,12 @@ Imports:
 Suggests:
   AMR (>= 3.0.1),
   arrow,
+  bit64,
   broom (>= 1.0.0),
   cleaner (>= 1.5.1),
   bslib,
   DT,
+  data.table,
   ggbeeswarm (>= 0.7.0),
   ggforce (>= 0.5.0),
   glue,
@@ -53,9 +55,12 @@ Suggests:
   knitr (>= 1.30),
   patchwork,
   pillar,
+  pkgdown,
   plotly (>= 4.8.0),
+  png,
   rio,
   rstudioapi (>= 0.10.0),
+  S7,
   sf (>= 1.0.0),
   shiny (>= 1.10.0),
   shinyjs,
@@ -64,6 +69,7 @@ Suggests:
   stringr (>= 1.5.0),
   sysfonts (>= 0.8.0),
   testthat (>= 3.0.0),
+  tibble,
   vctrs,
   vdiffr,
   viridisLite,
