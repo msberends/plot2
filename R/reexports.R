@@ -24,6 +24,34 @@ dplyr::n
 #' @export
 dplyr::n_distinct
 
+#' @importFrom dplyr case_when
+#' @export
+dplyr::case_when
+
+#' @importFrom dplyr recode_values
+#' @export
+dplyr::recode_values
+
+#' @importFrom dplyr replace_values
+#' @export
+dplyr::replace_values
+
+#' @importFrom dplyr first
+#' @export
+dplyr::first
+
+#' @importFrom dplyr last
+#' @export
+dplyr::last
+
+#' @importFrom dplyr all_of
+#' @export
+dplyr::all_of
+
+#' @importFrom dplyr any_of
+#' @export
+dplyr::any_of
+
 #' @importFrom tidyselect everything
 #' @export
 tidyselect::everything
@@ -43,19 +71,3 @@ tidyselect::matches
 #' @importFrom tidyselect where
 #' @export
 tidyselect::where
-
-#' @importFrom dplyr first
-#' @export
-dplyr::first
-
-#' @importFrom dplyr last
-#' @export
-dplyr::last
-
-#' @importFrom dplyr all_of
-#' @export
-dplyr::all_of
-
-#' @importFrom dplyr any_of
-#' @export
-dplyr::any_of

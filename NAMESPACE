@@ -42,6 +42,7 @@ export(all_of)
 export(any_of)
 export(as_plotly)
 export(big_mark)
+export(case_when)
 export(coord_spider)
 export(create_interactively)
 export(dec_mark)
@@ -61,7 +62,9 @@ export(n)
 export(n_distinct)
 export(plot2)
 export(plotly_style)
+export(recode_values)
 export(register_colour)
+export(replace_values)
 export(starts_with)
 export(theme_minimal2)
 export(unregister_colour)
@@ -76,6 +79,7 @@ importFrom(dplyr,
   bind_cols,
   bind_rows,
   c_across,
+  case_when,
   count,
   cur_column,
   desc,
@@ -91,8 +95,10 @@ importFrom(dplyr,
   n,
   n_distinct,
   pull,
+  recode_values,
   reframe,
   rename,
+  replace_values,
   rowwise,
   select,
   summarise,

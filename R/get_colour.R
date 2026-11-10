@@ -32,7 +32,6 @@ viridisLite_colours <- c("viridis", "magma", "inferno", "plasma", "cividis", "ro
 #' A palette from \R will be expanded where needed, so even `get_colour("R4", length = 20)` will work, despite "R4" only supporting a maximum of eight colours.
 #' @return [get_colour()] returns a [character] vector in HTML format (i.e., `"#AABBCC"`) with new class `colour`. [register_colour()] and [unregister_colour()] are called for their side effect and return `NULL` invisibly.
 #' @rdname colour
-#' @importFrom grDevices rainbow heat.colors terrain.colors topo.colors col2rgb colours grey.colors rgb
 #' @export
 #' @examples
 #' get_colour(c("red", "tan1", "#ffa", "FFAA00"))
@@ -117,15 +116,15 @@ get_colour <- function(x, length = 1, transparency = 0) {
       x <- unname(new_cols)
       
     } else if (x == "topo") {
-      x <- topo.colors(length)
+      x <- grDevices::topo.colors(length)
     } else if (x == "heatmap") {
-      x <- heat.colors(length)
+      x <- grDevices::heat.colors(length)
     } else if (x == "rainbow") {
-      x <- rainbow(length)
+      x <- grDevices::rainbow(length)
     } else if (x == "terrain") {
-      x <- terrain.colors(length)
+      x <- grDevices::terrain.colors(length)
     } else if (x %in% c("greyscale", "grayscale")) {
-      x <- grey.colors(length)
+      x <- grDevices::grey.colors(length)
     }
     
     if (length > 1 & length(x) == 1) {
@@ -135,9 +134,9 @@ get_colour <- function(x, length = 1, transparency = 0) {
   }
   
   # replace R colour names with HTML code
-  if (any(tolower(x) %in% colours())) {
-    x[tolower(x) %in% colours()] <- sapply(as.list(as.data.frame(col2rgb(tolower(x[tolower(x) %in% colours()])))),
-                                           function(rgb) rgb(red = rgb[1], green = rgb[2], blue = rgb[3], maxColorValue = 255))
+  if (any(tolower(x) %in% grDevices::colours())) {
+    x[tolower(x) %in% grDevices::colours()] <- sapply(as.list(as.data.frame(grDevices::col2rgb(tolower(x[tolower(x) %in% grDevices::colours()])))),
+                                           function(rgb) grDevices::rgb(red = rgb[1], green = rgb[2], blue = rgb[3], maxColorValue = 255))
   }
   # replace pre-registered colour names with HTML code
   reg <- tolower(x) %in% tolower(names(plot2_env$reg_cols))
@@ -181,7 +180,7 @@ get_colour <- function(x, length = 1, transparency = 0) {
     # misses some colours, so fill with greys that are 70-95% white
     plot2_warning("Missing ", length - length(x), " colours, filling with random light greys")
     x <- c(x[1:length(x)],
-           grey.colors(length - length(x), start = 0.7, end = 0.95))
+           grDevices::grey.colors(length - length(x), start = 0.7, end = 0.95))
   }
   
   # so everything is now hexadecimal; paste alpha (transparency) to it

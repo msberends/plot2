@@ -108,7 +108,6 @@ coord_spider <- function(theta = "x",
 #' @rdname coord_spider
 #' @format NULL
 #' @importFrom ggplot2 ggproto Coord calc_element is_waiver expansion theme_grey element_grob
-#' @importFrom grid nullGrob
 #' @export
 CoordSpider <- ggproto(
   "CoordSpider",
@@ -258,10 +257,10 @@ CoordSpider <- ggproto(
     
     # ---- helpers / early exits ----
     th_n <- panel_params$theta_n
-    if (is.na(th_n) || th_n <= 1) return(nullGrob())
+    if (is.na(th_n) || th_n <= 1) return(grid::nullGrob())
     
     r_breaks <- panel_params$r_breaks
-    if (is.null(r_breaks) || length(r_breaks) == 0) return(nullGrob())
+    if (is.null(r_breaks) || length(r_breaks) == 0) return(grid::nullGrob())
     
     # map helpers (use anchored mapping range)
     r_to_unit <- function(r) scales::rescale(
@@ -284,7 +283,7 @@ CoordSpider <- ggproto(
     }
     
     bg_base <- if (inherits(bg, "element_blank")) {
-      nullGrob()
+      grid::nullGrob()
     } else {
       element_grob(bg)  # a rect over the whole panel
     }
@@ -414,10 +413,10 @@ CoordSpider <- ggproto(
   },
   
   render_axis_h = function(self, panel_params, theme) {
-    list(top = nullGrob(), bottom = nullGrob())
+    list(top = grid::nullGrob(), bottom = grid::nullGrob())
   },
   render_axis_v = function(self, panel_params, theme) {
-    list(left = nullGrob(), right = nullGrob())
+    list(left = grid::nullGrob(), right = grid::nullGrob())
   }
 )
 

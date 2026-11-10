@@ -1,5 +1,6 @@
 # plot2 1.99.1
 
+* Re-exported from `dplyr`: `case_when()`, `recode_values()`, `replace_values()`
 * Calculations in titles (`title`, `subtitle`, `caption`, `tag`, `x.title`, `y.title` and `category.title`) now always use the columns of the data first. Before, an object with the same name in the calling environment took precedence, so that e.g. `caption = min(format(date, "%Y"))` used the function `date()` instead of the column `date`, and a global object `age` was used instead of the column `age`.
 * In maps (sf objects), `colour_fill` now also sets the colours of a discrete `category`; before, the colours of `ggplot2` were always used.
 * The percentage breaks of density plots now follow the computed density. Before, they were based on the values of `x`, which could give a single, odd break such as `99%`.

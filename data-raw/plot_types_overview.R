@@ -73,10 +73,11 @@ make_panel <- function(name, expr) {
   }
   # every panel is wrapped as one element, so that the axes of the panels are not aligned with each other
   patchwork::wrap_elements(panel = p) +
-    ggplot2::labs(title = name, subtitle = code_text(expr)) +
+    # ggplot2::labs(title = name, subtitle = code_text(expr)) +
+    ggplot2::labs(title = name) +
     ggplot2::theme(
       plot.title = ggplot2::element_text(size = 13, face = "bold", hjust = 0),
-      plot.subtitle = ggplot2::element_text(size = 8, family = "mono", colour = "grey30", hjust = 0, lineheight = 1.1),
+      # plot.subtitle = ggplot2::element_text(size = 8, family = "mono", colour = "grey30", hjust = 0, lineheight = 1.1),
       plot.margin = ggplot2::margin(8, 8, 8, 8)
     )
 }
@@ -86,7 +87,8 @@ plots <- Map(make_panel, names(panels), panels)
 overview <- patchwork::wrap_plots(plots, ncol = 4) +
   patchwork::plot_annotation(
     title = "Plot types of plot2()",
-    subtitle = "Each plot is created by the single line of code shown with it.",
+    # subtitle = "Each plot is created by the single line of code shown with it.",
+    subtitle = "Each plot is created by a single line of code.",
     theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 20, face = "bold"),
                            plot.subtitle = ggplot2::element_text(size = 12, colour = "grey30"))
   )

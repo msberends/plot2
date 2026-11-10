@@ -100,9 +100,9 @@ reference:
       - admitted_patients
       - netherlands
 
-  - title: Re-exported functions
+  - title: `dplyr` and `tidyselect` functions
     desc: >
-      Functions from `dplyr` and `tidyselect` that are often used in the
-      arguments of `plot2()`.
+      These are functions from `dplyr` and `tidyselect` that can be used in
+      `plot2()` directly, without the need to load those packages first.
     contents:
       - reexports
