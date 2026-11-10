@@ -12,9 +12,7 @@ to see their documentation.
   [`first()`](https://dplyr.tidyverse.org/reference/nth.html),
   [`last()`](https://dplyr.tidyverse.org/reference/nth.html),
   [`n()`](https://dplyr.tidyverse.org/reference/context.html),
-  [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html),
-  [`recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html),
-  [`replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
+  [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html)
 
 - tidyselect:
 

@@ -42,8 +42,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.99.1" id="plot2-1991">plot2 1.99.1<a class="anchor" aria-label="anchor" href="#plot2-1991"></a></h2>
-<ul><li>Re-exported from <code>dplyr</code>: <code><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/recode-and-replace-values.html" class="external-link">recode_values()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/recode-and-replace-values.html" class="external-link">replace_values()</a></code>
+<ul><li>Re-exported from <code>dplyr</code>: <code><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when()</a></code>
 </li>
+<li>Scientific notation on the y axis (e.g. <code>y.scientific = TRUE</code>) failed with <code>ggplot2</code> 4.0.0 with the error ‘invalid mathematical annotation’</li>
 <li>Calculations in titles (<code>title</code>, <code>subtitle</code>, <code>caption</code>, <code>tag</code>, <code>x.title</code>, <code>y.title</code> and <code>category.title</code>) now always use the columns of the data first. Before, an object with the same name in the calling environment took precedence, so that e.g. <code>caption = min(format(date, "%Y"))</code> used the function <code><a href="https://rdrr.io/r/base/date.html" class="external-link">date()</a></code> instead of the column <code>date</code>, and a global object <code>age</code> was used instead of the column <code>age</code>.</li>
 <li>In maps (sf objects), <code>colour_fill</code> now also sets the colours of a discrete <code>category</code>; before, the colours of <code>ggplot2</code> were always used.</li>
 <li>The percentage breaks of density plots now follow the computed density. Before, they were based on the values of <code>x</code>, which could give a single, odd break such as <code>99%</code>.</li>
@@ -75,14 +76,12 @@
 <li>create_interactively() serves only a copy of the logo, no longer the whole folder that contains it</li>
 <li>Column names are no longer parsed as R code in back-to-back and UpSet plots, so data with unusual column names (such as <code>my col</code>) work, and column names can never run code</li>
 <li>
-<code><a href="../reference/label_taxonomy.html">label_taxonomy()</a></code> italicises species names only after a genus or an abbreviated genus, so ordinary words stay upright</li>
-<li>
 <code><a href="../reference/plot2.html">?plot2</a></code> has a new section ‘Automatic choices’ that lists every decision plot2 makes by itself, its rule and the argument that overrides it</li>
 <li>Much faster on large data: datalabels are formatted only for the rows that are drawn, e.g. 200,000 rows now take about 0.2 s instead of 1.5 to 3 s</li>
 <li>Arguments renamed to follow one naming rule (see ‘Argument names’ in <code><a href="../reference/plot2.html">?plot2</a></code>): <code>colour_opacity</code> is now <code>colour_transparency</code> (and <code>get_colour(opacity)</code> is <code>transparency</code>), <code>x.lbl_angle</code>, <code>x.lbl_align</code> and <code>x.lbl_italic</code> are <code>x.label_*</code>, <code>facet.repeat_lbls_*</code> are <code>facet.repeat_labels_*</code>, <code>facet.fill</code> is <code>facet.colour_fill</code>, <code>sankey.*</code> are <code>sankey_*</code>, and the options <code>dec_mark</code> and <code>big_mark</code> are <code>plot2.decimal.mark</code> and <code>plot2.big.mark</code>. The old argument names give an error that names the new one</li>
-<li>New: <code>legend = FALSE</code> hides the legend; <code>stacked = "fill"</code> stacks to 100%; <code><a href="../reference/label_taxonomy.html">label_taxonomy()</a></code> italicises microorganism names in any labels, e.g. <code>x.labels = label_taxonomy</code> (replacing <code>x.lbl_taxonomy</code>)</li>
+<li>New: <code>legend = FALSE</code> hides the legend; <code>stacked = "fill"</code> stacks to 100%</li>
 <li>
-<code>x.mic</code> was removed; add <code>+ AMR::scale_x_mic()</code> to the plot instead</li>
+<code>x.mic</code> was removed; add <code>+ AMR::scale_x_mic()</code> to the plot instead. <code>x.lbl_taxonomy</code> was removed; use <code>x.labels = AMR::labels_taxonomy</code> instead. The <code>AMR</code> package is no longer a suggested dependency</li>
 <li>Giving both <code>category.title</code> and <code>legend.title</code> is now an error, since they are the same setting</li>
 <li>Automatic defaults are now <code>NULL</code> in the usage, and explicit values mean what they say: e.g. <code>datalabels = TRUE</code> always shows all labels, while the default <code>NULL</code> shows at most 25; <code>summarise_function = FALSE</code> (no longer <code>NULL</code>) turns off summarising; an explicit <code>y.percent_break</code> is kept as given</li>
 <li>

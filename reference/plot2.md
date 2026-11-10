@@ -1,22 +1,22 @@
-# Conveniently Create a New `ggplot`
+# Create a `ggplot` in a Single Call
 
-The `plot2()` function is a convenient wrapper around many
-[`ggplot2`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-functions. By design, the `ggplot2` package requires users to use a lot
-of functions and manual settings, while the `plot2()` function does all
-the heavy lifting automatically and only requires users to define some
-arguments in one single function, greatly increases convenience.
-
-Moreover, `plot2()` allows for in-place calculation of `y`, all axes,
-and all axis labels, often preventing the need to use
+`plot2()` creates a complete
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) in one
+call. It takes the place of the usual combination of
+[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html),
+[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html), a
+`geom_*()` function, scales, labels and a theme, and of the data
+preparation that often precedes it with
 [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html),
 [`count()`](https://dplyr.tidyverse.org/reference/count.html),
-[`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html), or
-[`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html).
+[`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) or
+[`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html):
+calculations can be given in the arguments directly, such as `y = n()`
+or `x = format(date, "%Y")`.
 
-See
-[plot2-methods](https://msberends.github.io/plot2/reference/plot2-methods.md)
-for all implemented methods for different object classes.
+Besides data frames, `plot2()` accepts vectors, matrices, formulas, 'sf'
+objects and other classes; see
+[plot2-methods](https://msberends.github.io/plot2/reference/plot2-methods.md).
 
 ## Usage
 
@@ -1057,65 +1057,71 @@ plot2(
 
 ## Value
 
-a `ggplot` object
+A [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+object.
 
 ## Details
 
-The `plot2()` function is a convenient wrapper around many
-[`ggplot2`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-functions such as
-[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html),
-[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html),
-[`geom_col()`](https://ggplot2.tidyverse.org/reference/geom_bar.html),
-[`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html),
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), etc., and
-provides:
+**Plotting directions**
 
-- Writing as few lines of codes as possible
+A plot has up to four directions: `x`, `y`, `category` (the colours,
+called 'colour' and 'fill' in `ggplot2`) and `facet` (separate panels).
+Each can be a column or a calculation on the data. Groups of `x`,
+`category` and `facet` that contain several values are summarised with
+`summarise_function`, and each direction has its own settings, such as
+`x.sort` and `category.sort` for the order of the values, and
+`x.max_items` and `category.max_items` to show only the first values and
+combine the rest into one. Directions that are not given are chosen from
+the data, see *Automatic choices* below.
 
-- Easy plotting in three 'directions': `x` (the regular X-axis),
-  `category` (replaces 'fill' and 'colour') and `facet`
+**Plot types**
 
-- Automatic setting of these 'directions' based on the input data
+`type` accepts every `ggplot2` geom and adds the types `"barpercent"`,
+`"linedot"`, `"dumbbell"`, `"back-to-back"`, `"sankey"`, `"spider"` and
+`"upset"`. Without `type`, the type follows from the data. See
+[`vignette("supported_types", package = "plot2")`](https://msberends.github.io/plot2/articles/supported_types.md)
+for every type with its data requirements.
 
-- Setting in-place calculations for all plotting directions and even `y`
+**The result**
 
-- Easy way for sorting data in many ways (such as on alphabet, numeric
-  value, frequency, original data order), by setting a single argument
-  for the 'direction': `x.sort`, `category.sort` and `facet.sort`
+The result is an ordinary `ggplot` object: it can be extended with `+`
+and any `ggplot2` function, with the
+[`add_*()`](https://msberends.github.io/plot2/reference/add_type.md)
+functions, which add layers with unquoted variables, and its layers can
+be reordered with
+[`move_layer()`](https://msberends.github.io/plot2/reference/move_layer.md).
+The default theme is
+[`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md),
+and the colours are set with `colour` and `colour_fill`, which accept
+any value of
+[`get_colour()`](https://msberends.github.io/plot2/reference/colour.md).
 
-- Easy limiting values, e.g. by setting `x.max_items = 5` or
-  `category.max_items = 5`
+**Text and numbers**
 
-- Markdown support for any title text, with any theme
+Titles and labels support markdown (such as `"**bold**"` and
+`"*italic*"`) and calculations on the data, such as
+`title = paste("Patients in", min(format(date, "%Y")))`. The font can be
+any installed system font or a Google Font (`font`). Numbers use the
+decimal and big marks of
+[`dec_mark()`](https://msberends.github.io/plot2/reference/dec_mark.md)
+and
+[`big_mark()`](https://msberends.github.io/plot2/reference/dec_mark.md),
+and the language of generated text follows the `plot2.language` option;
+see
+[plot2-options](https://msberends.github.io/plot2/reference/plot2-options.md)
+for all options.
 
-- Integrated support for any Google Font and any installed system font
+**Further reading**
 
-- An extra clean, minimalistic theme with a lot of whitespace (but
-  without unnecessary margins) that is ideal for printing:
-  [`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md)
+[`vignette("plot2", package = "plot2")`](https://msberends.github.io/plot2/articles/plot2.md)
+introduces the package step by step. The [package
+website](https://msberends.github.io/plot2/) has articles on colours and
+themes, maps, fonts, and `plot2()` for `ggplot2` users.
+[`create_interactively()`](https://msberends.github.io/plot2/reference/create_interactively.md)
+builds a plot in a Shiny app and shows the code that creates it.
 
-- Some conveniences from Microsoft Excel:
-
-  - The Y-axis starts at 0 if possible
-
-  - The y scale expands at the top to be better able to interpret all
-    data points
-
-  - Date breaks can be written in a human-readable format (such as "d
-    mmm yyyy")
-
-  - Labels with data values can easily be printed and are automatically
-    determined
-
-- Support for any `ggplot2` extension based on
-  [`ggplot2::fortify()`](https://ggplot2.tidyverse.org/reference/fortify.html)
-
-The `ggplot2` package in conjunction with the `dplyr`, `tidyr` and
-`forcats` packages can provide above functionalities, but the goal of
-the `plot2()` function is to generalise this into one function. The
-generic `plot2()` function currently has 153 arguments, all with a
-default value except `.data` and `...`. **Less typing, faster coding.**
+The generic `plot2()` currently has 153 arguments, all with a default
+value except `.data` and `...`.
 
 ## Automatic choices
 
@@ -1208,6 +1214,22 @@ plain snake case, e.g. `colour_fill`, `sankey_node_width` or
 A default of `NULL` means that `plot2()` determines the value
 automatically, often announced in a message. An explicit value is always
 used as given.
+
+## See also
+
+[`vignette("plot2", package = "plot2")`](https://msberends.github.io/plot2/articles/plot2.md)
+and
+[`vignette("supported_types", package = "plot2")`](https://msberends.github.io/plot2/articles/supported_types.md);
+[plot2-methods](https://msberends.github.io/plot2/reference/plot2-methods.md)
+for the methods per object class;
+[`add_type()`](https://msberends.github.io/plot2/reference/add_type.md)
+and
+[`move_layer()`](https://msberends.github.io/plot2/reference/move_layer.md)
+to extend a plot;
+[`get_colour()`](https://msberends.github.io/plot2/reference/colour.md)
+and
+[`theme_minimal2()`](https://msberends.github.io/plot2/reference/theme_minimal2.md)
+for colours and the theme.
 
 ## Examples
 

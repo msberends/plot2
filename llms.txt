@@ -1,6 +1,6 @@
 # `plot()` + `ggplot2` = **`plot2()`**
 
-## The single-line plotting assistant for `ggplot2`
+## The Single-Line Plotting Assistant for `ggplot2`
 
 The `ggplot2` R package composes any plot from layers, aesthetics,
 scales, coordinates and themes. This grammar makes it flexible and
@@ -20,8 +20,7 @@ colours, axes and theme:
 
 ``` r
 
-iris |> 
-  plot2()
+iris |> plot2()
 #> Using x = Sepal.Length
 #> Using y = Sepal.Width
 #> Using category = Species
@@ -32,8 +31,7 @@ iris |>
 
 ``` r
 
-iris |>
-  plot2(x = Species)
+iris |> plot2(x = Species)
 #> Using y = Sepal.Length
 #> Using type = "boxplot" since all groups in Species contain at least three values
 ```
@@ -42,8 +40,7 @@ iris |>
 
 ``` r
 
-iris |>
-  plot2(x = Species, y = mean(Sepal.Length))
+iris |> plot2(x = Species, y = mean(Sepal.Length))
 ```
 
 ![](reference/figures/README-unnamed-chunk-2-3.png)
@@ -76,8 +73,8 @@ install.packages("plot2", repos = c("https://msberends.r-universe.dev", "https:/
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
 supports all `ggplot2` geoms, and adds plot types such as dumbbell,
-back-to-back, Sankey, spider and UpSet plots. Each plot below is made
-with a single line of code:
+back-to-back, Sankey, spider and UpSet plots. Each of the 20 plots below
+is made with only a single line of code:
 
 ![Grid of 24 example plots made with plot2(), including bar, line, area,
 boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map
@@ -101,6 +98,9 @@ admitted_patients |> plot2(age_group, n(), hospital, stacked_fill = TRUE)
 
 # Line
 admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "line")
+
+# Line with points
+admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "linedot")
 
 # Area
 admitted_patients |> plot2(format(date, "%Y"), n(), hospital, type = "area", stacked = TRUE, x.complete = 0)
@@ -167,8 +167,9 @@ admitted_patients |>
 admitted_patients |>
   plot2(x = age_group,
         y = n_distinct(patient_id),
-        category = gender |> recode_values("F" ~ "Female", "M" ~ "Male"),
+        category = case_when(gender == "F" ~ "Female", gender == "M" ~ "Male"),
         facet = paste("Ward:", ward),
+        
         # additional options are each only 1 argument:
         x.title = "Age Group",
         y.title = "Unique Nr of Patients",
@@ -177,13 +178,14 @@ admitted_patients |>
 #> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
-![](reference/figures/README-unnamed-chunk-4-2.png)
+![](reference/figures/README-unnamed-chunk-5-1.png)
 
-> All arguments are named after the plotting direction they apply to:
-> `x.*`, `y.*`, `category.*` and `facet.*`. There is no need to remember
-> argument names or look them up in the documentation. Type the
-> direction and press Tab, and your editor lists every option for it,
-> together with its description:
+> **NOTE** All arguments are named after the plotting direction they
+> apply to: `x.*`, `y.*`, `category.*` and `facet.*`. With
+> [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md),
+> there is no need to remember argument or function names, or to look
+> them up in the documentation. Type the direction and press Tab, and
+> your editor lists every option for it, together with its description:
 >
 > ![RStudio autocompletion after typing plot2(facet, listing all facet
 > arguments such as facet.fixed_y, facet.bold and facet.drop, with the
@@ -203,7 +205,7 @@ mtcars |>
 #> Using type = "point" since both axes are numeric
 ```
 
-![](reference/figures/README-unnamed-chunk-5-1.png)
+![](reference/figures/README-unnamed-chunk-6-1.png)
 
 A correlation matrix becomes a heatmap:
 
@@ -218,22 +220,23 @@ mtcars |>
 #> Using category.midpoint = 0 (the current category scale centre)
 ```
 
-![](reference/figures/README-unnamed-chunk-6-1.png)
+![](reference/figures/README-unnamed-chunk-7-1.png)
 
 ## Learning more
 
 - [Introduction to
   plot2](https://msberends.github.io/plot2/articles/plot2.html)
-  ([`vignette("plot2", package = "plot2")`](https://msberends.github.io/plot2/articles/plot2.md))
   describes the main ideas.
 - [Plot
   types](https://msberends.github.io/plot2/articles/supported_types.html)
-  ([`vignette("supported_types", package = "plot2")`](https://msberends.github.io/plot2/articles/supported_types.md))
   shows every plot type.
-- The [package website](https://msberends.github.io/plot2/) has articles
-  on colours and themes, maps, fonts, and
-  [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) for
-  `ggplot2` users.
+- [Colour and
+  themes](https://msberends.github.io/plot2/articles/colours-and-themes.html)
+  describes how to set manual/organisational style
+- [Fonts](https://msberends.github.io/plot2/articles/fonts.html)
+  explains how any font can be used directly.
+- [Maps](https://msberends.github.io/plot2/articles/maps.html) shows how
+  maps can be plotted easily.
 
 [`create_interactively()`](https://msberends.github.io/plot2/reference/create_interactively.md)
 opens a Shiny app that builds a plot from a point-and-click interface
@@ -270,7 +273,7 @@ and its shortcuts add layers to a plot.
 
 - [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) :
 
-  Conveniently Create a New `ggplot`
+  Create a `ggplot` in a Single Call
 
 - [`plot2(`*`<default>`*`)`](https://msberends.github.io/plot2/reference/plot2-methods.md)
   [`plot2(`*`<formula>`*`)`](https://msberends.github.io/plot2/reference/plot2-methods.md)
@@ -337,8 +340,6 @@ markdown in titles, and labelling functions for axes and data labels.
 - [`euros()`](https://msberends.github.io/plot2/reference/labellers.md)
   [`dollars()`](https://msberends.github.io/plot2/reference/labellers.md)
   : Label Currencies
-- [`label_taxonomy()`](https://msberends.github.io/plot2/reference/label_taxonomy.md)
-  : Label Taxonomic Names in Italics
 
 ## Number formatting
 
@@ -393,17 +394,15 @@ directly, without the need to load those packages first.
   [`n`](https://msberends.github.io/plot2/reference/reexports.md)
   [`n_distinct`](https://msberends.github.io/plot2/reference/reexports.md)
   [`case_when`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`recode_values`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`replace_values`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`first`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`last`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`all_of`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`any_of`](https://msberends.github.io/plot2/reference/reexports.md)
   [`everything`](https://msberends.github.io/plot2/reference/reexports.md)
   [`starts_with`](https://msberends.github.io/plot2/reference/reexports.md)
   [`ends_with`](https://msberends.github.io/plot2/reference/reexports.md)
   [`matches`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`where`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`first`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`last`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`all_of`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`any_of`](https://msberends.github.io/plot2/reference/reexports.md) :
+  [`where`](https://msberends.github.io/plot2/reference/reexports.md) :
   Objects exported from other packages
 
 # Articles

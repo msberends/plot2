@@ -74,7 +74,7 @@
 │   ├── data.R                # Documentation for bundled datasets
 │   ├── dec_mark.R            # dec_mark(), big_mark(), dollars(), euros()
 │   ├── get_plot_title.R      # Title extraction helpers
-│   ├── labellers.R           # Labeller functions, e.g. label_taxonomy()
+│   ├── labellers.R           # Labeller functions euros() and dollars()
 │   ├── move_layer.R          # move_layer() utility
 │   ├── plotly.R              # plotly integration
 │   ├── reexports.R           # Re-exported dplyr / tidyselect functions
@@ -416,7 +416,7 @@ plot2.formula      – formula interface</code></pre>
 </tr><tr><td>
 <code>x.mic</code>, <code>x.lbl_taxonomy</code>
 </td>
-<td>Removed from <code><a href="reference/plot2.html">plot2()</a></code>; replaced by separate helpers (e.g. <code><a href="reference/label_taxonomy.html">label_taxonomy()</a></code>).</td>
+<td>Removed from <code><a href="reference/plot2.html">plot2()</a></code>; replaced by <code><a href="https://amr-for-r.org/reference/plot.html" class="external-link">AMR::scale_x_mic()</a></code> and <code>AMR::labels_taxonomy()</code> of the <code>AMR</code> package, which is not a dependency.</td>
 </tr><tr><td><code>legend</code></td>
 <td>New argument: <code>NULL</code> (automatic), <code>TRUE</code> forces, <code>FALSE</code> hides. The legend is only the plot element explaining <code>category</code>; the <code>legend.*</code> settings keep their names.</td>
 </tr><tr><td><code>legend.position</code></td>

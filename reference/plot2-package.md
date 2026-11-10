@@ -16,6 +16,8 @@ Useful links:
 
 - <https://github.com/msberends/plot2>
 
+- Report bugs at <https://github.com/msberends/plot2/issues>
+
 ## Author
 
 **Maintainer**: Matthijs S. Berends <m.s.berends@umcg.nl>

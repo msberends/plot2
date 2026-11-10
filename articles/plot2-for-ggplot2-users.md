@@ -174,10 +174,9 @@ alone:
   which converts markdown to a `plotmath` expression for titles and
   labels;
 - the labelling functions
-  [`euros()`](https://msberends.github.io/plot2/reference/labellers.md),
-  [`dollars()`](https://msberends.github.io/plot2/reference/labellers.md)
+  [`euros()`](https://msberends.github.io/plot2/reference/labellers.md)
   and
-  [`label_taxonomy()`](https://msberends.github.io/plot2/reference/label_taxonomy.md),
+  [`dollars()`](https://msberends.github.io/plot2/reference/labellers.md),
   for scales and data labels.
 
 ``` r

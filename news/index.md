@@ -3,9 +3,9 @@
 ## plot2 1.99.1
 
 - Re-exported from `dplyr`:
-  [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html),
-  [`recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html),
-  [`replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
+  [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
+- Scientific notation on the y axis (e.g. `y.scientific = TRUE`) failed
+  with `ggplot2` 4.0.0 with the error ‘invalid mathematical annotation’
 - Calculations in titles (`title`, `subtitle`, `caption`, `tag`,
   `x.title`, `y.title` and `category.title`) now always use the columns
   of the data first. Before, an object with the same name in the calling
@@ -102,9 +102,6 @@
 - Column names are no longer parsed as R code in back-to-back and UpSet
   plots, so data with unusual column names (such as `my col`) work, and
   column names can never run code
-- [`label_taxonomy()`](https://msberends.github.io/plot2/reference/label_taxonomy.md)
-  italicises species names only after a genus or an abbreviated genus,
-  so ordinary words stay upright
 - [`?plot2`](https://msberends.github.io/plot2/reference/plot2.md) has a
   new section ‘Automatic choices’ that lists every decision plot2 makes
   by itself, its rule and the argument that overrides it
@@ -121,11 +118,10 @@
   are `plot2.decimal.mark` and `plot2.big.mark`. The old argument names
   give an error that names the new one
 - New: `legend = FALSE` hides the legend; `stacked = "fill"` stacks to
-  100%;
-  [`label_taxonomy()`](https://msberends.github.io/plot2/reference/label_taxonomy.md)
-  italicises microorganism names in any labels,
-  e.g. `x.labels = label_taxonomy` (replacing `x.lbl_taxonomy`)
-- `x.mic` was removed; add `+ AMR::scale_x_mic()` to the plot instead
+  100%
+- `x.mic` was removed; add `+ AMR::scale_x_mic()` to the plot instead.
+  `x.lbl_taxonomy` was removed; use `x.labels = AMR::labels_taxonomy`
+  instead. The `AMR` package is no longer a suggested dependency
 - Giving both `category.title` and `legend.title` is now an error, since
   they are the same setting
 - Automatic defaults are now `NULL` in the usage, and explicit values

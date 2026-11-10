@@ -10,7 +10,7 @@ and its shortcuts add layers to a plot.
 
 - [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) :
 
-  Conveniently Create a New `ggplot`
+  Create a `ggplot` in a Single Call
 
 - [`plot2(`*`<default>`*`)`](https://msberends.github.io/plot2/reference/plot2-methods.md)
   [`plot2(`*`<formula>`*`)`](https://msberends.github.io/plot2/reference/plot2-methods.md)
@@ -77,8 +77,6 @@ markdown in titles, and labelling functions for axes and data labels.
 - [`euros()`](https://msberends.github.io/plot2/reference/labellers.md)
   [`dollars()`](https://msberends.github.io/plot2/reference/labellers.md)
   : Label Currencies
-- [`label_taxonomy()`](https://msberends.github.io/plot2/reference/label_taxonomy.md)
-  : Label Taxonomic Names in Italics
 
 ## Number formatting
 
@@ -133,15 +131,13 @@ directly, without the need to load those packages first.
   [`n`](https://msberends.github.io/plot2/reference/reexports.md)
   [`n_distinct`](https://msberends.github.io/plot2/reference/reexports.md)
   [`case_when`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`recode_values`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`replace_values`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`first`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`last`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`all_of`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`any_of`](https://msberends.github.io/plot2/reference/reexports.md)
   [`everything`](https://msberends.github.io/plot2/reference/reexports.md)
   [`starts_with`](https://msberends.github.io/plot2/reference/reexports.md)
   [`ends_with`](https://msberends.github.io/plot2/reference/reexports.md)
   [`matches`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`where`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`first`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`last`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`all_of`](https://msberends.github.io/plot2/reference/reexports.md)
-  [`any_of`](https://msberends.github.io/plot2/reference/reexports.md) :
+  [`where`](https://msberends.github.io/plot2/reference/reexports.md) :
   Objects exported from other packages
