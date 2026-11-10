@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 21: sort_data() (#157)
 
 srt <- data.frame(x = c("A10", "b", "A2", "c", "b"), y = c(1, 2, 3, 4, 10))

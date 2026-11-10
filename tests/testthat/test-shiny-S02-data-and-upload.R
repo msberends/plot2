@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # S02: data sets and the upload tab
 
 csv_file <- function(lines = c("g,v", "a,1", "b,3", "a,2")) {

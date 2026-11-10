@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 22: set_max_items() (#157)
 
 d5 <- data.frame(x = c("a", "b", "c", "d", "e"), y = c(50, 40, 30, 20, 10))

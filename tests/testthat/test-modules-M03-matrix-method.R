@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # M03: plot2.matrix()
 
 test_that("M03.01 correlation matrix: tiles and datalabels, one tile per cell", {

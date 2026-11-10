@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 05: validate_x_scale() (#157)
 
 test_that("05.01 a character x gives a discrete scale; x.drop = FALSE keeps unused levels", {

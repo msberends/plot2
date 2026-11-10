@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 24: format_datalabels() (#157)
 
 dl <- data.frame(x = c("a", "b", "c"), y = c(1.234, 2.5, 10))

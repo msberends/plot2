@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # E05: UpSet plots
 
 # intersections: a&b x2, a x1, b&c x1, a&c x1, c x1; set sizes a 4, b 3, c 3

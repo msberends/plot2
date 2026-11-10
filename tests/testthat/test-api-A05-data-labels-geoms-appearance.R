@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # A05: plot2() arguments for data handling, datalabels, geoms and appearance
 
 d30 <- data.frame(x = paste0("v", sprintf("%02d", 1:30)), y = 1:30)

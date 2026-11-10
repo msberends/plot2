@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # Legacy smoke tests from the former test_plot2.R (#50), split by topic. They
 # mostly check the class and are skipped on CRAN; the content tests are in the
 # test-plot2_exec-*, test-modules-*, test-api-* and test-validate-* files.

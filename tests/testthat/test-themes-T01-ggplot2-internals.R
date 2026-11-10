@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # T01: ggplot2 4.x internals and compatibility
 
 test_that("T01.01 plots of all main types build and render without warnings", {

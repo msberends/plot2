@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 02: validate_legend.position() (#157)
 
 test_that("02.01 default: top for a discrete category, right for a numeric category", {

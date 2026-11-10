@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 04: validate_taxonomy(), replaced by label_taxonomy() (#70) (#157)
 
 bugs <- data.frame(name = c("Escherichia coli", "E. coli", "Other", "Klebsiella pneumoniae"),

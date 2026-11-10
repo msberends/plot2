@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # T04: plot2 inside functions, knitr, Quarto and Shiny
 
 f_embrace <- function(df, col) plot2(df, {{ col }}, n())

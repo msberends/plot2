@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # A08: vignette 'An Introduction to plot2()'
 
 test_that("A08.01 every chunk of the introduction vignette runs without error or warning", {

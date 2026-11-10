@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # S01: building the app (arguments, logo, inputs)
 
 test_that("S01.01 create_interactively() returns an app object outside an interactive session", {

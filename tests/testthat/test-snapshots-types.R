@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # Visual snapshots, one per plot type (#50). Skipped on CRAN and without vdiffr.
 # After an intended visual change, review with testthat::snapshot_review().
 

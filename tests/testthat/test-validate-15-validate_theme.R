@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 15: validate_theme() (#157)
 
 panel_fill <- function(p) col_hex(theme_el(p, "panel.background")$fill)

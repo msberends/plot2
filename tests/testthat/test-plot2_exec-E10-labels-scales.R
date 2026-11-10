@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # E10: axis labels and scale assembly
 
 test_that("E10.01 axis titles are the column names; y = n() gives 'n()'", {

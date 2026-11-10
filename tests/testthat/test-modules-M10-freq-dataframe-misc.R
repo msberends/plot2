@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # M10: plot2.freq(), the data.frame wrapper, re-exports and data
 
 test_that("M10.01 freq object: frequency order, titles Item and Count", {

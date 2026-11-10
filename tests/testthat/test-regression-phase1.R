@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # Regression tests for Phase 1 issues that had no end-to-end test case yet.
 # Each test_that() starts with the GitHub issue number.
 

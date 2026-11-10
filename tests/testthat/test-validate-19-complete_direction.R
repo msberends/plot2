@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 19: complete_direction() (#157)
 
 gaps <- data.frame(x = c(1L, 2L, 5L), y = c(3, 4, 6))

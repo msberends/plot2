@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # A10: README, NEWS, DESCRIPTION and pkgdown
 
 test_that("A10.01 the evaluated README chunks run without error or warning", {

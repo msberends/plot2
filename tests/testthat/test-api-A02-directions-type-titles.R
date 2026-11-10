@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # A02: plot2() arguments for directions, type and titles
 
 test_that("A02.01 type left blank: two numeric axes give points", {

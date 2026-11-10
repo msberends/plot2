@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 20: validate_sorting() (#157)
 
 srt <- data.frame(x = c("b", "A10", "c", "A2"), y = c(5, 1, 9, 3))

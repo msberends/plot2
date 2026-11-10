@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # Self-tests of the helpers in helper-plot2.R. These use plain ggplot2 plots
 # with known output, so a failure here means a helper is broken, not plot2.
 

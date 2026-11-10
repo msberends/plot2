@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # E08: back-to-back plots
 
 fx_pop <- data.frame(age = rep(c("0-9", "10-19", "20-29"), 2),

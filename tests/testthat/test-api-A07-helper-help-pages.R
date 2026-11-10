@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # A07: help pages of the exported helpers, options and data
 
 test_that("A07.01 md_to_expression() converts every element, as its return value says", {

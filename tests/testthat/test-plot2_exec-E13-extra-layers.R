@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # E13: additional layers for linedot, dumbbell and spider
 
 fx_dumbbell <- data.frame(x = rep(c("a", "b", "c"), 2),

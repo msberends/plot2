@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 16: validate_facet() (#157)
 
 free <- function(p) unlist(facet_info(p)[c("free_x", "free_y")])

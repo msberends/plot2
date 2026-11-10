@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # M07: coord_spider()
 
 fx_radar <- data.frame(dim = c("a", "b", "c", "d"), score = c(3, 5, 2, 4))

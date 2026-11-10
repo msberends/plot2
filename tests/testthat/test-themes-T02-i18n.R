@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # T02: internationalisation (locale, dates, decimal marks, Unicode)
 
 fx_two_dates <- data.frame(x = c("a", "b", "a", "b"), dt = as.Date(c("2024-01-01", "2024-01-01", "2024-02-01", "2024-02-01")), v = 1:4)

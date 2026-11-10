@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # Phase 6 of the review and overhaul: the Shiny app and its security.
 # Each test_that() starts with the GitHub issue number.
 

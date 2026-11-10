@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 06: validate_y_scale() (#157)
 
 d100 <- data.frame(x = c("a", "b", "c"), y = c(12, 55, 97))

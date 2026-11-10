@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 07: validate_category_scale() (#157)
 
 cat_cols <- function(p, aes = "colour", at = c(0.1, 0.5, 0.9)) {

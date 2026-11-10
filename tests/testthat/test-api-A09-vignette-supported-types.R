@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # A09: vignette 'Supported Plot Types'
 
 test_that("A09.01 every chunk of the plot types vignette runs without error or warning", {

@@ -12,6 +12,9 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
 # 12: validate_linewidth() (#157)
 
 test_that("12.01 lines 0.5, areas 0.25, maps 0.1 by default", {
