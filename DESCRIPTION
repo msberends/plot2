@@ -9,9 +9,6 @@ Authors@R: c(
          email = "m.s.berends@umcg.nl"),
   person(given = c("Erwin", "E.", "A."), 
          family = "Hassing",
-         role = c("aut", "ctb")),
-  person(given = c("Wikje", "E."), 
-         family = "Berends-Hoekstra",
          role = c("aut", "ctb")))
 Description: A streamlined extension of 'ggplot2' designed to simplify and accelerate
   the creation of data visualisations. 'plot2' automates common tasks such as axis handling,

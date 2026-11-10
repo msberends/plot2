@@ -177,7 +177,9 @@ admitted_patients |>
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
 
-> **NOTE** All arguments are named after the plotting direction they
+> **NOTE**
+>
+> All arguments are named after the plotting direction they
 > apply to: `x.*`, `y.*`, `category.*` and `facet.*`. With `plot2()`,
 > there is no need to remember argument or function names, or to look
 > them up in the documentation. Type the direction and press

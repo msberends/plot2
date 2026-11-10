@@ -157,6 +157,7 @@ admitted_patients |>
 ```
 
 > **NOTE**
+> 
 > All arguments are named after the plotting direction they apply to: `x.*`, `y.*`, `category.*` and `facet.*`. With `plot2()`, there is no need to remember argument or function names, or to look them up in the documentation. Type the direction and press <kbd>Tab</kbd>, and your editor lists every option for it, together with its description:
 > 
 > <img src="man/figures/plot_arguments.png" alt="RStudio autocompletion after typing plot2(facet, listing all facet arguments such as facet.fixed_y, facet.bold and facet.drop, with the help text of facet.fixed_y shown alongside" />
