@@ -1,0 +1,46 @@
+# ===================================================================== #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
+#                                                                       #
+#  This R package is free software; you can freely use and distribute   #
+#  it for both personal and commercial purposes under the terms of the  #
+#  GNU General Public License version 2.0 (GNU GPL-2), as published by  #
+#  the Free Software Foundation.                                        #
+#                                                                       #
+#  We created this package for both routine data analysis and academic  #
+#  research and it was publicly released in the hope that it will be    #
+#  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
+# ===================================================================== #
+
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
+# README, NEWS, DESCRIPTION and pkgdown
+
+test_that("the evaluated README chunks run without error or warning", {
+  skip_on_cran()
+  skip_if_not_installed("ggforce")
+  withr::local_pdf(NULL)
+  res <- eval_chunks(source_file("README.Rmd"), include_unevaluated = FALSE, exclude = "opts_chunk|install.packages")
+  expect_identical(res$code[!is.na(res$error)], character(0))
+  expect_identical(res$code[!is.na(res$warnings)], character(0))
+})
+
+test_that("the README chunks marked eval = FALSE run without error or warning too", {
+  withr::local_pdf(NULL)
+  res <- eval_chunks(source_file("README.Rmd"), exclude = "opts_chunk|install.packages|create_interactively")
+  expect_identical(res$code[!is.na(res$error)], character(0))
+  expect_identical(res$code[!is.na(res$warnings)], character(0))
+})
+
+test_that("the pkgdown reference index lists every topic", {
+  skip_on_cran()
+  skip_if_not_installed("pkgdown")
+  pkg <- dirname(source_file("_pkgdown.yml"))
+  expect_no_error(suppressMessages(pkgdown::check_pkgdown(pkg)))
+})
+
+test_that("NEWS.md mentions the user-visible features added since 1.0.0", {
+  news <- paste(readLines(source_file("NEWS.md")), collapse = " ")
+  expect_true(all(vapply(c("spider", "coord_spider", "beeswarm"), grepl, logical(1), x = news, ignore.case = TRUE)))
+})

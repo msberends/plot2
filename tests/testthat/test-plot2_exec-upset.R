@@ -1,0 +1,100 @@
+# ===================================================================== #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
+#                                                                       #
+#  This R package is free software; you can freely use and distribute   #
+#  it for both personal and commercial purposes under the terms of the  #
+#  GNU General Public License version 2.0 (GNU GPL-2), as published by  #
+#  the Free Software Foundation.                                        #
+#                                                                       #
+#  We created this package for both routine data analysis and academic  #
+#  research and it was publicly released in the hope that it will be    #
+#  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
+# ===================================================================== #
+
+# Not part of the CRAN core, which must finish within 1 minute (#50)
+skip_on_cran()
+
+# UpSet plots
+
+# intersections: a&b x2, a x1, b&c x1, a&c x1, c x1; set sizes a 4, b 3, c 3
+fx_upset <- data.frame(a = c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE),
+                       b = c(TRUE, TRUE, FALSE, TRUE, FALSE, FALSE),
+                       c = c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE),
+                       g = c("m", "f", "m", "f", "m", "f"),
+                       w = c(1, 2, 3, 4, 5, 6))
+
+test_that("result is a patchwork of four plots", {
+  skip_if_not_installed("patchwork")
+  p <- expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
+  expect_s3_class(p, "patchwork")
+  expect_length(p, 4)
+})
+
+test_that("intersection sizes are the combination counts, sorted descending", {
+  skip_if_not_installed("patchwork")
+  p <- plot2(fx_upset, x = c(a, b, c), type = "upset")
+  expect_identical(as.numeric(layer_df(p[[2]], "bar")$y), c(2, 1, 1, 1, 1))
+})
+
+test_that("set sizes equal the column sums", {
+  skip_if_not_installed("patchwork")
+  p <- plot2(fx_upset, x = c(a, b, c), type = "upset")
+  # drawn as negative bars, growing to the left
+  expect_setequal(abs(as.numeric(layer_df(p[[3]], "bar")$y)), c(4, 3, 3))
+})
+
+test_that("y title: default 'Intersection size', replaced by y.title", {
+  skip_if_not_installed("patchwork")
+  upset_ylab <- function(p) toString(p[[1]]$layers[[1]]$aes_params$label)
+  expect_identical(upset_ylab(plot2(fx_upset, x = c(a, b, c), type = "upset")), "Intersection size")
+  expect_identical(upset_ylab(plot2(fx_upset, x = c(a, b, c), type = "upset", y.title = "Patients")), "Patients")
+})
+
+test_that("a category stacks the intersection bars", {
+  skip_if_not_installed("patchwork")
+  p <- expect_plot2(plot2(fx_upset, x = c(a, b, c), category = g, type = "upset"))
+  expect_identical(as.character(scale_breaks(p[[2]], "fill")), c("f", "m"))
+})
+
+test_that("with y, intersection heights are sums of y", {
+  skip_if_not_installed("patchwork")
+  p <- plot2(fx_upset, x = c(a, b, c), y = w, type = "upset")
+  # a&b: 1 + 2; a: 3; b&c: 4; a&c: 5; c: 6
+  expect_setequal(as.numeric(layer_df(p[[2]], "bar")$y), c(3, 3, 4, 5, 6))
+})
+
+test_that("x.sort = 'freq-asc' sorts ascending", {
+  skip_if_not_installed("patchwork")
+  p <- plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = "freq-asc")
+  expect_identical(as.numeric(layer_df(p[[2]], "bar")$y), c(1, 1, 1, 1, 2))
+})
+
+test_that("a single x column errors", {
+  expect_error(plot2(fx_upset, x = a, type = "upset"))
+})
+
+test_that("x.sort as a vector (#83)", {
+  skip_if_not_installed("patchwork")
+  expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset", x.sort = c("1", "2")))
+})
+
+test_that("print = TRUE returns the plot invisibly (#22)", {
+  skip_if_not_installed("patchwork")
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  expect_s3_class(plot2(fx_upset, x = c(a, b, c), type = "upset", print = TRUE), "patchwork")
+})
+
+test_that("no internal state left behind", {
+  expect_clean_state(plot2(fx_upset, x = c(a, b, c), type = "upset"), check = c("state", "locale"))
+})
+
+test_that("the random-number stream is untouched (#14)", {
+  expect_clean_state(plot2(fx_upset, x = c(a, b, c), type = "upset"), check = "rng")
+})
+
+test_that("no R warnings (#87)", {
+  skip_if_not_installed("patchwork")
+  expect_plot2(plot2(fx_upset, x = c(a, b, c), type = "upset"))
+})

@@ -46,13 +46,13 @@ plot2/
 │   ├── helper-fixtures.R     # Shared fixtures fx_*
 │   ├── setup.R               # Deterministic test environment
 │   ├── test-helpers.R        # Self-tests of the helpers
-│   ├── test-plot2_exec-E*.R  # End-to-end tests per plot2_exec() stage
-│   ├── test-modules-M*.R     # End-to-end tests for methods, add_*(), coord, theme, colours
-│   ├── test-api-A*.R         # Documented behaviour, examples, vignettes, README
-│   ├── test-themes-T*.R      # Cross-cutting themes: i18n, devices, dependencies, ...
-│   ├── test-shiny-S*.R       # Shiny app server tests with shiny::testServer()
+│   ├── test-plot2_exec-*.R   # End-to-end tests per plot2_exec() stage
+│   ├── test-modules-*.R      # End-to-end tests for methods, add_*(), coord, theme, colours
+│   ├── test-api-*.R          # Documented behaviour, examples, vignettes, README
+│   ├── test-themes-*.R       # Cross-cutting themes: i18n, devices, dependencies, ...
+│   ├── test-shiny-*.R        # Shiny app server tests with shiny::testServer()
 │   ├── test-validate-*.R     # End-to-end tests per validate.R function (#157)
-│   ├── test-regression-*.R   # Regression tests per fixing phase
+│   ├── test-regression-*.R   # Regression tests per topic, named by GitHub issue
 │   └── test-legacy-*.R       # Former test_plot2.R smoke tests (helper-legacy.R), skipped on CRAN
 ├── vignettes/
 │   ├── plot2.Rmd             # Vignette 'Introduction to plot2' (pkgdown: Get started)
@@ -176,10 +176,10 @@ New files **must** include this header verbatim at the top.
   - `helper-fixtures.R`: small deterministic fixtures `fx_*`; add shared data there, not inline.
   - `setup.R`: deterministic environment (UTC, C locale, plot2 options reset).
   - `test-helpers.R`: self-tests of the helpers; extend it whenever a helper is added or changed.
-- Test files: per-topic files only; the smoke tests of the former `test_plot2.R` are in `test-legacy-*.R` (skipped on CRAN). Topic prefixes: `test-plot2_exec-E<nn>-<topic>.R` (stages of `plot2_exec()`), `test-modules-M<nn>-<topic>.R` (methods and modules), `test-api-A<nn>` (documented behaviour), `test-themes-T<nn>` (cross-cutting themes), `test-shiny-S<nn>` (Shiny server, driven with the `shiny_*()` helpers) and `test-validate-<nn>` (one file per `validate.R` function). Every `test_that()` description starts with its case ID (e.g. `"E05.03 ..."`); in `test-regression-*.R` the ID is the GitHub issue number (e.g. `"#13 ..."`).
+- Test files: per-topic files only; the smoke tests of the former `test_plot2.R` are in `test-legacy-*.R` (skipped on CRAN). Group prefixes: `test-plot2_exec-<topic>.R` (stages of `plot2_exec()`), `test-modules-<topic>.R` (methods and modules), `test-api-<topic>.R` (documented behaviour), `test-themes-<topic>.R` (cross-cutting themes), `test-shiny-<topic>.R` (Shiny server, driven with the `shiny_*()` helpers), `test-validate-<function>.R` (one file per `validate.R` function) and `test-regression-<topic>.R` (fixed issues). Test files and descriptions carry no case IDs; in `test-regression-*.R` every `test_that()` description starts with the GitHub issue number (e.g. `"#13 ..."`).
 - Tests for open GitHub issues describe the desired behaviour and start with `skip_open_issue("#123")`. When fixing the issue, remove that line and the test must pass. Known soft deprecations caused by plot2 are silenced per test with `local_known_deprecation("#123")`, never globally.
 - Test content, not only class: prefer `expect_geoms()`, `expect_labels()` etc. over `expect_s3_class(p, "gg")`. `expect_plot2()` renders the plot and fails on R warnings.
-- CRAN core (#50): on CRAN only a small core runs, which must finish within 1 minute (about 20 seconds locally). Every other test file starts with a file-level `skip_on_cran()` directly below the header. The core: E01, E02, E03, E06, E12, E14, A01, A11, M02, M08, M09, T05, T06, T09 and validate-01. New test files get the file-level `skip_on_cran()` unless they replace a core file; measure with `NOT_CRAN=false` before adding to the core. Guard every use of a suggested package with `skip_if_not_installed()`.
+- CRAN core (#50): on CRAN only a small core runs, which must finish within 1 minute (about 20 seconds locally). Every test file outside the core starts with a file-level `skip_on_cran()` directly below the header, so the files without it form the core. New test files get this skip; add a file to the core only after timing the CRAN run with `NOT_CRAN=false`. Such a local run deletes the vdiffr snapshots as unused, so restore `tests/testthat/_snaps` from git afterwards. Guard every use of a suggested package with `skip_if_not_installed()`.
 - The full suite takes several minutes: run it detached and read the log.
 
 ### Running Tests
@@ -293,7 +293,7 @@ devtools::build_readme()
 - In-depth material goes in `vignettes/articles/` (website only): colours and themes, maps, fonts, and plot2 for ggplot2 users. List every article in `_pkgdown.yml`.
 - Writing standard: neutral technical tone, British spelling, no em dashes; one sentence before each chunk on what it shows; only current argument names; show the code of every displayed plot.
 - The `?plot2` examples must stay well under 5 seconds in `R CMD check --as-cran`; examples beyond the core usage belong in the vignettes.
-- Tests A08, A09 and A12 run every chunk of the vignettes and articles; chunks with `eval = FALSE` run too, so exclude `install.packages()` and isolate any options they set.
+- The tests `test-api-vignette-plot2.R`, `test-api-vignette-supported-types.R` and `test-api-website-articles.R` run every chunk of the vignettes and articles; chunks with `eval = FALSE` run too, so exclude `install.packages()` and isolate any options they set.
 
 ---
 

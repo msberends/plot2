@@ -1,0 +1,64 @@
+# ===================================================================== #
+#  An R package for Fast 'ggplot2' Plotting:                            #
+#  https://github.com/msberends/plot2                                   #
+#                                                                       #
+#  This R package is free software; you can freely use and distribute   #
+#  it for both personal and commercial purposes under the terms of the  #
+#  GNU General Public License version 2.0 (GNU GPL-2), as published by  #
+#  the Free Software Foundation.                                        #
+#                                                                       #
+#  We created this package for both routine data analysis and academic  #
+#  research and it was publicly released in the hope that it will be    #
+#  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
+# ===================================================================== #
+
+# API surface and signatures
+
+rd_arguments <- function(rd_file) {
+  rd <- tools::parse_Rd(rd_file)
+  args <- rd[vapply(rd, attr, "", "Rd_tag") == "\\arguments"][[1]]
+  items <- args[vapply(args, attr, "", "Rd_tag") == "\\item"]
+  nms <- vapply(items, function(i) paste(unlist(i[[1]]), collapse = ""), "")
+  trimws(unlist(strsplit(gsub("\\\\dots", "...", nms), ",")))
+}
+
+test_that("every argument of the generic is documented on its help page", {
+  documented <- rd_arguments(source_file("man", "plot2.Rd"))
+  expect_setequal(setdiff(names(formals(plot2)), documented), character(0))
+})
+
+test_that("every method accepts every argument of the generic; only the formula method takes `data` (#32)", {
+  for (m in c("plot2.default", "plot2.data.frame", "plot2.formula", "plot2.matrix", "plot2.sf", "plot2.freq")) {
+    expected <- if (m == "plot2.formula") character(0) else "data"
+    expect_setequal(setdiff(names(formals(plot2)), names(formals(getFromNamespace(m, "plot2")))), expected)
+  }
+})
+
+test_that("methods use the defaults shown in the generic's usage", {
+  g <- formals(plot2)
+  f <- formals(plot2:::plot2.data.frame)
+  common <- intersect(names(g), names(f))
+  expect_identical(common[!mapply(identical, g[common], f[common])], character(0))
+})
+
+test_that("every exported function has a help page with examples", {
+  db <- tools::Rd_db(dir = source_file())
+  has_ex <- vapply(db, function(rd) any(vapply(rd, attr, "", "Rd_tag") == "\\examples"), logical(1))
+  aliases <- lapply(db, function(rd) unlist(rd[vapply(rd, attr, "", "Rd_tag") == "\\alias"]))
+  # re-exports are documented together on the help page 'reexports', without examples
+  reexported <- unlist(aliases[basename(names(db)) == "reexports.Rd"])
+  exported <- setdiff(getNamespaceExports("plot2"), c(reexported, "%>%", "CoordSpider"))
+  without <- exported[!vapply(exported, function(e) any(has_ex[vapply(aliases, function(a) e %in% a, logical(1))]), logical(1))]
+  expect_identical(sort(without), character(0))
+})
+
+test_that("passing the default shown in the usage gives the same plot as omitting it", {
+  d <- data.frame(x = paste0("v", 1:30), y = 1:30)
+  expect_identical(length(datalabels_of(plot2(d, x, y, datalabels = NULL))),
+                   length(datalabels_of(plot2(d, x, y))))
+})
+
+test_that("help pages are reproducible: no random or session-dependent text in roxygen", {
+  src <- readLines(source_file("R", "get_colour.R"))
+  expect_false(any(grepl("^#'.*(sample\\(|R\\.version)", src)))
+})

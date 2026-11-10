@@ -18,7 +18,7 @@ skip_on_cran()
 # Visual snapshots, one per plot type (#50). Skipped on CRAN and without vdiffr.
 # After an intended visual change, review with testthat::snapshot_review().
 
-test_that("SNAP.01 column, stacked, horizontal and percentage bars", {
+test_that("column, stacked, horizontal and percentage bars", {
   expect_plot2_snapshot("col", plot2(fx_counts, group, n))
   expect_plot2_snapshot("col-category", plot2(fx_cat_unique, x, y, category))
   expect_plot2_snapshot("col-stacked", plot2(fx_cat_unique, x, y, category, stacked = TRUE))
@@ -26,7 +26,7 @@ test_that("SNAP.01 column, stacked, horizontal and percentage bars", {
   expect_plot2_snapshot("bar-horizontal", plot2(fx_counts, group, n, horizontal = TRUE, x.sort = "freq-desc"))
 })
 
-test_that("SNAP.02 point, line, area and smooth", {
+test_that("point, line, area and smooth", {
   expect_plot2_snapshot("point", plot2(fx_xy, x, y))
   expect_plot2_snapshot("point-numeric-category", plot2(fx_numcat, x, y, value))
   expect_plot2_snapshot("line-dates", plot2(fx_dates, date, y, type = "line"))
@@ -34,18 +34,18 @@ test_that("SNAP.02 point, line, area and smooth", {
   expect_plot2_snapshot("smooth", plot2(mtcars, mpg, hp, smooth = TRUE, smooth.method = "lm"))
 })
 
-test_that("SNAP.03 distributions", {
+test_that("distributions", {
   expect_plot2_snapshot("boxplot", plot2(iris, Species, Sepal.Length, type = "boxplot"))
   expect_plot2_snapshot("jitter", plot2(iris, Species, Sepal.Length, type = "jitter", jitter_seed = 1))
 })
 
-test_that("SNAP.04 facets and datalabels", {
+test_that("facets and datalabels", {
   expect_plot2_snapshot("facet", plot2(fx_facet, x, y, facet = facet))
   expect_plot2_snapshot("percent-labels", plot2(fx_pct, x, y, y.percent = TRUE))
   expect_plot2_snapshot("negative", plot2(fx_neg, x, y))
 })
 
-test_that("SNAP.05 special types", {
+test_that("special types", {
   expect_plot2_snapshot("dumbbell", plot2(admitted_patients, age_group, n(), ward, type = "dumbbell"))
   expect_plot2_snapshot("back-to-back", plot2(admitted_patients, age_group, n(), facet = gender, type = "back-to-back"))
   expect_plot2_snapshot("heatmap-matrix", plot2(cor(mtcars[, 1:5])))
@@ -53,7 +53,7 @@ test_that("SNAP.05 special types", {
   expect_plot2_snapshot("sankey", plot2(admitted_patients, x = c(hospital, ward), category = gender, type = "sankey"))
 })
 
-test_that("SNAP.06 distributions with a density estimate", {
+test_that("distributions with a density estimate", {
   # stats::density() gives different coordinates before R 4.4.0 (its 'old.coords' argument)
   skip_if(getRversion() < "4.4.0", "density() coordinates differ before R 4.4.0")
   expect_plot2_snapshot("violin", plot2(iris, Species, Sepal.Length, type = "violin"))
