@@ -180,8 +180,10 @@ admitted_patients |>
 
 ![](reference/figures/README-unnamed-chunk-5-1.png)
 
-> **NOTE** All arguments are named after the plotting direction they
-> apply to: `x.*`, `y.*`, `category.*` and `facet.*`. With
+> **NOTE**
+>
+> All arguments are named after the plotting direction they apply to:
+> `x.*`, `y.*`, `category.*` and `facet.*`. With
 > [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md),
 > there is no need to remember argument or function names, or to look
 > them up in the documentation. Type the direction and press Tab, and
