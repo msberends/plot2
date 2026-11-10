@@ -45,7 +45,9 @@ test_that("A01.04 every exported function has a help page with examples", {
   db <- tools::Rd_db(dir = source_file())
   has_ex <- vapply(db, function(rd) any(vapply(rd, attr, "", "Rd_tag") == "\\examples"), logical(1))
   aliases <- lapply(db, function(rd) unlist(rd[vapply(rd, attr, "", "Rd_tag") == "\\alias"]))
-  exported <- setdiff(getNamespaceExports("plot2"), c("%>%", "all_of", "any_of", "ends_with", "everything", "first", "last", "matches", "n", "n_distinct", "starts_with", "where", "CoordSpider"))
+  # re-exports are documented together on the help page 'reexports', without examples
+  reexported <- unlist(aliases[basename(names(db)) == "reexports.Rd"])
+  exported <- setdiff(getNamespaceExports("plot2"), c(reexported, "%>%", "CoordSpider"))
   without <- exported[!vapply(exported, function(e) any(has_ex[vapply(aliases, function(a) e %in% a, logical(1))]), logical(1))]
   expect_identical(sort(without), character(0))
 })

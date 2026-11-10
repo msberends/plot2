@@ -100,7 +100,7 @@ reference:
       - admitted_patients
       - netherlands
 
-  - title: `dplyr` and `tidyselect` functions
+  - title: "`dplyr` and `tidyselect` functions"
     desc: >
       These are functions from `dplyr` and `tidyselect` that can be used in
       `plot2()` directly, without the need to load those packages first.

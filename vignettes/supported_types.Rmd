@@ -246,7 +246,7 @@ The spider plot uses `coord_spider()`, a coordinate system of this package with 
 
 An UpSet plot shows the sizes of the intersections of several sets. `x` contains logical columns or columns with 0 and 1, one per set. This example defines four sets of cars:
 
-```{r}
+```{r, eval = has_patchwork}
 mtcars |>
   transform(manual = am == 1,
             straight_engine = vs == 1,
@@ -257,7 +257,7 @@ mtcars |>
 
 With a `y`, the bars show a summary of `y` per intersection instead of the counts:
 
-```{r}
+```{r, eval = has_patchwork}
 mtcars |>
   transform(manual = am == 1,
             straight_engine = vs == 1,

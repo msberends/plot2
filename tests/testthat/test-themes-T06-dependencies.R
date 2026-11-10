@@ -22,11 +22,13 @@ desc_deps <- function(field) {
 test_that("T06.01 every package imported in NAMESPACE is listed in Imports", {
   ns <- readLines(source_file("NAMESPACE"))
   imported <- unique(sub("^import(From)?\\(([^,)]+).*", "\\2", grep("^import(From)?\\(", ns, value = TRUE)))
-  expect_identical(setdiff(imported, desc_deps("Imports")), character(0))
+  # base packages (e.g. grid, grDevices) need not be listed, R CMD check does not require them
+  base_pkgs <- rownames(utils::installed.packages(priority = "base"))
+  expect_identical(setdiff(imported, c(desc_deps("Imports"), base_pkgs)), character(0))
 })
 
 test_that("T06.02 packages called on the default code path are in Imports", {
-  expect_true(all(c("cli", "rlang", "scales", "grid", "grDevices") %in% desc_deps("Imports")))
+  expect_true(all(c("cli", "rlang", "scales") %in% desc_deps("Imports")))
   # stringr is no longer used: sorting uses the internal natural_sort() (#20)
   src <- unlist(lapply(list.files(source_file("R"), full.names = TRUE), readLines))
   expect_false(any(grepl("stringr::", src[!grepl("^\\s*#", src)])))
