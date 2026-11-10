@@ -28,14 +28,6 @@ dplyr::n_distinct
 #' @export
 dplyr::case_when
 
-#' @importFrom dplyr recode_values
-#' @export
-dplyr::recode_values
-
-#' @importFrom dplyr replace_values
-#' @export
-dplyr::replace_values
-
 #' @importFrom dplyr first
 #' @export
 dplyr::first

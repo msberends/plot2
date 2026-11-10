@@ -11,7 +11,7 @@ A \link[tibble:tibble]{tibble}/\link{data.frame} with 250 observations and 7 var
 \item \code{patient_id}\cr ID of the patient (fictitious)
 \item \code{gender}\cr gender of the patient
 \item \code{age}\cr age of the patient
-\item \code{age_group}\cr age group of the age of the patient, generated with \code{\link[AMR:age_groups]{AMR::age_groups()}}
+\item \code{age_group}\cr age group of the age of the patient, generated with \code{AMR::age_groups()}
 \item \code{hospital}\cr ID of the hospital, from A to D
 \item \code{ward}\cr type of ward, either ICU or Non-ICU
 }

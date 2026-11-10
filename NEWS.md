@@ -1,6 +1,7 @@
 # plot2 1.99.1
 
-* Re-exported from `dplyr`: `case_when()`, `recode_values()`, `replace_values()`
+* Re-exported from `dplyr`: `case_when()`
+* Scientific notation on the y axis (e.g. `y.scientific = TRUE`) failed with `ggplot2` 4.0.0 with the error 'invalid mathematical annotation'
 * Calculations in titles (`title`, `subtitle`, `caption`, `tag`, `x.title`, `y.title` and `category.title`) now always use the columns of the data first. Before, an object with the same name in the calling environment took precedence, so that e.g. `caption = min(format(date, "%Y"))` used the function `date()` instead of the column `date`, and a global object `age` was used instead of the column `age`.
 * In maps (sf objects), `colour_fill` now also sets the colours of a discrete `category`; before, the colours of `ggplot2` were always used.
 * The percentage breaks of density plots now follow the computed density. Before, they were based on the values of `x`, which could give a single, odd break such as `99%`.
@@ -29,12 +30,11 @@
 * create_interactively() no longer accepts R serialisation files (.rds, .rda) for upload, since reading them can run code; pass such data with the data argument. With upload_tab = FALSE (the default) the app offers no way to upload files at all
 * create_interactively() serves only a copy of the logo, no longer the whole folder that contains it
 * Column names are no longer parsed as R code in back-to-back and UpSet plots, so data with unusual column names (such as `my col`) work, and column names can never run code
-* `label_taxonomy()` italicises species names only after a genus or an abbreviated genus, so ordinary words stay upright
 * `?plot2` has a new section 'Automatic choices' that lists every decision plot2 makes by itself, its rule and the argument that overrides it
 * Much faster on large data: datalabels are formatted only for the rows that are drawn, e.g. 200,000 rows now take about 0.2 s instead of 1.5 to 3 s
 * Arguments renamed to follow one naming rule (see 'Argument names' in `?plot2`): `colour_opacity` is now `colour_transparency` (and `get_colour(opacity)` is `transparency`), `x.lbl_angle`, `x.lbl_align` and `x.lbl_italic` are `x.label_*`, `facet.repeat_lbls_*` are `facet.repeat_labels_*`, `facet.fill` is `facet.colour_fill`, `sankey.*` are `sankey_*`, and the options `dec_mark` and `big_mark` are `plot2.decimal.mark` and `plot2.big.mark`. The old argument names give an error that names the new one
-* New: `legend = FALSE` hides the legend; `stacked = "fill"` stacks to 100%; `label_taxonomy()` italicises microorganism names in any labels, e.g. `x.labels = label_taxonomy` (replacing `x.lbl_taxonomy`)
-* `x.mic` was removed; add `+ AMR::scale_x_mic()` to the plot instead
+* New: `legend = FALSE` hides the legend; `stacked = "fill"` stacks to 100%
+* `x.mic` was removed; add `+ AMR::scale_x_mic()` to the plot instead. `x.lbl_taxonomy` was removed; use `x.labels = AMR::labels_taxonomy` instead. The `AMR` package is no longer a suggested dependency
 * Giving both `category.title` and `legend.title` is now an error, since they are the same setting
 * Automatic defaults are now `NULL` in the usage, and explicit values mean what they say: e.g. `datalabels = TRUE` always shows all labels, while the default `NULL` shows at most 25; `summarise_function = FALSE` (no longer `NULL`) turns off summarising; an explicit `y.percent_break` is kept as given
 * `plot2()` on a matrix now says that `x`, `y` and `category` are ignored, instead of ignoring them silently

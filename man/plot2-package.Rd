@@ -12,6 +12,7 @@ Useful links:
 \itemize{
   \item \url{https://msberends.github.io/plot2/}
   \item \url{https://github.com/msberends/plot2}
+  \item Report bugs at \url{https://github.com/msberends/plot2/issues}
 }
 
 }

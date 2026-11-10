@@ -115,7 +115,7 @@ Several functions of `plot2` also work in plots made with `ggplot2` alone:
 - `coord_spider()`, the coordinate system of spider plots;
 - `get_colour()`, which returns colours from palettes and registered colours, for example for `scale_fill_manual(values = get_colour("viridis", 4))`;
 - `md_to_expression()`, which converts markdown to a `plotmath` expression for titles and labels;
-- the labelling functions `euros()`, `dollars()` and `label_taxonomy()`, for scales and data labels.
+- the labelling functions `euros()` and `dollars()`, for scales and data labels.
 
 ```{r}
 ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +

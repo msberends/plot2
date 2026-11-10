@@ -53,7 +53,6 @@ export(everything)
 export(first)
 export(get_colour)
 export(get_plot_title)
-export(label_taxonomy)
 export(last)
 export(matches)
 export(md_to_expression)
@@ -62,9 +61,7 @@ export(n)
 export(n_distinct)
 export(plot2)
 export(plotly_style)
-export(recode_values)
 export(register_colour)
-export(replace_values)
 export(starts_with)
 export(theme_minimal2)
 export(unregister_colour)
@@ -95,10 +92,8 @@ importFrom(dplyr,
   n,
   n_distinct,
   pull,
-  recode_values,
   reframe,
   rename,
-  replace_values,
   rowwise,
   select,
   summarise,
@@ -172,17 +167,6 @@ importFrom(ggplot2,
   unit,
   waiver
 )
-importFrom(grDevices,
-  col2rgb,
-  colours,
-  grey.colors,
-  heat.colors,
-  rainbow,
-  rgb,
-  terrain.colors,
-  topo.colors
-)
-importFrom(grid,nullGrob)
 importFrom(tidyr,
   full_seq,
   pivot_longer,

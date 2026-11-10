@@ -7,17 +7,15 @@
 \alias{n}
 \alias{n_distinct}
 \alias{case_when}
-\alias{recode_values}
-\alias{replace_values}
+\alias{first}
+\alias{last}
+\alias{all_of}
+\alias{any_of}
 \alias{everything}
 \alias{starts_with}
 \alias{ends_with}
 \alias{matches}
 \alias{where}
-\alias{first}
-\alias{last}
-\alias{all_of}
-\alias{any_of}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -25,7 +23,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr:\%>\%]{\%>\%}}, \code{\link[dplyr:all_of]{all_of}}, \code{\link[dplyr:any_of]{any_of}}, \code{\link[dplyr:case_when]{case_when()}}, \code{\link[dplyr:first]{first()}}, \code{\link[dplyr:last]{last()}}, \code{\link[dplyr:n]{n()}}, \code{\link[dplyr:n_distinct]{n_distinct()}}, \code{\link[dplyr:recode_values]{recode_values()}}, \code{\link[dplyr:replace_values]{replace_values()}}}
+  \item{dplyr}{\code{\link[dplyr:\%>\%]{\%>\%}}, \code{\link[dplyr:all_of]{all_of}}, \code{\link[dplyr:any_of]{any_of}}, \code{\link[dplyr:case_when]{case_when()}}, \code{\link[dplyr:first]{first()}}, \code{\link[dplyr:last]{last()}}, \code{\link[dplyr:n]{n()}}, \code{\link[dplyr:n_distinct]{n_distinct()}}}
 
   \item{tidyselect}{\code{\link[tidyselect:ends_with]{ends_with()}}, \code{\link[tidyselect:everything]{everything()}}, \code{\link[tidyselect:matches]{matches()}}, \code{\link[tidyselect:starts_with]{starts_with()}}, \code{\link[tidyselect:where]{where()}}}
 }}

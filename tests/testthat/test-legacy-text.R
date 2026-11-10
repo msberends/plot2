@@ -82,16 +82,6 @@ test_that("manual fonts work", {
   expect_s3_class(suppressWarnings(mtcars |> plot2(mpg, hp, font = "Courier")), "gg") # already downloaded
 })
 
-test_that("misc elements works", {
-  skip_on_cran()
-  expect_s3_class(plotdata |> plot2(x_char, x.labels = label_taxonomy), "gg")
-  skip_if_not_installed("cleaner")
-  skip_if_not_installed("AMR")
-  expect_s3_class(AMR::example_isolates |>
-                    cleaner::freq(AMR::mo_name(mo, "nl")) |>
-                    plot2(type = "barpercent", x.labels = label_taxonomy), "gg")
-})
-
 test_that("Plotly works", {
   skip_on_cran()
   skip_if_not_installed("plotly")

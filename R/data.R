@@ -20,7 +20,7 @@
 #' - `patient_id`\cr ID of the patient (fictitious)
 #' - `gender`\cr gender of the patient
 #' - `age`\cr age of the patient
-#' - `age_group`\cr age group of the age of the patient, generated with [AMR::age_groups()]
+#' - `age_group`\cr age group of the age of the patient, generated with `AMR::age_groups()`
 #' - `hospital`\cr ID of the hospital, from A to D
 #' - `ward`\cr type of ward, either ICU or Non-ICU
 "admitted_patients"

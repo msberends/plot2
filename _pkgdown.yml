@@ -70,7 +70,6 @@ reference:
       - md_to_expression
       - get_plot_title
       - labellers
-      - label_taxonomy
 
   - title: Number formatting
     desc: >

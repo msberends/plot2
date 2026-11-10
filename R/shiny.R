@@ -1236,7 +1236,7 @@ shiny_choice_set <- function(name) {
 
 # functions that may be given as labels
 shiny_label_functions <- function() {
-  c("toupper", "tolower", "label_taxonomy")
+  c("toupper", "tolower")
 }
 
 # functions that may be used in calculations typed in the column selectors and in
@@ -1259,7 +1259,6 @@ shiny_safe_env <- function() {
   env$sd <- stats::sd
   env$IQR <- stats::IQR
   env$poly <- stats::poly
-  env$label_taxonomy <- label_taxonomy
   env
 }
 

@@ -257,7 +257,8 @@ format2_scientific <- function(x,
     # plotmath %*% gives a multiplication sign on every device and console (#119)
     out[[i]] <- bquote(.(mant) %*% 10^.(expn))
   }
-  out
+  # an expression vector, not a list of calls: ggplot2 4.0.0 cannot draw a list of calls as labels
+  as.expression(out)
 }
 
 # Translate plot2's date format tokens (e.g. "d mmmm yyyy") to strftime() codes (#41).

@@ -180,7 +180,7 @@ plot2_old_args <- c(colour_opacity = "was renamed to `colour_transparency`",
                     sankey.node_whitespace = "was renamed to `sankey_node_whitespace`",
                     sankey.alpha = "was renamed to `sankey_alpha`",
                     sankey.remove_axes = "was renamed to `sankey_remove_axes`",
-                    x.lbl_taxonomy = "was removed; use `x.labels = label_taxonomy` instead",
+                    x.lbl_taxonomy = "was removed; use `x.labels = AMR::labels_taxonomy` instead",
                     x.mic = "was removed; add `+ AMR::scale_x_mic()` to the plot instead")
 
 check_old_args <- function(arg_names) {

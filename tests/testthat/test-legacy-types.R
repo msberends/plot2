@@ -92,21 +92,6 @@ test_that("S3 implementations work", {
   skip_if_not_installed("sf")
   expect_s3_class(netherlands |> plot2(), "gg")
   expect_s3_class(netherlands |> plot2(crs = 28992, theme = theme_minimal2()), "gg")
-  # bug_drug_combinations
-  skip_if_not_installed("AMR")
-  expect_s3_class(AMR::example_isolates |>
-                    dplyr::select(mo, CIP, AMC) |>
-                    AMR::bug_drug_combinations(FUN = AMR::mo_gramstain) |>
-                    plot2(),
-                  "gg")
-  # sir_df
-  expect_s3_class(AMR::example_isolates |>
-                    dplyr::select(date, NIT, CIP, IPM, MEM) |>
-                    dplyr::group_by(yr = format(date, "%Y")) |>
-                    AMR::sir_df() |>
-                    dplyr::filter(yr >= 2015) |>
-                    plot2(),
-                  "gg")
   # type should become boxplot here
   expect_s3_class(admitted_patients |> plot2(x = hospital, y = (age - mean(age)) / sd(age)), "gg")
   # this uses the format2_scientific function for the Y-axis

@@ -35,7 +35,7 @@ plot2/
 │   ├── data.R                # Documentation for bundled datasets
 │   ├── dec_mark.R            # dec_mark(), big_mark(), dollars(), euros()
 │   ├── get_plot_title.R      # Title extraction helpers
-│   ├── labellers.R           # Labeller functions, e.g. label_taxonomy()
+│   ├── labellers.R           # Labeller functions euros() and dollars()
 │   ├── move_layer.R          # move_layer() utility
 │   ├── plotly.R              # plotly integration
 │   ├── reexports.R           # Re-exported dplyr / tidyselect functions
@@ -336,7 +336,7 @@ The maintainer's decisions on argument names and defaults, made before the first
 | `sankey.node_width`, `sankey.node_whitespace`, `sankey.alpha`, `sankey.remove_axes` | Renamed to `sankey_node_width`, `sankey_node_whitespace`, `sankey_alpha`, `sankey_remove_axes` (there is no `sankey` argument). |
 | `facet.fill` | Renamed to `facet.colour_fill`. |
 | Options `dec_mark`, `big_mark` | Renamed to `plot2.decimal.mark`, `plot2.big.mark`; the functions `dec_mark()` and `big_mark()` keep their names and read these options. |
-| `x.mic`, `x.lbl_taxonomy` | Removed from `plot2()`; replaced by separate helpers (e.g. `label_taxonomy()`). |
+| `x.mic`, `x.lbl_taxonomy` | Removed from `plot2()`; replaced by `AMR::scale_x_mic()` and `AMR::labels_taxonomy()` of the `AMR` package, which is not a dependency. |
 | `legend` | New argument: `NULL` (automatic), `TRUE` forces, `FALSE` hides. The legend is only the plot element explaining `category`; the `legend.*` settings keep their names. |
 | `legend.position` | Keeps `"none"` as an alternative way to hide; `NULL` means automatic. |
 | `legend.title`, `category.title` | Both kept as one setting; giving both stops with an error. |
