@@ -122,16 +122,19 @@ Example data sets used in the documentation.
 - [`netherlands`](https://msberends.github.io/plot2/reference/netherlands.md)
   : Example Geography Data Set: the Netherlands
 
-## Re-exported functions
+## `dplyr` and `tidyselect` functions
 
-Functions from `dplyr` and `tidyselect` that are often used in the
-arguments of
-[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md).
+These are functions from `dplyr` and `tidyselect` that can be used in
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+directly, without the need to load those packages first.
 
 - [`reexports`](https://msberends.github.io/plot2/reference/reexports.md)
   [`%>%`](https://msberends.github.io/plot2/reference/reexports.md)
   [`n`](https://msberends.github.io/plot2/reference/reexports.md)
   [`n_distinct`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`case_when`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`recode_values`](https://msberends.github.io/plot2/reference/reexports.md)
+  [`replace_values`](https://msberends.github.io/plot2/reference/reexports.md)
   [`everything`](https://msberends.github.io/plot2/reference/reexports.md)
   [`starts_with`](https://msberends.github.io/plot2/reference/reexports.md)
   [`ends_with`](https://msberends.github.io/plot2/reference/reexports.md)

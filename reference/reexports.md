@@ -8,10 +8,13 @@ to see their documentation.
   [`%>%`](https://magrittr.tidyverse.org/reference/pipe.html),
   [`all_of`](https://tidyselect.r-lib.org/reference/all_of.html),
   [`any_of`](https://tidyselect.r-lib.org/reference/all_of.html),
+  [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html),
   [`first()`](https://dplyr.tidyverse.org/reference/nth.html),
   [`last()`](https://dplyr.tidyverse.org/reference/nth.html),
   [`n()`](https://dplyr.tidyverse.org/reference/context.html),
-  [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html)
+  [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html),
+  [`recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html),
+  [`replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
 
 - tidyselect:
 

@@ -29,7 +29,7 @@ components:
 | `facet` | [`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html) |
 | `type` | `geom_*()`, together with the position, such as [`position_dodge()`](https://ggplot2.tidyverse.org/reference/position_dodge.html) |
 | calculations in `x`, `y`, `category` and `facet` | [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) and [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) or [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) before the plot |
-| `x.sort`, `category.sort`, `facet.sort` | [`forcats::fct_reorder()`](https://forcats.tidyverse.org/reference/fct_reorder.html), [`fct_infreq()`](https://forcats.tidyverse.org/reference/fct_inorder.html) or [`fct_relevel()`](https://forcats.tidyverse.org/reference/fct_relevel.html) before the plot |
+| `x.sort`, `category.sort`, `facet.sort` | [`forcats::fct_reorder()`](https://forcats.tidyverse.org/reference/fct_reorder.html), `fct_infreq()` or `fct_relevel()` before the plot |
 | `x.max_items`, `category.max_items` | [`forcats::fct_lump_n()`](https://forcats.tidyverse.org/reference/fct_lump.html) before the plot |
 | `colour`, `colour_fill` | `scale_colour_*()` and `scale_fill_*()` |
 | `x.*` and `y.*` settings | `scale_x_*()` and `scale_y_*()` |

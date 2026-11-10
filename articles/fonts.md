@@ -29,7 +29,7 @@ admitted_patients |>
         category = gender,
         font = "Source Sans 3",
         title = "Admissions per hospital")
-#> Downloaded font https://fonts.google.com/specimen/Source+Sans+3 from Google Fonts into /tmp/Rtmp7RJgQH/R/plot2/fonts
+#> Downloaded font https://fonts.google.com/specimen/Source+Sans+3 from Google Fonts into /tmp/RtmpDuVDzW/R/plot2/fonts
 ```
 
 ![](fonts_files/figure-html/unnamed-chunk-4-1.png)
@@ -57,7 +57,7 @@ options(plot2.font = "Roboto Slab", plot2.text_factor = 1.1)
 mtcars |>
   plot2(x = wt, y = mpg, title = "Fuel consumption and weight")
 #> Using type = "point" since both axes are numeric
-#> Downloaded font https://fonts.google.com/specimen/Roboto+Slab from Google Fonts into /tmp/Rtmp7RJgQH/R/plot2/fonts
+#> Downloaded font https://fonts.google.com/specimen/Roboto+Slab from Google Fonts into /tmp/RtmpDuVDzW/R/plot2/fonts
 ```
 
 ![](fonts_files/figure-html/unnamed-chunk-5-1.png)

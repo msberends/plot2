@@ -17,8 +17,7 @@ this coordinate system:
 
 Typical usage is to map a discrete variable (categories) to `x` (theta)
 and a continuous variable (scores) to `y` (radius), then draw a polygon
-with
-[`geom_polygon()`](https://ggplot2.tidyverse.org/reference/geom_polygon.html).
+with `geom_polygon()`.
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) uses
 this novel coordinate system to plot spider plots, created using

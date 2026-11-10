@@ -2,6 +2,10 @@
 
 ## plot2 1.99.1
 
+- Re-exported from `dplyr`:
+  [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html),
+  [`recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html),
+  [`replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
 - Calculations in titles (`title`, `subtitle`, `caption`, `tag`,
   `x.title`, `y.title` and `category.title`) now always use the columns
   of the data first. Before, an object with the same name in the calling

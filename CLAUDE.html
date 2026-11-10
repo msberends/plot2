@@ -85,13 +85,13 @@
 │   ├── helper-fixtures.R     # Shared fixtures fx_*
 │   ├── setup.R               # Deterministic test environment
 │   ├── test-helpers.R        # Self-tests of the helpers
-│   ├── test-plot2_exec-E*.R  # End-to-end tests per plot2_exec() stage
-│   ├── test-modules-M*.R     # End-to-end tests for methods, add_*(), coord, theme, colours
-│   ├── test-api-A*.R         # Documented behaviour, examples, vignettes, README
-│   ├── test-themes-T*.R      # Cross-cutting themes: i18n, devices, dependencies, ...
-│   ├── test-shiny-S*.R       # Shiny app server tests with shiny::testServer()
+│   ├── test-plot2_exec-*.R   # End-to-end tests per plot2_exec() stage
+│   ├── test-modules-*.R      # End-to-end tests for methods, add_*(), coord, theme, colours
+│   ├── test-api-*.R          # Documented behaviour, examples, vignettes, README
+│   ├── test-themes-*.R       # Cross-cutting themes: i18n, devices, dependencies, ...
+│   ├── test-shiny-*.R        # Shiny app server tests with shiny::testServer()
 │   ├── test-validate-*.R     # End-to-end tests per validate.R function (#157)
-│   ├── test-regression-*.R   # Regression tests per fixing phase
+│   ├── test-regression-*.R   # Regression tests per topic, named by GitHub issue
 │   └── test-legacy-*.R       # Former test_plot2.R smoke tests (helper-legacy.R), skipped on CRAN
 ├── vignettes/
 │   ├── plot2.Rmd             # Vignette 'Introduction to plot2' (pkgdown: Get started)
@@ -248,10 +248,10 @@
 <li>
 <code>test-helpers.R</code>: self-tests of the helpers; extend it whenever a helper is added or changed.</li>
 </ul></li>
-<li>Test files: per-topic files only; the smoke tests of the former <code>test_plot2.R</code> are in <code>test-legacy-*.R</code> (skipped on CRAN). Topic prefixes: <code>test-plot2_exec-E&lt;nn&gt;-&lt;topic&gt;.R</code> (stages of <code>plot2_exec()</code>), <code>test-modules-M&lt;nn&gt;-&lt;topic&gt;.R</code> (methods and modules), <code>test-api-A&lt;nn&gt;</code> (documented behaviour), <code>test-themes-T&lt;nn&gt;</code> (cross-cutting themes), <code>test-shiny-S&lt;nn&gt;</code> (Shiny server, driven with the <code>shiny_*()</code> helpers) and <code>test-validate-&lt;nn&gt;</code> (one file per <code>validate.R</code> function). Every <code>test_that()</code> description starts with its case ID (e.g. <code>"E05.03 ..."</code>); in <code>test-regression-*.R</code> the ID is the GitHub issue number (e.g. <code>"#13 ..."</code>).</li>
+<li>Test files: per-topic files only; the smoke tests of the former <code>test_plot2.R</code> are in <code>test-legacy-*.R</code> (skipped on CRAN). Group prefixes: <code>test-plot2_exec-&lt;topic&gt;.R</code> (stages of <code>plot2_exec()</code>), <code>test-modules-&lt;topic&gt;.R</code> (methods and modules), <code>test-api-&lt;topic&gt;.R</code> (documented behaviour), <code>test-themes-&lt;topic&gt;.R</code> (cross-cutting themes), <code>test-shiny-&lt;topic&gt;.R</code> (Shiny server, driven with the <code>shiny_*()</code> helpers), <code>test-validate-&lt;function&gt;.R</code> (one file per <code>validate.R</code> function) and <code>test-regression-&lt;topic&gt;.R</code> (fixed issues). Test files and descriptions carry no case IDs; in <code>test-regression-*.R</code> every <code>test_that()</code> description starts with the GitHub issue number (e.g. <code>"#13 ..."</code>).</li>
 <li>Tests for open GitHub issues describe the desired behaviour and start with <code>skip_open_issue("#123")</code>. When fixing the issue, remove that line and the test must pass. Known soft deprecations caused by plot2 are silenced per test with <code>local_known_deprecation("#123")</code>, never globally.</li>
 <li>Test content, not only class: prefer <code>expect_geoms()</code>, <code>expect_labels()</code> etc. over <code>expect_s3_class(p, "gg")</code>. <code>expect_plot2()</code> renders the plot and fails on R warnings.</li>
-<li>CRAN core (#50): on CRAN the suite runs without the legacy smoke tests (<code>test-legacy-*.R</code>), the Shiny server tests (<code>shiny_app()</code> skips), the help page, vignette and README tests, visual snapshots and timing guards; about 2 minutes in total. Guard every use of a suggested package with <code>skip_if_not_installed()</code>.</li>
+<li>CRAN core (#50): on CRAN only a small core runs, which must finish within 1 minute (about 20 seconds locally). Every test file outside the core starts with a file-level <code>skip_on_cran()</code> directly below the header, so the files without it form the core. New test files get this skip; add a file to the core only after timing the CRAN run with <code>NOT_CRAN=false</code>. Such a local run deletes the vdiffr snapshots as unused, so restore <code>tests/testthat/_snaps</code> from git afterwards. Guard every use of a suggested package with <code>skip_if_not_installed()</code>.</li>
 <li>The full suite takes several minutes: run it detached and read the log.</li>
 </ul><div class="section level3">
 <h3 id="running-tests">Running Tests<a class="anchor" aria-label="anchor" href="#running-tests"></a></h3>
@@ -360,7 +360,7 @@ plot2.formula      – formula interface</code></pre>
 <li>In-depth material goes in <code>vignettes/articles/</code> (website only): colours and themes, maps, fonts, and plot2 for ggplot2 users. List every article in <code>_pkgdown.yml</code>.</li>
 <li>Writing standard: neutral technical tone, British spelling, no em dashes; one sentence before each chunk on what it shows; only current argument names; show the code of every displayed plot.</li>
 <li>The <code><a href="reference/plot2.html">?plot2</a></code> examples must stay well under 5 seconds in <code>R CMD check --as-cran</code>; examples beyond the core usage belong in the vignettes.</li>
-<li>Tests A08, A09 and A12 run every chunk of the vignettes and articles; chunks with <code>eval = FALSE</code> run too, so exclude <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> and isolate any options they set.</li>
+<li>The tests <code>test-api-vignette-plot2.R</code>, <code>test-api-vignette-supported-types.R</code> and <code>test-api-website-articles.R</code> run every chunk of the vignettes and articles; chunks with <code>eval = FALSE</code> run too, so exclude <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> and isolate any options they set.</li>
 </ul><hr></div>
 <div class="section level2">
 <h2 id="versioning--changelog">Versioning &amp; Changelog<a class="anchor" aria-label="anchor" href="#versioning--changelog"></a></h2>
