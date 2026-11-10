@@ -19,7 +19,7 @@ options(plot2.silent = TRUE,
         plot2.colour = NULL,
         plot2.colour_font_secondary = NULL)
 library(plot2)
-library(ggplot2)
+library(ggplot2) # for URL-linking
 ```
 
 # `plot()` + `ggplot2` = **`plot2()`**
@@ -31,12 +31,9 @@ The `ggplot2` R package composes any plot from layers, aesthetics, scales, coord
 `plot2` takes the opposite approach. Like base R's `plot()`, one call gives a complete plot, even when the type of plot or other details are not given. You describe what you want to see, and `plot2()` summarises, sorts and labels the data, and chooses the plot type, colours, axes and theme:
 
 ```{r}
-iris |> 
-  plot2()
-iris |>
-  plot2(x = Species)
-iris |>
-  plot2(x = Species, y = mean(Sepal.Length))
+iris |> plot2()
+iris |> plot2(x = Species)
+iris |> plot2(x = Species, y = mean(Sepal.Length))
 ```
 
 The result is a standard `ggplot` object, so every `ggplot2` function and extension still works on it.
@@ -148,6 +145,7 @@ admitted_patients |>
         y = n_distinct(patient_id),
         category = gender |> recode_values("F" ~ "Female", "M" ~ "Male"),
         facet = paste("Ward:", ward),
+        
         # additional options are each only 1 argument:
         x.title = "Age Group",
         y.title = "Unique Nr of Patients",
@@ -155,6 +153,7 @@ admitted_patients |>
         facet.fixed_y = TRUE)
 ```
 
+> **NOTE**
 > All arguments are named after the plotting direction they apply to: `x.*`, `y.*`, `category.*` and `facet.*`. With `plot2()`, there is no need to remember argument or function names, or to look them up in the documentation. Type the direction and press <kbd>Tab</kbd>, and your editor lists every option for it, together with its description:
 > 
 > <img src="man/figures/plot_arguments.png" alt="RStudio autocompletion after typing plot2(facet, listing all facet arguments such as facet.fixed_y, facet.bold and facet.drop, with the help text of facet.fixed_y shown alongside" />
