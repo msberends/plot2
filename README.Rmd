@@ -60,7 +60,7 @@ install.packages("plot2", repos = c("https://msberends.r-universe.dev", "https:/
 
 ## Plot types
 
-`plot2()` supports all `ggplot2` geoms, and adds plot types such as dumbbell, back-to-back, Sankey, spider and UpSet plots. Each plot below is made with a single line of code:
+`plot2()` supports all `ggplot2` geoms, and adds plot types such as dumbbell, back-to-back, Sankey, spider and UpSet plots. Each of the 20 plots below is made with only a single line of code:
 
 <img src="man/figures/plot_types.png" alt="Grid of 24 example plots made with plot2(), including bar, line, area, boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map plots" />
 
@@ -82,6 +82,9 @@ admitted_patients |> plot2(age_group, n(), hospital, stacked_fill = TRUE)
 
 # Line
 admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "line")
+
+# Line with points
+admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "linedot")
 
 # Area
 admitted_patients |> plot2(format(date, "%Y"), n(), hospital, type = "area", stacked = TRUE, x.complete = 0)
@@ -143,7 +146,7 @@ admitted_patients |>
 admitted_patients |>
   plot2(x = age_group,
         y = n_distinct(patient_id),
-        category = gender |> recode_values("F" ~ "Female", "M" ~ "Male"),
+        category = case_when(gender == "F" ~ "Female", gender == "M" ~ "Male"),
         facet = paste("Ward:", ward),
         
         # additional options are each only 1 argument:

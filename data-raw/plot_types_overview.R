@@ -35,6 +35,7 @@ panels <- list(
   "Bar with percentages" = quote(plot2(ggplot2::mpg, manufacturer, type = "barpercent")),
   "Stacked to 100%" = quote(plot2(admitted_patients, age_group, n(), hospital, stacked_fill = TRUE)),
   "Line" = quote(plot2(admitted_patients, format(date, "%Y"), n(), ward, type = "line")),
+  "Line with points" = quote(plot2(admitted_patients, format(date, "%Y"), n(), ward, type = "linedot")),
   "Area" = quote(plot2(admitted_patients, format(date, "%Y"), n(), hospital, type = "area", stacked = TRUE, x.complete = 0)),
   "Point" = quote(plot2(iris)),
   "Beeswarm" = quote(plot2(iris, Species, Sepal.Length, type = "beeswarm")),

@@ -1,11 +1,10 @@
 
 <!-- README.md is generated from README.Rmd; please edit that file. -->
-
 <!-- Run with: suppressWarnings(rmarkdown::render("README.Rmd", quiet = TRUE)) -->
 
 # `plot()` + `ggplot2` = **`plot2()`**
 
-## The single-line plotting assistant for `ggplot2`
+## The Single-Line Plotting Assistant for `ggplot2`
 
 The `ggplot2` R package composes any plot from layers, aesthetics,
 scales, coordinates and themes. This grammar makes it flexible and
@@ -22,31 +21,28 @@ sorts and labels the data, and chooses the plot type, colours, axes and
 theme:
 
 ``` r
-iris |> 
-  plot2()
+iris |> plot2()
 #> Using x = Sepal.Length
 #> Using y = Sepal.Width
 #> Using category = Species
 #> Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
 ``` r
-iris |>
-  plot2(x = Species)
+iris |> plot2(x = Species)
 #> Using y = Sepal.Length
 #> Using type = "boxplot" since all groups in Species contain at least three values
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-2.png" alt="" width="100%" />
 
 ``` r
-iris |>
-  plot2(x = Species, y = mean(Sepal.Length))
+iris |> plot2(x = Species, y = mean(Sepal.Length))
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-3.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-3.png" alt="" width="100%" />
 
 The result is a standard `ggplot` object, so every `ggplot2` function
 and extension still works on it.
@@ -61,28 +57,26 @@ install.packages("plot2", repos = c("https://msberends.r-universe.dev", "https:/
 
 ## What plot2 replaces
 
-| Task | ggplot2 | plot2 |
-|----|----|----|
-| Summarise, then plot | `group_by()` + `summarise()` + `ggplot()` + `geom_col()` | `plot2(x = a, y = mean(b))` |
-| Sort bars | `mutate(fct_reorder(...))` | `x.sort = "freq-desc"` |
-| Group by colour | `aes(fill = var)` for bars, `aes(colour = var)` for points, each with its own `scale_*()` | `category = var` |
-| Set colours | `scale_fill_manual(values = ...)` or `scale_colour_manual(values = ...)`, depending on the geom | `colour = c(...)` |
-| Facet | `+ facet_wrap(~var)` | `facet = var` |
-| Data labels | `+ geom_text(aes(label = ...), vjust = ...)` | automatic for columns |
-| Stacked bars | `geom_col(position = "stack")` or `position = "fill"` | `stacked = TRUE` or `stacked_fill = TRUE` |
+| Task                 | ggplot2                                                                                         | plot2                                     |
+|----------------------|-------------------------------------------------------------------------------------------------|-------------------------------------------|
+| Summarise, then plot | `group_by()` + `summarise()` + `ggplot()` + `geom_col()`                                        | `plot2(x = a, y = mean(b))`               |
+| Sort bars            | `mutate(fct_reorder(...))`                                                                      | `x.sort = "freq-desc"`                    |
+| Group by colour      | `aes(fill = var)` for bars, `aes(colour = var)` for points, each with its own `scale_*()`       | `category = var`                          |
+| Set colours          | `scale_fill_manual(values = ...)` or `scale_colour_manual(values = ...)`, depending on the geom | `colour = c(...)`                         |
+| Facet                | `+ facet_wrap(~var)`                                                                            | `facet = var`                             |
+| Data labels          | `+ geom_text(aes(label = ...), vjust = ...)`                                                    | automatic for columns                     |
+| Stacked bars         | `geom_col(position = "stack")` or `position = "fill"`                                           | `stacked = TRUE` or `stacked_fill = TRUE` |
 
 ## Plot types
 
 `plot2()` supports all `ggplot2` geoms, and adds plot types such as
-dumbbell, back-to-back, Sankey, spider and UpSet plots. Each plot below
-is made with a single line of code:
+dumbbell, back-to-back, Sankey, spider and UpSet plots. Each of the 20
+plots below is made with only a single line of code:
 
 <img src="man/figures/plot_types.png" alt="Grid of 24 example plots made with plot2(), including bar, line, area, boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map plots" />
 
 <details>
-
 <summary>
-
 Show the code for each plot
 </summary>
 
@@ -101,6 +95,9 @@ admitted_patients |> plot2(age_group, n(), hospital, stacked_fill = TRUE)
 
 # Line
 admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "line")
+
+# Line with points
+admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "linedot")
 
 # Area
 admitted_patients |> plot2(format(date, "%Y"), n(), hospital, type = "area", stacked = TRUE, x.complete = 0)
@@ -161,14 +158,15 @@ admitted_patients |>
 #> Using free y scales per facet since the two y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" alt="" width="100%" />
 
 ``` r
 admitted_patients |>
   plot2(x = age_group,
         y = n_distinct(patient_id),
-        category = gender |> recode_values("F" ~ "Female", "M" ~ "Male"),
+        category = case_when(gender == "F" ~ "Female", gender == "M" ~ "Male"),
         facet = paste("Ward:", ward),
+        
         # additional options are each only 1 argument:
         x.title = "Age Group",
         y.title = "Unique Nr of Patients",
@@ -177,13 +175,14 @@ admitted_patients |>
 #> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
 
-> All arguments are named after the plotting direction they apply to:
-> `x.*`, `y.*`, `category.*` and `facet.*`. There is no need to remember
-> argument names or look them up in the documentation. Type the
-> direction and press <kbd>Tab</kbd>, and your editor lists every option
-> for it, together with its description:
+> **NOTE** All arguments are named after the plotting direction they
+> apply to: `x.*`, `y.*`, `category.*` and `facet.*`. With `plot2()`,
+> there is no need to remember argument or function names, or to look
+> them up in the documentation. Type the direction and press
+> <kbd>Tab</kbd>, and your editor lists every option for it, together
+> with its description:
 >
 > <img src="man/figures/plot_arguments.png" alt="RStudio autocompletion after typing plot2(facet, listing all facet arguments such as facet.fixed_y, facet.bold and facet.drop, with the help text of facet.fixed_y shown alongside" />
 
@@ -199,7 +198,7 @@ mtcars |>
 #> Using type = "point" since both axes are numeric
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" alt="" width="100%" />
 
 A correlation matrix becomes a heatmap:
 
@@ -213,19 +212,23 @@ mtcars |>
 #> Using category.midpoint = 0 (the current category scale centre)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
 
 ## Learning more
 
 - [Introduction to
   plot2](https://msberends.github.io/plot2/articles/plot2.html)
-  (`vignette("plot2", package = "plot2")`) describes the main ideas.
+  describes the main ideas.
 - [Plot
   types](https://msberends.github.io/plot2/articles/supported_types.html)
-  (`vignette("supported_types", package = "plot2")`) shows every plot
-  type.
-- The [package website](https://msberends.github.io/plot2/) has articles
-  on colours and themes, maps, fonts, and `plot2()` for `ggplot2` users.
+  shows every plot type.
+- [Colour and
+  themes](https://msberends.github.io/plot2/articles/colours-and-themes.html)
+  describes how to set manual/organisational style
+- [Fonts](https://msberends.github.io/plot2/articles/fonts.html)
+  explains how any font can be used directly.
+- [Maps](https://msberends.github.io/plot2/articles/maps.html) shows how
+  maps can be plotted easily.
 
 `create_interactively()` opens a Shiny app that builds a plot from a
 point-and-click interface and shows the code:
