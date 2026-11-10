@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot2.R
 \name{plot2}
 \alias{plot2}
-\title{Conveniently Create a New \code{ggplot}}
+\title{Create a \code{ggplot} in a Single Call}
 \usage{
 plot2(
   .data,
@@ -436,38 +436,35 @@ The default \code{NULL} sets it automatically: \code{"right"} for numeric \code{
 \item{...}{Any argument to give to the geom. This will override automatically-set settings for the geom.}
 }
 \value{
-a \code{ggplot} object
+A \code{\link[ggplot2:ggplot]{ggplot}} object.
 }
 \description{
-The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \code{\link[ggplot2:ggplot]{ggplot2}} functions. By design, the \code{ggplot2} package requires users to use a lot of functions and manual settings, while the \code{\link[=plot2]{plot2()}} function does all the heavy lifting automatically and only requires users to define some arguments in one single function, greatly increases convenience.
+\code{\link[=plot2]{plot2()}} creates a complete \code{\link[ggplot2:ggplot]{ggplot}} in one call. It takes the place of the usual combination of \code{\link[ggplot2:ggplot]{ggplot()}}, \code{\link[ggplot2:aes]{aes()}}, a \verb{geom_*()} function, scales, labels and a theme, and of the data preparation that often precedes it with \code{\link[dplyr:group_by]{group_by()}}, \code{\link[dplyr:count]{count()}}, \code{\link[dplyr:mutate]{mutate()}} or \code{\link[dplyr:summarise]{summarise()}}: calculations can be given in the arguments directly, such as \code{y = n()} or \code{x = format(date, "\%Y")}.
 
-Moreover, \code{\link[=plot2]{plot2()}} allows for in-place calculation of \code{y}, all axes, and all axis labels, often preventing the need to use \code{\link[dplyr:group_by]{group_by()}}, \code{\link[dplyr:count]{count()}}, \code{\link[dplyr:mutate]{mutate()}}, or \code{\link[dplyr:summarise]{summarise()}}.
-
-See \link{plot2-methods} for all implemented methods for different object classes.
+Besides data frames, \code{\link[=plot2]{plot2()}} accepts vectors, matrices, formulas, 'sf' objects and other classes; see \link{plot2-methods}.
 }
 \details{
-The \code{\link[=plot2]{plot2()}} function is a convenient wrapper around many \code{\link[ggplot2:ggplot]{ggplot2}} functions such as \code{\link[ggplot2:ggplot]{ggplot()}}, \code{\link[ggplot2:aes]{aes()}}, \code{\link[ggplot2:geom_col]{geom_col()}}, \code{\link[ggplot2:facet_wrap]{facet_wrap()}}, \code{\link[ggplot2:labs]{labs()}}, etc., and provides:
-\itemize{
-\item Writing as few lines of codes as possible
-\item Easy plotting in three 'directions': \code{x} (the regular X-axis), \code{category} (replaces 'fill' and 'colour') and \code{facet}
-\item Automatic setting of these 'directions' based on the input data
-\item Setting in-place calculations for all plotting directions and even \code{y}
-\item Easy way for sorting data in many ways (such as on alphabet, numeric value, frequency, original data order), by setting a single argument for the 'direction': \code{x.sort}, \code{category.sort} and \code{facet.sort}
-\item Easy limiting values, e.g. by setting \code{x.max_items = 5} or \code{category.max_items = 5}
-\item Markdown support for any title text, with any theme
-\item Integrated support for any Google Font and any installed system font
-\item An extra clean, minimalistic theme with a lot of whitespace (but without unnecessary margins) that is ideal for printing: \code{theme_minimal2()}
-\item Some conveniences from Microsoft Excel:
-\itemize{
-\item The Y-axis starts at 0 if possible
-\item The y scale expands at the top to be better able to interpret all data points
-\item Date breaks can be written in a human-readable format (such as "d mmm yyyy")
-\item Labels with data values can easily be printed and are automatically determined
-}
-\item Support for any \code{ggplot2} extension based on \code{\link[ggplot2:fortify]{ggplot2::fortify()}}
-}
+\strong{Plotting directions}
 
-The \code{ggplot2} package in conjunction with the \code{dplyr}, \code{tidyr} and \code{forcats} packages can provide above functionalities, but the goal of the \code{\link[=plot2]{plot2()}} function is to generalise this into one function. The generic \code{\link[=plot2]{plot2()}} function currently has 153 arguments, all with a default value except \code{.data} and \code{...}. \strong{Less typing, faster coding.}
+A plot has up to four directions: \code{x}, \code{y}, \code{category} (the colours, called 'colour' and 'fill' in \code{ggplot2}) and \code{facet} (separate panels). Each can be a column or a calculation on the data. Groups of \code{x}, \code{category} and \code{facet} that contain several values are summarised with \code{summarise_function}, and each direction has its own settings, such as \code{x.sort} and \code{category.sort} for the order of the values, and \code{x.max_items} and \code{category.max_items} to show only the first values and combine the rest into one. Directions that are not given are chosen from the data, see \emph{Automatic choices} below.
+
+\strong{Plot types}
+
+\code{type} accepts every \code{ggplot2} geom and adds the types \code{"barpercent"}, \code{"linedot"}, \code{"dumbbell"}, \code{"back-to-back"}, \code{"sankey"}, \code{"spider"} and \code{"upset"}. Without \code{type}, the type follows from the data. See \code{vignette("supported_types", package = "plot2")} for every type with its data requirements.
+
+\strong{The result}
+
+The result is an ordinary \code{ggplot} object: it can be extended with \code{+} and any \code{ggplot2} function, with the \code{\link[=add_type]{add_*()}} functions, which add layers with unquoted variables, and its layers can be reordered with \code{\link[=move_layer]{move_layer()}}. The default theme is \code{\link[=theme_minimal2]{theme_minimal2()}}, and the colours are set with \code{colour} and \code{colour_fill}, which accept any value of \code{\link[=get_colour]{get_colour()}}.
+
+\strong{Text and numbers}
+
+Titles and labels support markdown (such as \code{"**bold**"} and \code{"*italic*"}) and calculations on the data, such as \code{title = paste("Patients in", min(format(date, "\%Y")))}. The font can be any installed system font or a Google Font (\code{font}). Numbers use the decimal and big marks of \code{\link[=dec_mark]{dec_mark()}} and \code{\link[=big_mark]{big_mark()}}, and the language of generated text follows the \code{plot2.language} option; see \link{plot2-options} for all options.
+
+\strong{Further reading}
+
+\code{vignette("plot2", package = "plot2")} introduces the package step by step. The \href{https://msberends.github.io/plot2/}{package website} has articles on colours and themes, maps, fonts, and \code{\link[=plot2]{plot2()}} for \code{ggplot2} users. \code{\link[=create_interactively]{create_interactively()}} builds a plot in a Shiny app and shows the code that creates it.
+
+The generic \code{\link[=plot2]{plot2()}} currently has 153 arguments, all with a default value except \code{.data} and \code{...}.
 }
 \section{Automatic choices}{
 
@@ -552,4 +549,7 @@ mtcars |>
 # are in the vignettes:
 # vignette("plot2", package = "plot2")
 # vignette("supported_types", package = "plot2")
+}
+\seealso{
+\code{vignette("plot2", package = "plot2")} and \code{vignette("supported_types", package = "plot2")}; \link{plot2-methods} for the methods per object class; \code{\link[=add_type]{add_type()}} and \code{\link[=move_layer]{move_layer()}} to extend a plot; \code{\link[=get_colour]{get_colour()}} and \code{\link[=theme_minimal2]{theme_minimal2()}} for colours and the theme.
 }

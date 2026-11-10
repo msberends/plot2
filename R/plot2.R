@@ -12,13 +12,11 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' Conveniently Create a New `ggplot`
+#' Create a `ggplot` in a Single Call
 #'
-#' @description The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions. By design, the `ggplot2` package requires users to use a lot of functions and manual settings, while the [plot2()] function does all the heavy lifting automatically and only requires users to define some arguments in one single function, greatly increases convenience.
+#' @description [plot2()] creates a complete [`ggplot`][ggplot2::ggplot()] in one call. It takes the place of the usual combination of [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], a `geom_*()` function, scales, labels and a theme, and of the data preparation that often precedes it with [`group_by()`][dplyr::group_by()], [`count()`][dplyr::count()], [`mutate()`][dplyr::mutate()] or [`summarise()`][dplyr::summarise()]: calculations can be given in the arguments directly, such as `y = n()` or `x = format(date, "%Y")`.
 #'
-#' Moreover, [plot2()] allows for in-place calculation of `y`, all axes, and all axis labels, often preventing the need to use [`group_by()`][dplyr::group_by()], [`count()`][dplyr::count()], [`mutate()`][dplyr::mutate()], or [`summarise()`][dplyr::summarise()].
-#' 
-#' See [plot2-methods] for all implemented methods for different object classes.
+#' Besides data frames, [plot2()] accepts vectors, matrices, formulas, 'sf' objects and other classes; see [plot2-methods].
 #' @param .data Data to plot. A single character value that is the name of a data frame in the calling environment (such as `plot2("df")`, as used in tool calling) plots that data frame; only the calling environment is searched, not the search path.
 #' @param x Plotting 'direction' for the X-axis. This can be:
 #' 
@@ -196,24 +194,28 @@
 #' @param markdown A [logical] to turn all labels and titles into [plotmath] expressions, by converting common markdown language using the [md_to_expression()] function (defaults to `TRUE`).
 #' @param data Data for formula notation only, e.g. `plot2(mpg ~ hp, data = mtcars)`, which is the same as `mtcars |> plot2(mpg ~ hp)`. A formula takes the form `y ~ x + category + facet` or `y ~ x + category | facet`; terms can be expressions, such as `log(mpg) ~ hp`. For other input, `data` gives an error: pass the data as the first argument instead.
 #' @param ... Any argument to give to the geom. This will override automatically-set settings for the geom.
-#' @details The [plot2()] function is a convenient wrapper around many [`ggplot2`][ggplot2::ggplot()] functions such as [`ggplot()`][ggplot2::ggplot()], [`aes()`][ggplot2::aes()], [`geom_col()`][ggplot2::geom_col()], [`facet_wrap()`][ggplot2::facet_wrap()], [`labs()`][ggplot2::labs()], etc., and provides:
-#'   - Writing as few lines of codes as possible
-#'   - Easy plotting in three 'directions': `x` (the regular X-axis), `category` (replaces 'fill' and 'colour') and `facet`
-#'   - Automatic setting of these 'directions' based on the input data
-#'   - Setting in-place calculations for all plotting directions and even `y`
-#'   - Easy way for sorting data in many ways (such as on alphabet, numeric value, frequency, original data order), by setting a single argument for the 'direction': `x.sort`, `category.sort` and `facet.sort`
-#'   - Easy limiting values, e.g. by setting `x.max_items = 5` or `category.max_items = 5`
-#'   - Markdown support for any title text, with any theme
-#'   - Integrated support for any Google Font and any installed system font
-#'   - An extra clean, minimalistic theme with a lot of whitespace (but without unnecessary margins) that is ideal for printing: `theme_minimal2()`
-#'   - Some conveniences from Microsoft Excel:
-#'     - The Y-axis starts at 0 if possible
-#'     - The y scale expands at the top to be better able to interpret all data points
-#'     - Date breaks can be written in a human-readable format (such as "d mmm yyyy")
-#'     - Labels with data values can easily be printed and are automatically determined
-#'   - Support for any `ggplot2` extension based on [ggplot2::fortify()]
-#'   
-#' The `ggplot2` package in conjunction with the `dplyr`, `tidyr` and `forcats` packages can provide above functionalities, but the goal of the [plot2()] function is to generalise this into one function. The generic [plot2()] function currently has `r length(formals(plot2))` arguments, all with a default value except `.data` and `...`. **Less typing, faster coding.**
+#' @details
+#' **Plotting directions**
+#'
+#' A plot has up to four directions: `x`, `y`, `category` (the colours, called 'colour' and 'fill' in `ggplot2`) and `facet` (separate panels). Each can be a column or a calculation on the data. Groups of `x`, `category` and `facet` that contain several values are summarised with `summarise_function`, and each direction has its own settings, such as `x.sort` and `category.sort` for the order of the values, and `x.max_items` and `category.max_items` to show only the first values and combine the rest into one. Directions that are not given are chosen from the data, see *Automatic choices* below.
+#'
+#' **Plot types**
+#'
+#' `type` accepts every `ggplot2` geom and adds the types `"barpercent"`, `"linedot"`, `"dumbbell"`, `"back-to-back"`, `"sankey"`, `"spider"` and `"upset"`. Without `type`, the type follows from the data. See `vignette("supported_types", package = "plot2")` for every type with its data requirements.
+#'
+#' **The result**
+#'
+#' The result is an ordinary `ggplot` object: it can be extended with `+` and any `ggplot2` function, with the [`add_*()`][add_type()] functions, which add layers with unquoted variables, and its layers can be reordered with [move_layer()]. The default theme is [theme_minimal2()], and the colours are set with `colour` and `colour_fill`, which accept any value of [get_colour()].
+#'
+#' **Text and numbers**
+#'
+#' Titles and labels support markdown (such as `"**bold**"` and `"*italic*"`) and calculations on the data, such as `title = paste("Patients in", min(format(date, "%Y")))`. The font can be any installed system font or a Google Font (`font`). Numbers use the decimal and big marks of [dec_mark()] and [big_mark()], and the language of generated text follows the `plot2.language` option; see [plot2-options] for all options.
+#'
+#' **Further reading**
+#'
+#' `vignette("plot2", package = "plot2")` introduces the package step by step. The [package website](https://msberends.github.io/plot2/) has articles on colours and themes, maps, fonts, and [plot2()] for `ggplot2` users. [create_interactively()] builds a plot in a Shiny app and shows the code that creates it.
+#'
+#' The generic [plot2()] currently has `r length(formals(plot2))` arguments, all with a default value except `.data` and `...`.
 #' @section Automatic choices:
 #' Like base R's [plot()], [plot2()] decides what is not given. Every decision follows a fixed rule, is announced in a message (in interactive sessions, see the `plot2.silent` option in [plot2-options]), and is overridden by setting the argument concerned. The rules are:
 #' 
@@ -244,7 +246,8 @@
 #' The arguments follow one naming rule: `<argument>.<setting>`, where the part before the dot is itself an argument of [plot2()] (`x`, `y`, `category`, `facet`, `y_secondary`, `title`, `subtitle`, `datalabels`, `smooth` or `legend`) and the setting is written in snake case, e.g. `x.label_angle` or `facet.repeat_labels_x`. All other arguments are plain snake case, e.g. `colour_fill`, `sankey_node_width` or `jitter_seed`. The exceptions are names known from base R: `na.rm`, `na.replace`, `decimal.mark` and `big.mark`.
 #' 
 #' A default of `NULL` means that [plot2()] determines the value automatically, often announced in a message. An explicit value is always used as given.
-#' @return a `ggplot` object
+#' @return A [`ggplot`][ggplot2::ggplot()] object.
+#' @seealso `vignette("plot2", package = "plot2")` and `vignette("supported_types", package = "plot2")`; [plot2-methods] for the methods per object class; [add_type()] and [move_layer()] to extend a plot; [get_colour()] and [theme_minimal2()] for colours and the theme.
 #' @importFrom ggplot2 ggplot labs
 #' @export
 #' @examples
