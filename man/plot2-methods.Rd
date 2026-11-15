@@ -991,7 +991,7 @@ Please note: in \code{ggplot2}, 'bars' and 'columns' are equal, while it is comm
 \item \code{"sankey"} (short: \code{"s"}) creates a \href{https://en.wikipedia.org/wiki/Sankey_diagram}{Sankey plot} using \code{category} for the flows and requires \code{x} to contain multiple variables from \code{.data}. At default, it also sets \code{x.expand = c(0.05, 0.05)} and \code{y.limits = c(NA, NA)} and \code{y.expand = c(0.01, 0.01)}. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using \code{datalabels.size}, \code{datalabels.colour}, and \code{datalabels.colour_fill}. The transparency of the flows can be set using \code{sankey_alpha}, and the width of the nodes can be set using \code{sankey_node_width}. Sankey plots can also be flipped using \code{horizontal = TRUE}, and the label angles can be set with \code{datalabels.angle}.
 \item \code{"spider"} or \code{"radar"} (short: \code{"sp"}) creates a \href{https://en.wikipedia.org/wiki/Spider_chart}{Spider plot} using our novel \code{\link[=coord_spider]{CoordSpider}} coordinate system. Facets are supported, always with the same scale in all facets.
 }
-\item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}, and accepts any value of \code{type}, such as \code{"line"} or \code{"l"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
+\item Left blank. In this case, the type will be determined automatically: \code{"boxplot"} if there is no X-axis or if the length of unique values per X-axis item is at least 3, \code{"point"} if both the y and x axes are numeric, \code{"line"} if the X-axis contains dates with one value each (a time series), and the \link[=options]{option} \code{"plot2.default_type"} otherwise (which defaults to \code{"col"}, and accepts any value of \code{type}, such as \code{"line"} or \code{"l"}). Use \code{type = "blank"} or \code{type = "geom_blank"} to \emph{not} add a geom.
 }}
 
 \item{title, subtitle, caption, tag, x.title, y.title, category.title, legend.title, y_secondary.title}{A title to use. This can be:
@@ -1017,9 +1017,9 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{facet.position, facet.colour_fill, facet.bold, facet.italic, facet.size, facet.margin, facet.repeat_labels_x, facet.repeat_labels_y, facet.drop, facet.nrow, facet.relative}{Additional settings for the plotting direction \code{facet}. \code{facet.repeat_labels_x} and \code{facet.repeat_labels_y} repeat the axis labels in every facet, which also makes the scales of that axis free (unless \code{facet.fixed_x} or \code{facet.fixed_y} is \code{TRUE}).}
 
-\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. If not set, this depends on the data: \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25\%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set \code{facet.fixed_y = TRUE} when panels must be compared.}
+\item{facet.fixed_y}{A \link{logical} to indicate whether all y scales should have the same limits. If not set, this depends on the data: \code{TRUE} only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet, after \code{y.transform}, is less than 25\%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set \code{facet.fixed_y = TRUE} when panels must be compared.}
 
-\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}. If not set and x is numeric, the same rule as for \code{facet.fixed_y} applies to the maximum x values per facet.}
+\item{facet.fixed_x}{A \link{logical} to indicate whether all x scales should have the same breaks. This acts like the inverse of \code{x.drop}. If not set and x is numeric, the same rule as for \code{facet.fixed_y} applies to the maximum x values per facet, compared after \code{x.transform} (so as plotted, e.g. on a log scale).}
 
 \item{x.date_breaks}{Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as \code{"1 day"} and \code{"2 years"}.}
 
@@ -1061,11 +1061,11 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{x.labels, y.labels, y_secondary.labels}{A labels function or character vector to use for the axis.}
 
-\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when \code{type} is not set or is a discrete type such as \code{"col"} or \code{"boxplot"}, with a message; for continuous types such as \code{"point"}, \code{"line"} and \code{"area"} they stay numeric. Numeric values also become character for other discrete types. Use \code{x.character = FALSE} to keep numeric values.}
+\item{x.character}{A \link{logical} to indicate whether the values of the X-axis should be forced to \link{character}. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character when \code{type} is not set or is a discrete type such as \code{"col"} or \code{"boxplot"}, with a message; years only so with at most one value per year (per \code{category} and \code{facet}), so that e.g. many measurements per year form a numeric axis; for continuous types such as \code{"point"}, \code{"line"} and \code{"area"} they stay numeric, and years are then labelled without a thousands separator. Numeric values also become character for other discrete types, and always for \code{"boxplot"}, \code{"violin"} and \code{"dumbbell"}. Use \code{x.character = FALSE} to keep numeric values.}
 
 \item{x.drop}{\link{logical} to indicate whether factor levels should be dropped.}
 
-\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left \code{NULL} (default for \code{x.zoom}), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
+\item{x.zoom, y.zoom}{A \link{logical} to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left \code{NULL} (default for \code{x.zoom}), the x axis is zoomed for plot types with a continuous x axis (such as histograms), and for years that stay numeric (such as in a line plot) only. This sets \code{x.limits = c(NA, NA)} (or \code{y.limits}) and, unless \code{x.expand} (or \code{y.expand}) is set, a 5\% expansion on both sides, like \code{ggplot2} does. It has no effect if \code{x.limits} (or \code{y.limits}) is set.}
 
 \item{y.24h}{A \link{logical} to indicate whether the y labels and breaks should be formatted as 24-hour sequences.}
 
@@ -1093,7 +1093,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{category.date_labels}{Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as \code{"d mmmm yyyy"}.}
 
-\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use \code{category.character = FALSE} to keep numeric values.}
+\item{category.character}{A \link{logical} to indicate whether the values of the category should be forced to \link{character}. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character, with a message. Use \code{category.character = FALSE} to keep numeric values.}
 
 \item{x.sort, category.sort, facet.sort}{Sorting of the plotting direction. \code{category.sort} and \code{facet.sort} default to \code{TRUE}; \code{x.sort} defaults to \code{NULL}, which sorts text and factors as \code{TRUE} and leaves continuous values (such as dates and numbers) unsorted. Applying one of the sorting methods will transform the values to an ordered \link{factor}, which \code{ggplot2} uses to orient the data. Valid values are:
 \itemize{
@@ -1147,7 +1147,7 @@ The \code{category.title} defaults to \code{TRUE} if the legend items are numeri
 
 \item{smooth}{A \link{logical} to add a smooth. In histograms, this will add the density count as an overlaying line (default: \code{TRUE}). In all other cases, a smooth will be added using \code{\link[ggplot2:geom_smooth]{geom_smooth()}} (default: \code{FALSE}).}
 
-\item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{Settings for \code{smooth}.}
+\item{smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour}{Settings for \code{smooth}. If not set, \code{smooth.method} and \code{smooth.formula} are chosen as in \code{ggplot2}: \code{"loess"} with \code{y ~ x} if the largest group (per \code{category} and \code{facet}) has fewer than 1000 values, and \code{"gam"} with \code{y ~ s(x, bs = "cs")} otherwise. The lines of the smooth are not affected by \code{colour_transparency}.}
 
 \item{size}{Size of the geom. Defaults to \code{2} for geoms \link[ggplot2:geom_point]{point}, \link[ggplot2:geom_jitter]{jitter}, and \link[ggbeeswarm:geom_beeswarm]{beeswarm}; \code{4} for UpSet plots (using \code{type = "upset"}); \code{5} for dumbbell plots (using \code{type = "dumbbell"}); \code{0.75} otherwise.}
 

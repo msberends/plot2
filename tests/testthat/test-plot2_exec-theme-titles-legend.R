@@ -61,3 +61,15 @@ test_that("horizontal plot with legend on top: legend reversed to match the bars
 test_that("legend.nrow reaches the guide", {
   expect_identical(as.numeric(guide_param(plot2(fx_cat_unique, x, y, category, legend.nrow = 2), "fill", "nrow")), 2)
 })
+
+test_that("horizontal plot with legend on the right: legend also reversed to match the bars", {
+  expect_true(isTRUE(guide_param(plot2(fx_cat_unique, x, y, category, horizontal = TRUE, legend.position = "right"), "fill", "reverse")))
+  expect_false(isTRUE(guide_param(plot2(fx_cat_unique, x, y, category, horizontal = TRUE, legend.reverse = TRUE), "fill", "reverse")))
+})
+
+test_that("character ranges such as '1952-1977' are not numeric, so the legend goes on top", {
+  expect_false(plot2:::data_is_numeric(c("1952-1977", "1982-2007")))
+  expect_true(plot2:::data_is_numeric(c("1", "-2.5", "1,000.5", "1e+05")))
+  d <- data.frame(x = 1:4, y = 1:4, period = c("1952-1977", "1952-1977", "1982-2007", "1982-2007"))
+  expect_identical(plot2(d, x, y, period)$theme$legend.position, "top")
+})

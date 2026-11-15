@@ -564,11 +564,27 @@ add_smooth <- function(plot, y = NULL, x = NULL, colour = getOption("plot2.colou
     geom_data$params$se <- se
   }
   
-  if (is.null(geom_data$data) && geom_data$has_category) {
+  continuous_category <- is.null(geom_data$data) && geom_data$has_category &&
+    !is.null(geom_data$mapping$colour) &&
+    tryCatch({
+      category_values <- rlang::eval_tidy(geom_data$mapping$colour, data = plot$data)
+      is.numeric(category_values) && !is.factor(category_values)
+    }, error = function(e) FALSE)
+  if (isTRUE(continuous_category)) {
+    # a continuous category (e.g. a colour gradient of years) has no groups to fit a line
+    # for: fit one line per facet, in a neutral colour unless a colour was set
+    geom_data$mapping$colour <- NULL
+    geom_data$mapping$fill <- NULL
+    geom_data$mapping$group <- rlang::quo(1)
+    if (missing(colour)) {
+      geom_data$params$colour <- "grey35"
+      geom_data$params$fill <- "grey35"
+    }
+  } else if (is.null(geom_data$data) && geom_data$has_category) {
     # update the group mapping in line geoms
     geom_data$mapping <- setup_aes(geom_data$mapping, group = geom_data$mapping$colour)
   }
-  
+
   p <- add_type(plot = geom_data$plot,
                 type = "smooth",
                 data = geom_data$data,

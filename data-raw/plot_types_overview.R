@@ -14,7 +14,8 @@
 
 # Creates man/figures/plot_types.png: one panel per plot type, each with the single
 # line of code that creates it (#4). Run from the package root after changes to the
-# plot types, with the packages patchwork, ggforce, ggbeeswarm and sf installed:
+# plot types, with the packages patchwork, ggforce, ggbeeswarm, sf and ggplot2movies
+# installed:
 #   source("data-raw/plot_types_overview.R")
 
 devtools::load_all(".", quiet = TRUE)
@@ -22,33 +23,28 @@ library(patchwork)
 
 options(plot2.silent = TRUE)
 
-upset_data <- transform(mtcars,
-                        manual = am == 1,
-                        straight = vs == 1,
-                        gears_4 = gear == 4,
-                        mpg_20 = mpg > 20)
-
-# each element: the plot type as title, and the code that creates the plot
+# data sets from the examples in the documentation of ggplot2 where possible, so that
+# every example is understood without explanation
 panels <- list(
-  "Column" = quote(plot2(admitted_patients, hospital, n())),
-  "Bar" = quote(plot2(admitted_patients, hospital, n(), ward, type = "bar")),
+  "Column" = quote(plot2(ggplot2::mpg, class, n())),
+  "Bar" = quote(plot2(ggplot2::mpg, class, n(), drv, type = "bar")),
   "Bar with percentages" = quote(plot2(ggplot2::mpg, manufacturer, type = "barpercent")),
-  "Stacked to 100%" = quote(plot2(admitted_patients, age_group, n(), hospital, stacked_fill = TRUE)),
-  "Line" = quote(plot2(admitted_patients, format(date, "%Y"), n(), ward, type = "line")),
-  "Line with points" = quote(plot2(admitted_patients, format(date, "%Y"), n(), ward, type = "linedot")),
-  "Area" = quote(plot2(admitted_patients, format(date, "%Y"), n(), hospital, type = "area", stacked = TRUE, x.complete = 0)),
+  "Stacked to 100%" = quote(plot2(ggplot2::diamonds, clarity, n(), cut, stacked_fill = TRUE)),
+  "Line" = quote(plot2(ggplot2::economics_long, date, value01, variable)),
+  "Line with points" = quote(plot2(ggplot2::diamonds, clarity, median(carat), cut, type = "linedot")),
+  "Area" = quote(plot2(ggplot2::economics, date, unemploy, type = "area")),
   "Point" = quote(plot2(iris)),
   "Beeswarm" = quote(plot2(iris, Species, Sepal.Length, type = "beeswarm")),
-  "Boxplot" = quote(plot2(admitted_patients, hospital, age, gender)),
-  "Violin" = quote(plot2(admitted_patients, ward, age, type = "violin")),
-  "Histogram" = quote(plot2(admitted_patients, age, type = "histogram")),
+  "Boxplot" = quote(plot2(ggplot2::mpg, class, hwy)),
+  "Violin" = quote(plot2(mtcars, cyl, mpg, type = "violin")),
+  "Histogram" = quote(plot2(ggplot2::diamonds, carat)),
   "Density" = quote(plot2(iris, Sepal.Length, category = Species, type = "density", colour_transparency = 0.5)),
-  "Dumbbell" = quote(plot2(admitted_patients, hospital, median(age), gender, type = "dumbbell")),
+  "Dumbbell" = quote(plot2(ggplot2::mpg, manufacturer, median(hwy), year, type = "dumbbell")),
   "Heatmap" = quote(plot2(cor(mtcars), colour = c("#2166AC", "white", "#B2182B"))),
   "Sankey" = quote(plot2(Titanic, c(Class, Age, Survived), category = Sex, type = "sankey")),
-  "Spider" = quote(plot2(admitted_patients, age_group, n(), hospital, type = "spider")),
-  "UpSet" = quote(plot2(upset_data, c(manual, straight, gears_4, mpg_20), type = "upset")),
-  "Back-to-back" = quote(plot2(admitted_patients, age_group, n(), facet = gender, type = "back-to-back")),
+  "Spider" = quote(plot2(ggplot2::diamonds, clarity, median(price), cut, type = "spider")),
+  "UpSet" = quote(plot2(ggplot2movies::movies, c(Action, Animation, Comedy, Drama, Romance), type = "upset")),
+  "Back-to-back" = quote(plot2(ggplot2::mpg, class, n(), facet = year, type = "back-to-back")),
   "Map" = quote(plot2(netherlands, datalabels = FALSE))
 )
 

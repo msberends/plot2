@@ -169,8 +169,8 @@ back2back_plot <- function(df,
                             datapoints = facet_values,
                             summarise_function = NULL,
                             summarise_fn_name = "",
-                            # reversed, except for the order in the data (as before #153)
-                            horizontal = !identical(validate_sorting(facet.sort, horizontal = FALSE), "inorder"),
+                            # the first value is the left plot, as facets read from left to right
+                            horizontal = FALSE,
                             drop = FALSE,
                             argument = "facet")
   facet_values <- as.character(levels(facet_values))

@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 
 ```{r}
 library(plot2)
+data(mpg, package = "ggplot2")
 ```
 
 This article describes how `plot2()` sets colours, how to use palettes and the colours of an organisation, and how to change the theme and the titles of a plot.
@@ -24,25 +25,25 @@ This article describes how `plot2()` sets colours, how to use palettes and the c
 `colour` sets the colours of a plot, whatever its type. `ggplot2` distinguishes between the `colour` aesthetic (for points and lines) and the `fill` aesthetic (for areas such as bars), each with its own scale functions. `plot2()` determines which of the two applies and sets both where needed. Without `colour`, the colours of `ggplot2` are used:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = ward)
+mpg |>
+  plot2(x = class, y = n(), category = year)
 ```
 
 `colour` accepts R colour names, hexadecimal codes and palette names. A vector of colours is used in the order of the values of `category`:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = ward, colour = c("steelblue", "#E15759"))
+mpg |>
+  plot2(x = class, y = n(), category = year, colour = c("steelblue", "#E15759"))
 ```
 
 A named vector matches its names to the values of `category`, so that a value keeps its colour in every plot, even when not all values are present:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = ward,
-        colour = c("Non-ICU" = "grey70", "ICU" = "#E15759"))
+        category = year,
+        colour = c("1999" = "grey70", "2008" = "#E15759"))
 ```
 
 ### Palettes
@@ -50,8 +51,8 @@ admitted_patients |>
 The colourblind-safe palettes of the `viridisLite` package are available by name: `"viridis"`, `"magma"`, `"inferno"`, `"plasma"`, `"cividis"`, `"rocket"`, `"mako"` and `"turbo"`. So are the palettes of base R, such as `"Okabe-Ito"`, `"R4"` and `"Tableau 10"` (see `grDevices::palette.pals()`):
 
 ```{r}
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, colour = "Tableau 10")
+ggplot2::diamonds |>
+  plot2(x = clarity, y = n(), category = cut, colour = "Tableau 10")
 ```
 
 `get_colour()` returns the colours that `plot2()` uses for a name or palette. A palette is extended where needed, so that it never runs out of colours:
@@ -66,10 +67,10 @@ get_colour(c("red", "#4E79A7", "f80"))
 Where a geom has both a line and an area, such as columns and boxplots, `colour` applies to both. `colour_fill` sets the area separately:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
-        y = age,
-        category = ward,
+mpg |>
+  plot2(x = drv,
+        y = hwy,
+        category = year,
         type = "boxplot",
         colour = c("#4E79A7", "#E15759"),
         colour_fill = "white")
@@ -96,13 +97,12 @@ mtcars |>
 `category.focus` shows one value in its colour and the other values in grey. It accepts a value or its position:
 
 ```{r}
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = n(),
-        category = hospital,
-        category.focus = "D",
-        type = "line",
-        x.title = "Year")
+gapminder::gapminder |>
+  plot2(x = year,
+        y = median(lifeExp),
+        category = continent,
+        category.focus = "Asia",
+        type = "line")
 ```
 
 ## Colours of an organisation
@@ -120,8 +120,8 @@ get_colour("company", length = 4)
 ```
 
 ```{r}
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, colour = "company")
+mpg |>
+  plot2(x = class, y = n(), category = drv, colour = "company")
 ```
 
 The option `plot2.colour` sets the default colours for all plots in the session:
@@ -129,8 +129,8 @@ The option `plot2.colour` sets the default colours for all plots in the session:
 ```{r}
 options(plot2.colour = "company")
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = gender)
+mpg |>
+  plot2(x = class, y = n(), category = year)
 ```
 
 ```{r}
@@ -145,15 +145,15 @@ A package can register colours when it is loaded, so that all users of that pack
 `plot2()` applies `theme_minimal2()` by default. This theme is based on `ggplot2::theme_minimal()`, with fewer grid lines, more white space and the legend at the top, and it is suited to print. The `theme` argument sets another theme, and `theme = NULL` uses the default theme of `ggplot2`:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n(), theme = ggplot2::theme_bw())
+mpg |>
+  plot2(x = class, y = n(), theme = ggplot2::theme_bw())
 ```
 
 A partial theme, made with `ggplot2::theme()`, is added to `theme_minimal2()`, so that only the given elements change:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
         theme = ggplot2::theme(panel.grid.major.y = ggplot2::element_blank()))
 ```
@@ -161,10 +161,10 @@ admitted_patients |>
 Other arguments change frequent elements directly. `background` sets the background colour, `text_factor` scales all text, and `legend.position` places the legend:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
+        category = year,
         background = "#F5F5F0",
         text_factor = 1.2,
         legend.position = "right")

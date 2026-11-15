@@ -35,7 +35,7 @@ test_that("many x values build without datalabels", {
 
 test_that("a date axis with many rows is aggregated before plotting", {
   d <- data.frame(dt = as.Date("2020-01-01") + sample(0:30, 1e4, TRUE))
-  p <- plot2(d, dt, n())
+  p <- plot2(d, dt, n(), type = "col")
   expect_lte(nrow(layer_df(p, layer_index(p, "GeomBar"))), 31)
 })
 

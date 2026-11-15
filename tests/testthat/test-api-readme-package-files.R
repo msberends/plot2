@@ -20,14 +20,26 @@ skip_on_cran()
 test_that("the evaluated README chunks run without error or warning", {
   skip_on_cran()
   skip_if_not_installed("ggforce")
+  skip_if_not_installed("gapminder")
+  skip_if_not_installed("showtext")
+  # the README downloads a Google Font
+  skip_if_offline("fonts.googleapis.com")
   withr::local_pdf(NULL)
+  # the README sets options, so these must not leak into other tests
+  withr::local_options(plot2.silent = NULL, plot2.colour = NULL, plot2.colour_font_secondary = NULL)
   res <- eval_chunks(source_file("README.Rmd"), include_unevaluated = FALSE, exclude = "opts_chunk|install.packages")
   expect_identical(res$code[!is.na(res$error)], character(0))
   expect_identical(res$code[!is.na(res$warnings)], character(0))
 })
 
 test_that("the README chunks marked eval = FALSE run without error or warning too", {
+  skip_if_not_installed("gapminder")
+  skip_if_not_installed("showtext")
+  # the README downloads a Google Font
+  skip_if_offline("fonts.googleapis.com")
   withr::local_pdf(NULL)
+  # the README sets options, so these must not leak into other tests
+  withr::local_options(plot2.silent = NULL, plot2.colour = NULL, plot2.colour_font_secondary = NULL)
   res <- eval_chunks(source_file("README.Rmd"), exclude = "opts_chunk|install.packages|create_interactively")
   expect_identical(res$code[!is.na(res$error)], character(0))
   expect_identical(res$code[!is.na(res$warnings)], character(0))

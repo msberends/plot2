@@ -67,7 +67,7 @@ export(theme_minimal2)
 export(unregister_colour)
 export(where)
 importFrom(dplyr,
-  `%>%`,
+  "%>%",
   across,
   all_of,
   any_of,

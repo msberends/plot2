@@ -266,6 +266,9 @@ emit_diagnostic <- function(txt, type) {
     warning(warningCondition(txt, class = "plot2_warning", call = NULL))
     return(invisible(FALSE))
   }
+  if (isTRUE(as.logical(getOption("plot2.silent", default = FALSE)))) {
+    return(invisible(FALSE))
+  }
   cls <- c(if (type == "cautions") "plot2_caution", "plot2_message")
   printed <- FALSE
   withRestarts({
@@ -337,6 +340,20 @@ transform_name <- function(x) {
   if (is.character(x)) return(x[1L])
   if (inherits(x, "transform") || is.list(x)) return(as.character(x$name %or% "custom")[1L])
   "custom"
+}
+
+# coefficient of variation of the axis maxima per facet, compared as they are plotted:
+# after the axis transformation, so that e.g. maxima of 30 000 and 100 000 on a log10 axis
+# are close; NA if the transformation cannot be applied
+maxima_variation <- function(maxima, transform = NULL) {
+  if (transform_name(transform) != "identity") {
+    maxima <- tryCatch(scales::as.transform(transform)$transform(maxima),
+                       error = function(e) NA_real_)
+  }
+  if (any(!is.finite(maxima)) || isTRUE(mean(maxima) == 0)) {
+    return(NA_real_)
+  }
+  stats::sd(maxima) / abs(mean(maxima))
 }
 
 # a sequence of breaks that are multiples of `by` (anchored at zero), also when
@@ -681,6 +698,10 @@ is_empty <- function(x) {
 geom_is_continuous <- function(geom) {
   geom %in% c("geom_boxplot", "geom_violin", "geom_point", "geom_jitter", "geom_beeswarm", "geom_histogram", "geom_density", "geom_sf", "geom_line", "geom_area", "geom_ribbon", "geom_polygon", "geom_tile", "geom_raster", "geom_rect", "geom_upset", "geom_spider")
 }
+# geoms with a continuous y but always a discrete x: a numeric x becomes character
+geom_is_discrete_x <- function(geom) {
+  geom %in% c("geom_boxplot", "geom_violin")
+}
 geom_is_continuous_x <- function(geom) {
   geom %in% c("geom_histogram", "geom_density")
 }
@@ -760,8 +781,32 @@ restore_mapping <- function(p, df) {
       return(mapping)
     }
     att <- attributes(mapping)
+    var_name <- function(v) {
+      switch(v,
+             `_var_x` = get_x_name(df),
+             `_var_y_secondary` = get_y_secondary_name(df),
+             `_var_y` = get_y_name(df),
+             `_var_category` = get_category_name(df),
+             `_var_facet` = get_facet_name(df))
+    }
+    replace_vars <- function(expr) {
+      if (is.symbol(expr) && as.character(expr) %in% c("_var_x", "_var_y_secondary", "_var_y", "_var_category", "_var_facet")) {
+        setup_aes(x = var_name(as.character(expr)), as_symbol = TRUE)[[1]]
+      } else if (is.call(expr)) {
+        as.call(lapply(as.list(expr), replace_vars))
+      } else {
+        expr
+      }
+    }
     new_mapping <- lapply(mapping,
                           function(map) {
+                            expr <- if (rlang::is_quosure(map)) rlang::quo_get_expr(map) else map
+                            if (is.call(expr) && any(c("stage", "after_scale", "after_stat") %in% all.names(expr))) {
+                              # a staged mapping (such as the solid lines of a smooth): only rename the
+                              # columns inside it, so that the staging is kept
+                              return(rlang::new_quosure(replace_vars(expr),
+                                                        env = if (rlang::is_quosure(map)) rlang::quo_get_env(map) else globalenv()))
+                            }
                             # deparse(map) has a value such as "~`_var_y`"
                             if (any(deparse(map) %like% "_var_x")) {
                               setup_aes(x = get_x_name(df), as_symbol = TRUE)[[1]] 
@@ -894,7 +939,7 @@ is_date <- function(x) {
 
 data_is_numeric <- function(x) {
   # the unique values suffice (#37)
-  all(unique(x) %like% "^[0-9.,-]+(e[+][0-9.,-]+)?$", na.rm = TRUE)
+  all(unique(x) %like% "^-?[0-9]+([.,][0-9]+)*(e[+-]?[0-9]+)?$", na.rm = TRUE)
 }
 
 digit_to_text <- function(x) {

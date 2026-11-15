@@ -72,10 +72,10 @@ test_that("spider: facets work with fixed scales (#158); fewer than three x valu
   expect_error(plot2(fx_spider[1:2, ], dim, score, type = "spider"))
 })
 
-test_that("smooth: drawn below the points, in smooth.colour", {
+test_that("smooth: drawn on top of the points, in smooth.colour", {
   df <- data.frame(x = 1:30, y = sin(1:30 / 5) + 1:30 / 10)
   p <- expect_plot2(plot2(df, x, y, smooth = TRUE, smooth.colour = "red"))
-  expect_identical(geoms(p)[1], "GeomSmooth")
+  expect_identical(geoms(p)[length(geoms(p))], "GeomSmooth")
   expect_identical(unique(col_hex(as.character(layer_df(p, "smooth")$colour))), "#FF0000")
 })
 

@@ -35,7 +35,12 @@ validate_type <- function(type, df = NULL) {
       }
     } else {
       # check if y has multiple values across groups, then make it boxplot
-      if (all(group_sizes(df) >= 3)) {
+      if (is_date(get_x(df)) && n_distinct(get_x(df)) > 1 && all(group_sizes(df) == 1)) {
+        # a time series: dates with one value each (per category and facet) read best as a line
+        type <- "geom_line"
+        plot2_message("Using ", font_code("type = \"line\""),
+                      " since ", font_var(get_x_name(df)), " contains dates with one value each")
+      } else if (all(group_sizes(df) >= 3)) {
         type <- "geom_boxplot"
         plot2_message("Using ", font_code("type = \"", gsub("geom_", "", type), "\""),
                       " since all groups in ",
@@ -419,13 +424,19 @@ validate_data <- function(df,
   
   # turn x to character if data seems to suggest so; years and months are only guessed for
   # whole numbers and for discrete or automatic types, so that e.g. a scatter plot of
-  # weights from 2000 to 2050 keeps a numeric x (#25)
-  guess_discrete <- !type %in% c("geom_point", "geom_line", "geom_area", "geom_ribbon", "geom_path", "geom_step",
-                                "geom_smooth", "geom_histogram", "geom_density", "geom_polygon", "geom_rect", "geom_sf")
+  # weights from 1900 to 2050 keeps a numeric x (#25)
+  # boxplots, violins and dumbbells (drawn as points) always have a discrete x
+  discrete_x <- geom_is_discrete_x(type) || identical(dots$type_backup, "dumbbell")
+  guess_discrete <- discrete_x ||
+    !type %in% c("geom_point", "geom_line", "geom_area", "geom_ribbon", "geom_path", "geom_step",
+                 "geom_smooth", "geom_histogram", "geom_density", "geom_polygon", "geom_rect", "geom_sf")
   if (has_x(df) &&!isTRUE(dots$x.character)) {
     if (is.null(dots$x.character) &&
         guess_discrete &&
-        looks_like_years(get_x(df))) {
+        looks_like_years(get_x(df)) &&
+        all(group_sizes(df) <= 1)) {
+      # years are only discrete with at most one value per year (per category and facet),
+      # otherwise they form a numeric axis, such as in a scatter plot or trend over time
       plot2_message("Assuming ", font_code("x.character = TRUE"),
                     " since the ", font_arg("x"), " labels seem to be years (use ",
                     font_code("x.character = FALSE"), " to prevent this)")
@@ -439,7 +450,7 @@ validate_data <- function(df,
       dots$x.character <- TRUE
     } else if (is.numeric(get_x(df)) &&
                !type %in% c("", "geom_blank") &&
-               !geom_is_continuous(type)) {
+               (!geom_is_continuous(type) || discrete_x)) {
       plot2_message("Using ", font_code("x.character = TRUE"),
                     " for discrete plot type (", font_code("type = \"", type, "\""), ")",
                     " since ", font_var(get_x_name(df)), " is numeric")
@@ -780,7 +791,7 @@ validate_x_scale <- function(df,
       group_by(across(get_facet_name(df))) |> 
       summarise(max = as.double(max(`_var_x`, na.rm = TRUE)))
     if (!any(is.infinite(x_maxima$max), na.rm = TRUE)) {   
-      coeff_of_variation <- stats::sd(x_maxima$max) / mean(x_maxima$max)
+      coeff_of_variation <- maxima_variation(x_maxima$max, x.transform)
       if (isTRUE(coeff_of_variation < 0.25)) {
         plot2_message("Assuming ", font_code("facet.fixed_x = TRUE"), 
                       " since the ", digit_to_text(nrow(x_maxima)), " ",
@@ -898,6 +909,10 @@ validate_x_scale <- function(df,
         plot2_env$x_lim <- x.limits
       }
       if (is.null(x.labels)) {
+        # years on a continuous axis (e.g. of a line plot) are labelled without a big mark, as 1990 and not 1 990
+        if (looks_like_years(values)) {
+          big.mark <- ""
+        }
         x.labels <- function(x, dec_mark = decimal.mark, big_mark = big.mark, ...) {
           format2(x,
                   round = max(2, sigfigs(diff(range(x, na.rm = TRUE))) + 1),
@@ -945,6 +960,17 @@ validate_x_scale <- function(df,
         }
         max_lim <- max(values, na.rm = TRUE)
         x.limits <- c(min_lim, max_lim)
+        if (transform_name(x.transform) != "identity" && isTRUE(min_lim == 0)) {
+          # some transformations, such as log, do not allow 0: start at the lowest value that
+          # can be transformed, so that all facets still share the same scale
+          transformed <- tryCatch(scales::as.transform(x.transform)$transform(values),
+                                  error = function(e) rep(NA_real_, length(values)))
+          if (any(is.finite(transformed))) {
+            x.limits[1] <- min(values[is.finite(transformed)], na.rm = TRUE)
+          } else {
+            x.limits[1] <- NA_real_
+          }
+        }
         plot2_env$x_lim <- x.limits
       }
       scale_x_continuous(labels = x.labels,
@@ -1032,7 +1058,7 @@ validate_y_scale <- function(df,
       group_by(across(get_facet_name(df))) |> 
       summarise(max = as.double(max(`_var_y`, na.rm = TRUE)))
     if (!any(is.infinite(y_maxima$max), na.rm = TRUE)) {   
-      coeff_of_variation <- stats::sd(y_maxima$max) / mean(y_maxima$max)
+      coeff_of_variation <- maxima_variation(y_maxima$max, y.transform)
       if (isTRUE(coeff_of_variation < 0.25)) {
         plot2_message("Assuming ", font_code("facet.fixed_y = TRUE"), 
                       " since the ", digit_to_text(nrow(y_maxima)), " ",
@@ -1334,6 +1360,9 @@ validate_y_scale <- function(df,
                        decimal.mark = decimal.mark,
                        big.mark = big.mark),
     limits = limits_evaluated,
+    # the shared limits of fixed facets follow the data, so keep what goes beyond them, such as
+    # the line or band of a smooth; the expansion leaves room for it
+    oob = if (is.null(y.limits) && has_facet(df) && isTRUE(facet.fixed_y)) scales::oob_keep else scales::oob_censor,
     expand = expand_evaluated,
     transform = y.transform,
     position = y.position,
@@ -1398,6 +1427,10 @@ validate_category_scale <- function(values,
         function(x, format = lbls, ...) format2(as.Date(as.numeric(x), origin = "1970-01-01"), format = format)
       }
     } else {
+      if (looks_like_years(values)) {
+        # years such as 1990, not 1 990
+        big.mark <- ""
+      }
       function(x, dec = decimal.mark, big = big.mark, ...) format2(x, decimal.mark = dec, big.mark = big)
     }
   }
@@ -3133,10 +3166,11 @@ format_datalabels <- function(datalabels,
   datalabels_out
 }
 
-# whole numbers from 2000 to 2050 (#25)
+# whole numbers (also when stored as double) from 1900 to 25 years after the current year (#25)
 looks_like_years <- function(x) {
   x <- x[!is.na(x)]
-  is.numeric(x) && length(x) > 0 && all(x == round(x)) && all(x >= 2000 & x <= 2050)
+  is.numeric(x) && length(x) > 0 && all(x == ceiling(x)) &&
+    all(x >= 1900 & x <= as.integer(format(Sys.Date(), "%Y")) + 25)
 }
 
 # exactly the whole numbers 1 to 12 (#25)

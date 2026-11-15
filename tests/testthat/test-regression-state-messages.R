@@ -58,13 +58,14 @@ test_that("#26 messages are conditions of class plot2_message and can be muffled
   expect_silent(suppressMessages(plot2(df)))
 })
 
-test_that("#26 plot2.silent = TRUE prints no messages but keeps them catchable", {
+test_that("#26 plot2.silent = TRUE prints and signals no messages, also in knitr and pkgdown", {
   withr::local_envvar(IN_PKGDOWN = "true")
   withr::local_options(plot2.silent = TRUE)
   df <- data.frame(g = c("a", "b", "c"), v = 1:3)
   out <- capture.output(type = "message", invisible(plot2(df)))
   expect_length(out, 0)
-  expect_message(plot2(df), class = "plot2_message")
+  # knitr records every signalled message condition, so silenced messages must not be signalled at all
+  expect_no_message(plot2(df))
 })
 
 test_that("#26 plot2 warnings are R warnings of class plot2_warning", {

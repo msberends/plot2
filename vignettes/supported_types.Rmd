@@ -21,13 +21,14 @@ has_sf <- requireNamespace("sf", quietly = TRUE)
 has_patchwork <- requireNamespace("patchwork", quietly = TRUE)
 has_beeswarm <- requireNamespace("ggbeeswarm", quietly = TRUE)
 has_ggforce <- requireNamespace("ggforce", quietly = TRUE)
+has_gapminder <- requireNamespace("gapminder", quietly = TRUE)
 ```
 
 ```{r}
 library(plot2)
 ```
 
-This vignette shows every plot type of `plot2()`, with the data that each type needs. The examples use the `admitted_patients` data set from this package and data sets from base R and `ggplot2`.
+This vignette shows every plot type of `plot2()`, with the data that each type needs. The examples use well-known data sets: `mpg` and `diamonds` from `ggplot2`, `gapminder` from the `gapminder` package, and data sets from base R.
 
 ## Choosing a type
 
@@ -70,15 +71,15 @@ All other `ggplot2` geoms can be used as well, such as `"step"` or `"text"`. Arg
 Columns compare a value between groups. `y` is often a calculation, such as `n()` for the number of rows, which `plot2()` computes per group:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n())
+ggplot2::mpg |>
+  plot2(x = class, y = n())
 ```
 
 In `ggplot2`, columns and bars are the same geom. Following the common use of these terms, `plot2()` draws bars horizontally:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = ward, type = "bar")
+ggplot2::mpg |>
+  plot2(x = class, y = n(), category = drv, type = "bar")
 ```
 
 Columns of different categories are placed next to each other. Use `stacked = TRUE` to stack them, or `stacked_fill = TRUE` to stack them to 100%.
@@ -98,30 +99,30 @@ This type sets `type = "bar"`, `x.sort = "freq-desc"`, `x.max_items = 10` and `d
 
 Lines show a trend over an ordered `x`, such as time:
 
-```{r}
-admitted_patients |>
-  plot2(x = format(date, "%Y"), y = n(), category = ward, type = "line")
+```{r, eval = has_gapminder}
+gapminder::gapminder |>
+  plot2(x = year, y = median(lifeExp), category = continent, type = "line")
 ```
 
 `type = "linedot"` adds points to the line, like `type = "b"` in base R's `plot()`:
 
-```{r}
-admitted_patients |>
-  plot2(x = format(date, "%Y"), y = n(), category = ward, type = "linedot")
+```{r, eval = has_gapminder}
+gapminder::gapminder |>
+  plot2(x = year, y = median(lifeExp), category = continent, type = "linedot")
 ```
 
 ## Area
 
-Stacked areas show how parts add up to a total over an ordered `x`. Not every hospital has admissions in every year, so `x.complete = 0` adds the missing years with a count of zero; without it, the areas would skip these years:
+Stacked areas show how parts add up to a total over an ordered `x`. If a group has no value for some values of `x`, `x.complete = 0` adds them with a value of zero, so that the areas do not skip them:
 
-```{r}
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = n(),
-        category = hospital,
+```{r, eval = has_gapminder}
+gapminder::gapminder |>
+  plot2(x = year,
+        y = sum(pop) / 1e9,
+        category = continent,
         type = "area",
         stacked = TRUE,
-        x.complete = 0)
+        y.title = "Population (billions)")
 ```
 
 ## Point, jitter and beeswarm
@@ -136,8 +137,8 @@ mtcars |>
 For a discrete `x`, points of the same group overlap. Jitter moves them randomly in the horizontal direction, and a beeswarm places them next to each other:
 
 ```{r}
-admitted_patients |>
-  plot2(x = ward, y = age, type = "jitter")
+ggplot2::mpg |>
+  plot2(x = drv, y = hwy, type = "jitter")
 ```
 
 ```{r, eval = has_beeswarm}
@@ -150,8 +151,8 @@ iris |>
 Boxplots and violins summarise a distribution per group. A boxplot is the automatic type when every group contains at least three values:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = age, category = gender)
+ggplot2::mpg |>
+  plot2(x = drv, y = hwy, category = year)
 ```
 
 `y` can also be several columns, which are then shown as a category:
@@ -164,8 +165,8 @@ iris |>
 A violin also shows the shape of the distribution, with lines at the quartiles:
 
 ```{r}
-admitted_patients |>
-  plot2(x = ward, y = age, type = "violin")
+ggplot2::mpg |>
+  plot2(x = drv, y = hwy, type = "violin")
 ```
 
 ## Histogram and density
@@ -173,8 +174,8 @@ admitted_patients |>
 A histogram shows the distribution of one numeric variable. `plot2()` chooses the bin width from the data and adds the density as a line; set `binwidth` and `smooth = FALSE` to change this:
 
 ```{r}
-admitted_patients |>
-  plot2(x = age, type = "histogram")
+ggplot2::mpg |>
+  plot2(x = hwy, type = "histogram")
 ```
 
 A density plot shows the distribution as a smooth curve, which makes it easier to compare groups. Transparency keeps overlapping groups visible:
@@ -189,8 +190,8 @@ iris |>
 A dumbbell plot compares two groups per value of `x`, with a line between the two points. The `category` must have exactly two values:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = median(age), category = gender, type = "dumbbell")
+ggplot2::mpg |>
+  plot2(x = manufacturer, y = median(hwy), category = year, type = "dumbbell")
 ```
 
 ## Back-to-back
@@ -198,15 +199,15 @@ admitted_patients |>
 A back-to-back plot, also known as a butterfly plot or population pyramid, shows two groups on either side of a shared axis. The `facet` must have exactly two values:
 
 ```{r, eval = has_patchwork}
-admitted_patients |>
-  plot2(x = age_group, y = n(), facet = gender, type = "back-to-back")
+ggplot2::mpg |>
+  plot2(x = class, y = n(), facet = year, type = "back-to-back")
 ```
 
 A `category` divides each side further:
 
 ```{r, eval = has_patchwork}
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = ward, facet = gender, type = "back-to-back")
+ggplot2::mpg |>
+  plot2(x = class, y = n(), category = drv, facet = year, type = "back-to-back")
 ```
 
 ## Heatmap
@@ -236,8 +237,8 @@ Titanic |>
 A spider plot, also known as a radar chart, shows several values per group on axes that are arranged in a circle. `x` gives the axes, and `category` the groups:
 
 ```{r}
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, type = "spider")
+ggplot2::diamonds |>
+  plot2(x = clarity, y = median(price), category = cut, type = "spider")
 ```
 
 The spider plot uses `coord_spider()`, a coordinate system of this package with straight grid lines between the axes.

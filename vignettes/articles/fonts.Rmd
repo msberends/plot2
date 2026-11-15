@@ -31,12 +31,12 @@ install.packages(c("showtext", "showtextdb", "sysfonts"))
 The `font` argument sets the font of all text in the plot. A Google Font that is not installed is downloaded once, the first time it is used:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
+ggplot2::mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
+        category = year,
         font = "Source Sans 3",
-        title = "Admissions per hospital")
+        title = "Cars per class and model year")
 ```
 
 The font is used only while the plot is drawn, so other plots in the session are not affected.

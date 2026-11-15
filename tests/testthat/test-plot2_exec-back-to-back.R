@@ -91,3 +91,11 @@ test_that("one legend for both halves, also when a category is missing on one si
   p <- plot2(pop, age, n, facet = sex, type = "b2b", y.limits = c(0, 100))
   expect_identical(axis_range(p[[2]], "x"), c(0, 100))
 })
+
+test_that("the first facet value is the left half, following facet.sort", {
+  skip_if_not_installed("patchwork")
+  df <- data.frame(g = rep(c("a", "b"), 2), year = rep(c(2008L, 1999L), each = 2), n = 1:4)
+  p <- plot2(df, g, n, facet = year, type = "b2b")
+  expect_true("1999" %in% names(p[[1]]$data))
+  expect_true("2008" %in% names(p[[2]]$data))
+})

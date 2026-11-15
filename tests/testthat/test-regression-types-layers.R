@@ -86,3 +86,42 @@ test_that("#143 violin plots with single-observation groups render", {
   p <- expect_plot2(plot2(d, x, y, type = "violin"), allow_warnings = TRUE)
   expect_true(nrow(suppressWarnings(layer_df(p, "violin"))) > 0)
 })
+
+test_that("#25 years are recognised from 1900 to 25 years from now, also as doubles, and zoomed on when numeric", {
+  expect_true(plot2:::looks_like_years(c(1900, 1999.0, 2008)))
+  expect_true(plot2:::looks_like_years(as.integer(format(Sys.Date(), "%Y")) + 25))
+  expect_false(plot2:::looks_like_years(c(1899, 2000)))
+  expect_false(plot2:::looks_like_years(as.integer(format(Sys.Date(), "%Y")) + 26))
+  expect_identical(axis_class(plot2(data.frame(year = c(1999, 2008), n = 1:2), year, n), "x"), "discrete")
+  p <- plot2(data.frame(year = c(1950, 1980, 2010), v = 1:3), year, v, type = "line")
+  expect_identical(axis_class(p, "x"), "continuous")
+  expect_gt(min(axis_range(p, "x")), 1900)
+  expect_false(any(grepl("[^0-9]", stats::na.omit(axis_labels(p, "x")))))
+})
+
+test_that("boxplots, violins and dumbbells always have a discrete x axis", {
+  df <- data.frame(dose = rep(c(0.5, 1, 2), each = 5), len = c(1:5, 3:7, 6:10))
+  expect_identical(axis_class(plot2(df, dose, len, type = "boxplot"), "x"), "discrete")
+  expect_identical(axis_class(plot2(df, dose, len, type = "violin"), "x"), "discrete")
+  df$grp <- rep(c("a", "b"), length.out = nrow(df))
+  expect_identical(axis_class(plot2(df, dose, mean(len), grp, type = "dumbbell"), "x"), "discrete")
+})
+
+test_that("a time series with one value per date becomes a line when type is not set", {
+  ts <- data.frame(date = as.Date("2026-01-01") + 0:9, n = c(3, 5, 4, 6, 8, 7, 9, 8, 10, 12))
+  expect_geoms(plot2(ts, date, n), "line")
+  ts2 <- rbind(transform(ts, g = "a"), transform(ts, g = "b", n = n + 1))
+  expect_geoms(plot2(ts2, date, n, g), "line")
+  expect_geoms(plot2(ts, date, n, type = "col"), "bar")
+})
+
+test_that("#25 years are only discrete with at most one value per year (per category and facet)", {
+  one_each <- data.frame(year = rep(2015:2020, 2), n = 1:12, grp = rep(c("a", "b"), each = 6))
+  expect_identical(axis_class(plot2(one_each, year, n, grp), "x"), "discrete")
+  several <- data.frame(year = rep(2015:2020, each = 4), v = seq_len(24), grp = rep(c("a", "b"), 12))
+  p <- plot2(several, year, v, grp)
+  expect_identical(axis_class(p, "x"), "continuous")
+  expect_geoms(p, "point")
+  # counting gives one value per year, so years are discrete again
+  expect_identical(axis_class(plot2(several, year, n()), "x"), "discrete")
+})

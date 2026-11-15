@@ -66,7 +66,7 @@
 #'   - `"sankey"` (short: `"s"`) creates a [Sankey plot](https://en.wikipedia.org/wiki/Sankey_diagram) using `category` for the flows and requires `x` to contain multiple variables from `.data`. At default, it also sets `x.expand = c(0.05, 0.05)` and `y.limits = c(NA, NA)` and `y.expand = c(0.01, 0.01)`. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using `datalabels.size`, `datalabels.colour`, and `datalabels.colour_fill`. The transparency of the flows can be set using `sankey_alpha`, and the width of the nodes can be set using `sankey_node_width`. Sankey plots can also be flipped using `horizontal = TRUE`, and the label angles can be set with `datalabels.angle`.
 #'   - `"spider"` or `"radar"` (short: `"sp"`) creates a [Spider plot](https://en.wikipedia.org/wiki/Spider_chart) using our novel [`CoordSpider`][coord_spider()] coordinate system. Facets are supported, always with the same scale in all facets.
 #' 
-#' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`, and accepts any value of `type`, such as `"line"` or `"l"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
+#' - Left blank. In this case, the type will be determined automatically: `"boxplot"` if there is no X-axis or if the length of unique values per X-axis item is at least 3, `"point"` if both the y and x axes are numeric, `"line"` if the X-axis contains dates with one value each (a time series), and the [option][options()] `"plot2.default_type"` otherwise (which defaults to `"col"`, and accepts any value of `type`, such as `"line"` or `"l"`). Use `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
 #' @param y_secondary.type Type of the secondary series, see **`type`**. The default (`NULL`) is a line with points if the primary type is a column or bar plot, so that the secondary series does not cover the bars, and the primary type otherwise.
 #' @param title,subtitle,caption,tag,x.title,y.title,category.title,legend.title,y_secondary.title A title to use. This can be:
 #' 
@@ -81,8 +81,8 @@
 #' @param subtitle.colour Text colour of the subtitle.
 #' @param na.replace Character to put in place of `NA` values if `na.rm = FALSE`.
 #' @param na.rm Remove `NA` values from showing in the plot.
-#' @param facet.fixed_y A [logical] to indicate whether all y scales should have the same limits. If not set, this depends on the data: `TRUE` only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set `facet.fixed_y = TRUE` when panels must be compared.
-#' @param facet.fixed_x A [logical] to indicate whether all x scales should have the same breaks. This acts like the inverse of `x.drop`. If not set and x is numeric, the same rule as for `facet.fixed_y` applies to the maximum x values per facet.
+#' @param facet.fixed_y A [logical] to indicate whether all y scales should have the same limits. If not set, this depends on the data: `TRUE` only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet, after `y.transform`, is less than 25%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set `facet.fixed_y = TRUE` when panels must be compared.
+#' @param facet.fixed_x A [logical] to indicate whether all x scales should have the same breaks. This acts like the inverse of `x.drop`. If not set and x is numeric, the same rule as for `facet.fixed_y` applies to the maximum x values per facet, compared after `x.transform` (so as plotted, e.g. on a log scale).
 #' @param facet.position,facet.colour_fill,facet.bold,facet.italic,facet.size,facet.margin,facet.repeat_labels_x,facet.repeat_labels_y,facet.drop,facet.nrow,facet.relative Additional settings for the plotting direction `facet`. `facet.repeat_labels_x` and `facet.repeat_labels_y` repeat the axis labels in every facet, which also makes the scales of that axis free (unless `facet.fixed_x` or `facet.fixed_y` is `TRUE`).
 #' @param x.date_breaks Breaks to use when the X-axis contains dates, will be determined automatically if left blank. This accepts values such as `"1 day"` and `"2 years"`.
 #' @param x.date_labels Labels to use when the X-axis contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`: `d`/`dd` (day), `ddd`/`dddd` (weekday name), `mm` (month number), `mmm`/`mmmm` (month name), `yy`/`yyyy` (year), `q`/`qq` (quarter: `1` or `Q1`), `w`/`ww` (ISO week), `h`/`hh` (hour), `MM` (minutes), `ss` (seconds). Other words are kept as they are (e.g. `"Week ww"`), and text in single quotes is always kept literally (e.g. `"'d' d"`). A format containing `%` is used as a [strftime()] format. Month and weekday names follow the [option][options()] `plot2.language` if set, and the system locale otherwise.
@@ -94,7 +94,7 @@
 #' @param x.label_angle Angle to use for the X-axis in a counter-clockwise direction (i.e., a value of `90` will orient the axis labels from bottom to top, a value of `270` will orient the axis labels from top to bottom).
 #' @param x.label_align Alignment for the X-axis between `0` (left aligned) and `1` (right aligned). If not set, rotated labels (see `x.label_angle`) are anchored at their ticks with [`guide_axis(angle = )`][ggplot2::guide_axis()], for every angle and also when `horizontal = TRUE`.
 #' @param x.label_italic [logical] to indicate whether the x labels should be in *italics*.
-#' @param x.character A [logical] to indicate whether the values of the X-axis should be forced to [character]. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when `type` is not set or is a discrete type such as `"col"` or `"boxplot"`, with a message; for continuous types such as `"point"`, `"line"` and `"area"` they stay numeric. Numeric values also become character for other discrete types. Use `x.character = FALSE` to keep numeric values.
+#' @param x.character A [logical] to indicate whether the values of the X-axis should be forced to [character]. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character when `type` is not set or is a discrete type such as `"col"` or `"boxplot"`, with a message; years only so with at most one value per year (per `category` and `facet`), so that e.g. many measurements per year form a numeric axis; for continuous types such as `"point"`, `"line"` and `"area"` they stay numeric, and years are then labelled without a thousands separator. Numeric values also become character for other discrete types, and always for `"boxplot"`, `"violin"` and `"dumbbell"`. Use `x.character = FALSE` to keep numeric values.
 #' @param x.drop [logical] to indicate whether factor levels should be dropped.
 #' @param x.complete,category.complete,facet.complete A value to complete the data. This makes use of [tidyr::full_seq()] and [tidyr::complete()]. For example, using `x.complete = 0` will apply `data |> complete(x = full_seq(x, ...), fill = list(y = 0))`, crossed with the values of `category` and `facet` if set. Numeric values and dates are completed with [tidyr::full_seq()] at their observed resolution, date-times at their observed interval, and character values and factors with their unique values or levels. Using value `TRUE` (e.g., `x.complete = TRUE`) is identical to using value `0`.
 #' @param x.remove,y.remove A [logical] to indicate whether the axis labels and title should be removed.
@@ -110,13 +110,13 @@
 #' @param x.expand,y.expand [expansion][ggplot2::expansion] to use for the axis, can be length 1 or 2. Left `NULL` (default), they are determined automatically: `x.expand` adds half a category on both sides of a discrete axis and a proportion of the range on a continuous axis, `y.expand` adds 25% above the data; both are 0 for sf objects or when the limits are set. An explicit value is used as given.
 #' @param x.transform,y.transform,category.transform A transformation function to use, e.g. `"log2"`. This can be: `r paste0('\u0060"', sort(gsub("_trans$", "", ls(envir = asNamespace("scales"))[grepl("_trans$", ls(envir = asNamespace("scales")))])), '"\u0060', collapse = ", ")`.
 #' @param x.position,y.position Position of the axis.
-#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left `NULL` (default for `x.zoom`), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets `x.limits = c(NA, NA)` (or `y.limits`) and, unless `x.expand` (or `y.expand`) is set, a 5% expansion on both sides, like `ggplot2` does. It has no effect if `x.limits` (or `y.limits`) is set.
+#' @param x.zoom,y.zoom A [logical] to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left `NULL` (default for `x.zoom`), the x axis is zoomed for plot types with a continuous x axis (such as histograms), and for years that stay numeric (such as in a line plot) only. This sets `x.limits = c(NA, NA)` (or `y.limits`) and, unless `x.expand` (or `y.expand`) is set, a 5% expansion on both sides, like `ggplot2` does. It has no effect if `x.limits` (or `y.limits`) is set.
 #' @param category.type Type of the `category`, one or more of: `"colour"` (default), `"shape"`, `"size"`, `"linetype"`, `"linewidth"`, `"alpha"`. There is no need to set `"fill"`, as `plot2` handles colour-setting internally and determines automatically whether the `colour` or `fill` aesthetic must be used.
 #' @param category.labels,category.percent,category.breaks,category.expand,category.midpoint Settings for the plotting direction `category`.
 #' @param category.limits Limits to use for a numeric category, must be length 2. Use `NA` for the highest or lowest value in the data, e.g. `category.limits = c(0, NA)` to have the scale start at zero. If not set, the limits are the range of the data, rounded outwards to pretty values with [pretty()] (e.g., values from 12 to 87 give limits 0 to 100). With three colours and `category.midpoint` set, the limits are made symmetric around the midpoint.
 #' @param category.date_breaks Breaks to use when the category contains dates, will be determined automatically if left blank. This will be passed on to [`seq.Date(by = ...)`][seq.Date()] and thus can be: a number, taken to be in days, or a character string containing one of "day", "week", "month", "quarter" or "year" (optionally preceded by an integer and a space, and/or followed by "s").
 #' @param category.date_labels Labels to use when the category contains dates, will be determined automatically if left blank. This accepts 'Excel' date-language such as `"d mmmm yyyy"`.
-#' @param category.character A [logical] to indicate whether the values of the category should be forced to [character]. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use `category.character = FALSE` to keep numeric values.
+#' @param category.character A [logical] to indicate whether the values of the category should be forced to [character]. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character, with a message. Use `category.character = FALSE` to keep numeric values.
 #' @param x.max_items,category.max_items,facet.max_items Maximum number of items to show, including the item that holds the rest: `x.max_items = 5` shows four values and the rest, see `x.max_txt`. Defaults to infinite. Left `NULL` (default for `x.max_items`), this is infinite, except for `type = "barpercent"` and back-to-back plots (10). The remaining values are grouped into one item and summarised using the `summarise_function` function. **Please note:** the sorting will be applied first, so that e.g. `x.sort = "freq-desc"` with `x.max_items = 5` shows the four most frequent values of the X-axis and the rest.
 #' @param x.max_txt,category.max_txt,facet.max_txt The text of the item that holds the values beyond `*.max_items`. The placeholder `%n` is replaced with the number of values in that item, and `%p` with their share of the total of `y` (or of the rows, when `y` is not numeric). For example, the default `"(rest, x%n)"` gives `"(rest, x4)"` for four values.
 #' @param x.sort,category.sort,facet.sort Sorting of the plotting direction. `category.sort` and `facet.sort` default to `TRUE`; `x.sort` defaults to `NULL`, which sorts text and factors as `TRUE` and leaves continuous values (such as dates and numbers) unsorted. Applying one of the sorting methods will transform the values to an ordered [factor], which `ggplot2` uses to orient the data. Valid values are:
@@ -151,7 +151,7 @@
 #' @param horizontal A [logical] to turn the plot 90 degrees using [`coord_flip()`][ggplot2::coord_flip()]. This option also updates some theme options, so that e.g., `x.label_italic` will still apply to the original X-axis.
 #' @param reverse A [logical] to reverse the *values* of `category`. Use `legend.reverse` to reverse the *legend* of `category`.
 #' @param smooth A [logical] to add a smooth. In histograms, this will add the density count as an overlaying line (default: `TRUE`). In all other cases, a smooth will be added using [`geom_smooth()`][ggplot2::geom_smooth()] (default: `FALSE`).
-#' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour Settings for `smooth`.
+#' @param smooth.method,smooth.formula,smooth.se,smooth.level,smooth.alpha,smooth.linewidth,smooth.linetype,smooth.colour Settings for `smooth`. If not set, `smooth.method` and `smooth.formula` are chosen as in `ggplot2`: `"loess"` with `y ~ x` if the largest group (per `category` and `facet`) has fewer than 1000 values, and `"gam"` with `y ~ s(x, bs = "cs")` otherwise. The lines of the smooth are not affected by `colour_transparency`.
 #' @param size Size of the geom. Defaults to `2` for geoms [point][ggplot2::geom_point()], [jitter][ggplot2::geom_jitter()], and [beeswarm][ggbeeswarm::geom_beeswarm()]; `4` for UpSet plots (using `type = "upset"`); `5` for dumbbell plots (using `type = "dumbbell"`); `0.75` otherwise.
 #' @param linetype Linetype of the geom, only suitable for geoms that draw lines. Possible options are:
 #'   1. `"solid"` (default)
@@ -223,14 +223,14 @@
 #' - `y`: a column named `n`, otherwise the first numeric column (the second one if `x` is also chosen automatically); `y = n()` to count rows if the data have no numeric column, or for `type = "barpercent"` and Sankey plots.
 #' - `x`: the first numeric column if there is no `x` and the data have several numeric columns, otherwise the first column not used elsewhere.
 #' - `category`: the first character or factor column if neither `x` nor `category` is given and the data have more than two columns; for 'sf' data, the first numeric column.
-#' - `type`: a boxplot if there is no `x`, or if every group of `x`, `category` and `facet` has at least three values; points if `x` and `y` are both numeric; a histogram if `x` is the only numeric column; otherwise the `plot2.default_type` option (columns). A matrix with identical row and column names becomes a heatmap (`"tile"`).
+#' - `type`: a boxplot if there is no `x`, or if every group of `x`, `category` and `facet` has at least three values; points if `x` and `y` are both numeric; a line if `x` contains dates with one value each (per `category` and `facet`), as in a time series; a histogram if `x` is the only numeric column; otherwise the `plot2.default_type` option (columns). A matrix with identical row and column names becomes a heatmap (`"tile"`).
 #' - `summarise_function`: [sum()] if groups contain several values (see `summarise_function`).
 #' 
 #' **Axes and scales**
-#' - `x.character` and `category.character`: `TRUE` if the values are whole years from 2000 to 2050, or exactly the months 1 to 12 (for `x` only in discrete plot types); `x.character` also if `x` is numeric in a discrete plot type, or if `x.sort` is set.
+#' - `x.character` and `category.character`: `TRUE` if the values are whole years from 1900 to 25 years after the current year, or exactly the months 1 to 12 (for `x` only in discrete plot types, and for years only with at most one value per year per `category` and `facet`); `x.character` also if `x` is numeric in a discrete plot type (including boxplots, violins and dumbbells), or if `x.sort` is set.
 #' - `x.date_remove_years`: `TRUE` if `category` contains the years of a date `x`.
 #' - `x.date_breaks`, `x.date_labels`, `category.date_breaks` and `category.date_labels`: based on the range of the dates.
-#' - `facet.fixed_x` and `facet.fixed_y`: the same scale in all facets if the maxima per facet differ by less than 25% (coefficient of variation), free scales otherwise; `facet.repeat_labels_y = FALSE` with a fixed y scale.
+#' - `facet.fixed_x` and `facet.fixed_y`: the same scale in all facets if the maxima per facet differ by less than 25% (coefficient of variation, after the axis transformation), free scales otherwise; `facet.repeat_labels_y = FALSE` with a fixed y scale.
 #' - `x.expand` and `y.expand`: 0 if the limits are set.
 #' - `y.percent`: `TRUE` for density plots; `y.percent_break`: about 10 labels.
 #' - `y.scientific`: `TRUE` if a non-zero label would be 1e9 or larger, or smaller than 1e-4.
@@ -265,23 +265,23 @@
 #'   plot2(x = Species, y = where(is.double))
 #'
 #' # y can be any calculation; datalabels are added for columns
-#' admitted_patients |>
-#'   plot2(hospital, n(), gender)
+#' ggplot2::mpg |>
+#'   plot2(class, n(), drv)
 #'
 #' # sorting and stacking are single arguments
-#' admitted_patients |>
-#'   plot2(hospital, n(), gender,
+#' ggplot2::mpg |>
+#'   plot2(class, n(), drv,
 #'         x.sort = "freq-asc",
 #'         stacked = TRUE)
 #'
 #' # set the plot type explicitly
-#' admitted_patients |>
-#'   plot2(hospital, median(age), gender, type = "dumbbell")
+#' ggplot2::mpg |>
+#'   plot2(manufacturer, median(hwy), year, type = "dumbbell")
 #'
 #' # titles support calculations too
-#' admitted_patients |>
-#'   plot2(age, type = "hist",
-#'         title = paste("Based on n =", n_distinct(patient_id), "patients"))
+#' ggplot2::mpg |>
+#'   plot2(hwy, type = "hist",
+#'         title = paste("Based on n =", n_distinct(model), "car models"))
 #'
 #' # a correlation matrix becomes a heatmap
 #' mtcars |>
@@ -1468,6 +1468,10 @@ plot2_exec <- function(.data, ...) {
       x.expand <- 0
     }
   }
+  if (misses_x.zoom && has_x(df) && looks_like_years(get_x(df))) {
+    # years that stay numeric (e.g. in a line plot) are zoomed on, since an axis from year 0 has no meaning
+    x.zoom <- TRUE
+  }
   if (has_x(df)) {
     mapping <- utils::modifyList(mapping, aes(x = `_var_x`, group = `_var_x`))
   }
@@ -1656,6 +1660,22 @@ plot2_exec <- function(.data, ...) {
     plot2_message("Assuming ", font_code("smooth = TRUE"), " for ", font_code("type = \"histogram\""))
     smooth <- TRUE
   }
+  if (isTRUE(smooth) && type != "geom_histogram" && (is.null(smooth.method) || is.null(smooth.formula))) {
+    # choose the method and formula as ggplot2 does, but here, so that ggplot2 does not report
+    # them when printing (which plot2.silent cannot suppress): loess below 1000 values per group
+    if (is.null(smooth.method)) {
+      max_group <- max(c(0, df |>
+                            group_by(across(c(get_category_name(df), get_facet_name(df)))) |>
+                            group_size()))
+      smooth.method <- if (max_group < 1000) "loess" else "gam"
+      plot2_message("Using ", font_code(paste0("smooth.method = \"", smooth.method, "\"")),
+                    " since the largest group has ", ifelse(max_group < 1000, "fewer than", "at least"),
+                    " 1000 values")
+    }
+    if (is.null(smooth.formula) && is.character(smooth.method)) {
+      smooth.formula <- if (smooth.method == "gam") y ~ s(x, bs = "cs") else y ~ x
+    }
+  }
   if (isTRUE(smooth)) {
     if (type == "geom_histogram") {
       # add a density count
@@ -1676,7 +1696,7 @@ plot2_exec <- function(.data, ...) {
                    alpha = smooth.alpha,
                    linetype = smooth.linetype,
                    linewidth = smooth.linewidth,
-                   move = -1)
+                   move = 0)
     } else {
       p <- p |>
         add_smooth(colour = smooth.colour,
@@ -1688,7 +1708,18 @@ plot2_exec <- function(.data, ...) {
                    alpha = smooth.alpha,
                    linetype = smooth.linetype,
                    linewidth = smooth.linewidth,
-                   move = -1)
+                   move = 0)
+    }
+    if (isTRUE(as.double(colour_transparency) > 0)) {
+      # colour_transparency is meant for the plotted values: keep the lines of the smooth solid,
+      # so that trends stay visible over transparent points; the band keeps smooth.alpha
+      for (i in seq_along(p$layers)) {
+        smooth_colour <- p$layers[[i]]$mapping$colour
+        if (inherits(p$layers[[i]]$geom, "GeomSmooth") && !is.null(smooth_colour)) {
+          p$layers[[i]]$mapping$colour <- aes(colour = ggplot2::stage(!!rlang::quo_get_expr(smooth_colour),
+                                                                      after_scale = scales::alpha(colour, 1)))$colour
+        }
+      }
     }
   }
   # add axis labels ----
@@ -1984,15 +2015,15 @@ plot2_exec <- function(.data, ...) {
         }
       }
     }
-    if (isTRUE(horizontal)) {
-      if (legend.position %in% c("top", "bottom") &&
-          validate_sorting(category.sort, horizontal = horizontal) %unlike% "freq") {
-        # reverse legend items when on top or bottom, but not when sorting is freq, freq-asc or freq-desc
-        for (cat in category.type) {
-          if (cat %in% names(mapping)) {
-            p <- p +
-              do.call(guides, stats::setNames(list(guide_legend(reverse = TRUE, nrow = legend.nrow)), cat))
-          }
+    if (isTRUE(horizontal) &&
+        validate_sorting(category.sort, horizontal = horizontal) %unlike% "freq") {
+      # the category levels are reversed for horizontal plots (#153), so reverse the legend items
+      # back, wherever the legend is, so that they read in the same order as the bars; but not when
+      # sorting is freq, freq-asc or freq-desc; legend.reverse = TRUE then reverses this again
+      for (cat in category.type) {
+        if (cat %in% names(mapping)) {
+          p <- p +
+            do.call(guides, stats::setNames(list(guide_legend(reverse = !isTRUE(legend.reverse), nrow = legend.nrow)), cat))
         }
       }
     }

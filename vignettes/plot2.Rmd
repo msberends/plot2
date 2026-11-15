@@ -18,16 +18,24 @@ knitr::opts_chunk$set(
 )
 # suggested packages are used conditionally, so that the vignette also builds without them (#114)
 has_broom <- requireNamespace("broom", quietly = TRUE)
+has_gapminder <- requireNamespace("gapminder", quietly = TRUE)
 ```
 
 `plot2()` creates a complete `ggplot2` plot from a single function call. You describe what you want to see, and `plot2()` determines how to draw it: it chooses the plot type, summarises the data, sorts, sets colours, axes and data labels, and applies a clean theme. The result is an ordinary `ggplot` object, so everything that `ggplot2` offers remains available afterwards.
 
-This vignette introduces the main ideas. It uses the `admitted_patients` data set that comes with the package, a fictitious set of `r nrow(plot2::admitted_patients)` hospital admissions, and some data sets from base R.
+This vignette introduces the main ideas. It uses well-known data sets: `mpg` from `ggplot2`, with the fuel economy of `r nrow(ggplot2::mpg)` cars from 1999 and 2008, `gapminder` from the `gapminder` package, with the life expectancy, population and income of `r if (has_gapminder) length(unique(gapminder::gapminder$country)) else 142` countries from 1952 to 2007, and some data sets from base R.
 
 ```{r}
 library(plot2)
+data(mpg, package = "ggplot2")
 
-admitted_patients
+mpg
+```
+
+```{r, eval = has_gapminder}
+library(gapminder)
+
+gapminder
 ```
 
 ## Four directions
@@ -42,15 +50,15 @@ Every plot is described by up to four plotting directions, which are also the fi
 Columns are given without quotes, as in `dplyr`:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = age, category = gender, facet = ward)
+mpg |>
+  plot2(x = displ, y = hwy, category = drv, facet = year)
 ```
 
 Since these are the first four arguments, the names can be left out. The following call gives the same plot:
 
 ```{r, eval = FALSE}
-admitted_patients |>
-  plot2(hospital, age, gender, ward)
+mpg |>
+  plot2(displ, hwy, drv, year)
 ```
 
 `plot2()` fills in what is not given. The `iris` data have four numeric columns and a factor, so a call without any directions plots the first two numeric columns as points, coloured by the factor:
@@ -67,19 +75,19 @@ Each automatic decision follows a fixed rule. In an interactive session, `plot2(
 The directions accept calculations on the columns of the data. For `y`, this means that the data are summarised per group, without a separate `group_by()` and `summarise()` step:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n_distinct(patient_id))
+mpg |>
+  plot2(x = class, y = n_distinct(model))
 ```
 
 Every value of `x` is now one bar, so `plot2()` chose a column plot and added data labels. Use `y = n()` to count rows, or any other function that returns a single value per group, such as `mean()`, `median()` or `max()`.
 
 The other directions accept calculations too:
 
-```{r}
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = median(age),
-        category = ifelse(ward == "ICU", "Intensive care", "Other wards"),
+```{r, eval = has_gapminder}
+gapminder |>
+  plot2(x = year,
+        y = median(lifeExp),
+        category = ifelse(continent == "Africa", "Africa", "Rest of the world"),
         type = "line")
 ```
 
@@ -93,12 +101,12 @@ iris |>
 Titles accept calculations as well, which keeps them correct when the data change. `glue::glue()` also works here:
 
 ```{r}
-admitted_patients |>
-  plot2(x = age,
+mpg |>
+  plot2(x = hwy,
         type = "histogram",
-        title = paste("Age of", n_distinct(patient_id), "patients"),
-        subtitle = paste("Based on", n(), "admissions"),
-        caption = paste("Admitted between", min(format(date, "%Y")), "and", max(format(date, "%Y"))))
+        title = paste("Highway mileage of", n_distinct(model), "car models"),
+        subtitle = paste("Based on", n(), "cars"),
+        caption = paste("Model years", min(year), "and", max(year)))
 ```
 
 ## Plot types
@@ -106,15 +114,15 @@ admitted_patients |>
 Without a `type`, `plot2()` chooses one from the data: a boxplot if every group contains at least three values, points if both axes are numeric, and columns otherwise. The `type` argument sets it explicitly. It accepts the name of any `ggplot2` geom, with or without the `geom_` prefix, and abbreviations such as `"l"` for lines and `"b"` for boxplots:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = age, type = "violin")
+mpg |>
+  plot2(x = class, y = hwy, type = "violin")
 ```
 
 `plot2()` also adds types that `ggplot2` does not provide directly, such as dumbbell, back-to-back, Sankey, spider and UpSet plots. A dumbbell plot compares two groups:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = median(age), category = gender, type = "dumbbell")
+mpg |>
+  plot2(x = class, y = median(hwy), category = year, type = "dumbbell")
 ```
 
 `vignette("supported_types", package = "plot2")` shows every type with its data requirements.
@@ -131,11 +139,11 @@ mtcars |>
 A vector does not need to contain all values; the remaining values follow in their usual order:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
-        x.sort = c("D", "B"),
+        category = drv,
+        x.sort = c("suv", "pickup"),
         category.sort = "alpha-desc")
 ```
 
@@ -151,13 +159,13 @@ mtcars |>
 Columns of different categories are placed next to each other. `stacked = TRUE` stacks them, and `stacked_fill = TRUE` stacks them to 100%:
 
 ```{r}
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, stacked = TRUE)
+mpg |>
+  plot2(x = class, y = n(), category = drv, stacked = TRUE)
 ```
 
 ```{r}
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, stacked_fill = TRUE)
+mpg |>
+  plot2(x = class, y = n(), category = drv, stacked_fill = TRUE)
 ```
 
 ## Axes and data labels
@@ -165,14 +173,14 @@ admitted_patients |>
 All settings of a direction share its name as a prefix, such as `x.title`, `y.limits` or `category.title`. The y axis starts at zero where possible; `y.zoom = TRUE` (or `zoom = TRUE` for both axes) limits it to the range of the data. `horizontal = TRUE` turns the plot, and a `type = "bar"` gives horizontal columns:
 
 ```{r}
-admitted_patients |>
-  plot2(x = age_group,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
+        category = year,
         type = "bar",
-        x.title = "Age group",
-        y.title = "Number of admissions",
-        category.title = "Gender")
+        x.title = "Class",
+        y.title = "Number of cars",
+        category.title = "Model year")
 ```
 
 Axis values can be formatted with functions, such as `y.percent = TRUE` for percentages or `y.labels` for any labelling function. A secondary y axis is set with `y_secondary`. This example uses the `economics` data set from `ggplot2`:
@@ -193,8 +201,8 @@ ggplot2::economics |>
 Data labels are added automatically to column plots with at most 25 values. `datalabels = TRUE` always shows them, `datalabels = FALSE` hides them, and `datalabels.format` sets their text. In this format, `%n` is the value and `%p` its percentage:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = n(), datalabels.format = "%n (%p)")
+mpg |>
+  plot2(x = class, y = n(), datalabels.format = "%n (%p)")
 ```
 
 ## Colours
@@ -202,21 +210,21 @@ admitted_patients |>
 `colour` sets the colours for every plot type. In `ggplot2`, this requires either the `colour` or the `fill` aesthetic with its matching scale function, depending on the geom. `colour` accepts colour names, hexadecimal codes, palette names such as `"viridis"`, and named vectors that match the values of `category`:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
-        colour = c(F = "#4E79A7", M = "#F28E2B"))
+        category = year,
+        colour = c("1999" = "#4E79A7", "2008" = "#F28E2B"))
 ```
 
 `category.focus` highlights one value and shows the others in grey:
 
-```{r}
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = n(),
-        category = hospital,
-        category.focus = "B",
+```{r, eval = has_gapminder}
+gapminder |>
+  plot2(x = year,
+        y = median(lifeExp),
+        category = continent,
+        category.focus = "Africa",
         type = "line")
 ```
 
@@ -273,9 +281,9 @@ Geographic data of class `sf` become maps; the article *Maps* on the package web
 The result of `plot2()` is a `ggplot` object. Any `ggplot2` layer, scale, coordinate system or theme element can be added with `+`:
 
 ```{r}
-admitted_patients |>
-  plot2(x = hospital, y = mean(age), y.title = "Mean age", datalabels = FALSE) +
-  ggplot2::geom_hline(yintercept = mean(admitted_patients$age), linetype = "dashed")
+mpg |>
+  plot2(x = class, y = mean(hwy), y.title = "Mean highway mileage", datalabels = FALSE) +
+  ggplot2::geom_hline(yintercept = mean(mpg$hwy), linetype = "dashed")
 ```
 
 By default, `plot2()` uses `theme_minimal2()`, a variant of `ggplot2::theme_minimal()` with fewer lines and more white space. The `theme` argument sets another theme, and `theme = NULL` uses the default `ggplot2` theme.
