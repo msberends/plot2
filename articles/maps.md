@@ -52,9 +52,9 @@ placed at the centre of each area:
 
 netherlands |>
   plot2()
-#> Using `category = area_km2`
-#> Using `datalabels = province`
-#> Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.
+#> Using category = area_km2
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```
 
 ![](maps_files/figure-html/unnamed-chunk-4-1.png)
@@ -74,8 +74,8 @@ netherlands |>
   plot2(category = ifelse(area_km2 > 3000, "Larger than 3 000 km²", "Smaller"),
         colour_fill = c("#4E79A7", "#E8E8E8"),
         category.title = "Area")
-#> Using `datalabels = province`
-#> Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```
 
 ![](maps_files/figure-html/unnamed-chunk-5-1.png)
@@ -97,7 +97,7 @@ netherlands |>
         datalabels = paste0(province, "\n", round(area_km2), " km²"),
         datalabels.size = 2.5,
         colour_fill = "mako")
-#> Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```
 
 ![](maps_files/figure-html/unnamed-chunk-6-1.png)
@@ -120,7 +120,7 @@ this map uses the global longitude and latitude system (EPSG:4326):
 
 netherlands |>
   plot2(crs = 4326, datalabels = FALSE)
-#> Using `category = area_km2`
+#> Using category = area_km2
 ```
 
 ![](maps_files/figure-html/unnamed-chunk-7-1.png)
@@ -142,7 +142,7 @@ netherlands |>
          colour_fill = NA,
          linewidth = 1,
          datalabels = province)
-#> Using `category = area_km2`
+#> Using category = area_km2
 ```
 
 ![](maps_files/figure-html/unnamed-chunk-8-1.png)

@@ -1237,27 +1237,27 @@ for colours and the theme.
 # without variables, plot2() determines them: two numeric columns give points
 iris |>
   plot2()
-#> Using `x = Sepal.Length`
-#> Using `y = Sepal.Width`
-#> Using `category = Species`
-#> Using `type = "point"` since both axes are numeric
+#> Using x = Sepal.Length
+#> Using y = Sepal.Width
+#> Using category = Species
+#> Using type = "point" since both axes are numeric
 
 
 # the arguments are in this order: x, y, category, facet
 iris |>
   plot2(Sepal.Length, Sepal.Width, Petal.Length, Species,
         colour = "viridis")
-#> Using `type = "point"` since both axes are numeric
-#> Assuming `facet.fixed_x = TRUE` since the three `x` scales differ by less than 25%
-#> Assuming `facet.fixed_y = TRUE` since the three `y` scales differ by less than 25%
-#> Assuming `facet.repeat_labels_y = FALSE` since `y` has fixed scales
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
+#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 
 
 # y can be several columns, also with selection helpers
 iris |>
   plot2(x = Species, y = where(is.double))
-#> Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`
-#> Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using type = "boxplot" since all groups in Species and category contain at least three values
 
 
 # y can be any calculation; datalabels are added for columns
@@ -1270,7 +1270,7 @@ admitted_patients |>
   plot2(hospital, n(), gender,
         x.sort = "freq-asc",
         stacked = TRUE)
-#> Applying `x.sort = "freq-asc"` using `summarise_function = sum`
+#> Applying x.sort = "freq-asc" using summarise_function = sum
 
 
 # set the plot type explicitly
@@ -1282,17 +1282,17 @@ admitted_patients |>
 admitted_patients |>
   plot2(age, type = "hist",
         title = paste("Based on n =", n_distinct(patient_id), "patients"))
-#> Using `type = "histogram"`
-#> Using `binwidth = 6.4` based on data
-#> Assuming `smooth = TRUE` for `type = "histogram"`
+#> Using type = "histogram"
+#> Using binwidth = 6.4 based on data
+#> Assuming smooth = TRUE for type = "histogram"
 
 
 # a correlation matrix becomes a heatmap
 mtcars |>
   cor() |>
   plot2()
-#> Assuming `type = "tile"` since the matrix contains identical row and column names
-#> Omitting printing of 121 datalabels - use `datalabels = TRUE` to force printing
+#> Assuming type = "tile" since the matrix contains identical row and column names
+#> Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
 
 
 # many more examples, including Sankey, spider and geographic plots,

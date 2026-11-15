@@ -52,9 +52,9 @@ Columns are given without quotes, as in `dplyr`:
 
 admitted_patients |>
   plot2(x = hospital, y = age, category = gender, facet = ward)
-#> Using `type = "boxplot"` since all groups in `hospital` and `gender` and `ward` contain at least three values
-#> Assuming `facet.fixed_y = TRUE` since the two `y` scales differ by less than 25%
-#> Assuming `facet.repeat_labels_y = FALSE` since `y` has fixed scales
+#> Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values
+#> Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
+#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-3-1.png)
@@ -77,10 +77,10 @@ columns as points, coloured by the factor:
 
 iris |>
   plot2()
-#> Using `x = Sepal.Length`
-#> Using `y = Sepal.Width`
-#> Using `category = Species`
-#> Using `type = "point"` since both axes are numeric
+#> Using x = Sepal.Length
+#> Using y = Sepal.Width
+#> Using category = Species
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-5-1.png)
@@ -144,8 +144,8 @@ columns for `y`, which are then shown as a category:
 
 iris |>
   plot2(x = Species, y = where(is.double))
-#> Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`
-#> Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using type = "boxplot" since all groups in Species and category contain at least three values
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-8-1.png)
@@ -163,8 +163,8 @@ admitted_patients |>
         title = paste("Age of", n_distinct(patient_id), "patients"),
         subtitle = paste("Based on", n(), "admissions"),
         caption = paste("Admitted between", min(format(date, "%Y")), "and", max(format(date, "%Y"))))
-#> Using `binwidth = 6.4` based on data
-#> Assuming `smooth = TRUE` for `type = "histogram"`
+#> Using binwidth = 6.4 based on data
+#> Assuming smooth = TRUE for type = "histogram"
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-9-1.png)
@@ -215,7 +215,7 @@ desired order:
 
 mtcars |>
   plot2(x = carb, y = n(), x.sort = "freq-desc")
-#> Using `x.character = TRUE` since `x.sort` is set
+#> Using x.character = TRUE since x.sort is set
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-12-1.png)
@@ -243,7 +243,7 @@ one item, which is placed last:
 
 mtcars |>
   plot2(x = carb, y = n(), x.sort = "freq-desc", x.max_items = 4)
-#> Using `x.character = TRUE` since `x.sort` is set
+#> Using x.character = TRUE since x.sort is set
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-14-1.png)
@@ -309,8 +309,8 @@ ggplot2::economics |>
         x.title = NULL,
         y.title = "Unemployed (millions)",
         y_secondary.title = "Personal savings rate (%)")
-#> Using `x.date_breaks = "5 years"` based on data
-#> Using `x.date_labels = "yyyy"` based on data
+#> Using x.date_breaks = "5 years" based on data
+#> Using x.date_labels = "yyyy" based on data
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-18-1.png)
@@ -374,7 +374,7 @@ data of the plot unless other data are given, and they take the
 
 p <- mtcars |>
   plot2(x = mpg, y = hp, category = factor(cyl), category.title = "Cylinders")
-#> Using `type = "point"` since both axes are numeric
+#> Using type = "point" since both axes are numeric
 
 p |>
   add_line(y = mean(hp), legend.value = "Mean per group")
@@ -398,7 +398,7 @@ argument of
 
 mtcars |>
   plot2(x = mpg, y = hp, smooth = TRUE, smooth.method = "lm")
-#> Using `type = "point"` since both axes are numeric
+#> Using type = "point" since both axes are numeric
 #> `geom_smooth()` using formula = 'y ~ x'
 ```
 
@@ -418,7 +418,7 @@ convert to a data frame. A formula has the form
 ``` r
 
 plot2(hp ~ mpg + factor(cyl), data = mtcars)
-#> Using `type = "point"` since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-24-1.png)
@@ -432,8 +432,8 @@ mtcars |>
   plot2(colour = c("#2166AC", "white", "#B2182B"),
         datalabels = TRUE,
         category.title = "Correlation")
-#> Assuming `type = "tile"` since the matrix contains identical row and column names
-#> Using `category.midpoint = 0` (the current `category` scale centre)
+#> Assuming type = "tile" since the matrix contains identical row and column names
+#> Using category.midpoint = 0 (the current category scale centre)
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-25-1.png)
@@ -448,7 +448,7 @@ plot:
 
 lm(hp ~ mpg, data = mtcars) |>
   plot2(x = .fitted, y = .resid, x.title = "Fitted values", y.title = "Residuals")
-#> Using `type = "point"` since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-26-1.png)

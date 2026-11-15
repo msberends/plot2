@@ -99,8 +99,8 @@ bar:
 
 ggplot2::mpg |>
   plot2(x = manufacturer, type = "barpercent")
-#> Using `y = n()` to count rows, since `type = "barpercent"` shows frequencies
-#> Summarising values for `type = "barpercent"` using `summarise_function = sum`
+#> Using y = n() to count rows, since type = "barpercent" shows frequencies
+#> Summarising values for type = "barpercent" using summarise_function = sum
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-5-1.png)
@@ -161,7 +161,7 @@ automatic type when `x` and `y` are both numeric:
 
 mtcars |>
   plot2(x = wt, y = mpg, category = factor(cyl), category.title = "Cylinders")
-#> Using `type = "point"` since both axes are numeric
+#> Using type = "point" since both axes are numeric
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-9-1.png)
@@ -195,7 +195,7 @@ the automatic type when every group contains at least three values:
 
 admitted_patients |>
   plot2(x = hospital, y = age, category = gender)
-#> Using `type = "boxplot"` since all groups in `hospital` and `gender` contain at least three values
+#> Using type = "boxplot" since all groups in hospital and gender contain at least three values
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
@@ -206,8 +206,8 @@ admitted_patients |>
 
 iris |>
   plot2(x = Species, y = where(is.double))
-#> Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`
-#> Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values
+#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
+#> Using type = "boxplot" since all groups in Species and category contain at least three values
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-13-1.png)
@@ -234,8 +234,8 @@ chooses the bin width from the data and adds the density as a line; set
 
 admitted_patients |>
   plot2(x = age, type = "histogram")
-#> Using `binwidth = 6.4` based on data
-#> Assuming `smooth = TRUE` for `type = "histogram"`
+#> Using binwidth = 6.4 based on data
+#> Assuming smooth = TRUE for type = "histogram"
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-15-1.png)
@@ -274,8 +274,8 @@ must have exactly two values:
 
 admitted_patients |>
   plot2(x = age_group, y = n(), facet = gender, type = "back-to-back")
-#> This additional argument was given to the geom: `show.legend`
-#> Assuming `y.expand = 0` since `y.limits` is set
+#> This additional argument was given to the geom: show.legend
+#> Assuming y.expand = 0 since y.limits is set
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-18-1.png)
@@ -286,8 +286,8 @@ A `category` divides each side further:
 
 admitted_patients |>
   plot2(x = age_group, y = n(), category = ward, facet = gender, type = "back-to-back")
-#> This additional argument was given to the geom: `show.legend`
-#> Assuming `y.expand = 0` since `y.limits` is set
+#> This additional argument was given to the geom: show.legend
+#> Assuming y.expand = 0 since y.limits is set
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-19-1.png)
@@ -304,9 +304,9 @@ mtcars |>
   cor() |>
   plot2(colour = c("#2166AC", "white", "#B2182B"),
         category.title = "Correlation")
-#> Assuming `type = "tile"` since the matrix contains identical row and column names
-#> Using `category.midpoint = 0` (the current `category` scale centre)
-#> Omitting printing of 121 datalabels - use `datalabels = TRUE` to force printing
+#> Assuming type = "tile" since the matrix contains identical row and column names
+#> Using category.midpoint = 0 (the current category scale centre)
+#> Omitting printing of 121 datalabels - use datalabels = TRUE to force printing
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-20-1.png)
@@ -321,8 +321,8 @@ flows:
 
 Titanic |>
   plot2(x = c(Class, Age, Survived), category = Sex, type = "sankey")
-#> Assuming `sankey_remove_axes = TRUE`
-#> Input class 'table' was transformed using `as.data.frame()`
+#> Assuming sankey_remove_axes = TRUE
+#> Input class 'table' was transformed using as.data.frame()
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-21-1.png)
@@ -365,8 +365,8 @@ mtcars |>
             four_gears = gear == 4,
             economical = mpg > 20) |>
   plot2(x = c(manual, straight_engine, four_gears, economical), type = "upset")
-#> Using `y = 1`
-#> Using `summarise_function = sum` for UpSet plot
+#> Using y = 1
+#> Using summarise_function = sum for UpSet plot
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-23-1.png)
@@ -385,7 +385,7 @@ mtcars |>
         y = median(hp),
         y.title = "Median horsepower",
         type = "upset")
-#> Using `summarise_function = sum` for UpSet plot
+#> Using summarise_function = sum for UpSet plot
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-24-1.png)
@@ -399,8 +399,8 @@ contains the provinces of the Netherlands, with their area:
 
 netherlands |>
   plot2(category = area_km2, category.title = "Area (square kilometres)")
-#> Using `datalabels = province`
-#> Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.
+#> Using datalabels = province
+#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-25-1.png)

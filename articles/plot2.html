@@ -124,9 +124,9 @@ also the first four arguments of <code><a href="../reference/plot2.html">plot2()
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="va">age</span>, category <span class="op">=</span> <span class="va">gender</span>, facet <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `type = "boxplot"` since all groups in `hospital` and `gender` and `ward` contain at least three values</span></span>
-<span><span class="co">#&gt; Assuming `facet.fixed_y = TRUE` since the two `y` scales differ by less than 25%</span></span>
-<span><span class="co">#&gt; Assuming `facet.repeat_labels_y = FALSE` since `y` has fixed scales</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "boxplot"</span> since all groups in <span style="color: #00BB00;">hospital</span><span style="color: #000000;"> and </span><span style="color: #00BB00;">gender</span><span style="color: #000000;"> and </span><span style="color: #00BB00;">ward</span> contain at least three values</span></span>
+<span><span class="co">#&gt; Assuming <span style="color: #00BB00;">facet.fixed_y = TRUE</span> since the two <span style="color: #00BB00;">y</span> scales differ by less than 25%</span></span>
+<span><span class="co">#&gt; Assuming <span style="color: #00BB00;">facet.repeat_labels_y = FALSE</span> since <span style="color: #00BB00;">y</span> has fixed scales</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Since these are the first four arguments, the names can be left out.
 The following call gives the same plot:</p>
@@ -140,10 +140,10 @@ coloured by the factor:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `x = Sepal.Length`</span></span>
-<span><span class="co">#&gt; Using `y = Sepal.Width`</span></span>
-<span><span class="co">#&gt; Using `category = Species`</span></span>
-<span><span class="co">#&gt; Using `type = "point"` since both axes are numeric</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">x = Sepal.Length</span></span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">y = Sepal.Width</span></span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">category = Species</span></span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Each automatic decision follows a fixed rule. In an interactive
 session, <code><a href="../reference/plot2.html">plot2()</a></code> reports these decisions in a message, such
@@ -184,8 +184,8 @@ for <code>y</code>, which are then shown as a category:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`</span></span>
-<span><span class="co">#&gt; Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "boxplot"</span> since all groups in <span style="color: #00BB00;">Species</span><span style="color: #000000;"> and </span><span style="color: #00BB00;">category</span> contain at least three values</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Titles accept calculations as well, which keeps them correct when the
 data change. <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> also works here:</p>
@@ -196,8 +196,8 @@ data change. <code><a href="https://glue.tidyverse.org/reference/glue.html" clas
 <span>        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Age of"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>, <span class="st">"patients"</span><span class="op">)</span>,</span>
 <span>        subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Based on"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"admissions"</span><span class="op">)</span>,</span>
 <span>        caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Admitted between"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"and"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `binwidth = 6.4` based on data</span></span>
-<span><span class="co">#&gt; Assuming `smooth = TRUE` for `type = "histogram"`</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">binwidth = 6.4</span> based on data</span></span>
+<span><span class="co">#&gt; Assuming <span style="color: #00BB00;">smooth = TRUE</span> for <span style="color: #00BB00;">type = "histogram"</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -236,7 +236,7 @@ vector with the desired order:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `x.character = TRUE` since `x.sort` is set</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">x.character = TRUE</span> since <span style="color: #00BB00;">x.sort</span> is set</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A vector does not need to contain all values; the remaining values
 follow in their usual order:</p>
@@ -255,7 +255,7 @@ last:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carb</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, x.sort <span class="op">=</span> <span class="st">"freq-desc"</span>, x.max_items <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `x.character = TRUE` since `x.sort` is set</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">x.character = TRUE</span> since <span style="color: #00BB00;">x.sort</span> is set</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -308,8 +308,8 @@ data set from <code>ggplot2</code>:</p>
 <span>        x.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        y.title <span class="op">=</span> <span class="st">"Unemployed (millions)"</span>,</span>
 <span>        y_secondary.title <span class="op">=</span> <span class="st">"Personal savings rate (%)"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `x.date_breaks = "5 years"` based on data</span></span>
-<span><span class="co">#&gt; Using `x.date_labels = "yyyy"` based on data</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">x.date_breaks = "5 years"</span> based on data</span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">x.date_labels = "yyyy"</span> based on data</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Data labels are added automatically to column plots with at most 25
 values. <code>datalabels = TRUE</code> always shows them,
@@ -360,7 +360,7 @@ the <code>category</code> of the plot into account:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="va">hp</span>, category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `type = "point"` since both axes are numeric</span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span></span>
 <span><span class="va">p</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_type.html">add_line</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>, legend.value <span class="op">=</span> <span class="st">"Mean per group"</span><span class="op">)</span></span></code></pre></div>
@@ -374,7 +374,7 @@ directly with the <code>smooth</code> argument of
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>, y <span class="op">=</span> <span class="va">hp</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span>, smooth.method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `type = "point"` since both axes are numeric</span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span>
 <span><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
@@ -388,7 +388,7 @@ to a data frame. A formula has the form
 <code>y ~ x + category | facet</code>:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hp</span> <span class="op">~</span> <span class="va">mpg</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `type = "point"` since both axes are numeric</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A correlation matrix becomes a heatmap:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -397,8 +397,8 @@ to a data frame. A formula has the form
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"white"</span>, <span class="st">"#B2182B"</span><span class="op">)</span>,</span>
 <span>        datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Correlation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming `type = "tile"` since the matrix contains identical row and column names</span></span>
-<span><span class="co">#&gt; Using `category.midpoint = 0` (the current `category` scale centre)</span></span></code></pre></div>
+<span><span class="co">#&gt; Assuming <span style="color: #00BB00;">type = "tile"</span> since the matrix contains identical row and column names</span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">category.midpoint = 0</span> (the current <span style="color: #00BB00;">category</span> scale centre)</span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A model is converted with <code><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">broom::augment()</a></code>, which adds
 columns such as the fitted values (<code>.fitted</code>) and the
@@ -407,7 +407,7 @@ residual plot:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">hp</span> <span class="op">~</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.fitted</span>, y <span class="op">=</span> <span class="va">.resid</span>, x.title <span class="op">=</span> <span class="st">"Fitted values"</span>, y.title <span class="op">=</span> <span class="st">"Residuals"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using `type = "point"` since both axes are numeric</span></span></code></pre></div>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "point"</span><span style="color: #000000;"> since both axes are numeric</span></span></span></code></pre></div>
 <p><img src="plot2_files/figure-html/unnamed-chunk-26-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Geographic data of class <code>sf</code> become maps; the article
 <em>Maps</em> on the package website describes them.

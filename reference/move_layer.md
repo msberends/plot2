@@ -34,7 +34,7 @@ A `ggplot` object with the layers in the new order.
 ``` r
 p <- plot2(iris, Sepal.Length, Sepal.Width, colour = "grey75") |>
   add_line(y = mean(Sepal.Width), colour = "red", linewidth = 2)
-#> Using `type = "point"` since both axes are numeric
+#> Using type = "point" since both axes are numeric
 
 # the line is drawn on top of the points
 p

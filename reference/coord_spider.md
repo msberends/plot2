@@ -179,6 +179,6 @@ ggplot(df, aes(metric, value, group = 1)) +
     
 df |>
   plot2(type = "spider")
-#> Using `y = value`
-#> Using `x = metric`
+#> Using y = value
+#> Using x = metric
 ```
