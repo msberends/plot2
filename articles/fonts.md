@@ -30,7 +30,7 @@ ggplot2::mpg |>
         font = "Source Sans 3",
         title = "Cars per class and model year")
 #> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
-#> Downloaded font https://fonts.google.com/specimen/Source+Sans+3 from Google Fonts into /tmp/RtmpMMe1Wj/R/plot2/fonts
+#> Downloaded font https://fonts.google.com/specimen/Source+Sans+3 from Google Fonts into /tmp/RtmpGFxMUs/R/plot2/fonts
 ```
 
 ![](fonts_files/figure-html/unnamed-chunk-4-1.png)
@@ -58,7 +58,7 @@ options(plot2.font = "Roboto Slab", plot2.text_factor = 1.1)
 mtcars |>
   plot2(x = wt, y = mpg, title = "Fuel consumption and weight")
 #> Using type = "point" since both axes are numeric
-#> Downloaded font https://fonts.google.com/specimen/Roboto+Slab from Google Fonts into /tmp/RtmpMMe1Wj/R/plot2/fonts
+#> Downloaded font https://fonts.google.com/specimen/Roboto+Slab from Google Fonts into /tmp/RtmpGFxMUs/R/plot2/fonts
 ```
 
 ![](fonts_files/figure-html/unnamed-chunk-5-1.png)
