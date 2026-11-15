@@ -65,13 +65,15 @@ and their values can be retrieved using
   printed only in interactive sessions (and pkgdown builds), at the end
   of the
   [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-  call. They are signalled as R conditions of class `plot2_message` (and
-  `plot2_caution` for cautions), so they can also be caught with
+  call. Unless this option is `TRUE`, they are signalled as R conditions
+  of class `plot2_message` (and `plot2_caution` for cautions), so they
+  can also be caught with
   [`withCallingHandlers()`](https://rdrr.io/r/base/conditions.html) or
   hidden with
-  [`suppressMessages()`](https://rdrr.io/r/base/message.html). Warnings
-  are R warnings of class `plot2_warning` and are not hidden by this
-  option.
+  [`suppressMessages()`](https://rdrr.io/r/base/message.html). With
+  `TRUE`, no message conditions are signalled at all, so R Markdown,
+  Quarto and pkgdown output contain no messages either. Warnings are R
+  warnings of class `plot2_warning` and are not hidden by this option.
 
 - `plot2.text_factor`  
   Default factor to multiply all text sizes with, defaults to `1`

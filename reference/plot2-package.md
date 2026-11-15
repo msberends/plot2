@@ -27,5 +27,3 @@ Authors:
 - Matthijs S. Berends <m.s.berends@umcg.nl>
 
 - Erwin E. A. Hassing \[contributor\]
-
-- Wikje E. Berends-Hoekstra \[contributor\]

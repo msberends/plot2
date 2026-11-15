@@ -77,9 +77,10 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://msberends.github.io/plot2/">plot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>This vignette shows every plot type of <code><a href="../reference/plot2.html">plot2()</a></code>, with the
-data that each type needs. The examples use the
-<code>admitted_patients</code> data set from this package and data sets
-from base R and <code>ggplot2</code>.</p>
+data that each type needs. The examples use well-known data sets:
+<code>mpg</code> and <code>diamonds</code> from <code>ggplot2</code>,
+<code>gapminder</code> from the <code>gapminder</code> package, and data
+sets from base R.</p>
 <div class="section level2">
 <h2 id="choosing-a-type">Choosing a type<a class="anchor" aria-label="anchor" href="#choosing-a-type"></a>
 </h2>
@@ -254,15 +255,15 @@ percentages</a></td>
 calculation, such as <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code> for the number of rows, which
 <code><a href="../reference/plot2.html">plot2()</a></code> computes per group:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">class</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="100%"></p>
 <p>In <code>ggplot2</code>, columns and bars are the same geom.
 Following the common use of these terms, <code><a href="../reference/plot2.html">plot2()</a></code> draws bars
 horizontally:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">class</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">drv</span>, type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Columns of different categories are placed next to each other. Use
 <code>stacked = TRUE</code> to stack them, or
@@ -290,31 +291,31 @@ changed.</p>
 </h2>
 <p>Lines show a trend over an ordered <code>x</code>, such as time:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">gapminder</span><span class="fu">::</span><span class="va"><a href="https://jennybc.github.io/gapminder/reference/gapminder.html" class="external-link">gapminder</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">lifeExp</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">continent</span>, type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
 <p><code>type = "linedot"</code> adds points to the line, like
 <code>type = "b"</code> in base R’s <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"linedot"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">gapminder</span><span class="fu">::</span><span class="va"><a href="https://jennybc.github.io/gapminder/reference/gapminder.html" class="external-link">gapminder</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">lifeExp</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">continent</span>, type <span class="op">=</span> <span class="st">"linedot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="area">Area<a class="anchor" aria-label="anchor" href="#area"></a>
 </h2>
 <p>Stacked areas show how parts add up to a total over an ordered
-<code>x</code>. Not every hospital has admissions in every year, so
-<code>x.complete = 0</code> adds the missing years with a count of zero;
-without it, the areas would skip these years:</p>
+<code>x</code>. If a group has no value for some values of
+<code>x</code>, <code>x.complete = 0</code> adds them with a value of
+zero, so that the areas do not skip them:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="va">hospital</span>,</span>
+<code class="sourceCode R"><span><span class="fu">gapminder</span><span class="fu">::</span><span class="va"><a href="https://jennybc.github.io/gapminder/reference/gapminder.html" class="external-link">gapminder</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>,</span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pop</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e9</span>,</span>
+<span>        category <span class="op">=</span> <span class="va">continent</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"area"</span>,</span>
 <span>        stacked <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        x.complete <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<span>        y.title <span class="op">=</span> <span class="st">"Population (billions)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -332,8 +333,8 @@ numeric:</p>
 Jitter moves them randomly in the horizontal direction, and a beeswarm
 places them next to each other:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ward</span>, y <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"jitter"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">drv</span>, y <span class="op">=</span> <span class="va">hwy</span>, type <span class="op">=</span> <span class="st">"jitter"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
@@ -346,9 +347,10 @@ places them next to each other:</p>
 <p>Boxplots and violins summarise a distribution per group. A boxplot is
 the automatic type when every group contains at least three values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="va">age</span>, category <span class="op">=</span> <span class="va">gender</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "boxplot"</span> since all groups in <span style="color: #00BB00;">hospital</span><span style="color: #000000;"> and </span><span style="color: #00BB00;">gender</span> contain at least three values</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">drv</span>, y <span class="op">=</span> <span class="va">hwy</span>, category <span class="op">=</span> <span class="va">year</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Assuming <span style="color: #00BB00;">category.character = TRUE</span> since <span style="color: #00BB00;">category</span> seems to be years (use <span style="color: #00BB00;">category.character = FALSE</span> to prevent this)</span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">type = "boxplot"</span> since all groups in <span style="color: #00BB00;">drv</span><span style="color: #000000;"> and </span><span style="color: #00BB00;">year</span> contain at least three values</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
 <p><code>y</code> can also be several columns, which are then shown as a
 category:</p>
@@ -361,8 +363,8 @@ category:</p>
 <p>A violin also shows the shape of the distribution, with lines at the
 quartiles:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ward</span>, y <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">drv</span>, y <span class="op">=</span> <span class="va">hwy</span>, type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -373,9 +375,9 @@ quartiles:</p>
 density as a line; set <code>binwidth</code> and
 <code>smooth = FALSE</code> to change this:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"histogram"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using <span style="color: #00BB00;">binwidth = 6.4</span> based on data</span></span>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span>, type <span class="op">=</span> <span class="st">"histogram"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using <span style="color: #00BB00;">binwidth = 2.4</span> based on data</span></span>
 <span><span class="co">#&gt; Assuming <span style="color: #00BB00;">smooth = TRUE</span> for <span style="color: #00BB00;">type = "histogram"</span></span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A density plot shows the distribution as a smooth curve, which makes
@@ -393,8 +395,9 @@ visible:</p>
 a line between the two points. The <code>category</code> must have
 exactly two values:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">manufacturer</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">year</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Assuming <span style="color: #00BB00;">category.character = TRUE</span> since <span style="color: #00BB00;">category</span> seems to be years (use <span style="color: #00BB00;">category.character = FALSE</span> to prevent this)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -404,15 +407,15 @@ exactly two values:</p>
 pyramid, shows two groups on either side of a shared axis. The
 <code>facet</code> must have exactly two values:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">class</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, facet <span class="op">=</span> <span class="va">year</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This additional argument was given to the geom: <span style="color: #00BB00;">show.legend</span></span></span>
 <span><span class="co">#&gt; Assuming <span style="color: #00BB00;">y.expand = 0</span> since <span style="color: #00BB00;">y.limits</span> is set</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A <code>category</code> divides each side further:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">class</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">drv</span>, facet <span class="op">=</span> <span class="va">year</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This additional argument was given to the geom: <span style="color: #00BB00;">show.legend</span></span></span>
 <span><span class="co">#&gt; Assuming <span style="color: #00BB00;">y.expand = 0</span> since <span style="color: #00BB00;">y.limits</span> is set</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="100%"></p>
@@ -456,8 +459,8 @@ it uses as <code>y</code>.</p>
 group on axes that are arranged in a circle. <code>x</code> gives the
 axes, and <code>category</code> the groups:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">hospital</span>, type <span class="op">=</span> <span class="st">"spider"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">clarity</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">cut</span>, type <span class="op">=</span> <span class="st">"spider"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The spider plot uses <code><a href="../reference/coord_spider.html">coord_spider()</a></code>, a coordinate system
 of this package with straight grid lines between the axes.</p>

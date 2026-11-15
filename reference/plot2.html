@@ -250,7 +250,7 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 <li><p><code>"sankey"</code> (short: <code>"s"</code>) creates a <a href="https://en.wikipedia.org/wiki/Sankey_diagram" class="external-link">Sankey plot</a> using <code>category</code> for the flows and requires <code>x</code> to contain multiple variables from <code>.data</code>. At default, it also sets <code>x.expand = c(0.05, 0.05)</code> and <code>y.limits = c(NA, NA)</code> and <code>y.expand = c(0.01, 0.01)</code>. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using <code>datalabels.size</code>, <code>datalabels.colour</code>, and <code>datalabels.colour_fill</code>. The transparency of the flows can be set using <code>sankey_alpha</code>, and the width of the nodes can be set using <code>sankey_node_width</code>. Sankey plots can also be flipped using <code>horizontal = TRUE</code>, and the label angles can be set with <code>datalabels.angle</code>.</p></li>
 <li><p><code>"spider"</code> or <code>"radar"</code> (short: <code>"sp"</code>) creates a <a href="https://en.wikipedia.org/wiki/Spider_chart" class="external-link">Spider plot</a> using our novel <code><a href="coord_spider.html">CoordSpider</a></code> coordinate system. Facets are supported, always with the same scale in all facets.</p></li>
 </ul></li>
-<li><p>Left blank. In this case, the type will be determined automatically: <code>"boxplot"</code> if there is no X-axis or if the length of unique values per X-axis item is at least 3, <code>"point"</code> if both the y and x axes are numeric, and the <a href="https://rdrr.io/r/base/options.html" class="external-link">option</a> <code>"plot2.default_type"</code> otherwise (which defaults to <code>"col"</code>, and accepts any value of <code>type</code>, such as <code>"line"</code> or <code>"l"</code>). Use <code>type = "blank"</code> or <code>type = "geom_blank"</code> to <em>not</em> add a geom.</p></li>
+<li><p>Left blank. In this case, the type will be determined automatically: <code>"boxplot"</code> if there is no X-axis or if the length of unique values per X-axis item is at least 3, <code>"point"</code> if both the y and x axes are numeric, <code>"line"</code> if the X-axis contains dates with one value each (a time series), and the <a href="https://rdrr.io/r/base/options.html" class="external-link">option</a> <code>"plot2.default_type"</code> otherwise (which defaults to <code>"col"</code>, and accepts any value of <code>type</code>, such as <code>"line"</code> or <code>"l"</code>). Use <code>type = "blank"</code> or <code>type = "geom_blank"</code> to <em>not</em> add a geom.</p></li>
 </ul></dd>
 
 
@@ -290,11 +290,11 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 
 
 <dt id="arg-facet-fixed-y">facet.fixed_y<a class="anchor" aria-label="anchor" href="#arg-facet-fixed-y"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all y scales should have the same limits. If not set, this depends on the data: <code>TRUE</code> only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set <code>facet.fixed_y = TRUE</code> when panels must be compared.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all y scales should have the same limits. If not set, this depends on the data: <code>TRUE</code> only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet, after <code>y.transform</code>, is less than 25%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set <code>facet.fixed_y = TRUE</code> when panels must be compared.</p></dd>
 
 
 <dt id="arg-facet-fixed-x">facet.fixed_x<a class="anchor" aria-label="anchor" href="#arg-facet-fixed-x"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all x scales should have the same breaks. This acts like the inverse of <code>x.drop</code>. If not set and x is numeric, the same rule as for <code>facet.fixed_y</code> applies to the maximum x values per facet.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all x scales should have the same breaks. This acts like the inverse of <code>x.drop</code>. If not set and x is numeric, the same rule as for <code>facet.fixed_y</code> applies to the maximum x values per facet, compared after <code>x.transform</code> (so as plotted, e.g. on a log scale).</p></dd>
 
 
 <dt id="arg-x-date-breaks">x.date_breaks<a class="anchor" aria-label="anchor" href="#arg-x-date-breaks"></a></dt>
@@ -378,7 +378,7 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 
 
 <dt id="arg-x-character">x.character<a class="anchor" aria-label="anchor" href="#arg-x-character"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the X-axis should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when <code>type</code> is not set or is a discrete type such as <code>"col"</code> or <code>"boxplot"</code>, with a message; for continuous types such as <code>"point"</code>, <code>"line"</code> and <code>"area"</code> they stay numeric. Numeric values also become character for other discrete types. Use <code>x.character = FALSE</code> to keep numeric values.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the X-axis should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character when <code>type</code> is not set or is a discrete type such as <code>"col"</code> or <code>"boxplot"</code>, with a message; years only so with at most one value per year (per <code>category</code> and <code>facet</code>), so that e.g. many measurements per year form a numeric axis; for continuous types such as <code>"point"</code>, <code>"line"</code> and <code>"area"</code> they stay numeric, and years are then labelled without a thousands separator. Numeric values also become character for other discrete types, and always for <code>"boxplot"</code>, <code>"violin"</code> and <code>"dumbbell"</code>. Use <code>x.character = FALSE</code> to keep numeric values.</p></dd>
 
 
 <dt id="arg-x-drop">x.drop<a class="anchor" aria-label="anchor" href="#arg-x-drop"></a></dt>
@@ -386,7 +386,7 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 
 
 <dt id="arg-x-zoom-y-zoom">x.zoom, y.zoom<a class="anchor" aria-label="anchor" href="#arg-x-zoom-y-zoom"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left <code>NULL</code> (default for <code>x.zoom</code>), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets <code>x.limits = c(NA, NA)</code> (or <code>y.limits</code>) and, unless <code>x.expand</code> (or <code>y.expand</code>) is set, a 5% expansion on both sides, like <code>ggplot2</code> does. It has no effect if <code>x.limits</code> (or <code>y.limits</code>) is set.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left <code>NULL</code> (default for <code>x.zoom</code>), the x axis is zoomed for plot types with a continuous x axis (such as histograms), and for years that stay numeric (such as in a line plot) only. This sets <code>x.limits = c(NA, NA)</code> (or <code>y.limits</code>) and, unless <code>x.expand</code> (or <code>y.expand</code>) is set, a 5% expansion on both sides, like <code>ggplot2</code> does. It has no effect if <code>x.limits</code> (or <code>y.limits</code>) is set.</p></dd>
 
 
 <dt id="arg-y-h">y.24h<a class="anchor" aria-label="anchor" href="#arg-y-h"></a></dt>
@@ -442,7 +442,7 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 
 
 <dt id="arg-category-character">category.character<a class="anchor" aria-label="anchor" href="#arg-category-character"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the category should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use <code>category.character = FALSE</code> to keep numeric values.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the category should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character, with a message. Use <code>category.character = FALSE</code> to keep numeric values.</p></dd>
 
 
 <dt id="arg-x-sort-category-sort-facet-sort">x.sort, category.sort, facet.sort<a class="anchor" aria-label="anchor" href="#arg-x-sort-category-sort-facet-sort"></a></dt>
@@ -522,7 +522,7 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 
 
 <dt id="arg-smooth-method-smooth-formula-smooth-se-smooth-level-smooth-alpha-smooth-linewidth-smooth-linetype-smooth-colour">smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour<a class="anchor" aria-label="anchor" href="#arg-smooth-method-smooth-formula-smooth-se-smooth-level-smooth-alpha-smooth-linewidth-smooth-linetype-smooth-colour"></a></dt>
-<dd><p>Settings for <code>smooth</code>.</p></dd>
+<dd><p>Settings for <code>smooth</code>. If not set, <code>smooth.method</code> and <code>smooth.formula</code> are chosen as in <code>ggplot2</code>: <code>"loess"</code> with <code>y ~ x</code> if the largest group (per <code>category</code> and <code>facet</code>) has fewer than 1000 values, and <code>"gam"</code> with <code>y ~ s(x, bs = "cs")</code> otherwise. The lines of the smooth are not affected by <code>colour_transparency</code>.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
@@ -661,12 +661,12 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 <p><strong>What to plot</strong></p><ul><li><p><code>y</code>: a column named <code>n</code>, otherwise the first numeric column (the second one if <code>x</code> is also chosen automatically); <code>y = n()</code> to count rows if the data have no numeric column, or for <code>type = "barpercent"</code> and Sankey plots.</p></li>
 <li><p><code>x</code>: the first numeric column if there is no <code>x</code> and the data have several numeric columns, otherwise the first column not used elsewhere.</p></li>
 <li><p><code>category</code>: the first character or factor column if neither <code>x</code> nor <code>category</code> is given and the data have more than two columns; for 'sf' data, the first numeric column.</p></li>
-<li><p><code>type</code>: a boxplot if there is no <code>x</code>, or if every group of <code>x</code>, <code>category</code> and <code>facet</code> has at least three values; points if <code>x</code> and <code>y</code> are both numeric; a histogram if <code>x</code> is the only numeric column; otherwise the <code>plot2.default_type</code> option (columns). A matrix with identical row and column names becomes a heatmap (<code>"tile"</code>).</p></li>
+<li><p><code>type</code>: a boxplot if there is no <code>x</code>, or if every group of <code>x</code>, <code>category</code> and <code>facet</code> has at least three values; points if <code>x</code> and <code>y</code> are both numeric; a line if <code>x</code> contains dates with one value each (per <code>category</code> and <code>facet</code>), as in a time series; a histogram if <code>x</code> is the only numeric column; otherwise the <code>plot2.default_type</code> option (columns). A matrix with identical row and column names becomes a heatmap (<code>"tile"</code>).</p></li>
 <li><p><code>summarise_function</code>: <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code> if groups contain several values (see <code>summarise_function</code>).</p></li>
-</ul><p><strong>Axes and scales</strong></p><ul><li><p><code>x.character</code> and <code>category.character</code>: <code>TRUE</code> if the values are whole years from 2000 to 2050, or exactly the months 1 to 12 (for <code>x</code> only in discrete plot types); <code>x.character</code> also if <code>x</code> is numeric in a discrete plot type, or if <code>x.sort</code> is set.</p></li>
+</ul><p><strong>Axes and scales</strong></p><ul><li><p><code>x.character</code> and <code>category.character</code>: <code>TRUE</code> if the values are whole years from 1900 to 25 years after the current year, or exactly the months 1 to 12 (for <code>x</code> only in discrete plot types, and for years only with at most one value per year per <code>category</code> and <code>facet</code>); <code>x.character</code> also if <code>x</code> is numeric in a discrete plot type (including boxplots, violins and dumbbells), or if <code>x.sort</code> is set.</p></li>
 <li><p><code>x.date_remove_years</code>: <code>TRUE</code> if <code>category</code> contains the years of a date <code>x</code>.</p></li>
 <li><p><code>x.date_breaks</code>, <code>x.date_labels</code>, <code>category.date_breaks</code> and <code>category.date_labels</code>: based on the range of the dates.</p></li>
-<li><p><code>facet.fixed_x</code> and <code>facet.fixed_y</code>: the same scale in all facets if the maxima per facet differ by less than 25% (coefficient of variation), free scales otherwise; <code>facet.repeat_labels_y = FALSE</code> with a fixed y scale.</p></li>
+<li><p><code>facet.fixed_x</code> and <code>facet.fixed_y</code>: the same scale in all facets if the maxima per facet differ by less than 25% (coefficient of variation, after the axis transformation), free scales otherwise; <code>facet.repeat_labels_y = FALSE</code> with a fixed y scale.</p></li>
 <li><p><code>x.expand</code> and <code>y.expand</code>: 0 if the limits are set.</p></li>
 <li><p><code>y.percent</code>: <code>TRUE</code> for density plots; <code>y.percent_break</code>: about 10 labels.</p></li>
 <li><p><code>y.scientific</code>: <code>TRUE</code> if a non-zero label would be 1e9 or larger, or smaller than 1e-4.</p></li>
@@ -717,29 +717,30 @@ Besides data frames, plot2() accepts vectors, matrices, formulas, 'sf' objects a
 <span class="r-plt img"><img src="plot2-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># y can be any calculation; datalabels are added for columns</span></span></span>
-<span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">drv</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot2-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># sorting and stacking are single arguments</span></span></span>
-<span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">gender</span>,</span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">drv</span>,</span></span>
 <span class="r-in"><span>        x.sort <span class="op">=</span> <span class="st">"freq-asc"</span>,</span></span>
 <span class="r-in"><span>        stacked <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Applying <span style="color: #00BB00;">x.sort = "freq-asc"</span> using <span style="color: #00BB00;">summarise_function = sum</span></span>
 <span class="r-plt img"><img src="plot2-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># set the plot type explicitly</span></span></span>
-<span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">manufacturer</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">)</span>, <span class="va">year</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Assuming <span style="color: #00BB00;">category.character = TRUE</span> since <span style="color: #00BB00;">category</span> seems to be years (use <span style="color: #00BB00;">category.character = FALSE</span> to prevent this)</span>
 <span class="r-plt img"><img src="plot2-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># titles support calculations too</span></span></span>
-<span class="r-in"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">age</span>, type <span class="op">=</span> <span class="st">"hist"</span>,</span></span>
-<span class="r-in"><span>        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Based on n ="</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>, <span class="st">"patients"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">plot2</span><span class="op">(</span><span class="va">hwy</span>, type <span class="op">=</span> <span class="st">"hist"</span>,</span></span>
+<span class="r-in"><span>        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Based on n ="</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>, <span class="st">"car models"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using <span style="color: #00BB00;">type = "histogram"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using <span style="color: #00BB00;">binwidth = 6.4</span> based on data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using <span style="color: #00BB00;">binwidth = 2.4</span> based on data</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Assuming <span style="color: #00BB00;">smooth = TRUE</span> for <span style="color: #00BB00;">type = "histogram"</span></span>
 <span class="r-plt img"><img src="plot2-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

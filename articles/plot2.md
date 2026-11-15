@@ -9,29 +9,53 @@ data, sorts, sets colours, axes and data labels, and applies a clean
 theme. The result is an ordinary `ggplot` object, so everything that
 `ggplot2` offers remains available afterwards.
 
-This vignette introduces the main ideas. It uses the `admitted_patients`
-data set that comes with the package, a fictitious set of 250 hospital
-admissions, and some data sets from base R.
+This vignette introduces the main ideas. It uses well-known data sets:
+`mpg` from `ggplot2`, with the fuel economy of 234 cars from 1999 and
+2008, `gapminder` from the `gapminder` package, with the life
+expectancy, population and income of 142 countries from 1952 to 2007,
+and some data sets from base R.
 
 ``` r
 
 library(plot2)
+data(mpg, package = "ggplot2")
 
-admitted_patients
-#> # A tibble: 250 × 7
-#>    date       patient_id gender   age age_group hospital ward   
-#>    <date>          <dbl> <chr>  <dbl> <ord>     <fct>    <chr>  
-#>  1 2002-01-14          1 M         78 75+       D        Non-ICU
-#>  2 2002-03-17          2 M         78 75+       C        Non-ICU
-#>  3 2002-04-08          3 M         78 75+       A        ICU    
-#>  4 2002-04-14          4 M         72 55-74     C        Non-ICU
-#>  5 2002-05-07          5 M         83 75+       C        Non-ICU
-#>  6 2002-05-16          6 F         65 55-74     B        ICU    
-#>  7 2002-05-16          7 M         47 25-54     D        Non-ICU
-#>  8 2002-06-18          8 M         30 25-54     B        ICU    
-#>  9 2002-06-23          9 M         82 75+       D        Non-ICU
-#> 10 2002-06-23          9 M         82 75+       D        Non-ICU
-#> # ℹ 240 more rows
+mpg
+#> # A tibble: 234 × 11
+#>    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class
+#>    <chr>        <chr>      <dbl> <int> <int> <chr> <chr> <int> <int> <chr> <chr>
+#>  1 audi         a4           1.8  1999     4 auto… f        18    29 p     comp…
+#>  2 audi         a4           1.8  1999     4 manu… f        21    29 p     comp…
+#>  3 audi         a4           2    2008     4 manu… f        20    31 p     comp…
+#>  4 audi         a4           2    2008     4 auto… f        21    30 p     comp…
+#>  5 audi         a4           2.8  1999     6 auto… f        16    26 p     comp…
+#>  6 audi         a4           2.8  1999     6 manu… f        18    26 p     comp…
+#>  7 audi         a4           3.1  2008     6 auto… f        18    27 p     comp…
+#>  8 audi         a4 quattro   1.8  1999     4 manu… 4        18    26 p     comp…
+#>  9 audi         a4 quattro   1.8  1999     4 auto… 4        16    25 p     comp…
+#> 10 audi         a4 quattro   2    2008     4 manu… 4        20    28 p     comp…
+#> # ℹ 224 more rows
+```
+
+``` r
+
+library(gapminder)
+
+gapminder
+#> # A tibble: 1,704 × 6
+#>    country     continent  year lifeExp      pop gdpPercap
+#>    <fct>       <fct>     <int>   <dbl>    <int>     <dbl>
+#>  1 Afghanistan Asia       1952    28.8  8425333      779.
+#>  2 Afghanistan Asia       1957    30.3  9240934      821.
+#>  3 Afghanistan Asia       1962    32.0 10267083      853.
+#>  4 Afghanistan Asia       1967    34.0 11537966      836.
+#>  5 Afghanistan Asia       1972    36.1 13079460      740.
+#>  6 Afghanistan Asia       1977    38.4 14880372      786.
+#>  7 Afghanistan Asia       1982    39.9 12881816      978.
+#>  8 Afghanistan Asia       1987    40.8 13867957      852.
+#>  9 Afghanistan Asia       1992    41.7 16317921      649.
+#> 10 Afghanistan Asia       1997    41.8 22227415      635.
+#> # ℹ 1,694 more rows
 ```
 
 ## Four directions
@@ -50,22 +74,23 @@ Columns are given without quotes, as in `dplyr`:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = age, category = gender, facet = ward)
-#> Using type = "boxplot" since all groups in hospital and gender and ward contain at least three values
+mpg |>
+  plot2(x = displ, y = hwy, category = drv, facet = year)
+#> Using type = "point" since both axes are numeric
+#> Assuming facet.fixed_x = TRUE since the two x scales differ by less than 25%
 #> Assuming facet.fixed_y = TRUE since the two y scales differ by less than 25%
 #> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-3-1.png)
+![](plot2_files/figure-html/unnamed-chunk-4-1.png)
 
 Since these are the first four arguments, the names can be left out. The
 following call gives the same plot:
 
 ``` r
 
-admitted_patients |>
-  plot2(hospital, age, gender, ward)
+mpg |>
+  plot2(displ, hwy, drv, year)
 ```
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) fills
@@ -83,7 +108,7 @@ iris |>
 #> Using type = "point" since both axes are numeric
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-5-1.png)
+![](plot2_files/figure-html/unnamed-chunk-6-1.png)
 
 Each automatic decision follows a fixed rule. In an interactive session,
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
@@ -104,11 +129,11 @@ step:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n_distinct(patient_id))
+mpg |>
+  plot2(x = class, y = n_distinct(model))
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-6-1.png)
+![](plot2_files/figure-html/unnamed-chunk-7-1.png)
 
 Every value of `x` is now one bar, so
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) chose
@@ -122,14 +147,14 @@ The other directions accept calculations too:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = median(age),
-        category = ifelse(ward == "ICU", "Intensive care", "Other wards"),
+gapminder |>
+  plot2(x = year,
+        y = median(lifeExp),
+        category = ifelse(continent == "Africa", "Africa", "Rest of the world"),
         type = "line")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-7-1.png)
+![](plot2_files/figure-html/unnamed-chunk-8-1.png)
 
 [`n()`](https://dplyr.tidyverse.org/reference/context.html) and
 [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html)
@@ -148,7 +173,7 @@ iris |>
 #> Using type = "boxplot" since all groups in Species and category contain at least three values
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-8-1.png)
+![](plot2_files/figure-html/unnamed-chunk-9-1.png)
 
 Titles accept calculations as well, which keeps them correct when the
 data change.
@@ -157,17 +182,17 @@ works here:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age,
+mpg |>
+  plot2(x = hwy,
         type = "histogram",
-        title = paste("Age of", n_distinct(patient_id), "patients"),
-        subtitle = paste("Based on", n(), "admissions"),
-        caption = paste("Admitted between", min(format(date, "%Y")), "and", max(format(date, "%Y"))))
-#> Using binwidth = 6.4 based on data
+        title = paste("Highway mileage of", n_distinct(model), "car models"),
+        subtitle = paste("Based on", n(), "cars"),
+        caption = paste("Model years", min(year), "and", max(year)))
+#> Using binwidth = 2.4 based on data
 #> Assuming smooth = TRUE for type = "histogram"
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-9-1.png)
+![](plot2_files/figure-html/unnamed-chunk-10-1.png)
 
 ## Plot types
 
@@ -181,11 +206,11 @@ such as `"l"` for lines and `"b"` for boxplots:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = age, type = "violin")
+mpg |>
+  plot2(x = class, y = hwy, type = "violin")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-10-1.png)
+![](plot2_files/figure-html/unnamed-chunk-11-1.png)
 
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) also
 adds types that `ggplot2` does not provide directly, such as dumbbell,
@@ -194,11 +219,12 @@ two groups:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = median(age), category = gender, type = "dumbbell")
+mpg |>
+  plot2(x = class, y = median(hwy), category = year, type = "dumbbell")
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-11-1.png)
+![](plot2_files/figure-html/unnamed-chunk-12-1.png)
 
 [`vignette("supported_types", package = "plot2")`](https://msberends.github.io/plot2/articles/supported_types.md)
 shows every type with its data requirements.
@@ -218,22 +244,22 @@ mtcars |>
 #> Using x.character = TRUE since x.sort is set
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-12-1.png)
+![](plot2_files/figure-html/unnamed-chunk-13-1.png)
 
 A vector does not need to contain all values; the remaining values
 follow in their usual order:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
-        x.sort = c("D", "B"),
+        category = drv,
+        x.sort = c("suv", "pickup"),
         category.sort = "alpha-desc")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-13-1.png)
+![](plot2_files/figure-html/unnamed-chunk-14-1.png)
 
 `x.max_items`, `category.max_items` and `facet.max_items` limit the
 number of values shown. The values beyond the limit are combined into
@@ -246,7 +272,7 @@ mtcars |>
 #> Using x.character = TRUE since x.sort is set
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-14-1.png)
+![](plot2_files/figure-html/unnamed-chunk-15-1.png)
 
 ## Stacking
 
@@ -256,19 +282,19 @@ Columns of different categories are placed next to each other.
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, stacked = TRUE)
-```
-
-![](plot2_files/figure-html/unnamed-chunk-15-1.png)
-
-``` r
-
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, stacked_fill = TRUE)
+mpg |>
+  plot2(x = class, y = n(), category = drv, stacked = TRUE)
 ```
 
 ![](plot2_files/figure-html/unnamed-chunk-16-1.png)
+
+``` r
+
+mpg |>
+  plot2(x = class, y = n(), category = drv, stacked_fill = TRUE)
+```
+
+![](plot2_files/figure-html/unnamed-chunk-17-1.png)
 
 ## Axes and data labels
 
@@ -280,17 +306,18 @@ it to the range of the data. `horizontal = TRUE` turns the plot, and a
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
+        category = year,
         type = "bar",
-        x.title = "Age group",
-        y.title = "Number of admissions",
-        category.title = "Gender")
+        x.title = "Class",
+        y.title = "Number of cars",
+        category.title = "Model year")
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-17-1.png)
+![](plot2_files/figure-html/unnamed-chunk-18-1.png)
 
 Axis values can be formatted with functions, such as `y.percent = TRUE`
 for percentages or `y.labels` for any labelling function. A secondary y
@@ -313,7 +340,7 @@ ggplot2::economics |>
 #> Using x.date_labels = "yyyy" based on data
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-18-1.png)
+![](plot2_files/figure-html/unnamed-chunk-19-1.png)
 
 Data labels are added automatically to column plots with at most 25
 values. `datalabels = TRUE` always shows them, `datalabels = FALSE`
@@ -322,11 +349,11 @@ hides them, and `datalabels.format` sets their text. In this format,
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), datalabels.format = "%n (%p)")
+mpg |>
+  plot2(x = class, y = n(), datalabels.format = "%n (%p)")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-19-1.png)
+![](plot2_files/figure-html/unnamed-chunk-20-1.png)
 
 ## Colours
 
@@ -338,28 +365,29 @@ that match the values of `category`:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
-        colour = c(F = "#4E79A7", M = "#F28E2B"))
+        category = year,
+        colour = c("1999" = "#4E79A7", "2008" = "#F28E2B"))
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-20-1.png)
+![](plot2_files/figure-html/unnamed-chunk-21-1.png)
 
 `category.focus` highlights one value and shows the others in grey:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = n(),
-        category = hospital,
-        category.focus = "B",
+gapminder |>
+  plot2(x = year,
+        y = median(lifeExp),
+        category = continent,
+        category.focus = "Africa",
         type = "line")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-21-1.png)
+![](plot2_files/figure-html/unnamed-chunk-22-1.png)
 
 The article *Colours and themes* on the package website describes
 palettes, custom organisation colours and themes in more detail.
@@ -380,7 +408,7 @@ p |>
   add_line(y = mean(hp), legend.value = "Mean per group")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-22-1.png)
+![](plot2_files/figure-html/unnamed-chunk-23-1.png)
 
 [`add_line()`](https://msberends.github.io/plot2/reference/add_type.md),
 [`add_point()`](https://msberends.github.io/plot2/reference/add_type.md),
@@ -399,10 +427,9 @@ argument of
 mtcars |>
   plot2(x = mpg, y = hp, smooth = TRUE, smooth.method = "lm")
 #> Using type = "point" since both axes are numeric
-#> `geom_smooth()` using formula = 'y ~ x'
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-23-1.png)
+![](plot2_files/figure-html/unnamed-chunk-24-1.png)
 
 ## Other kinds of input
 
@@ -421,7 +448,7 @@ plot2(hp ~ mpg + factor(cyl), data = mtcars)
 #> Using type = "point" since both axes are numeric
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-24-1.png)
+![](plot2_files/figure-html/unnamed-chunk-25-1.png)
 
 A correlation matrix becomes a heatmap:
 
@@ -436,7 +463,7 @@ mtcars |>
 #> Using category.midpoint = 0 (the current category scale centre)
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-25-1.png)
+![](plot2_files/figure-html/unnamed-chunk-26-1.png)
 
 A model is converted with
 [`broom::augment()`](https://generics.r-lib.org/reference/augment.html),
@@ -451,7 +478,7 @@ lm(hp ~ mpg, data = mtcars) |>
 #> Using type = "point" since both axes are numeric
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-26-1.png)
+![](plot2_files/figure-html/unnamed-chunk-27-1.png)
 
 Geographic data of class `sf` become maps; the article *Maps* on the
 package website describes them. `?plot2-methods` lists all methods.
@@ -465,12 +492,12 @@ element can be added with `+`:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = mean(age), y.title = "Mean age", datalabels = FALSE) +
-  ggplot2::geom_hline(yintercept = mean(admitted_patients$age), linetype = "dashed")
+mpg |>
+  plot2(x = class, y = mean(hwy), y.title = "Mean highway mileage", datalabels = FALSE) +
+  ggplot2::geom_hline(yintercept = mean(mpg$hwy), linetype = "dashed")
 ```
 
-![](plot2_files/figure-html/unnamed-chunk-27-1.png)
+![](plot2_files/figure-html/unnamed-chunk-28-1.png)
 
 By default,
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) uses

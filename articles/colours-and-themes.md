@@ -3,6 +3,7 @@
 ``` r
 
 library(plot2)
+data(mpg, package = "ggplot2")
 ```
 
 This article describes how
@@ -22,8 +23,9 @@ determines which of the two applies and sets both where needed. Without
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = ward)
+mpg |>
+  plot2(x = class, y = n(), category = year)
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-3-1.png)
@@ -33,8 +35,9 @@ vector of colours is used in the order of the values of `category`:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = ward, colour = c("steelblue", "#E15759"))
+mpg |>
+  plot2(x = class, y = n(), category = year, colour = c("steelblue", "#E15759"))
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-4-1.png)
@@ -45,11 +48,12 @@ present:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = ward,
-        colour = c("Non-ICU" = "grey70", "ICU" = "#E15759"))
+        category = year,
+        colour = c("1999" = "grey70", "2008" = "#E15759"))
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-5-1.png)
@@ -64,8 +68,9 @@ as `"Okabe-Ito"`, `"R4"` and `"Tableau 10"` (see
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, colour = "Tableau 10")
+ggplot2::diamonds |>
+  plot2(x = clarity, y = n(), category = cut, colour = "Tableau 10")
+#> Omitting printing of 40 datalabels - use datalabels = TRUE to force printing
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-6-1.png)
@@ -91,13 +96,14 @@ Where a geom has both a line and an area, such as columns and boxplots,
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
-        y = age,
-        category = ward,
+mpg |>
+  plot2(x = drv,
+        y = hwy,
+        category = year,
         type = "boxplot",
         colour = c("#4E79A7", "#E15759"),
         colour_fill = "white")
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-8-1.png)
@@ -132,13 +138,12 @@ grey. It accepts a value or its position:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = n(),
-        category = hospital,
-        category.focus = "D",
-        type = "line",
-        x.title = "Year")
+gapminder::gapminder |>
+  plot2(x = year,
+        y = median(lifeExp),
+        category = continent,
+        category.focus = "Asia",
+        type = "line")
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-10-1.png)
@@ -168,8 +173,8 @@ get_colour("company", length = 4)
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, colour = "company")
+mpg |>
+  plot2(x = class, y = n(), category = drv, colour = "company")
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-12-1.png)
@@ -181,8 +186,9 @@ session:
 
 options(plot2.colour = "company")
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = gender)
+mpg |>
+  plot2(x = class, y = n(), category = year)
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-13-1.png)
@@ -212,8 +218,8 @@ it is suited to print. The `theme` argument sets another theme, and
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), theme = ggplot2::theme_bw())
+mpg |>
+  plot2(x = class, y = n(), theme = ggplot2::theme_bw())
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-15-1.png)
@@ -226,8 +232,8 @@ so that only the given elements change:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
         theme = ggplot2::theme(panel.grid.major.y = ggplot2::element_blank()))
 ```
@@ -240,13 +246,14 @@ places the legend:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
+        category = year,
         background = "#F5F5F0",
         text_factor = 1.2,
         legend.position = "right")
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-17-1.png)

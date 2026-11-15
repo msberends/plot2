@@ -1101,10 +1101,12 @@ plot2(
   - Left blank. In this case, the type will be determined automatically:
     `"boxplot"` if there is no X-axis or if the length of unique values
     per X-axis item is at least 3, `"point"` if both the y and x axes
-    are numeric, and the [option](https://rdrr.io/r/base/options.html)
-    `"plot2.default_type"` otherwise (which defaults to `"col"`, and
-    accepts any value of `type`, such as `"line"` or `"l"`). Use
-    `type = "blank"` or `type = "geom_blank"` to *not* add a geom.
+    are numeric, `"line"` if the X-axis contains dates with one value
+    each (a time series), and the
+    [option](https://rdrr.io/r/base/options.html) `"plot2.default_type"`
+    otherwise (which defaults to `"col"`, and accepts any value of
+    `type`, such as `"line"` or `"l"`). Use `type = "blank"` or
+    `type = "geom_blank"` to *not* add a geom.
 
 - title, subtitle, caption, tag, x.title, y.title, category.title,
   legend.title, y_secondary.title:
@@ -1168,18 +1170,19 @@ plot2(
   A [logical](https://rdrr.io/r/base/logical.html) to indicate whether
   all y scales should have the same limits. If not set, this depends on
   the data: `TRUE` only if the coefficient of variation (standard
-  deviation divided by mean) of the maximum y values per facet is less
-  than 25%, otherwise every facet gets its own y scale. Both outcomes
-  are reported in a message. Since this can change when the data change
-  (e.g., next month's data), set `facet.fixed_y = TRUE` when panels must
-  be compared.
+  deviation divided by mean) of the maximum y values per facet, after
+  `y.transform`, is less than 25%, otherwise every facet gets its own y
+  scale. Both outcomes are reported in a message. Since this can change
+  when the data change (e.g., next month's data), set
+  `facet.fixed_y = TRUE` when panels must be compared.
 
 - facet.fixed_x:
 
   A [logical](https://rdrr.io/r/base/logical.html) to indicate whether
   all x scales should have the same breaks. This acts like the inverse
   of `x.drop`. If not set and x is numeric, the same rule as for
-  `facet.fixed_y` applies to the maximum x values per facet.
+  `facet.fixed_y` applies to the maximum x values per facet, compared
+  after `x.transform` (so as plotted, e.g. on a log scale).
 
 - x.date_breaks:
 
@@ -1331,11 +1334,15 @@ plot2(
   A [logical](https://rdrr.io/r/base/logical.html) to indicate whether
   the values of the X-axis should be forced to
   [character](https://rdrr.io/r/base/character.html). If not set, whole
-  numbers that look like years (2000 to 2050) or months (exactly 1
-  to 12) become character when `type` is not set or is a discrete type
-  such as `"col"` or `"boxplot"`, with a message; for continuous types
-  such as `"point"`, `"line"` and `"area"` they stay numeric. Numeric
-  values also become character for other discrete types. Use
+  numbers that look like years (1900 to 25 years after the current year)
+  or months (exactly 1 to 12) become character when `type` is not set or
+  is a discrete type such as `"col"` or `"boxplot"`, with a message;
+  years only so with at most one value per year (per `category` and
+  `facet`), so that e.g. many measurements per year form a numeric axis;
+  for continuous types such as `"point"`, `"line"` and `"area"` they
+  stay numeric, and years are then labelled without a thousands
+  separator. Numeric values also become character for other discrete
+  types, and always for `"boxplot"`, `"violin"` and `"dumbbell"`. Use
   `x.character = FALSE` to keep numeric values.
 
 - x.drop:
@@ -1349,10 +1356,10 @@ plot2(
   axis should be zoomed on the data, i.e., cover the range of the data
   instead of starting at 0. Left `NULL` (default for `x.zoom`), the x
   axis is zoomed for plot types with a continuous x axis (such as
-  histograms) only. This sets `x.limits = c(NA, NA)` (or `y.limits`)
-  and, unless `x.expand` (or `y.expand`) is set, a 5% expansion on both
-  sides, like `ggplot2` does. It has no effect if `x.limits` (or
-  `y.limits`) is set.
+  histograms), and for years that stay numeric (such as in a line plot)
+  only. This sets `x.limits = c(NA, NA)` (or `y.limits`) and, unless
+  `x.expand` (or `y.expand`) is set, a 5% expansion on both sides, like
+  `ggplot2` does. It has no effect if `x.limits` (or `y.limits`) is set.
 
 - y.24h:
 
@@ -1451,8 +1458,8 @@ plot2(
   A [logical](https://rdrr.io/r/base/logical.html) to indicate whether
   the values of the category should be forced to
   [character](https://rdrr.io/r/base/character.html). If not set, whole
-  numbers that look like years (2000 to 2050) or months (exactly 1
-  to 12) become character, with a message. Use
+  numbers that look like years (1900 to 25 years after the current year)
+  or months (exactly 1 to 12) become character, with a message. Use
   `category.character = FALSE` to keep numeric values.
 
 - x.sort, category.sort, facet.sort:
@@ -1618,7 +1625,11 @@ plot2(
 - smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha,
   smooth.linewidth, smooth.linetype, smooth.colour:
 
-  Settings for `smooth`.
+  Settings for `smooth`. If not set, `smooth.method` and
+  `smooth.formula` are chosen as in `ggplot2`: `"loess"` with `y ~ x` if
+  the largest group (per `category` and `facet`) has fewer than 1000
+  values, and `"gam"` with `y ~ s(x, bs = "cs")` otherwise. The lines of
+  the smooth are not affected by `colour_transparency`.
 
 - size:
 

@@ -39,20 +39,20 @@ components:
 
 ## An example
 
-This plot shows the number of admissions per hospital and gender, sorted
-by the total number of admissions, with data labels. In `ggplot2`, the
-data are summarised and sorted first:
+This plot shows the number of cars in the `mpg` data set of `ggplot2`
+per class and type of drive, sorted by the total number of cars, with
+data labels. In `ggplot2`, the data are summarised and sorted first:
 
 ``` r
 
-admitted_patients |>
-  count(hospital, gender) |>
-  mutate(hospital = reorder(hospital, -n, FUN = sum)) |>
-  ggplot(aes(x = hospital, y = n, fill = gender)) +
+mpg |>
+  count(class, drv) |>
+  mutate(class = reorder(class, -n, FUN = sum)) |>
+  ggplot(aes(x = class, y = n, fill = drv)) +
   geom_col(position = position_dodge(width = 0.6), width = 0.5) +
   geom_text(aes(label = n), position = position_dodge(width = 0.6), vjust = -0.5) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-  labs(x = "Hospital", y = "Admissions", fill = "Gender") +
+  labs(x = "Class", y = "Cars", fill = "Drive") +
   theme_minimal()
 ```
 
@@ -63,14 +63,14 @@ the same steps are arguments:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital,
+mpg |>
+  plot2(x = class,
         y = n(),
-        category = gender,
+        category = drv,
         x.sort = "freq-desc",
-        x.title = "Hospital",
-        y.title = "Admissions",
-        category.title = "Gender")
+        x.title = "Class",
+        y.title = "Cars",
+        category.title = "Drive")
 #> Applying x.sort = "freq-desc" using summarise_function = sum
 ```
 
@@ -120,11 +120,11 @@ it:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age, type = "histogram", binwidth = 5) +
-  geom_vline(xintercept = 65, linetype = "dashed") +
-  annotate("text", x = 64, y = 40, label = "Aged 65 and over", hjust = 1) +
-  scale_x_continuous(breaks = seq(0, 100, 10))
+mpg |>
+  plot2(x = hwy, type = "histogram", binwidth = 2) +
+  geom_vline(xintercept = 30, linetype = "dashed") +
+  annotate("text", x = 31, y = 40, label = "30 miles per gallon or more", hjust = 0) +
+  scale_x_continuous(breaks = seq(10, 45, 5))
 #> Assuming smooth = TRUE for type = "histogram"
 #> Scale for x is already present.
 #> Adding another scale for x, which will replace the existing scale.

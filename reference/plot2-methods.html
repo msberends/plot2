@@ -1033,7 +1033,7 @@
 <li><p><code>"sankey"</code> (short: <code>"s"</code>) creates a <a href="https://en.wikipedia.org/wiki/Sankey_diagram" class="external-link">Sankey plot</a> using <code>category</code> for the flows and requires <code>x</code> to contain multiple variables from <code>.data</code>. At default, it also sets <code>x.expand = c(0.05, 0.05)</code> and <code>y.limits = c(NA, NA)</code> and <code>y.expand = c(0.01, 0.01)</code>. The so-called 'nodes' (the 'blocks' with text) are considered the datalabels, so you can set the text size and colour of the nodes using <code>datalabels.size</code>, <code>datalabels.colour</code>, and <code>datalabels.colour_fill</code>. The transparency of the flows can be set using <code>sankey_alpha</code>, and the width of the nodes can be set using <code>sankey_node_width</code>. Sankey plots can also be flipped using <code>horizontal = TRUE</code>, and the label angles can be set with <code>datalabels.angle</code>.</p></li>
 <li><p><code>"spider"</code> or <code>"radar"</code> (short: <code>"sp"</code>) creates a <a href="https://en.wikipedia.org/wiki/Spider_chart" class="external-link">Spider plot</a> using our novel <code><a href="coord_spider.html">CoordSpider</a></code> coordinate system. Facets are supported, always with the same scale in all facets.</p></li>
 </ul></li>
-<li><p>Left blank. In this case, the type will be determined automatically: <code>"boxplot"</code> if there is no X-axis or if the length of unique values per X-axis item is at least 3, <code>"point"</code> if both the y and x axes are numeric, and the <a href="https://rdrr.io/r/base/options.html" class="external-link">option</a> <code>"plot2.default_type"</code> otherwise (which defaults to <code>"col"</code>, and accepts any value of <code>type</code>, such as <code>"line"</code> or <code>"l"</code>). Use <code>type = "blank"</code> or <code>type = "geom_blank"</code> to <em>not</em> add a geom.</p></li>
+<li><p>Left blank. In this case, the type will be determined automatically: <code>"boxplot"</code> if there is no X-axis or if the length of unique values per X-axis item is at least 3, <code>"point"</code> if both the y and x axes are numeric, <code>"line"</code> if the X-axis contains dates with one value each (a time series), and the <a href="https://rdrr.io/r/base/options.html" class="external-link">option</a> <code>"plot2.default_type"</code> otherwise (which defaults to <code>"col"</code>, and accepts any value of <code>type</code>, such as <code>"line"</code> or <code>"l"</code>). Use <code>type = "blank"</code> or <code>type = "geom_blank"</code> to <em>not</em> add a geom.</p></li>
 </ul></dd>
 
 
@@ -1073,11 +1073,11 @@
 
 
 <dt id="arg-facet-fixed-y">facet.fixed_y<a class="anchor" aria-label="anchor" href="#arg-facet-fixed-y"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all y scales should have the same limits. If not set, this depends on the data: <code>TRUE</code> only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet is less than 25%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set <code>facet.fixed_y = TRUE</code> when panels must be compared.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all y scales should have the same limits. If not set, this depends on the data: <code>TRUE</code> only if the coefficient of variation (standard deviation divided by mean) of the maximum y values per facet, after <code>y.transform</code>, is less than 25%, otherwise every facet gets its own y scale. Both outcomes are reported in a message. Since this can change when the data change (e.g., next month's data), set <code>facet.fixed_y = TRUE</code> when panels must be compared.</p></dd>
 
 
 <dt id="arg-facet-fixed-x">facet.fixed_x<a class="anchor" aria-label="anchor" href="#arg-facet-fixed-x"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all x scales should have the same breaks. This acts like the inverse of <code>x.drop</code>. If not set and x is numeric, the same rule as for <code>facet.fixed_y</code> applies to the maximum x values per facet.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether all x scales should have the same breaks. This acts like the inverse of <code>x.drop</code>. If not set and x is numeric, the same rule as for <code>facet.fixed_y</code> applies to the maximum x values per facet, compared after <code>x.transform</code> (so as plotted, e.g. on a log scale).</p></dd>
 
 
 <dt id="arg-x-date-breaks">x.date_breaks<a class="anchor" aria-label="anchor" href="#arg-x-date-breaks"></a></dt>
@@ -1161,7 +1161,7 @@
 
 
 <dt id="arg-x-character">x.character<a class="anchor" aria-label="anchor" href="#arg-x-character"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the X-axis should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character when <code>type</code> is not set or is a discrete type such as <code>"col"</code> or <code>"boxplot"</code>, with a message; for continuous types such as <code>"point"</code>, <code>"line"</code> and <code>"area"</code> they stay numeric. Numeric values also become character for other discrete types. Use <code>x.character = FALSE</code> to keep numeric values.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the X-axis should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character when <code>type</code> is not set or is a discrete type such as <code>"col"</code> or <code>"boxplot"</code>, with a message; years only so with at most one value per year (per <code>category</code> and <code>facet</code>), so that e.g. many measurements per year form a numeric axis; for continuous types such as <code>"point"</code>, <code>"line"</code> and <code>"area"</code> they stay numeric, and years are then labelled without a thousands separator. Numeric values also become character for other discrete types, and always for <code>"boxplot"</code>, <code>"violin"</code> and <code>"dumbbell"</code>. Use <code>x.character = FALSE</code> to keep numeric values.</p></dd>
 
 
 <dt id="arg-x-drop">x.drop<a class="anchor" aria-label="anchor" href="#arg-x-drop"></a></dt>
@@ -1169,7 +1169,7 @@
 
 
 <dt id="arg-x-zoom-y-zoom">x.zoom, y.zoom<a class="anchor" aria-label="anchor" href="#arg-x-zoom-y-zoom"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left <code>NULL</code> (default for <code>x.zoom</code>), the x axis is zoomed for plot types with a continuous x axis (such as histograms) only. This sets <code>x.limits = c(NA, NA)</code> (or <code>y.limits</code>) and, unless <code>x.expand</code> (or <code>y.expand</code>) is set, a 5% expansion on both sides, like <code>ggplot2</code> does. It has no effect if <code>x.limits</code> (or <code>y.limits</code>) is set.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate if the axis should be zoomed on the data, i.e., cover the range of the data instead of starting at 0. Left <code>NULL</code> (default for <code>x.zoom</code>), the x axis is zoomed for plot types with a continuous x axis (such as histograms), and for years that stay numeric (such as in a line plot) only. This sets <code>x.limits = c(NA, NA)</code> (or <code>y.limits</code>) and, unless <code>x.expand</code> (or <code>y.expand</code>) is set, a 5% expansion on both sides, like <code>ggplot2</code> does. It has no effect if <code>x.limits</code> (or <code>y.limits</code>) is set.</p></dd>
 
 
 <dt id="arg-y-h">y.24h<a class="anchor" aria-label="anchor" href="#arg-y-h"></a></dt>
@@ -1225,7 +1225,7 @@
 
 
 <dt id="arg-category-character">category.character<a class="anchor" aria-label="anchor" href="#arg-category-character"></a></dt>
-<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the category should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (2000 to 2050) or months (exactly 1 to 12) become character, with a message. Use <code>category.character = FALSE</code> to keep numeric values.</p></dd>
+<dd><p>A <a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a> to indicate whether the values of the category should be forced to <a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>. If not set, whole numbers that look like years (1900 to 25 years after the current year) or months (exactly 1 to 12) become character, with a message. Use <code>category.character = FALSE</code> to keep numeric values.</p></dd>
 
 
 <dt id="arg-x-sort-category-sort-facet-sort">x.sort, category.sort, facet.sort<a class="anchor" aria-label="anchor" href="#arg-x-sort-category-sort-facet-sort"></a></dt>
@@ -1305,7 +1305,7 @@
 
 
 <dt id="arg-smooth-method-smooth-formula-smooth-se-smooth-level-smooth-alpha-smooth-linewidth-smooth-linetype-smooth-colour">smooth.method, smooth.formula, smooth.se, smooth.level, smooth.alpha, smooth.linewidth, smooth.linetype, smooth.colour<a class="anchor" aria-label="anchor" href="#arg-smooth-method-smooth-formula-smooth-se-smooth-level-smooth-alpha-smooth-linewidth-smooth-linetype-smooth-colour"></a></dt>
-<dd><p>Settings for <code>smooth</code>.</p></dd>
+<dd><p>Settings for <code>smooth</code>. If not set, <code>smooth.method</code> and <code>smooth.formula</code> are chosen as in <code>ggplot2</code>: <code>"loess"</code> with <code>y ~ x</code> if the largest group (per <code>category</code> and <code>facet</code>) has fewer than 1000 values, and <code>"gam"</code> with <code>y ~ s(x, bs = "cs")</code> otherwise. The lines of the smooth are not affected by <code>colour_transparency</code>.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>

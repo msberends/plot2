@@ -21,10 +21,6 @@ colours, axes and theme:
 ``` r
 
 iris |> plot2()
-#> Using x = Sepal.Length
-#> Using y = Sepal.Width
-#> Using category = Species
-#> Using type = "point" since both axes are numeric
 ```
 
 ![](reference/figures/README-unnamed-chunk-2-1.png)
@@ -32,8 +28,6 @@ iris |> plot2()
 ``` r
 
 iris |> plot2(x = Species)
-#> Using y = Sepal.Length
-#> Using type = "boxplot" since all groups in Species contain at least three values
 ```
 
 ![](reference/figures/README-unnamed-chunk-2-2.png)
@@ -47,6 +41,82 @@ iris |> plot2(x = Species, y = mean(Sepal.Length))
 
 The result is a standard `ggplot` object, so every `ggplot2` function
 and extension still works on it.
+
+## Plot types
+
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+supports all `ggplot2` geoms, and adds plot types such as dumbbell,
+back-to-back, Sankey, spider and UpSet plots. Each of the 20 plots below
+is made with only **a single line** of code:
+
+![Grid of 20 example plots made with plot2(), including bar, line, area,
+boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map
+plots](reference/figures/plot_types.png)
+
+Show the code for each plot
+
+``` r
+
+# Column
+ggplot2::mpg |> plot2(class, n())
+
+# Bar
+ggplot2::mpg |> plot2(class, n(), drv, type = "bar")
+
+# Bar with percentages
+ggplot2::mpg |> plot2(manufacturer, type = "barpercent")
+
+# Stacked to 100%
+ggplot2::diamonds |> plot2(clarity, n(), cut, stacked_fill = TRUE)
+
+# Line
+ggplot2::economics_long |> plot2(date, value01, variable)
+
+# Line with points
+ggplot2::diamonds |> plot2(clarity, median(carat), cut, type = "linedot")
+
+# Area
+ggplot2::economics |> plot2(date, unemploy, type = "area")
+
+# Point
+iris |> plot2()
+
+# Beeswarm
+iris |> plot2(Species, Sepal.Length, type = "beeswarm")
+
+# Boxplot
+ggplot2::mpg |> plot2(class, hwy)
+
+# Violin
+mtcars |> plot2(cyl, mpg, type = "violin")
+
+# Histogram
+ggplot2::diamonds |> plot2(carat)
+
+# Density
+iris |> plot2(Sepal.Length, category = Species, type = "density", colour_transparency = 0.5)
+
+# Dumbbell
+ggplot2::mpg |> plot2(manufacturer, median(hwy), year, type = "dumbbell")
+
+# Heatmap
+mtcars |> cor() |> plot2(colour = c("#2166AC", "white", "#B2182B"))
+
+# Sankey
+Titanic |> plot2(c(Class, Age, Survived), category = Sex, type = "sankey")
+
+# Spider
+ggplot2::diamonds |> plot2(clarity, median(price), cut, type = "spider")
+
+# UpSet
+ggplot2movies::movies |> plot2(c(Action, Animation, Comedy, Drama, Romance), type = "upset")
+
+# Back-to-back
+ggplot2::mpg |> plot2(class, n(), facet = year, type = "back-to-back")
+
+# Map
+netherlands |> plot2(datalabels = FALSE)
+```
 
 ## Installation
 
@@ -69,160 +139,40 @@ install.packages("plot2", repos = c("https://msberends.r-universe.dev", "https:/
 | Data labels | `+ geom_text(aes(label = ...), vjust = ...)` | automatic for columns |
 | Stacked bars | `geom_col(position = "stack")` or `position = "fill"` | `stacked = TRUE` or `stacked_fill = TRUE` |
 
-## Plot types
+## plot2 compared to ggplot2
 
+The first three pairs below start from an example in the documentation
+of `ggplot2` (left, literally as in the help page named above it) and
+replace it with one
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) call
+on the same data (right). The plots are not meant to look the same: the
+right side shows what
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
-supports all `ggplot2` geoms, and adds plot types such as dumbbell,
-back-to-back, Sankey, spider and UpSet plots. Each of the 20 plots below
-is made with only a single line of code:
+delivers without any further code, such as sorted groups, data labels,
+axis titles, a clean theme, and value axes that start at zero.
 
-![Grid of 24 example plots made with plot2(), including bar, line, area,
-boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map
-plots](reference/figures/plot_types.png)
+The last pair goes the other way: it starts from a finished plot, with
+groups, facets, trend lines, a log scale and a Google Font, and shows
+the `ggplot2` code needed to get the same result. With `font`,
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+downloads the font once, and uses it only while drawing this plot; with
+[`showtext_auto()`](https://rdrr.io/pkg/showtext/man/showtext_auto.html),
+the font handling stays switched on for every plot that follows.
 
-Show the code for each plot
+[TABLE]
 
-``` r
+Every part of these plots can then be changed with one argument. All
+arguments are named after the plotting direction they apply to: `x.*`,
+`y.*`, `category.*` and `facet.*`. With
+[`plot2()`](https://msberends.github.io/plot2/reference/plot2.md), there
+is no need to remember argument or function names, or to look them up in
+the documentation. Type the direction and press Tab, and your editor
+lists every option for it, together with its description:
 
-# Column
-admitted_patients |> plot2(hospital, n())
-
-# Bar
-admitted_patients |> plot2(hospital, n(), ward, type = "bar")
-
-# Bar with percentages
-ggplot2::mpg |> plot2(manufacturer, type = "barpercent")
-
-# Stacked to 100%
-admitted_patients |> plot2(age_group, n(), hospital, stacked_fill = TRUE)
-
-# Line
-admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "line")
-
-# Line with points
-admitted_patients |> plot2(format(date, "%Y"), n(), ward, type = "linedot")
-
-# Area
-admitted_patients |> plot2(format(date, "%Y"), n(), hospital, type = "area", stacked = TRUE, x.complete = 0)
-
-# Point
-iris |> plot2()
-
-# Beeswarm
-iris |> plot2(Species, Sepal.Length, type = "beeswarm")
-
-# Boxplot
-admitted_patients |> plot2(hospital, age, gender)
-
-# Violin
-admitted_patients |> plot2(ward, age, type = "violin")
-
-# Histogram
-admitted_patients |> plot2(age, type = "histogram")
-
-# Density
-iris |> plot2(Sepal.Length, category = Species, type = "density", colour_transparency = 0.5)
-
-# Dumbbell
-admitted_patients |> plot2(hospital, median(age), gender, type = "dumbbell")
-
-# Heatmap
-mtcars |> cor() |> plot2(colour = c("#2166AC", "white", "#B2182B"))
-
-# Sankey
-Titanic |> plot2(c(Class, Age, Survived), category = Sex, type = "sankey")
-
-# Spider
-admitted_patients |> plot2(age_group, n(), hospital, type = "spider")
-
-# UpSet
-mtcars |> transform(manual = am == 1, straight = vs == 1, gears_4 = gear == 4, mpg_20 = mpg > 20) |> plot2(x = c(manual, straight, gears_4, mpg_20), type = "upset")
-
-# Back-to-back
-admitted_patients |> plot2(age_group, n(), facet = gender, type = "back-to-back")
-
-# Map
-netherlands |> plot2(datalabels = FALSE)
-```
-
-## Examples
-
-The four plotting directions `x`, `y`, `category` and `facet` describe
-most plots. They accept columns and calculations:
-
-``` r
-
-admitted_patients |>
-  plot2(x = age_group,
-        y = n(),
-        category = gender,
-        facet = ward)
-#> Using free y scales per facet since the two y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)
-```
-
-![](reference/figures/README-unnamed-chunk-4-1.png)
-
-``` r
-
-admitted_patients |>
-  plot2(x = age_group,
-        y = n_distinct(patient_id),
-        category = case_when(gender == "F" ~ "Female", gender == "M" ~ "Male"),
-        facet = paste("Ward:", ward),
-        
-        # additional options are each only 1 argument:
-        x.title = "Age Group",
-        y.title = "Unique Nr of Patients",
-        category.title = "Gender",
-        facet.fixed_y = TRUE)
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
-```
-
-![](reference/figures/README-unnamed-chunk-5-1.png)
-
-> **NOTE**
->
-> All arguments are named after the plotting direction they apply to:
-> `x.*`, `y.*`, `category.*` and `facet.*`. With
-> [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md),
-> there is no need to remember argument or function names, or to look
-> them up in the documentation. Type the direction and press Tab, and
-> your editor lists every option for it, together with its description:
->
-> ![RStudio autocompletion after typing plot2(facet, listing all facet
-> arguments such as facet.fixed_y, facet.bold and facet.drop, with the
-> help text of facet.fixed_y shown
-> alongside](reference/figures/plot_arguments.png)
-
-Titles can be calculated from the data as well:
-
-``` r
-
-mtcars |>
-  plot2(x = mpg,
-        y = hp,
-        category = factor(cyl),
-        category.title = "Cylinders",
-        title = paste("Horsepower of", n(), "cars"))
-#> Using type = "point" since both axes are numeric
-```
-
-![](reference/figures/README-unnamed-chunk-6-1.png)
-
-A correlation matrix becomes a heatmap:
-
-``` r
-
-mtcars |>
-  cor() |>
-  plot2(datalabels = TRUE,
-        colour = c("steelblue", "white", "firebrick"),
-        category.title = "Correlation")
-#> Assuming type = "tile" since the matrix contains identical row and column names
-#> Using category.midpoint = 0 (the current category scale centre)
-```
-
-![](reference/figures/README-unnamed-chunk-7-1.png)
+![RStudio autocompletion after typing plot2(facet, listing all facet
+arguments such as facet.fixed_y, facet.bold and facet.drop, with the
+help text of facet.fixed_y shown
+alongside](reference/figures/plot_arguments.png)
 
 ## Learning more
 

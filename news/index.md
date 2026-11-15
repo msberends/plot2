@@ -10,6 +10,76 @@
   `}`) are now printed as they are, instead of failing.
 - Re-exported from `dplyr`:
   [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
+- The README now compares
+  [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) with
+  `ggplot2`: three examples from the `ggplot2` documentation, each next
+  to a single
+  [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md)
+  call, and a finished plot of the `gapminder` data with the `ggplot2`
+  code it replaces. The examples in
+  [`?plot2`](https://msberends.github.io/plot2/reference/plot2.md), the
+  vignettes, the website articles, the README and the overview of plot
+  types now use well-known data sets
+  ([`ggplot2::mpg`](https://ggplot2.tidyverse.org/reference/mpg.html),
+  [`ggplot2::diamonds`](https://ggplot2.tidyverse.org/reference/diamonds.html),
+  [`ggplot2::economics`](https://ggplot2.tidyverse.org/reference/economics.html),
+  [`gapminder::gapminder`](https://jennybc.github.io/gapminder/reference/gapminder.html),
+  `iris`, `mtcars`, `Titanic`,
+  [`ggplot2movies::movies`](https://rdrr.io/pkg/ggplot2movies/man/movies.html))
+  instead of `admitted_patients`, which remains available. `gapminder`
+  was added to Suggests
+- Years are now recognised from 1900 to 25 years after the current year
+  (was 2000 to 2050), also when stored as decimal numbers such as
+  `1999.0`. Years that stay numeric, such as on the x axis of a line
+  plot, are zoomed on and labelled without a thousands separator
+  (`1990`, not `1 990`)
+- Years on `x` now only become discrete with at most one value per year
+  (per `category` and `facet`); with more values per year, such as
+  yearly measurements of many countries, they stay on a numeric axis and
+  a scatter plot is drawn, instead of columns with summed values
+- Whether facets share the same x or y scale is now decided on the
+  values as they are plotted, after `x.transform` or `y.transform`: on a
+  log scale, maxima of e.g. 30 000 and 100 000 are close, so the facets
+  share their scale
+- `facet.fixed_x = TRUE` with a transformation that does not allow zero,
+  such as `x.transform = "log10"`, failed with the error ‘’from’ must be
+  a finite number’; the shared scale now starts at the lowest value
+- With `smooth = TRUE`,
+  [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) now
+  chooses `smooth.method` and `smooth.formula` itself (as `ggplot2`
+  does), so that the `ggplot2` message
+  ‘[`geom_smooth()`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+  using method = …’ no longer appears, also not with
+  `plot2.silent = TRUE`
+- The lines of `smooth = TRUE` are drawn on top of the values again, so
+  that trends stand out; since August 2025 (development version
+  1.25.0.9017) they were drawn below the values
+- With facets sharing their y scale, the line and band of a smooth are
+  no longer cut off (with a warning) where they go beyond the highest
+  value
+- With a numeric `category` (a colour gradient), `smooth = TRUE` now
+  fits one line per facet, in a neutral colour; before, it tried to fit
+  a line per value, which gave many warnings and no visible line
+- A `category` with ranges such as `"1952-1977"` was taken for numbers,
+  which put the legend on the right with a numeric title; it is now
+  treated as text
+- Years in a continuous legend are now labelled without a thousands
+  separator (`2010`, not `2 010`)
+- `colour_transparency` no longer makes the lines of `smooth = TRUE`
+  transparent: it applies to the plotted values, while the lines stay
+  solid and the band keeps `smooth.alpha`
+- A time series, with dates on `x` and one value per date (per
+  `category` and `facet`), now becomes a line plot when `type` is not
+  set; before, it became a column plot with a bar per date
+- Boxplots, violins and dumbbell plots now always have a discrete x
+  axis: a numeric `x` (such as a dose of 0.5, 1 and 2) becomes
+  character, as for other discrete types
+- In horizontal plots, the legend now lists the categories in the same
+  order as the bars wherever it is placed; before, this was only so for
+  a legend at the top or bottom, so that e.g. years read from new to old
+  in a legend on the right
+- Back-to-back plots now show the first value of `facet` on the left
+  (e.g. 1999 left of 2008), following `facet.sort`
 - Scientific notation on the y axis (e.g. `y.scientific = TRUE`) failed
   with `ggplot2` 4.0.0 with the error ‘invalid mathematical annotation’
 - Calculations in titles (`title`, `subtitle`, `caption`, `tag`,
@@ -205,10 +275,11 @@
   or within each category, facet, or the total; previously they were
   always relative to the grand total of the plot. Without a category,
   the default gives percentages within each facet
-- Numeric x values that look like years (2000 to 2050) or months (1
-  to 12) now stay numeric for continuous types such as `"point"` and
-  `"line"`, and are only treated as years or months when they are whole
-  numbers; columns of years without `type` work as before
+- Numeric x values that look like years (1900 to 25 years after the
+  current year) or months (1 to 12) now stay numeric for continuous
+  types such as `"point"` and `"line"`, and are only treated as years or
+  months when they are whole numbers; columns of years without `type`
+  work as before
 - An unknown or ambiguous `type` now gives an error with suggestions
   (“did you mean ‘boxplot’?”) instead of silently using the first geom
   whose name contains the text; abbreviations such as `"hist"` must be
@@ -266,9 +337,11 @@
   grouped at the end of the call in the order they occurred, and can be
   caught or hidden with
   [`suppressMessages()`](https://rdrr.io/r/base/message.html);
-  `options(plot2.silent = TRUE)` now works. Warnings (such as “No
-  observations” or values that could not be plotted) are now R warnings
-  of class `plot2_warning`, also in scripts, R Markdown and Quarto
+  `options(plot2.silent = TRUE)` now works, and then signals no message
+  conditions at all, so that R Markdown, Quarto and pkgdown output stay
+  free of messages. Warnings (such as “No observations” or values that
+  could not be plotted) are now R warnings of class `plot2_warning`,
+  also in scripts, R Markdown and Quarto
 - Fixed: internal state of one
   [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md) call
   could leak into the next call, or be wiped by a nested call

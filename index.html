@@ -77,16 +77,10 @@
 <p>The <code>ggplot2</code> R package composes any plot from layers, aesthetics, scales, coordinates and themes. This grammar makes it flexible and precise, but it also means that creating a plot requires the knowledge of many functions and arguments: a plot of “counts per department, coloured by year” requires knowledge of <code>geom_col()</code>, <code>aes(fill = )</code>, <code>position_dodge()</code>, <code>scale_fill_*()</code> and <code>theme()</code>, and of the data steps that come before them.</p>
 <p><code>plot2</code> takes the opposite approach. Like base R’s <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, one call gives a complete plot, even when the type of plot or other details are not given. You describe what you want to see, and <code><a href="reference/plot2.html">plot2()</a></code> summarises, sorts and labels the data, and chooses the plot type, colours, axes and theme:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using x = Sepal.Length</span></span>
-<span><span class="co">#&gt; Using y = Sepal.Width</span></span>
-<span><span class="co">#&gt; Using category = Species</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-2-1.png" alt="" width="100%"></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = Sepal.Length</span></span>
-<span><span class="co">#&gt; Using type = "boxplot" since all groups in Species contain at least three values</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-2-2.png" alt="" width="100%"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -94,10 +88,79 @@
 <p>The result is a standard <code>ggplot</code> object, so every <code>ggplot2</code> function and extension still works on it.</p>
 </div>
 <div class="section level2">
+<h2 id="plot-types">Plot types<a class="anchor" aria-label="anchor" href="#plot-types"></a>
+</h2>
+<p><code><a href="reference/plot2.html">plot2()</a></code> supports all <code>ggplot2</code> geoms, and adds plot types such as dumbbell, back-to-back, Sankey, spider and UpSet plots. Each of the 20 plots below is made with only <strong>a single line</strong> of code:</p>
+<p><img src="reference/figures/plot_types.png" alt="Grid of 20 example plots made with plot2(), including bar, line, area, boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map plots"></p>
+<details><summary>
+Show the code for each plot
+</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Column</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Bar</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">drv</span>, type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Bar with percentages</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">manufacturer</span>, type <span class="op">=</span> <span class="st">"barpercent"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Stacked to 100%</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">clarity</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">cut</span>, stacked_fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Line</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/economics.html" class="external-link">economics_long</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">value01</span>, <span class="va">variable</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Line with points</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">clarity</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">carat</span><span class="op">)</span>, <span class="va">cut</span>, type <span class="op">=</span> <span class="st">"linedot"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Area</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/economics.html" class="external-link">economics</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">unemploy</span>, type <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Point</span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Beeswarm</span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Species</span>, <span class="va">Sepal.Length</span>, type <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Boxplot</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">class</span>, <span class="va">hwy</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Violin</span></span>
+<span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">mpg</span>, type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Histogram</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">carat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Density</span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Sepal.Length</span>, category <span class="op">=</span> <span class="va">Species</span>, type <span class="op">=</span> <span class="st">"density"</span>, colour_transparency <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Dumbbell</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">manufacturer</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">)</span>, <span class="va">year</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Heatmap</span></span>
+<span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"white"</span>, <span class="st">"#B2182B"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Sankey</span></span>
+<span><span class="va">Titanic</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Spider</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">clarity</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>, <span class="va">cut</span>, type <span class="op">=</span> <span class="st">"spider"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># UpSet</span></span>
+<span><span class="fu">ggplot2movies</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ggplot2movies/man/movies.html" class="external-link">movies</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Action</span>, <span class="va">Animation</span>, <span class="va">Comedy</span>, <span class="va">Drama</span>, <span class="va">Romance</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Back-to-back</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, facet <span class="op">=</span> <span class="va">year</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Map</span></span>
+<span><span class="va">netherlands</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>datalabels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</details>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p><code>plot2</code> is not on CRAN yet. Install it from r-universe:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"plot2"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://msberends.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -163,125 +226,132 @@
 </table>
 </div>
 <div class="section level2">
-<h2 id="plot-types">Plot types<a class="anchor" aria-label="anchor" href="#plot-types"></a>
+<h2 id="plot2-compared-to-ggplot2">plot2 compared to ggplot2<a class="anchor" aria-label="anchor" href="#plot2-compared-to-ggplot2"></a>
 </h2>
-<p><code><a href="reference/plot2.html">plot2()</a></code> supports all <code>ggplot2</code> geoms, and adds plot types such as dumbbell, back-to-back, Sankey, spider and UpSet plots. Each of the 20 plots below is made with only a single line of code:</p>
-<p><img src="reference/figures/plot_types.png" alt="Grid of 24 example plots made with plot2(), including bar, line, area, boxplot, violin, heatmap, Sankey, spider, UpSet, back-to-back and map plots"></p>
-<details><summary>
-Show the code for each plot
-</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Column</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Bar</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Bar with percentages</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">manufacturer</span>, type <span class="op">=</span> <span class="st">"barpercent"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Stacked to 100%</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">age_group</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">hospital</span>, stacked_fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Line</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Line with points</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">ward</span>, type <span class="op">=</span> <span class="st">"linedot"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Area</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">hospital</span>, type <span class="op">=</span> <span class="st">"area"</span>, stacked <span class="op">=</span> <span class="cn">TRUE</span>, x.complete <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Point</span></span>
-<span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Beeswarm</span></span>
-<span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Species</span>, <span class="va">Sepal.Length</span>, type <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Boxplot</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="va">age</span>, <span class="va">gender</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Violin</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">ward</span>, <span class="va">age</span>, type <span class="op">=</span> <span class="st">"violin"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Histogram</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">age</span>, type <span class="op">=</span> <span class="st">"histogram"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Density</span></span>
-<span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">Sepal.Length</span>, category <span class="op">=</span> <span class="va">Species</span>, type <span class="op">=</span> <span class="st">"density"</span>, colour_transparency <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Dumbbell</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">hospital</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">age</span><span class="op">)</span>, <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"dumbbell"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Heatmap</span></span>
-<span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"white"</span>, <span class="st">"#B2182B"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Sankey</span></span>
-<span><span class="va">Titanic</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Spider</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">age_group</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">hospital</span>, type <span class="op">=</span> <span class="st">"spider"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># UpSet</span></span>
-<span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>manual <span class="op">=</span> <span class="va">am</span> <span class="op">==</span> <span class="fl">1</span>, straight <span class="op">=</span> <span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span>, gears_4 <span class="op">=</span> <span class="va">gear</span> <span class="op">==</span> <span class="fl">4</span>, mpg_20 <span class="op">=</span> <span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">manual</span>, <span class="va">straight</span>, <span class="va">gears_4</span>, <span class="va">mpg_20</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Back-to-back</span></span>
-<span><span class="va">admitted_patients</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">age_group</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Map</span></span>
-<span><span class="va">netherlands</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>datalabels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-</details>
-</div>
-<div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
-</h2>
-<p>The four plotting directions <code>x</code>, <code>y</code>, <code>category</code> and <code>facet</code> describe most plots. They accept columns and calculations:</p>
+<p>The first three pairs below start from an example in the documentation of <code>ggplot2</code> (left, literally as in the help page named above it) and replace it with one <code><a href="reference/plot2.html">plot2()</a></code> call on the same data (right). The plots are not meant to look the same: the right side shows what <code><a href="reference/plot2.html">plot2()</a></code> delivers without any further code, such as sorted groups, data labels, axis titles, a clean theme, and value axes that start at zero.</p>
+<p>The last pair goes the other way: it starts from a finished plot, with groups, facets, trend lines, a log scale and a Google Font, and shows the <code>ggplot2</code> code needed to get the same result. With <code>font</code>, <code><a href="reference/plot2.html">plot2()</a></code> downloads the font once, and uses it only while drawing this plot; with <code><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext_auto()</a></code>, the font handling stays switched on for every plot that follows.</p>
+<table class="table">
+<tr>
+<th width="50%">
+<code>ggplot2</code>
+</th>
+<th width="50%">
+<code>plot2</code>
+</th>
+</tr>
+<tr>
+<td colspan="2">
+From <code>?geom_bar</code>
+</td>
+</tr>
+<tr>
+<td width="50%">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="va">gender</span>,</span>
-<span>        facet <span class="op">=</span> <span class="va">ward</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using free y scales per facet since the two y scales differ by 25% or more (use facet.fixed_y = TRUE for the same scale in all facets)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mpg</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" alt="" width="100%"></p>
+</td>
+<td width="50%">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>,</span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">patient_id</span><span class="op">)</span>,</span>
-<span>        category <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">gender</span> <span class="op">==</span> <span class="st">"F"</span> <span class="op">~</span> <span class="st">"Female"</span>, <span class="va">gender</span> <span class="op">==</span> <span class="st">"M"</span> <span class="op">~</span> <span class="st">"Male"</span><span class="op">)</span>,</span>
-<span>        facet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Ward:"</span>, <span class="va">ward</span><span class="op">)</span>,</span>
-<span>        </span>
-<span>        <span class="co"># additional options are each only 1 argument:</span></span>
-<span>        x.title <span class="op">=</span> <span class="st">"Age Group"</span>,</span>
-<span>        y.title <span class="op">=</span> <span class="st">"Unique Nr of Patients"</span>,</span>
-<span>        category.title <span class="op">=</span> <span class="st">"Gender"</span>,</span>
-<span>        facet.fixed_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming facet.repeat_labels_y = FALSE since y has fixed scales</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mpg</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png" alt="" width="100%"></p>
-<blockquote>
-<p><strong>NOTE</strong></p>
-<p>All arguments are named after the plotting direction they apply to: <code>x.*</code>, <code>y.*</code>, <code>category.*</code> and <code>facet.*</code>. With <code><a href="reference/plot2.html">plot2()</a></code>, there is no need to remember argument or function names, or to look them up in the documentation. Type the direction and press <kbd>Tab</kbd>, and your editor lists every option for it, together with its description:</p>
-<p><img src="reference/figures/plot_arguments.png" alt="RStudio autocompletion after typing plot2(facet, listing all facet arguments such as facet.fixed_y, facet.bold and facet.drop, with the help text of facet.fixed_y shown alongside"></p>
-</blockquote>
-<p>Titles can be calculated from the data as well:</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+From <code>?geom_boxplot</code>
+</td>
+</tr>
+<tr>
+<td width="50%">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mpg</span>,</span>
-<span>        y <span class="op">=</span> <span class="va">hp</span>,</span>
-<span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>,</span>
-<span>        category.title <span class="op">=</span> <span class="st">"Cylinders"</span>,</span>
-<span>        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Horsepower of"</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mpg</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">class</span>, <span class="va">hwy</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_boxplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" alt="" width="100%"></p>
-<p>A correlation matrix becomes a heatmap:</p>
+</td>
+<td width="50%">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span>datalabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"white"</span>, <span class="st">"firebrick"</span><span class="op">)</span>,</span>
-<span>        category.title <span class="op">=</span> <span class="st">"Correlation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming type = "tile" since the matrix contains identical row and column names</span></span>
-<span><span class="co">#&gt; Using category.midpoint = 0 (the current category scale centre)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mpg</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">class</span>, <span class="va">hwy</span>, <span class="va">drv</span>, type <span class="op">=</span> <span class="st">"boxplot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%"></p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+From <code>?geom_point</code>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png" alt="" width="100%"></p>
+</td>
+<td width="50%">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-9-1.png" alt="" width="100%"></p>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+A finished plot: life expectancy and income per continent, in two periods, from the <code>gapminder</code> package
+</td>
+</tr>
+<tr>
+<td width="50%">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jennybc/gapminder" class="external-link">gapminder</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yixuan/showtext" class="external-link">showtext</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/sysfonts/man/font_add_google.html" class="external-link">font_add_google</a></span><span class="op">(</span><span class="st">"Roboto"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext_auto</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">gapminder</span>,</span>
+<span>       <span class="fu">aes</span><span class="op">(</span><span class="va">gdpPercap</span>, <span class="va">lifeExp</span>,</span>
+<span>           colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&lt;</span> <span class="fl">1980</span>, <span class="st">"1952-1977"</span>, <span class="st">"1982-2007"</span><span class="op">)</span>,</span>
+<span>           fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&lt;</span> <span class="fl">1980</span>, <span class="st">"1952-1977"</span>, <span class="st">"1982-2007"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.05</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="fu">vars</span><span class="op">(</span><span class="va">continent</span><span class="op">)</span>, axes <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_log10</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="cn">NA</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>                     expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_colour_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"firebrick"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"firebrick"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"GDP per capita (US$, inflation-adjusted)"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Life expectancy (years)"</span>,</span>
+<span>       colour <span class="op">=</span> <span class="st">"Period"</span>,</span>
+<span>       fill <span class="op">=</span> <span class="st">"Period"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span>        legend.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        strip.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>        panel.grid.major.x <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        panel.grid.minor.x <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        axis.line.x <span class="op">=</span> <span class="fu">element_line</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"grey75"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png" alt="" width="100%"></p>
+</td>
+<td width="50%">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gapminder</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/plot2.html">plot2</a></span><span class="op">(</span><span class="va">gdpPercap</span>, <span class="va">lifeExp</span>,</span>
+<span>        category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&lt;</span> <span class="fl">1980</span>, <span class="st">"1952-1977"</span>, <span class="st">"1982-2007"</span><span class="op">)</span>,</span>
+<span>        category.title <span class="op">=</span> <span class="st">"Period"</span>,</span>
+<span>        facet <span class="op">=</span> <span class="va">continent</span>,</span>
+<span>        smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        smooth.method <span class="op">=</span> <span class="st">"lm"</span>,</span>
+<span>        x.transform <span class="op">=</span> <span class="st">"log10"</span>,</span>
+<span>        x.title <span class="op">=</span> <span class="st">"GDP per capita (US$, inflation-adjusted)"</span>,</span>
+<span>        y.title <span class="op">=</span> <span class="st">"Life expectancy (years)"</span>,</span>
+<span>        colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"firebrick"</span><span class="op">)</span>,</span>
+<span>        colour_transparency <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>        font <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-11-1.png" alt="" width="100%"></p>
+</td>
+</tr>
+</table>
+<p>Every part of these plots can then be changed with one argument. All arguments are named after the plotting direction they apply to: <code>x.*</code>, <code>y.*</code>, <code>category.*</code> and <code>facet.*</code>. With <code><a href="reference/plot2.html">plot2()</a></code>, there is no need to remember argument or function names, or to look them up in the documentation. Type the direction and press <kbd>Tab</kbd>, and your editor lists every option for it, together with its description:</p>
+<p><img src="reference/figures/plot_arguments.png" alt="RStudio autocompletion after typing plot2(facet, listing all facet arguments such as facet.fixed_y, facet.bold and facet.drop, with the help text of facet.fixed_y shown alongside"></p>
 </div>
 <div class="section level2">
 <h2 id="learning-more">Learning more<a class="anchor" aria-label="anchor" href="#learning-more"></a>
@@ -299,7 +369,7 @@ Show the code for each plot
 <a href="https://msberends.github.io/plot2/articles/maps.html">Maps</a> shows how maps can be plotted easily.</li>
 </ul>
 <p><code><a href="reference/create_interactively.html">create_interactively()</a></code> opens a Shiny app that builds a plot from a point-and-click interface and shows the code:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/create_interactively.html">create_interactively</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <figure><img src="reference/figures/create_interactively.jpg" alt="The Shiny app of create_interactively()"><figcaption aria-hidden="true">
 The Shiny app of create_interactively()

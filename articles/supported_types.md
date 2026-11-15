@@ -7,8 +7,9 @@ library(plot2)
 
 This vignette shows every plot type of
 [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md), with
-the data that each type needs. The examples use the `admitted_patients`
-data set from this package and data sets from base R and `ggplot2`.
+the data that each type needs. The examples use well-known data sets:
+`mpg` and `diamonds` from `ggplot2`, `gapminder` from the `gapminder`
+package, and data sets from base R.
 
 ## Choosing a type
 
@@ -66,8 +67,8 @@ computes per group:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n())
+ggplot2::mpg |>
+  plot2(x = class, y = n())
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-3-1.png)
@@ -79,8 +80,8 @@ bars horizontally:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = n(), category = ward, type = "bar")
+ggplot2::mpg |>
+  plot2(x = class, y = n(), category = drv, type = "bar")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-4-1.png)
@@ -115,8 +116,8 @@ Lines show a trend over an ordered `x`, such as time:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = format(date, "%Y"), y = n(), category = ward, type = "line")
+gapminder::gapminder |>
+  plot2(x = year, y = median(lifeExp), category = continent, type = "line")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-6-1.png)
@@ -126,28 +127,27 @@ R’s [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
 
 ``` r
 
-admitted_patients |>
-  plot2(x = format(date, "%Y"), y = n(), category = ward, type = "linedot")
+gapminder::gapminder |>
+  plot2(x = year, y = median(lifeExp), category = continent, type = "linedot")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-7-1.png)
 
 ## Area
 
-Stacked areas show how parts add up to a total over an ordered `x`. Not
-every hospital has admissions in every year, so `x.complete = 0` adds
-the missing years with a count of zero; without it, the areas would skip
-these years:
+Stacked areas show how parts add up to a total over an ordered `x`. If a
+group has no value for some values of `x`, `x.complete = 0` adds them
+with a value of zero, so that the areas do not skip them:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = format(date, "%Y"),
-        y = n(),
-        category = hospital,
+gapminder::gapminder |>
+  plot2(x = year,
+        y = sum(pop) / 1e9,
+        category = continent,
         type = "area",
         stacked = TRUE,
-        x.complete = 0)
+        y.title = "Population (billions)")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-8-1.png)
@@ -172,8 +172,8 @@ each other:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = ward, y = age, type = "jitter")
+ggplot2::mpg |>
+  plot2(x = drv, y = hwy, type = "jitter")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-10-1.png)
@@ -193,9 +193,10 @@ the automatic type when every group contains at least three values:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = age, category = gender)
-#> Using type = "boxplot" since all groups in hospital and gender contain at least three values
+ggplot2::mpg |>
+  plot2(x = drv, y = hwy, category = year)
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
+#> Using type = "boxplot" since all groups in drv and year contain at least three values
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-12-1.png)
@@ -217,8 +218,8 @@ quartiles:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = ward, y = age, type = "violin")
+ggplot2::mpg |>
+  plot2(x = drv, y = hwy, type = "violin")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-14-1.png)
@@ -232,9 +233,9 @@ chooses the bin width from the data and adds the density as a line; set
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age, type = "histogram")
-#> Using binwidth = 6.4 based on data
+ggplot2::mpg |>
+  plot2(x = hwy, type = "histogram")
+#> Using binwidth = 2.4 based on data
 #> Assuming smooth = TRUE for type = "histogram"
 ```
 
@@ -258,8 +259,9 @@ between the two points. The `category` must have exactly two values:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = hospital, y = median(age), category = gender, type = "dumbbell")
+ggplot2::mpg |>
+  plot2(x = manufacturer, y = median(hwy), category = year, type = "dumbbell")
+#> Assuming category.character = TRUE since category seems to be years (use category.character = FALSE to prevent this)
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-17-1.png)
@@ -272,8 +274,8 @@ must have exactly two values:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group, y = n(), facet = gender, type = "back-to-back")
+ggplot2::mpg |>
+  plot2(x = class, y = n(), facet = year, type = "back-to-back")
 #> This additional argument was given to the geom: show.legend
 #> Assuming y.expand = 0 since y.limits is set
 ```
@@ -284,8 +286,8 @@ A `category` divides each side further:
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = ward, facet = gender, type = "back-to-back")
+ggplot2::mpg |>
+  plot2(x = class, y = n(), category = drv, facet = year, type = "back-to-back")
 #> This additional argument was given to the geom: show.legend
 #> Assuming y.expand = 0 since y.limits is set
 ```
@@ -340,8 +342,8 @@ group on axes that are arranged in a circle. `x` gives the axes, and
 
 ``` r
 
-admitted_patients |>
-  plot2(x = age_group, y = n(), category = hospital, type = "spider")
+ggplot2::diamonds |>
+  plot2(x = clarity, y = median(price), category = cut, type = "spider")
 ```
 
 ![](supported_types_files/figure-html/unnamed-chunk-22-1.png)
