@@ -26,8 +26,12 @@
   [`gapminder::gapminder`](https://jennybc.github.io/gapminder/reference/gapminder.html),
   `iris`, `mtcars`, `Titanic`,
   [`ggplot2movies::movies`](https://rdrr.io/pkg/ggplot2movies/man/movies.html))
-  instead of `admitted_patients`, which remains available. `gapminder`
-  was added to Suggests
+  instead of `admitted_patients`. `gapminder` was added to Suggests
+- The example data set `admitted_patients` has been removed; the unit
+  tests now use
+  [`ggplot2::mpg`](https://ggplot2.tidyverse.org/reference/mpg.html),
+  [`ggplot2::economics`](https://ggplot2.tidyverse.org/reference/economics.html)
+  and `iris`
 - Years are now recognised from 1900 to 25 years after the current year
   (was 2000 to 2050), also when stored as decimal numbers such as
   `1999.0`. Years that stay numeric, such as on the x axis of a line

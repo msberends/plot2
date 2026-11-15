@@ -115,8 +115,6 @@ Package options that set defaults for all plots in a session.
 
 Example data sets used in the documentation.
 
-- [`admitted_patients`](https://msberends.github.io/plot2/reference/admitted_patients.md)
-  : Example Data Set with Admitted Patients
 - [`netherlands`](https://msberends.github.io/plot2/reference/netherlands.md)
   : Example Geography Data Set: the Netherlands
 
