@@ -11,6 +11,8 @@ knitr::opts_chunk$set(
   dpi = 72,
   out.width = "100%"
 )
+# so that `netherlands` prints with the print method of `sf`
+invisible(loadNamespace("sf"))
 ```
 
 ```{r}
