@@ -26,24 +26,24 @@ msg <- function(expr) {
 has_msg <- function(msgs, pattern) any(grepl(pattern, msgs))
 
 test_that("y: a column named n, otherwise the first numeric column; n() without numeric columns", {
-  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b"), v = 1:2, n = 3:4), g)), "Using y = n$"))
-  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b"), v = 1:2), g)), "Using y = v"))
-  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b", "b")), g)), "Using y = n\\(\\) to count rows"))
+  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b"), v = 1:2, n = 3:4), g)), "Using `y = n`$"))
+  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b"), v = 1:2), g)), "Using `y = v`"))
+  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b", "b")), g)), "Using `y = n\\(\\)` to count rows"))
 })
 
 test_that("x: the first numeric column, or the first column not used elsewhere", {
-  expect_true(has_msg(msg(plot2(data.frame(a = 1:3, b = 4:6))), "Using x = a"))
-  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b"), v = 1:2), y = v)), "Using x = g"))
+  expect_true(has_msg(msg(plot2(data.frame(a = 1:3, b = 4:6))), "Using `x = a`"))
+  expect_true(has_msg(msg(plot2(data.frame(g = c("a", "b"), v = 1:2), y = v)), "Using `x = g`"))
 })
 
 test_that("category: the first character column if x and category are not given", {
   d <- data.frame(n = 1:4, g = c("a", "a", "b", "b"), h = c("p", "q", "p", "q"))
-  expect_true(has_msg(msg(plot2(d)), "Using category = h"))
+  expect_true(has_msg(msg(plot2(d)), "Using `category = h`"))
 })
 
 test_that("type: boxplot, points, histogram or columns", {
-  expect_true(has_msg(msg(plot2(iris, Species, Sepal.Length)), "Using type = \"boxplot\""))
-  expect_true(has_msg(msg(plot2(iris, Sepal.Length, Sepal.Width)), "Using type = \"point\""))
+  expect_true(has_msg(msg(plot2(iris, Species, Sepal.Length)), "Using `type = \"boxplot\"`"))
+  expect_true(has_msg(msg(plot2(iris, Sepal.Length, Sepal.Width)), "Using `type = \"point\"`"))
   expect_true(has_msg(msg(plot2(data.frame(v = c(1, 2, 2, 3)))), "type = \"histogram\""))
   expect_true(has_msg(msg(plot2(cor(mtcars[, 1:3]))), "type = \"tile\""))
 })
@@ -58,7 +58,7 @@ test_that("x.character for years and months; x.date_remove_years", {
 
 test_that("facet scales: fixed below 25% difference, free otherwise", {
   d <- data.frame(f = rep(c("a", "b"), each = 3), x = 1:6, y = c(1, 2, 3, 100, 200, 300))
-  expect_true(has_msg(msg(plot2(d, x, y, facet = f, type = "point")), "Using free y scales"))
+  expect_true(has_msg(msg(plot2(d, x, y, facet = f, type = "point")), "Using free `y` scales"))
   d$y <- c(1, 2, 3, 1, 2, 3.1)
   expect_true(has_msg(msg(plot2(d, x, y, facet = f, type = "point")), "facet.fixed_y = TRUE"))
 })

@@ -145,8 +145,8 @@ add_type <- function(plot, type = NULL, mapping = aes(), ..., data = NULL, move 
   # without data in the plot and in this call, there is nothing to draw (#52)
   plot_data <- attr(plot, "data", exact = TRUE) %or% plot$data
   if (is.null(data) && (inherits(plot_data, "waiver") || NROW(plot_data) == 0)) {
-    plot2_warning("The plot has no data and no ", font_blue("data"), " was given, so no ",
-                  font_blue(gsub("geom_", "", type)), " layer was added")
+    plot2_warning("The plot has no data and no ", font_arg("data"), " was given, so no ",
+                  font_code("type = \"", gsub("geom_", "", type), "\""), " layer was added")
     return(plot)
   }
   args <- utils::modifyList(list(mapping = mapping, data = data), args)
@@ -640,7 +640,7 @@ add_sf <- function(plot,
   crs <- c(plot = as.character(sf::st_crs(plot$data[[geometry_col]]))[1],
            add = as.character(sf::st_crs(sf_data))[1])
   if (n_distinct(crs) > 1) {
-    plot2_warning("The coordinate reference system (CRS) of `plot` and `sf_data` are different, transforming `sf_data` to ", crs[1])
+    plot2_warning("The coordinate reference system (CRS) of ", font_arg("plot"), " and ", font_arg("sf_data"), " are different, transforming ", font_arg("sf_data"), " to ", crs[1])
     sf_data <- sf::st_transform(sf_data, crs = crs[1])
   }
   crs <- crs[1]
@@ -657,7 +657,7 @@ add_sf <- function(plot,
   if (tryCatch(!is.null(datalabels), error = function(e) TRUE)) {
     
     if (abs(datalabels.nudge_y) > 0.25 && sf::st_is_longlat(sf_data)) {
-      plot2_message(font_blue(paste0("datalabels.nudge_y = ", datalabels.nudge_y)),
+      plot2_message(font_code(paste0("datalabels.nudge_y = ", datalabels.nudge_y)),
                     " might be very ", ifelse(datalabels.nudge_y < 0, "low", "high"),
                     " for the current coordinate reference system (", crs, ")")
     }

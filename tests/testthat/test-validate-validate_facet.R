@@ -25,8 +25,8 @@ test_that("facets with different maxima: free x and free y, with a message (#64)
 })
 
 test_that("facets with similar maxima: fixed y without repeated labels, with messages", {
-  expect_plot2_message(plot2(fx_facet_similar, x, y, facet = facet), "Assuming facet.fixed_y = TRUE")
-  expect_plot2_message(plot2(fx_facet_similar, x, y, facet = facet), "Assuming facet.repeat_labels_y = FALSE")
+  expect_plot2_message(plot2(fx_facet_similar, x, y, facet = facet), "Assuming `facet.fixed_y = TRUE`")
+  expect_plot2_message(plot2(fx_facet_similar, x, y, facet = facet), "Assuming `facet.repeat_labels_y = FALSE`")
   expect_identical(free(plot2(fx_facet_similar, x, y, facet = facet))[["free_y"]], FALSE)
 })
 
@@ -79,7 +79,7 @@ test_that("an empty panel renders without R warnings, with a shared x scale (#15
   d$facet <- factor(d$facet, levels = c("f1", "f2", "f3"))
   p <- expect_plot2(plot2(d, x, y, facet = facet, facet.drop = FALSE))
   expect_identical(facet_info(p)$free_x, FALSE)
-  expect_plot2_message(plot2(d, x, y, facet = facet, facet.drop = FALSE), "since facet.drop = FALSE leaves empty panels")
+  expect_plot2_message(plot2(d, x, y, facet = facet, facet.drop = FALSE), "since `facet.drop = FALSE` leaves empty panels")
   # without empty panels, nothing changes
   expect_identical(facet_info(plot2(fx_facet, x, y, facet = facet, facet.drop = FALSE))$free_x, TRUE)
 })

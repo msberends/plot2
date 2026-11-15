@@ -168,7 +168,7 @@ plot2.sf <- function(.data, ...) {
   loadNamespace("sf")
   
   if (!inherits(.data, "sf")) {
-    plot2_caution("Transforming plot data to an sf model using ", font_blue("sf::st_as_sf()"))
+    plot2_caution("Transforming plot data to an sf model using ", font_fn("sf::st_as_sf"))
     .data <- sf::st_as_sf(.data)
   }
   if (!is.null(crs)) {
@@ -177,14 +177,14 @@ plot2.sf <- function(.data, ...) {
   
   # use missing(), since x and y are column names that cannot be evaluated here (#92)
   if (!missing(x)) {
-    plot2_caution("In 'sf' plots, ", font_blue("x"), " will be ignored - did you mean ", font_blue("category"), "?")
+    plot2_caution("In 'sf' plots, ", font_arg("x"), " will be ignored - did you mean ", font_arg("category"), "?")
   }
   if (!missing(y)) {
-    plot2_caution("In 'sf' plots, ", font_blue("y"), " will be ignored - did you mean ", font_blue("category"), "?")
+    plot2_caution("In 'sf' plots, ", font_arg("y"), " will be ignored - did you mean ", font_arg("category"), "?")
   }
   colour_fill_default <- getOption("plot2.colour_sf_fill", getOption("plot2.colour", "ggplot2"))
   if (!missing(colour) && identical(colour_fill, colour_fill_default) && !identical(colour, "white")) {
-    plot2_caution("In 'sf' plots, " , font_blue("colour"), " will set the borders, not the areas - did you mean ", font_blue(paste0("colour_fill = ", deparse(colour))), "?")
+    plot2_caution("In 'sf' plots, " , font_arg("colour"), " will set the borders, not the areas - did you mean ", font_code(paste0("colour_fill = ", deparse(colour))), "?")
   }
   
   df <- .data
@@ -245,7 +245,7 @@ plot2.matrix <- function(.data, ...) {
   # x, y and category follow from the matrix (#46)
   ignored <- c(x = !missing(x), y = !missing(y), category = !missing(category))
   if (any(ignored)) {
-    plot2_caution("In matrix plots, ", paste0(font_blue(names(ignored)[ignored], collapse = NULL), collapse = font_black(" and ")),
+    plot2_caution("In matrix plots, ", paste0(font_arg(names(ignored)[ignored], collapse = NULL), collapse = font_black(" and ")),
                   " will be ignored, since the rows and columns of the matrix determine x, y and category")
   }
   
@@ -262,7 +262,7 @@ plot2.matrix <- function(.data, ...) {
     # rows and columns are identical, while the data are numeric
     # this is the outcome of cor(), a correlation matrix
     # assume type tile
-    plot2_message("Assuming ", font_blue("type = \"tile\""),
+    plot2_message("Assuming ", font_code("type = \"tile\""),
                   " since the matrix contains identical row and column names")
     type <- "tile"
     # make long format

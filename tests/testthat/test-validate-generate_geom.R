@@ -97,7 +97,7 @@ test_that("histograms: automatic binwidth with a message, binwidth honoured, con
 })
 
 test_that("density ignores y, with a message", {
-  p <- expect_plot2_message(plot2(fx_xy, x, y, type = "density"), "Ignoring y", type = "info")
+  p <- expect_plot2_message(plot2(fx_xy, x, y, type = "density"), "Ignoring `y`", type = "info")
   expect_geoms(p, "density", exact = TRUE)
 })
 
@@ -109,7 +109,7 @@ test_that("tile and raster use the category as fill", {
 })
 
 test_that("an extra argument in ... reaches the layer, with a message", {
-  p <- expect_plot2_message(plot2(fx_cat, x, y, alpha = 0.3), "additional argument was given to the geom: alpha")
+  p <- expect_plot2_message(plot2(fx_cat, x, y, alpha = 0.3), "additional argument was given to the geom: `alpha`")
   expect_identical(layer_params(p, "bar")$alpha, 0.3)
 })
 

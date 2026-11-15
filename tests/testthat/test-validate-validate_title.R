@@ -54,7 +54,7 @@ test_that("long titles are wrapped at title.linelength, accented ones too (#68)"
 
 test_that("a markdown title longer than the limit warns and is not wrapped", {
   expect_warning(p <- plot2(fx_xy, x, y, title = paste0("*", long, "*"), title.linelength = 40),
-                 "Multiple lines in title cannot be set", class = "plot2_warning")
+                 "Multiple lines in `title` cannot be set", class = "plot2_warning")
   expect_no_match(label_text(p, "title"), "\n")
 })
 

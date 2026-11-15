@@ -96,7 +96,7 @@ test_that("facets with similar x ranges share the x range, dissimilar ones do no
   p <- expect_plot2_message(plot2(d, x, y, facet = f, type = "point"), "facet.fixed_x = TRUE", type = "info")
   expect_identical(axis_range(p, "x", panel = 1), axis_range(p, "x", panel = 2))
   d$x <- c(1:3, 100:102)
-  p <- expect_plot2_message(plot2(d, x, y, facet = f, type = "point"), "Using free x scales", type = "info")
+  p <- expect_plot2_message(plot2(d, x, y, facet = f, type = "point"), "Using free `x` scales", type = "info")
   expect_false(identical(axis_range(p, "x", panel = 1), axis_range(p, "x", panel = 2)))
 })
 

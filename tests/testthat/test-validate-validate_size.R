@@ -32,7 +32,7 @@ test_that("a set size is used", {
 })
 
 test_that("size on a line plot warns and is used as linewidth", {
-  expect_warning(p <- plot2(fx_xy, x, y, type = "line", size = 3), "replaced with 'linewidth'")
+  expect_warning(p <- plot2(fx_xy, x, y, type = "line", size = 3), "replaced with `linewidth`")
   expect_identical(unique(layer_df(p, "line")$linewidth), 3)
 })
 

@@ -60,7 +60,7 @@ format2.numeric <- function(x,
     
     if (min_length > 0) {
       if (force_decimals == TRUE) {
-        plot2_warning("`force_decimals = TRUE` will be overwritten by `min_length = ", min_length, "`")
+        plot2_warning(font_code("force_decimals = TRUE"), " will be overwritten by ", font_code("min_length = ", min_length))
       }
       x <- formatC(as.integer(x),
                    width = min_length,

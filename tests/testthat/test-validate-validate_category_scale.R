@@ -70,7 +70,7 @@ test_that("a date category gets sensible breaks; a POSIXct category likewise", {
 
 test_that("category.transform = 'log10' with a zero in category.limits is reported", {
   expect_plot2_message(plot2(fx_numcat, x, y, value, category.transform = "log10", category.limits = c(0, 1)),
-                       "Ignoring category.limits since it contains 0")
+                       "Ignoring `category.limits` since it contains 0")
 })
 
 test_that("category.breaks and category.labels are honoured", {

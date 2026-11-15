@@ -136,6 +136,32 @@ font_white <- function(..., collapse = " ") {
   }
 }
 
+# Code in diagnostics, with the inline classes of cli as ggplot2 uses them:
+# font_code() for an argument with its value or any other code, font_arg() for
+# a bare argument name, font_var() for a column name and font_fn() for a
+# function name (cli adds the parentheses). The text is formatted at once,
+# with backticks and in the colours of plot2_cli_theme (R/zzz.R). Each element
+# of a vector is formatted separately; use `collapse` to join them first.
+font_code <- function(..., collapse = "") {
+  font_cli_inline("code", paste0(c(...), collapse = collapse))
+}
+font_arg <- function(..., collapse = "") {
+  font_cli_inline("arg", paste0(c(...), collapse = collapse))
+}
+font_var <- function(..., collapse = "") {
+  font_cli_inline("var", paste0(c(...), collapse = collapse))
+}
+font_fn <- function(..., collapse = "") {
+  font_cli_inline("fn", paste0(c(...), collapse = collapse))
+}
+font_cli_inline <- function(class, x) {
+  template <- paste0("{.", class, " {txt}}")
+  vapply(as.character(x), FUN.VALUE = character(1), USE.NAMES = FALSE, function(txt) {
+    cli::cli_div(theme = plot2_cli_theme)
+    as.character(cli::format_inline(template))
+  })
+}
+
 # Per-call state and diagnostics (#13, #26) ---------------------------------
 #
 # plot2_env holds the state of the plot2() call that is running. Every plot2()
@@ -232,9 +258,9 @@ emit_diagnostic <- function(txt, type) {
     ))
     if (plot2_shows_messages()) {
       if (type == "cautions") {
-        cli::cli_alert_warning(txt, wrap = TRUE)
+        cli::cli_alert_warning("{txt}", wrap = TRUE)
       } else {
-        cli::cli_alert_info(txt, wrap = TRUE)
+        cli::cli_alert_info("{txt}", wrap = TRUE)
       }
       printed <- TRUE
     }
@@ -253,7 +279,7 @@ throw_messages <- function(diagnostics) {
   # show the tip about plot2.silent once per session, without touching the random-number stream
   if (isTRUE(printed) && !isTRUE(plot2_session$silent_tip_shown) && Sys.getenv("IN_PKGDOWN") == "") {
     if (is.null(getOption("plot2.silent"))) {
-      message("NOTE: Use ", font_blue("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
+      message("NOTE: Use ", font_code("options(plot2.silent = TRUE)"), " to silence plot2 messages.")
     }
     plot2_session$silent_tip_shown <- TRUE
   }
@@ -348,7 +374,7 @@ add_direction <- function(df, direction, var_name, var_label, sep) {
       # replace e.g. `facet = where(is.character)` with `facet = c(var1, var2, var3)`
       # in labels for columns, but also in mapping
       new_var_name <- paste0("c(", paste0(selected_cols, collapse = ", "), ")")
-      plot2_message("Using ", font_blue(paste0(var_name, " = ", new_var_name)))
+      plot2_message("Using ", font_code(paste0(var_name, " = ", new_var_name)))
       if (var_name == "x") plot2_env$mapping_x <- new_var_name
       if (var_name == "category") plot2_env$mapping_category <- new_var_name
       if (var_name == "facet") plot2_env$mapping_facet <- new_var_name
@@ -933,7 +959,7 @@ fortify_df <- function(df, y = NULL) {
            call. = FALSE)
     }
     if (!inherits(df, "data.frame")) {
-      plot2_caution("Input class ", paste0("'", class(df), "'", collapse = "/"), " was transformed using `as.data.frame()`")
+      plot2_caution("Input class ", paste0("'", class(df), "'", collapse = "/"), " was transformed using ", font_fn("as.data.frame"))
     }
     if (inherits(df, "table")) {
       # if using `as.data.frame()` on a `table`, the resulting count column with be "Freq"

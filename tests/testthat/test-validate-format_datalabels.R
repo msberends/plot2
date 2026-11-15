@@ -33,7 +33,7 @@ test_that("y.percent: percentage labels, datalabels.round honoured, other format
   expect_identical(datalabels_of(plot2(d, x, y, y.percent = TRUE, datalabels.round = 2)), c("12.35%", "50.00%"))
   expect_identical(datalabels_of(plot2(d, x, y, y.percent = TRUE, datalabels.round = 0)), c("12%", "50%"))
   expect_plot2_message(plot2(fx_pct, x, y, y.percent = TRUE, datalabels.format = "%n (%p)"),
-                       "Ignoring datalabels.format = .* since y.percent = TRUE")
+                       "Ignoring `datalabels.format = .*` since `y.percent = TRUE`")
 })
 
 test_that("a function as datalabels.format", {

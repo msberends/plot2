@@ -20,7 +20,7 @@ validate_type <- function(type, df = NULL) {
     if (!has_x(df)) {
       # only numeric values, make it a boxplot
       type <- "geom_boxplot"
-      plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", type), "\"", collapse = NULL),
+      plot2_message("Using ", font_code("type = \"", gsub("geom_", "", type), "\""),
                     font_black(" since there is no X-axis"))
     } else if (has_x(df) && is.numeric(get_x(df))) {
       if (identical(get_x_name(df), get_y_name(df))) {
@@ -30,17 +30,17 @@ validate_type <- function(type, df = NULL) {
       } else {
         # make it points if x and y are both numeric
         type <- "geom_point"
-        plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", type), "\"", collapse = NULL), 
+        plot2_message("Using ", font_code("type = \"", gsub("geom_", "", type), "\""), 
                       font_black(" since both axes are numeric"))
       }
     } else {
       # check if y has multiple values across groups, then make it boxplot
       if (all(group_sizes(df) >= 3)) {
         type <- "geom_boxplot"
-        plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", type), "\"", collapse = NULL),
+        plot2_message("Using ", font_code("type = \"", gsub("geom_", "", type), "\""),
                       " since all groups in ",
-                      paste0(font_blue(unique(c(get_x_name(df), get_category_name(df), get_facet_name(df))),
-                                       collapse = NULL),
+                      paste0(font_var(unique(c(get_x_name(df), get_category_name(df), get_facet_name(df))),
+                                      collapse = NULL),
                              collapse = font_black(" and ")), 
                       " contain at least three values")
       } else {
@@ -51,11 +51,11 @@ validate_type <- function(type, df = NULL) {
             group_by(across(c(get_x_name(df), get_category_name(df)))) |>
             summarise(n = n())
           if (length(plot2_env$x_variable_names) > 1) {
-            plot2_message("To view the relation between multiple variables of ", font_blue("x"), ", a Sankey plot can be used (",
-                          font_blue("type = \"sankey\""), " or ", font_blue("type = \"s\""), ")")
+            plot2_message("To view the relation between multiple variables of ", font_arg("x"), ", a Sankey plot can be used (",
+                          font_code("type = \"sankey\""), " or ", font_code("type = \"s\""), ")")
             # } else if (all(count_nrs$n, na.rm = TRUE) == 1) {
-            #   plot2_message("To compare single values in two categories (", font_blue(get_category_name(df)), "), a dumbbell plot can be used (",
-            #                 font_blue("type = \"dumbbell\""), " or ", font_blue("type = \"d\""), ")")
+            #   plot2_message("To compare single values in two categories (", font_var(get_category_name(df)), "), a dumbbell plot can be used (",
+            #                 font_code("type = \"dumbbell\""), " or ", font_code("type = \"d\""), ")")
           }
         }
       }
@@ -64,7 +64,7 @@ validate_type <- function(type, df = NULL) {
     return("") # for quick validation
   } else {
     if (length(type) > 1) {
-      plot2_warning(font_blue("type"), " can only be of length 1")
+      plot2_warning(font_arg("type"), " can only be of length 1")
     }
     type <- trimws(tolower(type[1L]))
     type <- gsub(".*::", "", type) # for `type = "ggplot2::geom_col()"`
@@ -110,7 +110,7 @@ validate_type <- function(type, df = NULL) {
     candidates <- if (type == "geom_") character(0) else valid_geoms[startsWith(valid_geoms, type)]
     shortest <- candidates[which.min(nchar(candidates))]
     if (length(candidates) > 0 && all(startsWith(candidates, shortest))) {
-      plot2_message("Using ", font_blue("type = \"", gsub("geom_", "", shortest), "\"", collapse = NULL))
+      plot2_message("Using ", font_code("type = \"", gsub("geom_", "", shortest), "\""))
       type <- shortest
     } else {
       if (length(candidates) == 0 && type != "geom_") {
@@ -183,7 +183,7 @@ validate_data <- function(df,
   
   if (!has_y(df) && "n" %in% numeric_cols && mode(df$n) == "numeric") {
     # give preference to "n" for the Y-axis
-    plot2_message("Using ", font_blue("y = n"))
+    plot2_message("Using ", font_code("y = n"))
     df <- df |> 
       mutate(`_var_y` = df |> pull(n))
     set_plot2_env(y = "n")
@@ -198,10 +198,10 @@ validate_data <- function(df,
       # first check if there is also no X-axis
       if (!has_x(df)) {
         # make x first numeric column and y second numeric column
-        plot2_message("Using ", font_blue("x = ", numeric_cols[1L], collapse = NULL))
+        plot2_message("Using ", font_code("x = ", numeric_cols[1L]))
         if (!geom_is_continuous_x(type)) {
           # don't show when type for density geoms - y will not be used
-          plot2_message("Using ", font_blue("y = ", numeric_cols[2L], collapse = NULL))
+          plot2_message("Using ", font_code("y = ", numeric_cols[2L]))
         }
         df <- df |> 
           mutate(`_var_x` = df |> pull(numeric_cols[1L]),
@@ -210,7 +210,7 @@ validate_data <- function(df,
       } else {
         if (!geom_is_continuous_x(type)) {
           # don't show when type for density geoms - y will not be used
-          plot2_message("Using ", font_blue("y = ", numeric_cols[1L], collapse = NULL))
+          plot2_message("Using ", font_code("y = ", numeric_cols[1L]))
         }
         df <- df |> 
           mutate(`_var_y` = df |> pull(numeric_cols[1L]))
@@ -220,7 +220,7 @@ validate_data <- function(df,
       # only one numeric column
       if (geom_is_continuous_x(type)) {
         if (!has_x(df)) {
-          plot2_message("Using ", font_blue("x = ", numeric_cols, collapse = NULL))
+          plot2_message("Using ", font_code("x = ", numeric_cols))
           df <- df |> 
             mutate(`_var_x` = df |> pull(numeric_cols))
           set_plot2_env(x = numeric_cols)
@@ -230,8 +230,8 @@ validate_data <- function(df,
           mutate(`_var_y` = df |> pull(`_var_x`))
       } else if (!has_x(df) && type == "" && length(non_numeric_cols) == 0) {
         # has no x and no y, make it a histogram
-        plot2_message("Using ", font_blue("x = ", numeric_cols, collapse = NULL))
-        plot2_message("Assuming ", font_blue("type = \"histogram\""),
+        plot2_message("Using ", font_code("x = ", numeric_cols))
+        plot2_message("Assuming ", font_code("type = \"histogram\""),
                       " since the data has only one numeric variable and no other variables")
         type <- "geom_histogram"
         df <- df |> 
@@ -241,9 +241,9 @@ validate_data <- function(df,
       } else {
         if (has_x(df) && get_x_name(df) == numeric_cols) {
           if (type == "") {
-            plot2_message("Assuming ", font_blue("type = \"histogram\""),
-                          " since the ", font_blue("x"),
-                          " variable (", font_blue(get_x_name(df)), ") is the only numeric variable")
+            plot2_message("Assuming ", font_code("type = \"histogram\""),
+                          " since the ", font_arg("x"),
+                          " variable (", font_var(get_x_name(df)), ") is the only numeric variable")
             type <- "geom_histogram"
             df <- df |> 
               mutate(`_var_y` = df |> pull(`_var_x`))
@@ -252,7 +252,7 @@ validate_data <- function(df,
                  ") is the only numeric variable in the data set.\nDid you mean type = \"histogram\"?", call. = FALSE)
           }
         } else {
-          plot2_message("Using ", font_blue("y = ", numeric_cols, collapse = NULL))
+          plot2_message("Using ", font_code("y = ", numeric_cols))
           df <- df |> 
             mutate(`_var_y` = df |> pull(numeric_cols))
           set_plot2_env(y = numeric_cols)
@@ -266,7 +266,7 @@ validate_data <- function(df,
   if (has_y(df) &&
       (requires_numeric_coercion(get_y(df)) ||
        inherits(get_y(df), "mic"))) {
-    plot2_message(paste0("Coercing values of ", font_blue("y"),
+    plot2_message(paste0("Coercing values of ", font_arg("y"),
                          font_black(" from class "), font_blue(paste(class(get_y(df)), collapse = "/")),
                          font_black(" to class "), font_blue("double")))
     df <- df |> 
@@ -285,7 +285,7 @@ validate_data <- function(df,
     eligible_cols <- setdiff(eligible_cols, c(get_y_name(df), get_category_name(df), get_facet_name(df)))
     if (length(eligible_cols) > 0) {
       x_col <- eligible_cols[1L]
-      plot2_message("Using ", font_blue("x = ", x_col, collapse = NULL))
+      plot2_message("Using ", font_code("x = ", x_col))
       df <- df |> 
         mutate(`_var_x` = df |> pull(x_col))
       set_plot2_env(x = x_col)
@@ -308,7 +308,7 @@ validate_data <- function(df,
       cols <- cols[!cols %in% c("_var_facet", get_facet_name(df))]
     }
     if (length(cols) > 0) {
-      plot2_message("Using ", font_blue("category = ", cols[1L], collapse = NULL))
+      plot2_message("Using ", font_code("category = ", cols[1L]))
       df <- df |> 
         mutate(`_var_category` = df |> pull(cols[1L]))
       set_plot2_env(category = cols[1L])
@@ -316,7 +316,7 @@ validate_data <- function(df,
   }
   if (type == "geom_sf" && misses_category && !has_category(df) && !is.na(numeric_cols[1L])) {
     # try to take the first numeric column for 'sf' plots
-    plot2_message("Using ", font_blue("category = ", numeric_cols[1L], collapse = NULL))
+    plot2_message("Using ", font_code("category = ", numeric_cols[1L]))
     df <- df |> 
       mutate(`_var_category` = df |> pull(numeric_cols[1L]))
     set_plot2_env(category = numeric_cols[1L])
@@ -394,10 +394,10 @@ validate_data <- function(df,
       if (type == "geom_sf") {
         # take values from first character column in case of sf plots
         if (!is.na(character_cols[1L])) {
-          plot2_message("Using ", font_blue("datalabels = ", character_cols[1L], collapse = NULL))
+          plot2_message("Using ", font_code("datalabels = ", character_cols[1L]))
           df <- df |> mutate(`_var_datalabels` = df |> pull(character_cols[1L]))
         } else {
-          plot2_warning("No suitable column found for ", font_blue("datalabels = TRUE"))
+          plot2_warning("No suitable column found for ", font_code("datalabels = TRUE"))
           df <- df |> select(-`_var_datalabels`)
         }
       } else if (has_category(df) && type %in% c("geom_tile", "geom_raster", "geom_rect")) {
@@ -426,28 +426,28 @@ validate_data <- function(df,
     if (is.null(dots$x.character) &&
         guess_discrete &&
         looks_like_years(get_x(df))) {
-      plot2_message("Assuming ", font_blue("x.character = TRUE"),
-                    " since the ", font_blue("x"), " labels seem to be years (use ",
-                    font_blue("x.character = FALSE"), " to prevent this)")
+      plot2_message("Assuming ", font_code("x.character = TRUE"),
+                    " since the ", font_arg("x"), " labels seem to be years (use ",
+                    font_code("x.character = FALSE"), " to prevent this)")
       dots$x.character <- TRUE
     } else if (is.null(dots$x.character) &&
                guess_discrete &&
                looks_like_months(get_x(df))) {
-      plot2_message("Assuming ", font_blue("x.character = TRUE"),
-                    " since the ", font_blue("x"), " labels seem to be months (use ",
-                    font_blue("x.character = FALSE"), " to prevent this)")
+      plot2_message("Assuming ", font_code("x.character = TRUE"),
+                    " since the ", font_arg("x"), " labels seem to be months (use ",
+                    font_code("x.character = FALSE"), " to prevent this)")
       dots$x.character <- TRUE
     } else if (is.numeric(get_x(df)) &&
                !type %in% c("", "geom_blank") &&
                !geom_is_continuous(type)) {
-      plot2_message("Using ", font_blue("x.character = TRUE"),
-                    " for discrete plot type (", font_blue(type), ")",
-                    " since ", font_blue(get_x_name(df)), " is numeric")
+      plot2_message("Using ", font_code("x.character = TRUE"),
+                    " for discrete plot type (", font_code("type = \"", type, "\""), ")",
+                    " since ", font_var(get_x_name(df)), " is numeric")
       dots$x.character <- TRUE
     } else if (is.numeric(get_x(df)) &&
                !is.null(dots$x.sort)) {
-      plot2_message("Using ", font_blue("x.character = TRUE"),
-                    " since ", font_blue("x.sort"), " is set")
+      plot2_message("Using ", font_code("x.character = TRUE"),
+                    " since ", font_arg("x.sort"), " is set")
       dots$x.character <- TRUE
     }
   }
@@ -459,15 +459,15 @@ validate_data <- function(df,
   if (has_category(df) &&!isTRUE(dots$category.character)) {
     if (is.null(dots$category.character) &&
         looks_like_years(get_category(df))) {
-      plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                    " since ", font_blue("category"), " seems to be years (use ",
-                    font_blue("category.character = FALSE"), " to prevent this)")
+      plot2_message("Assuming ", font_code("category.character = TRUE"),
+                    " since ", font_arg("category"), " seems to be years (use ",
+                    font_code("category.character = FALSE"), " to prevent this)")
       dots$category.character <- TRUE
     } else if (is.null(dots$category.character) &&
                looks_like_months(get_category(df))) {
-      plot2_message("Assuming ", font_blue("category.character = TRUE"),
-                    " since ", font_blue("category"), " seems to be months (use ",
-                    font_blue("category.character = FALSE"), " to prevent this)")
+      plot2_message("Assuming ", font_code("category.character = TRUE"),
+                    " since ", font_arg("category"), " seems to be months (use ",
+                    font_code("category.character = FALSE"), " to prevent this)")
       dots$category.character <- TRUE
       # } else if (is.numeric(get_category(df)) &&
       #            is.null(dots$category.character) &&
@@ -478,9 +478,9 @@ validate_data <- function(df,
       #     type_prelim <- tryCatch(suppressMessages(validate_type("", df = df)), error = function(e) "geom_col")
       #   }
       #   if (!geom_is_continuous(type_prelim)) {
-      #     plot2_message("Assuming ", font_blue("category.character = TRUE"),
-      #                   " for discrete plot type (", font_blue(type_prelim), ")",
-      #                   " since ", font_blue(get_category_name(df)), " is numeric")
+      #     plot2_message("Assuming ", font_code("category.character = TRUE"),
+      #                   " for discrete plot type (", font_code("type = \"", type_prelim, "\""), ")",
+      #                   " since ", font_var(get_category_name(df)), " is numeric")
       #     dots$category.character <- TRUE
       #   }
     }
@@ -497,9 +497,9 @@ validate_data <- function(df,
     plot2_message("Removed ", inf_values,
                   " row", ifelse(inf_values > 1, "s", ""),
                   " with an infinite value of ",
-                  font_blue("y"), 
+                  font_arg("y"), 
                   ifelse(get_y_name(df) != "y",
-                         paste0(font_black(" ("), font_blue(get_y_name(df)), font_black(")")),
+                         paste0(font_black(" ("), font_var(get_y_name(df)), font_black(")")),
                          ""))
   }
   # replace int64 values
@@ -508,9 +508,9 @@ validate_data <- function(df,
       mutate(`_var_y` = as.integer(`_var_y`))
     df[, get_y_name(df)] <- df$`_var_y`
     plot2_message("Replaced integer64 values of ",
-                  font_blue("y"), 
+                  font_arg("y"), 
                   ifelse(get_y_name(df) != "y",
-                         paste0(font_black(" ("), font_blue(get_y_name(df)), font_black(")")),
+                         paste0(font_black(" ("), font_var(get_y_name(df)), font_black(")")),
                          ""),
                   " with regular integers")
   }
@@ -533,7 +533,7 @@ validate_data <- function(df,
     if (isTRUE(dots$na.rm)) {
       plot2_message("Removed ", length(rows_with_NA),
                     " row", ifelse(length(rows_with_NA) > 1, "s", ""),
-                    " since ", font_blue("na.rm = TRUE"))
+                    " since ", font_code("na.rm = TRUE"))
       df <- df[-rows_with_NA, , drop = FALSE]
     } else {
       # replace NAs
@@ -561,8 +561,8 @@ validate_data <- function(df,
         plot2_env$na_replaced_vars <- plot2_env$na_replaced_vars[plot2_env$na_replaced_vars %unlike% "^_var_"]
         plot2_message("Replacing ", font_magenta("NA"),
                       " in column", ifelse(length(plot2_env$na_replaced_vars) > 1, "s ", " "),
-                      paste(font_blue(plot2_env$na_replaced_vars, collapse = NULL), collapse = " and "),
-                      " using ", font_blue(paste0("na.replace = \"", dots$na.replace, "\"")))
+                      paste(font_var(plot2_env$na_replaced_vars, collapse = NULL), collapse = " and "),
+                      " using ", font_code(paste0("na.replace = \"", dots$na.replace, "\"")))
       }
     }
   }
@@ -580,8 +580,8 @@ validate_data <- function(df,
       has_x(df) &&
       inherits(get_x(df), c("Date", "POSIXt")) &&
       all(format(get_x(df), "%Y") == get_category(df), na.rm = TRUE)) {
-    plot2_message("Assuming ", font_blue("x.date_remove_years = TRUE"),
-                  " since ", font_blue("category"), " contains the years of ", font_blue(get_x_name(df)))
+    plot2_message("Assuming ", font_code("x.date_remove_years = TRUE"),
+                  " since ", font_arg("category"), " contains the years of ", font_var(get_x_name(df)))
     dots$x.date_remove_years <- TRUE
   }
   if (isTRUE(dots$x.date_remove_years) && has_x(df) && inherits(get_x(df), c("Date", "POSIXt"))) {
@@ -684,14 +684,14 @@ validate_data <- function(df,
     df[, y_name] <- df$`_var_y`
     
     if (!dots$summarise_fn_name %in% c("summarise_function", "function(x) x")) {
-      plot2_caution("Applying ", font_blue(paste0("y = ", dots$summarise_fn_name, "(", get_y_name(df), ")")),
-                    " since ", font_blue(paste0("summarise_function = ", dots$summarise_fn_name)),
+      plot2_caution("Applying ", font_code(paste0("y = ", dots$summarise_fn_name, "(", get_y_name(df), ")")),
+                    " since ", font_code(paste0("summarise_function = ", dots$summarise_fn_name)),
                     ifelse(isTRUE(dots$misses_summarise_function), " is the default (use ", " was set (use "),
-                    font_blue("summarise_function = FALSE"), " to plot all values).\n",
-                    "  When using a transformation function on ", font_blue("x"), 
-                    ifelse(has_category(df), paste0(" or ", font_blue("category")), ""),
-                    ifelse(has_facet(df), paste0(" or ", font_blue("facet")), ""),
-                    ", also use a summarising function on ", font_blue("y"), ".")
+                    font_code("summarise_function = FALSE"), " to plot all values).\n",
+                    "  When using a transformation function on ", font_arg("x"), 
+                    ifelse(has_category(df), paste0(" or ", font_arg("category")), ""),
+                    ifelse(has_facet(df), paste0(" or ", font_arg("facet")), ""),
+                    ", also use a summarising function on ", font_arg("y"), ".")
     }
   }
   
@@ -758,7 +758,7 @@ validate_x_scale <- function(df,
       x.expand <- 0.5
     } else {
       if (!inherits(values, c("Date", "POSIXt"))) {
-        plot2_message("Assuming ", font_blue("x.expand = 0"), " since ", font_blue("x.limits"), " is set")
+        plot2_message("Assuming ", font_code("x.expand = 0"), " since ", font_arg("x.limits"), " is set")
         x.expand <- 0
         if (is.numeric(values) && !is.factor(values)) {
           # also apply it, as announced (the continuous scale only uses x.expand when set)
@@ -782,15 +782,15 @@ validate_x_scale <- function(df,
     if (!any(is.infinite(x_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(x_maxima$max) / mean(x_maxima$max)
       if (isTRUE(coeff_of_variation < 0.25)) {
-        plot2_message("Assuming ", font_blue("facet.fixed_x = TRUE"), 
+        plot2_message("Assuming ", font_code("facet.fixed_x = TRUE"), 
                       " since the ", digit_to_text(nrow(x_maxima)), " ",
-                      font_blue("x"), " scales differ by less than 25%")
+                      font_arg("x"), " scales differ by less than 25%")
         facet.fixed_x <- TRUE
       } else if (isTRUE(coeff_of_variation >= 0.25)) {
         # report the data-dependent choice, so that readers know panels are not comparable (#64)
-        plot2_message("Using free ", font_blue("x"), " scales per facet since the ",
-                      digit_to_text(nrow(x_maxima)), " ", font_blue("x"),
-                      " scales differ by 25% or more (use ", font_blue("facet.fixed_x = TRUE"),
+        plot2_message("Using free ", font_arg("x"), " scales per facet since the ",
+                      digit_to_text(nrow(x_maxima)), " ", font_arg("x"),
+                      " scales differ by 25% or more (use ", font_code("facet.fixed_x = TRUE"),
                       " for the same scale in all facets)")
       }
     }
@@ -802,7 +802,7 @@ validate_x_scale <- function(df,
     x.limits <- as.character(x.limits)
     not_in_x <- setdiff(x.limits, as.character(values))
     if (length(not_in_x) > 0) {
-      plot2_warning("Value", ifelse(length(not_in_x) > 1, "s", ""), " in ", font_blue("x.limits"), " not found in ", font_blue("x"), ": ",
+      plot2_warning("Value", ifelse(length(not_in_x) > 1, "s", ""), " in ", font_arg("x.limits"), " not found in ", font_arg("x"), ": ",
                     paste0(not_in_x, collapse = ", "))
     }
   } else if (!is.null(x.limits)) {
@@ -810,7 +810,7 @@ validate_x_scale <- function(df,
       x.limits <- as.integer(x.limits)
     }
     if (!any(class(x.limits) %in% class(values))) {
-      plot2_warning("Values set in ", font_blue("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_blue("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
+      plot2_warning("Values set in ", font_arg("x.limits"), " are of class ", font_blue(paste0(class(x.limits), collapse = "/")), ", while the values on ", font_arg("x"), " are of class ", font_blue(paste0(class(values), collapse = "/")))
     }
     if (length(x.limits) != 2) {
       # a single value used to become a zero-width axis (#142)
@@ -847,12 +847,12 @@ validate_x_scale <- function(df,
     auto_breaks_labels <- determine_date_breaks_labels(values)
     if (is.null(x.date_breaks)) {
       x.date_breaks <- auto_breaks_labels$breaks
-      plot2_message("Using ", font_blue("x.date_breaks = \"", x.date_breaks, "\"", collapse = ""),
+      plot2_message("Using ", font_code("x.date_breaks = \"", x.date_breaks, "\""),
                     " based on data")
     }
     if (is.null(x.date_labels)) {
       x.date_labels <- auto_breaks_labels$labels
-      plot2_message("Using ", font_blue("x.date_labels = \"", x.date_labels, "\"", collapse = ""),
+      plot2_message("Using ", font_code("x.date_labels = \"", x.date_labels, "\""),
                     " based on data")
     }
   }
@@ -1007,7 +1007,7 @@ validate_y_scale <- function(df,
       # set default value to 0.25
       y.expand <- 0.25
     } else {
-      plot2_message("Assuming ", font_blue("y.expand = 0"), " since ", font_blue("y.limits"), " is set")
+      plot2_message("Assuming ", font_code("y.expand = 0"), " since ", font_arg("y.limits"), " is set")
       y.expand <- 0
     }
   }
@@ -1034,16 +1034,16 @@ validate_y_scale <- function(df,
     if (!any(is.infinite(y_maxima$max), na.rm = TRUE)) {   
       coeff_of_variation <- stats::sd(y_maxima$max) / mean(y_maxima$max)
       if (isTRUE(coeff_of_variation < 0.25)) {
-        plot2_message("Assuming ", font_blue("facet.fixed_y = TRUE"), 
+        plot2_message("Assuming ", font_code("facet.fixed_y = TRUE"), 
                       " since the ", digit_to_text(nrow(y_maxima)), " ",
-                      font_blue("y"), " scales differ by less than 25%")
+                      font_arg("y"), " scales differ by less than 25%")
         facet.fixed_y <- TRUE
         plot2_env$facet.fixed_y <- TRUE
       } else if (isTRUE(coeff_of_variation >= 0.25)) {
         # report the data-dependent choice, so that readers know panels are not comparable (#64)
-        plot2_message("Using free ", font_blue("y"), " scales per facet since the ",
-                      digit_to_text(nrow(y_maxima)), " ", font_blue("y"),
-                      " scales differ by 25% or more (use ", font_blue("facet.fixed_y = TRUE"),
+        plot2_message("Using free ", font_arg("y"), " scales per facet since the ",
+                      digit_to_text(nrow(y_maxima)), " ", font_arg("y"),
+                      " scales differ by 25% or more (use ", font_code("facet.fixed_y = TRUE"),
                       " for the same scale in all facets)")
       }
     }
@@ -1060,8 +1060,8 @@ validate_y_scale <- function(df,
     }
     if (transform_name(y.transform) != "identity") {
       if (!is.null(y.breaks)) {
-        plot2_warning("Ignoring ", font_blue("y.breaks"), " since ",
-                      font_blue(paste0("y.transform = \"", y.transform, "\"")))
+        plot2_warning("Ignoring ", font_arg("y.breaks"), " since ",
+                      font_code(paste0("y.transform = \"", y.transform, "\"")))
       }
       return(waiver)
     } else if (!is.null(y.breaks)) {
@@ -1102,7 +1102,7 @@ validate_y_scale <- function(df,
       }
       if (isTRUE(misses_y.percent_break) && as.integer(labels_n) > 10) {
         y.percent_break <- round((max(y.limits, na.rm = TRUE) - min(y.limits, na.rm = TRUE)) / 10, 2)
-        plot2_message("Using ", font_blue("y.percent_break =", y.percent_break),
+        plot2_message("Using ", font_code("y.percent_break = ", y.percent_break),
                       " (", y.percent_break * 100, "%) to keep a maximum of ~10 labels")
       }
       # an explicit y.percent_break is kept as given (#106)
@@ -1111,8 +1111,8 @@ validate_y_scale <- function(df,
         y.percent_break <- max(y.limits, na.rm = TRUE) / 6.5
         allowed <- c(1e6 / 10 ^ c(1:18), 5e6 / 10 ^ c(1:18))
         y.percent_break <- allowed[which.min(abs(allowed - y.percent_break))]
-        plot2_message("Using ", font_blue("y.percent_break =", format(y.percent_break, scientific = FALSE)), 
-                      " since the original setting (", font_blue(y.percent_break.bak), ")",
+        plot2_message("Using ", font_code("y.percent_break = ", format(y.percent_break, scientific = FALSE)), 
+                      " since the original setting (", font_code(y.percent_break.bak), ")",
                       " would yield too few labels")
       }
       function(x, ...) {
@@ -1174,7 +1174,7 @@ validate_y_scale <- function(df,
         non_unique <- !is_unique(digits)
         if (isTRUE(non_unique) || (isTRUE(is_scientific) && is.null(y.scientific))) {
           if (isTRUE(is_scientific)) {
-            plot2_message("Assuming ", font_blue("y.scientific = TRUE"))
+            plot2_message("Assuming ", font_code("y.scientific = TRUE"))
           }
           # scientific notation or non-unique labels
           format2_scientific(x, decimal.mark = dec, big.mark = big)
@@ -1213,7 +1213,7 @@ validate_y_scale <- function(df,
         c(min_value, max(max_y$maximum))
       } else {
         if (type == "geom_histogram") {
-          plot2_warning("Maximum limit of ", font_blue("y"), " cannot be determined well in histograms when ", font_blue("facet.fixed_y = TRUE"))
+          plot2_warning("Maximum limit of ", font_arg("y"), " cannot be determined well in histograms when ", font_code("facet.fixed_y = TRUE"))
         }
         # otherwise, return max per y
         c(min_value, max(values, na.rm = TRUE))
@@ -1386,7 +1386,7 @@ validate_category_scale <- function(values,
     } else if (is_date(values)) {
       if (is.null(category.date_labels)) {
         lbls <- determine_date_breaks_labels(values)$labels
-        plot2_message("Assuming ", font_blue("category.date_labels = \"", lbls, "\"", collapse = ""))
+        plot2_message("Assuming ", font_code("category.date_labels = \"", lbls, "\""))
       } else {
         lbls <- category.date_labels
       }
@@ -1404,13 +1404,13 @@ validate_category_scale <- function(values,
   breaks_fn <- function(values, category.breaks, category.percent, category.transform, category.date_breaks, waiver) {
     if (transform_name(category.transform) != "identity") {
       if (!is.null(category.breaks)) {
-        plot2_warning("Ignoring ", font_blue("category.breaks"), " since ",
-                      font_blue(paste0("category.transform = \"", category.transform, "\"")))
+        plot2_warning("Ignoring ", font_arg("category.breaks"), " since ",
+                      font_code(paste0("category.transform = \"", category.transform, "\"")))
       }
       return(waiver)
     } else if (!is.null(category.breaks)) {
       if (is_date(values) && is.null(category.date_breaks)) {
-        plot2_warning("Setting ", font_blue("category.breaks"), " is not useful for dates. Did you mean ", font_blue("category.date_breaks"), "?")
+        plot2_warning("Setting ", font_arg("category.breaks"), " is not useful for dates. Did you mean ", font_arg("category.date_breaks"), "?")
       }
       category.breaks
     } else if (isTRUE(category.percent)) {
@@ -1426,7 +1426,7 @@ validate_category_scale <- function(values,
     } else if (is_date(values)) {
       if (is.null(category.date_breaks)) {
         breaks <- determine_date_breaks_labels(values)$breaks
-        plot2_message("Assuming ", font_blue("category.date_breaks = \"", breaks, "\"", collapse = ""))
+        plot2_message("Assuming ", font_code("category.date_breaks = \"", breaks, "\""))
       } else {
         breaks <- category.date_breaks
       }
@@ -1455,8 +1455,8 @@ validate_category_scale <- function(values,
   limits_fn <- function(values, category.limits, category.percent, category.transform, category.date_breaks, waiver) {
     if (isTRUE(transform_name(category.transform) %in% c("log", "log2", "log10", "log-10", "log-2")) && isTRUE(0 %in% category.limits)) {
       # in certain transformations, such as log, 0 is not allowed
-      plot2_warning("Ignoring ", font_blue("category.limits"), " since it contains 0, and ",
-                    font_blue(paste0("category.transform = \"", category.transform, "\"")))
+      plot2_warning("Ignoring ", font_arg("category.limits"), " since it contains 0, and ",
+                    font_code(paste0("category.transform = \"", category.transform, "\"")))
       c(NA_real_, NA_real_)
     } else if (!is.null(category.limits)) {
       if (!is.function(category.limits) && length(category.limits) != 2) {
@@ -1552,8 +1552,8 @@ validate_category_scale <- function(values,
     } else {
       # 1 colour, start with white
       if (!identical(colour_fill, "ggplot2") && !is.null(colour_fill)) {
-        plot2_message("Adding white to the ", font_blue("category"),
-                      " scale - set two colours to ", font_blue("colour_fill"),
+        plot2_message("Adding white to the ", font_arg("category"),
+                      " scale - set two colours to ", font_arg("colour_fill"),
                       " to prevent this.")
       }
       do.call(scale_colour_gradient,
@@ -1587,11 +1587,11 @@ validate_category_scale <- function(values,
         rng <- args$limits
       }
       mid_point <- sum(rng) / 2
-      plot2_message("Using ", font_blue("category.midpoint =", round(mid_point, 2)),
+      plot2_message("Using ", font_code("category.midpoint = ", round(mid_point, 2)),
                     ifelse(isTRUE(category.percent),
                            paste0(" (", format2(as_percentage(mid_point)), ", "),
                            " ("),
-                    "the current ", font_blue("category"), " scale centre)")
+                    "the current ", font_arg("category"), " scale centre)")
     }
     do.call(scale_colour_gradient2,
             args = c(list(low = cols_category[1],
@@ -1760,7 +1760,7 @@ generate_geom <- function(type,
       } else {
         binwidth <- round(binwidth, 1)
       }
-      plot2_message("Using ", font_blue("binwidth =", format(binwidth, scientific = FALSE)), " based on data")
+      plot2_message("Using ", font_code("binwidth = ", format(binwidth, scientific = FALSE)), " based on data")
     }
     do.call(geom_fn,
             args = set_arguments(list(linetype = linetype,
@@ -1805,7 +1805,7 @@ generate_geom <- function(type,
     
   } else {
     # try to put some arguments into the requested geom
-    plot2_caution(font_blue("type = \"", type, "\"", collapse = ""), " is currently only loosely supported")
+    plot2_caution(font_code("type = \"", type, "\""), " is currently only loosely supported")
     # pass only what this geom accepts as a parameter or aesthetic (#72)
     probe <- tryCatch(geom_fn(), error = function(e) NULL)
     accepted <- if (inherits(probe, "LayerInstance")) {
@@ -1914,7 +1914,7 @@ validate_colour <- function(df,
     # fewer colours than categories: recycle them, with a warning
     recycle_colours <- function(cols, n, what, quiet = FALSE) {
       if (length(cols) > 1 && length(cols) < n && is.null(names(cols))) {
-        if (!isTRUE(quiet)) plot2_warning("Only ", length(cols), " values given in ", font_blue(what), " for ", n,
+        if (!isTRUE(quiet)) plot2_warning("Only ", length(cols), " values given in ", font_arg(what), " for ", n,
                       " categories, so they were recycled")
         cols <- structure(rep_len(as.character(cols), n), class = class(cols))
       }
@@ -2028,7 +2028,7 @@ validate_markdown <- function(markdown,
            tryCatch(as.character(df_titles),  error = function(e) ""))
   out <- any(txt %like% "(\\^|[_*].+[_*])", na.rm = TRUE)
   if (isTRUE(out)) {
-    plot2_message("Assuming ", font_blue("markdown = TRUE"))
+    plot2_message("Assuming ", font_code("markdown = TRUE"))
   }
   out
 }
@@ -2109,7 +2109,7 @@ validate_title <- function(x, markdown, df = NULL, max_length = NULL) {
     if (is.expression(out)) {
       x_deparsed <- trimws(deparse(x_expr))
       x_deparsed <- x_deparsed[!x_deparsed %in% c("{", "}")]
-      plot2_warning("Multiple lines in ", font_blue(x_deparsed), 
+      plot2_warning("Multiple lines in ", font_code(x_deparsed), 
                     " cannot be set since it is an expression (does it contain markdown characters?)")
     } else {
       out <- gsub("<br>", "\n", out, fixed = TRUE)
@@ -2189,7 +2189,7 @@ validate_theme_build <- function(theme,
       theme <- theme()
     }
     if (!inherits(theme, "theme")) {
-      plot2_warning("No valid ggplot2 theme, using ", font_blue("theme = ggplot2::theme_grey()"))
+      plot2_warning("No valid ggplot2 theme, using ", font_code("theme = ggplot2::theme_grey()"))
       theme <- NULL
     }
   }
@@ -2359,8 +2359,8 @@ validate_facet <- function(df,
   
   if (is.null(facet.repeat_labels_y)) {
     if (isTRUE(facet.fixed_y)) {
-      plot2_message("Assuming ", font_blue("facet.repeat_labels_y = FALSE"),
-                    " since ", font_blue("y"), " has fixed scales")
+      plot2_message("Assuming ", font_code("facet.repeat_labels_y = FALSE"),
+                    " since ", font_arg("y"), " has fixed scales")
       facet.repeat_labels_y <- FALSE
     } else {
       facet.repeat_labels_y <- TRUE
@@ -2372,8 +2372,8 @@ validate_facet <- function(df,
       !all(levels(facet_values) %in% facet_values) && has_x(df) && !is.numeric(get_x(df)) &&
       !type %in% c("geom_sf", "geom_spider")) {
     # a free discrete scale on an empty panel makes ggplot2 warn when drawing (#151)
-    plot2_message("Using a shared x scale (", font_blue("facet.repeat_labels_x = FALSE"), ") since ",
-                  font_blue("facet.drop = FALSE"), " leaves empty panels")
+    plot2_message("Using a shared x scale (", font_code("facet.repeat_labels_x = FALSE"), ") since ",
+                  font_code("facet.drop = FALSE"), " leaves empty panels")
     facet.repeat_labels_x <- FALSE
   }
   
@@ -2418,8 +2418,8 @@ validate_facet <- function(df,
                         scales = scales,
                         switch = switch))
     } else {
-      plot2_warning("When using ", font_blue("facet.relative = TRUE"), ", the number of columns cannot be > 1 when ",
-                    font_blue("facet.nrow"), " is larger than 1")
+      plot2_warning("When using ", font_code("facet.relative = TRUE"), ", the number of columns cannot be > 1 when ",
+                    font_arg("facet.nrow"), " is larger than 1")
       return(facet_grid(rows = facet_var,
                         space = scales,
                         drop = facet.drop,
@@ -2468,7 +2468,7 @@ generate_datalabels <- function(p,
   
   if (isTRUE(misses_datalabels) && nrow(df) > 25) {
     plot2_caution("Omitting printing of ", nrow(df), " datalabels - use ",
-                  font_blue("datalabels = TRUE"), " to force printing")
+                  font_code("datalabels = TRUE"), " to force printing")
     return(p)
   }
   
@@ -2553,7 +2553,7 @@ generate_datalabels <- function(p,
     st_point_on_surface <- getExportedValue(name = "st_point_on_surface", ns = asNamespace("sf"))
     st_zm <- getExportedValue(name = "st_zm", ns = asNamespace("sf"))
     if (is.null(datalabels.centroid)) {
-      plot2_message("Assuming ", font_blue("datalabels.centroid = TRUE"), ". Set to FALSE for a point-on-surface placing of datalabels.")
+      plot2_message("Assuming ", font_code("datalabels.centroid = TRUE"), ". Set to FALSE for a point-on-surface placing of datalabels.")
       datalabels.centroid <- TRUE
     }
     if (isTRUE(datalabels.centroid)) {
@@ -2906,8 +2906,8 @@ sort_data_vertical <- function(values,
                   levels = levels(fct_inorder(as.character(original_values))))
   } else if (sort_method %in% c("freq-asc", "infreq-asc")) {
     if (n_distinct(values) < length(values)) {
-      plot2_message("Applying ", font_blue(paste0(argument, " = \"", sort_method, "\"")), " using ",
-                    font_blue(paste0("summarise_function = ", summarise_fn_name)))
+      plot2_message("Applying ", font_code(paste0(argument, " = \"", sort_method, "\"")), " using ",
+                    font_code(paste0("summarise_function = ", summarise_fn_name)))
     }
     out <- fct_reorder(.f = as.character(values),
                        .x = datapoints,
@@ -2915,8 +2915,8 @@ sort_data_vertical <- function(values,
                        .desc = FALSE)
   } else if (sort_method %in% c("freq-desc", "infreq-desc")) {
     if (n_distinct(values) < length(values)) {
-      plot2_message("Applying ", font_blue(paste0(argument, " = \"", sort_method, "\"")), " using ",
-                    font_blue(paste0("summarise_function = ", summarise_fn_name)))
+      plot2_message("Applying ", font_code(paste0(argument, " = \"", sort_method, "\"")), " using ",
+                    font_code(paste0("summarise_function = ", summarise_fn_name)))
     }
     out <- fct_reorder(.f = as.character(values),
                        .x = datapoints,
@@ -2961,7 +2961,7 @@ set_max_items <- function(df,
       return(values)
     }
     if (!is.factor(values)) {
-      plot2_warning("Setting ", font_blue("*.max_items"), " only works when values are a character or (sorted) factor, not ", font_magenta(paste0(class(values), collapse = "/")))
+      plot2_warning("Setting ", font_arg("*.max_items"), " only works when values are a character or (sorted) factor, not ", font_magenta(paste0(class(values), collapse = "/")))
       return(values)
     }
     if (n_max < length(levels(values))) {
@@ -3096,11 +3096,11 @@ format_datalabels <- function(datalabels,
                                        percent = TRUE))
       if (datalabels.round == eval(formals(plot2)$datalabels.round) && n_distinct(datalabels) > n_distinct(datalabels_out)) {
         # formals() get the default value, so that's why it's in this if()
-        plot2_message("Use ", font_blue("datalabels.round"), " to edit the rounding of datalabels")
+        plot2_message("Use ", font_arg("datalabels.round"), " to edit the rounding of datalabels")
       }
       if (datalabels.format != "%n") {
-        plot2_message("Ignoring ", font_blue("datalabels.format = \"", datalabels.format, "\"", collapse = NULL),
-                      " since ",  font_blue("y.percent = TRUE"))
+        plot2_message("Ignoring ", font_code("datalabels.format = \"", datalabels.format, "\""),
+                      " since ",  font_code("y.percent = TRUE"))
       }
     }
   } else if (!is.null(datalabels.format) &&

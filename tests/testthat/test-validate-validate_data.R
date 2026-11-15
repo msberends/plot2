@@ -18,13 +18,13 @@ skip_on_cran()
 # validate_data() (#157)
 
 test_that("without y, a column named n is used as y, with a message", {
-  p <- expect_plot2_message(plot2(fx_counts), "Using y = n", type = "info")
+  p <- expect_plot2_message(plot2(fx_counts), "Using `y = n`", type = "info")
   expect_labels(p, x = "group", y = "n")
   expect_identical(layer_df(p, "bar")$y, c(12, 7, 30, 1)[order(c("a", "b", "c", "d"))])
 })
 
 test_that("without x and y, two numeric columns give x = first and y = second", {
-  p <- expect_plot2_message(plot2(fx_xy), "Using type = \"point\"", type = "info")
+  p <- expect_plot2_message(plot2(fx_xy), "Using `type = \"point\"`", type = "info")
   expect_geoms(p, "point", exact = TRUE)
   expect_labels(p, x = "x", y = "y")
 })
@@ -41,7 +41,7 @@ test_that("x as the only numeric column with another type suggests a histogram",
 
 test_that("a difftime y is coerced to double, with a message", {
   d <- data.frame(g = c("a", "b"), d = as.difftime(c(1, 2), units = "hours"))
-  p <- expect_plot2_message(plot2(d), "Coercing values of y from class difftime", type = "info")
+  p <- expect_plot2_message(plot2(d), "Coercing values of `y` from class difftime", type = "info")
   expect_identical(layer_df(p, "bar")$y, c(1, 2))
 })
 
@@ -52,13 +52,13 @@ test_that("a POSIXct column is never chosen as automatic y", {
 })
 
 test_that("a missing x becomes the first column that is not y, with a message", {
-  p <- expect_plot2_message(plot2(fx_cat_unique, y = y), "Using x = x", type = "info")
+  p <- expect_plot2_message(plot2(fx_cat_unique, y = y), "Using `x = x`", type = "info")
   expect_labels(p, x = "x", y = "y")
 })
 
 test_that("missing x and category: the first character columns become x and category", {
   d <- data.frame(a = c("p", "q", "p", "q"), b = c("u", "u", "v", "v"), v = 1:4)
-  p <- expect_plot2_message(plot2(d), "Using category = b", type = "info")
+  p <- expect_plot2_message(plot2(d), "Using `category = b`", type = "info")
   expect_labels(p, x = "a", y = "v")
   expect_identical(rlang::as_label(plot_of(p)$mapping$fill), "b")
 })
@@ -121,7 +121,7 @@ test_that("an integer64 y is converted", {
 
 test_that("na.rm = TRUE removes rows with NA in x, category or facet and counts them correctly", {
   p <- expect_plot2_message(plot2(fx_na, x, y, category, facet, na.rm = TRUE),
-                            "^Removed 3 rows since na.rm = TRUE$", type = "info")
+                            "^Removed 3 rows since `na.rm = TRUE`$", type = "info")
   expect_false(anyNA(plot_data(p)$x))
 })
 

@@ -30,7 +30,7 @@ test_that("by default, markdown in a title becomes an expression", {
 
 test_that("markdown = NULL with a superscript in the y name: guessed TRUE, with a message", {
   df <- data.frame(x = 1:3, `y^2` = 1:3, check.names = FALSE)
-  expect_plot2_message(plot2(df, x, `y^2`, markdown = NULL), "Assuming markdown = TRUE")
+  expect_plot2_message(plot2(df, x, `y^2`, markdown = NULL), "Assuming `markdown = TRUE`")
   expect_identical(label_text(plot2(df, x, `y^2`, markdown = NULL), "y"), "paste(\"y\"^\"2\")")
 })
 

@@ -529,7 +529,7 @@ plot2_exec <- function(.data, ...) {
     plot2_message(ifelse(length(dots_geom) == 1,
                          "This additional argument was given to the geom: ",
                          "These additional arguments were given to the geom: "),
-                  paste0(font_blue(names(dots_geom), collapse = NULL), collapse = font_black(", ")))
+                  paste0(font_arg(names(dots_geom), collapse = NULL), collapse = font_black(", ")))
   }
   
   # automatic defaults (#106) ----
@@ -626,7 +626,7 @@ plot2_exec <- function(.data, ...) {
   if (!is.null(type)) {
     if (length(type) > 1) {
       # warn here, before the type is shortened (#149)
-      plot2_warning(font_blue("type"), " can only be of length 1, using ", font_blue("type = \"", type[1L], "\"", collapse = NULL))
+      plot2_warning(font_arg("type"), " can only be of length 1, using ", font_code("type = \"", type[1L], "\""))
     }
     type <- tolower(type[1L])
     type_backup <- type
@@ -701,9 +701,9 @@ plot2_exec <- function(.data, ...) {
     has_numeric <- any(vapply(FUN.VALUE = logical(1), .data,
                               function(col) mode(col) == "numeric" && !inherits(col, c("Date", "POSIXt", "factor"))))
     if (type_backup %in% c("barpercent", "sankey") || !has_numeric) {
-      plot2_message("Using ", font_blue("y = n()"), " to count rows, since ",
+      plot2_message("Using ", font_code("y = n()"), " to count rows, since ",
                     ifelse(type_backup %in% c("barpercent", "sankey"),
-                           paste0(font_blue(paste0("type = \"", type_backup, "\"")), " shows frequencies"),
+                           paste0(font_code(paste0("type = \"", type_backup, "\"")), " shows frequencies"),
                            "the data have no numeric column"))
       y <- rlang::quo(n())
       dots$`_label.y` <- "n()"
@@ -781,7 +781,7 @@ plot2_exec <- function(.data, ...) {
           summarise_function <<- function(x) x
           dots$`_summarise_fn_name` <<- "function(x) x"
           misses_summarise_function <<- FALSE
-          # plot2_message("Assuming ", font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)))
+          # plot2_message("Assuming ", font_code(paste0("summarise_function = ", dots$`_summarise_fn_name`)))
         }
         
         new_df <- .data |>
@@ -798,15 +798,15 @@ plot2_exec <- function(.data, ...) {
         
         if (!dots$`_summarise_fn_name` %in% c("NULL", "function(x) x")) {
           plot2_message("Summarising values using ",
-                        font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)),
+                        font_code(paste0("summarise_function = ", dots$`_summarise_fn_name`)),
                         ifelse(isTRUE(misses_summarise_function),
-                               paste0(" (use ", font_blue("summarise_function = FALSE"), font_black(" to prevent this)")),
+                               paste0(" (use ", font_code("summarise_function = FALSE"), font_black(" to prevent this)")),
                                ""))
         }
         
         # category values are data, not patterns (#29)
         if (!any(vapply(unique(as.character(new_df$category)), grepl, logical(1), x = plot2_env$mapping_y, fixed = TRUE))) {
-          plot2_message("Using ", font_blue("y = c(", paste(unique(new_df$category), collapse = ", "), ")", collapse = NULL))
+          plot2_message("Using ", font_code("y = c(", paste(unique(new_df$category), collapse = ", "), ")"))
         }
         plot2_env$mapping_y <- "y"
         plot2_env$mapping_category <- "category"
@@ -828,7 +828,7 @@ plot2_exec <- function(.data, ...) {
         y_precalc <- y_precalc$val # will be NULL if y is missing
         
         if (is.null(y_precalc) && identical(type, "upset")) {
-          plot2_message("Using ", font_blue(paste0("y = 1")))
+          plot2_message("Using ", font_code(paste0("y = 1")))
           y_precalc <- rep(1, NROW(.data))
           if (isTRUE(y.title)) {
             y.title <<- "Intersection size"
@@ -855,7 +855,7 @@ plot2_exec <- function(.data, ...) {
           # so calculate it over all groups that are available and add a category
           # this will support e.g. `data |> plot2(y = range(age))`
           if (is.null(category.labels)) {
-            plot2_caution("Categories were auto-generated since ", font_blue("y"), " is a vector - use ", font_blue("category.labels"), " to manually name them.")
+            plot2_caution("Categories were auto-generated since ", font_arg("y"), " is a vector - use ", font_arg("category.labels"), " to manually name them.")
           }
           plot2_env$mapping_category <- "category"
           # take the first call or function from what was given to y
@@ -946,7 +946,7 @@ plot2_exec <- function(.data, ...) {
       as.data.frame()
     
     if (isTRUE(misses_summarise_function)) {
-      plot2_message("Using ", font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)), " for UpSet plot")
+      plot2_message("Using ", font_code(paste0("summarise_function = ", dots$`_summarise_fn_name`)), " for UpSet plot")
     }
     df_count <- df_original |>
       group_by(across(any_of(vars_x))) |>
@@ -1146,7 +1146,7 @@ plot2_exec <- function(.data, ...) {
   # validate type ----
   type <- validate_type(type = type, df = df) # this will automatically determine the type if is.null(type)
   if (geom_is_line_or_area(type) && type_backup != "linedot" && !is.null(size)) {
-    plot2_warning("'size' has been replaced with 'linewidth' for line/area types, assuming ", font_blue("linewidth = ", size, collapse = NULL))
+    plot2_warning(font_arg("size"), " has been replaced with ", font_arg("linewidth"), " for line/area types, assuming ", font_code("linewidth = ", size))
     linewidth <- size
   }
   y_secondary_points <- FALSE
@@ -1167,8 +1167,8 @@ plot2_exec <- function(.data, ...) {
   if (any(group_sizes(df) > 1) && !geom_is_continuous(type) && type_backup != "sankey" &&
       !identical(dots$`_summarise_fn_name`, "function(x) x")) {
     if (identical(type_backup, "barpercent")) {
-      plot2_message("Summarising values for ", font_blue("type = \"barpercent\""), " using ",
-                    font_blue(paste0("summarise_function = ", dots$`_summarise_fn_name`)))
+      plot2_message("Summarising values for ", font_code("type = \"barpercent\""), " using ",
+                    font_code(paste0("summarise_function = ", dots$`_summarise_fn_name`)))
     }
     df <- summarise_data(df = df,
                          summarise_function = summarise_function,
@@ -1204,7 +1204,7 @@ plot2_exec <- function(.data, ...) {
     df <- df |> select(-`_var_datalabels`)
   }
   if (!isTRUE(misses_y) && geom_is_continuous_x(type)) {
-    plot2_message("Ignoring ", font_blue("y"), " for plot type ", font_blue(gsub("geom_", "", type)))
+    plot2_message("Ignoring ", font_arg("y"), " for ", font_code("type = \"", gsub("geom_", "", type), "\""))
     df$`_var_y` <- df$`_var_x`
   }
   
@@ -1231,7 +1231,7 @@ plot2_exec <- function(.data, ...) {
   
   # keep only one of `stacked` and `stacked_fill`
   if (isTRUE(stacked) && isTRUE(stacked_fill)) {
-    plot2_warning("Ignoring ", font_blue("stacked = TRUE"), " since ", font_blue("stacked_fill = TRUE"))
+    plot2_warning("Ignoring ", font_code("stacked = TRUE"), " since ", font_code("stacked_fill = TRUE"))
     stacked <- FALSE
   }
   
@@ -1267,7 +1267,7 @@ plot2_exec <- function(.data, ...) {
     category.focus <- category.focus[1L]
     # check if value is actually in category
     if (!category.focus %in% get_category(df) && !is.numeric(category.focus)) {
-      plot2_warning("Value \"", category.focus, "\" not found in ", font_blue("category"))
+      plot2_warning("Value \"", category.focus, "\" not found in ", font_arg("category"))
     } else {
       category_unique <- sort(unique(get_category(df)))
       if (is.numeric(category.focus)) {
@@ -1544,7 +1544,7 @@ plot2_exec <- function(.data, ...) {
     if (is.null(sankey_remove_axes)) {
       # make the default TRUE, but give message so users will know which argument to set
       sankey_remove_axes <- TRUE
-      plot2_message("Assuming ", font_blue("sankey_remove_axes = TRUE"))
+      plot2_message("Assuming ", font_code("sankey_remove_axes = TRUE"))
     }
   } else {
     p <- p +
@@ -1641,9 +1641,10 @@ plot2_exec <- function(.data, ...) {
     args_given <- dots[names(dots) %in% allowed]
     if (length(args_given) > 0) {
       plot2_message(ifelse(length(args_given) == 1,
-                           "This additional argument was given to `coord_spider()`: ",
-                           "These additional arguments were given to `coord_spider()`: "),
-                    paste0(font_blue(names(args_given), collapse = NULL), collapse = font_black(", ")))
+                           "This additional argument was given to ",
+                           "These additional arguments were given to "),
+                    font_fn("coord_spider"), ": ",
+                    paste0(font_arg(names(args_given), collapse = NULL), collapse = font_black(", ")))
     }
     if (isFALSE(datalabels)) {
       args_given$r_labels <- datalabels
@@ -1652,7 +1653,7 @@ plot2_exec <- function(.data, ...) {
   }
   
   if (is.null(smooth) && type == "geom_histogram") {
-    plot2_message("Assuming ", font_blue("smooth = TRUE"), " for ", font_blue("type = \"histogram\""))
+    plot2_message("Assuming ", font_code("smooth = TRUE"), " for ", font_code("type = \"histogram\""))
     smooth <- TRUE
   }
   if (isTRUE(smooth)) {
@@ -1747,7 +1748,7 @@ plot2_exec <- function(.data, ...) {
     category_txt <- get_category(df)
     if (is.null(category.labels) &&
         any(has_markdown(category_txt), na.rm = TRUE)) {
-      plot2_message("The ", font_blue("category"), " seems to contain markdown, assuming ", font_blue("category.labels = md_to_expression"))
+      plot2_message("The ", font_arg("category"), " seems to contain markdown, assuming ", font_code("category.labels = md_to_expression"))
       category.labels <- md_to_expression
     }
     

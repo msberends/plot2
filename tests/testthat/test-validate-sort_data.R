@@ -33,7 +33,7 @@ test_that("a vector of values comes first, the rest follows in data order", {
 })
 
 test_that("freq-desc with duplicates sorts on the summed y, with a message", {
-  expect_plot2_message(plot2(srt, x, y, x.sort = "freq-desc"), "Applying x.sort = \"freq-desc\" using summarise_function = sum")
+  expect_plot2_message(plot2(srt, x, y, x.sort = "freq-desc"), "Applying `x.sort = \"freq-desc\"` using `summarise_function = sum`")
   expect_identical(axis_labels(plot2(srt, x, y, x.sort = "freq-desc"), "x"), c("b", "c", "A2", "A10"))
 })
 
