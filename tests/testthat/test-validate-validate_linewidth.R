@@ -26,7 +26,7 @@ test_that("lines 0.5, areas 0.25, maps 0.1 by default", {
 })
 
 test_that("dumbbell segments and spider polygons have linewidth 1", {
-  p <- plot2(admitted_patients, age_group, n(), ward, type = "dumbbell")
+  p <- plot2(fx_mpg, class, n(), transmission, type = "dumbbell")
   expect_identical(unique(layer_df(p, layer_index(p, "GeomSegment"))$linewidth), 1)
   expect_identical(plot2:::validate_linewidth(NULL, type = "geom_polygon", type_backup = "spider"), 1)
 })

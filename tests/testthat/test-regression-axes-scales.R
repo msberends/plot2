@@ -55,7 +55,7 @@ test_that("#63 x.label_angle and x.label_align apply to the category labels of h
 })
 
 test_that("#64 the data-dependent choice of facet scales is reported", {
-  expect_plot2_message(plot2(admitted_patients, hospital, n(), facet = ward), "Using free `y` scales per facet", type = "info")
+  expect_plot2_message(plot2(fx_mpg, drv, n(), facet = transmission), "Using free `y` scales per facet", type = "info")
   d <- data.frame(x = rep(c("a", "b"), 2), f = rep(c("p", "q"), each = 2), y = c(10, 11, 10, 12))
   expect_plot2_message(plot2(d, x, y, facet = f), "facet.fixed_y = TRUE", type = "info")
 })

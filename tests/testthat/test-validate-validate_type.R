@@ -83,6 +83,6 @@ test_that("beeswarm uses ggbeeswarm", {
 })
 
 test_that("several x variables with a two-level category suggest a Sankey plot", {
-  expect_plot2_message(plot2(admitted_patients, x = c(hospital, ward), y = n(), category = gender),
+  expect_plot2_message(plot2(fx_mpg, x = c(drv, fl), y = n(), category = transmission),
                        "a Sankey plot can be used", type = "info")
 })

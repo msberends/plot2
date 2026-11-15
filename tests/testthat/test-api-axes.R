@@ -58,7 +58,7 @@ test_that("the y axis starts at zero where possible", {
 })
 
 test_that("x.date_breaks accepts human-readable intervals", {
-  p <- plot2(admitted_patients, date, n(), x.date_breaks = "2 years", x.date_labels = "yyyy")
+  p <- plot2(ggplot2::economics, date, unemploy, x.date_breaks = "2 years", x.date_labels = "yyyy")
   labs <- as.integer(axis_labels(p, "x"))
   expect_true(all(diff(labs[!is.na(labs)]) == 2))
 })

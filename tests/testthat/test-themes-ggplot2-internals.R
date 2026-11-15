@@ -21,7 +21,7 @@ test_that("plots of all main types build and render without warnings", {
   skip_if_not_installed("patchwork")
   withr::local_pdf(NULL)
   plots <- list(plot2(fx_counts, group, n), plot2(iris, Sepal.Length, Sepal.Width), plot2(iris, Species, Sepal.Length),
-                plot2(admitted_patients, age, type = "hist"), plot2(admitted_patients, age_group, n(), facet = ward, type = "b2b"),
+                plot2(fx_mpg, hwy, type = "hist"), plot2(fx_mpg, class, n(), facet = transmission, type = "b2b"),
                 plot2(data.frame(x = c("a", "b", "c"), y = c(3, 5, 4)), x, y, type = "spider"))
   for (p in plots) expect_no_warning(ggplot2::ggplotGrob(p))
 })

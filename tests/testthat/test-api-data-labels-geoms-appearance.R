@@ -34,8 +34,9 @@ test_that("datalabels.format = NULL does not transform the labels", {
 })
 
 test_that("x.sort with a manual vector adds missing values at the end", {
-  p <- plot2(admitted_patients, hospital, n(), x.sort = c("B", "D", "A"))
-  expect_identical(as.character(axis_labels(p, "x")), c("B", "D", "A", "C"))
+  p <- plot2(fx_mpg, class, n(), x.sort = c("suv", "compact", "2seater"))
+  expect_identical(as.character(axis_labels(p, "x"))[1:3], c("suv", "compact", "2seater"))
+  expect_length(axis_labels(p, "x"), 7)
 })
 
 test_that("x.max_items with x.sort = 'freq-desc' keeps the most frequent values", {
@@ -48,7 +49,7 @@ test_that("x.max_items with x.sort = 'freq-desc' keeps the most frequent values"
 test_that("documented size, width and linewidth defaults", {
   p_point <- plot2(iris, Sepal.Length, Sepal.Width)
   expect_identical(unique(layer_df(p_point)$size), 2)
-  p_box <- plot2(admitted_patients, hospital, age)
+  p_box <- plot2(fx_mpg, drv, hwy)
   b <- layer_df(p_box, layer_index(p_box, "GeomBoxplot"))
   expect_equal(unique(round(b$xmax - b$xmin, 2)), 0.66)
   p_col <- plot2(fx_counts, group, n)
@@ -59,8 +60,8 @@ test_that("documented size, width and linewidth defaults", {
 })
 
 test_that("a histogram has a density smooth by default", {
-  expect_geoms(plot2(admitted_patients, age, type = "hist"), c("bar", "density"))
-  expect_geoms(plot2(admitted_patients, age, type = "hist", smooth = FALSE), "bar", exact = TRUE)
+  expect_geoms(plot2(fx_mpg, hwy, type = "hist"), c("bar", "density"))
+  expect_geoms(plot2(fx_mpg, hwy, type = "hist", smooth = FALSE), "bar", exact = TRUE)
 })
 
 test_that("theme = NULL gives the ggplot2 default theme", {
@@ -80,5 +81,5 @@ test_that("na.replace sets the label of NA values", {
 })
 
 test_that("summarise_function = FALSE keeps the values, as documented", {
-  expect_geoms(plot2(admitted_patients, hospital, age, type = "col", summarise_function = FALSE), "bar")
+  expect_geoms(plot2(fx_mpg, drv, hwy, type = "col", summarise_function = FALSE), "bar")
 })

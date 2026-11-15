@@ -95,6 +95,11 @@ fx_pct <- data.frame(x = c("a", "b", "c"),
                      y = c(0.12, 0.45, 0.83),
                      stringsAsFactors = FALSE)
 
+# ggplot2::mpg (234 cars) with a two-level column, for tests that need one
+# (dumbbell, back-to-back, a two-level category or facet)
+fx_mpg <- dplyr::mutate(ggplot2::mpg,
+                        transmission = ifelse(startsWith(trans, "auto"), "automatic", "manual"))
+
 # larger data, generated on demand for performance tests
 fx_large <- function(n = 1e5, seed = 1) {
   withr::with_seed(seed, data.frame(x = sample(letters, n, replace = TRUE),

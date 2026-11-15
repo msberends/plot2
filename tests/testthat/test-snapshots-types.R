@@ -46,11 +46,11 @@ test_that("facets and datalabels", {
 })
 
 test_that("special types", {
-  expect_plot2_snapshot("dumbbell", plot2(admitted_patients, age_group, n(), ward, type = "dumbbell"))
-  expect_plot2_snapshot("back-to-back", plot2(admitted_patients, age_group, n(), facet = gender, type = "back-to-back"))
+  expect_plot2_snapshot("dumbbell", plot2(fx_mpg, class, n(), transmission, type = "dumbbell"))
+  expect_plot2_snapshot("back-to-back", plot2(fx_mpg, class, n(), facet = transmission, type = "back-to-back"))
   expect_plot2_snapshot("heatmap-matrix", plot2(cor(mtcars[, 1:5])))
   skip_if_not_installed("ggforce")
-  expect_plot2_snapshot("sankey", plot2(admitted_patients, x = c(hospital, ward), category = gender, type = "sankey"))
+  expect_plot2_snapshot("sankey", plot2(fx_mpg, x = c(drv, class), category = transmission, type = "sankey"))
 })
 
 test_that("distributions with a density estimate", {

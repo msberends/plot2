@@ -66,9 +66,6 @@ test_that("every example of the helper help pages runs without error", {
 })
 
 test_that("the bundled data sets match their documentation", {
-  expect_identical(dim(admitted_patients), c(250L, 7L))
-  expect_setequal(as.character(unique(admitted_patients$hospital)), LETTERS[1:4])
-  expect_setequal(unique(admitted_patients$ward), c("ICU", "Non-ICU"))
   expect_identical(nrow(netherlands), 12L)
   expect_true(all(c("province", "area_km2", "geometry") %in% names(netherlands)))
 })

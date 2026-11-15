@@ -12,19 +12,6 @@
 #  useful, but it comes WITHOUT ANY WARRANTY OR LIABILITY.              #
 # ===================================================================== #
 
-#' Example Data Set with Admitted Patients
-#'
-#' An auto-generated data set containing fictitious patients admitted to hospitals.
-#' @format A [tibble][tibble::tibble()]/[data.frame] with `r format(nrow(admitted_patients), big.mark = ",")` observations and `r ncol(admitted_patients)` variables:
-#' - `date`\cr date of hospital admission
-#' - `patient_id`\cr ID of the patient (fictitious)
-#' - `gender`\cr gender of the patient
-#' - `age`\cr age of the patient
-#' - `age_group`\cr age group of the age of the patient, generated with `AMR::age_groups()`
-#' - `hospital`\cr ID of the hospital, from A to D
-#' - `ward`\cr type of ward, either ICU or Non-ICU
-"admitted_patients"
-
 #' Example Geography Data Set: the Netherlands
 #'
 #' A data set containing the geometries of the twelve provinces of the Netherlands, according to Statistics Netherlands (2021).

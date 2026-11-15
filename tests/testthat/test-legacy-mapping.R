@@ -30,8 +30,8 @@ test_that("general mapping works", {
   expect_equal(plotdata |> plot2(category = n, category.type = "size") |> get_mapping() |> names(),
                c("y", "x", "size"))
   # remove X-axis
-  expect_s3_class(admitted_patients |> plot2(x = NULL, y = age), "gg")
-  expect_s3_class(admitted_patients |> plot2(x = 1:250, y = age), "gg")
+  expect_s3_class(fx_mpg |> plot2(x = NULL, y = hwy), "gg")
+  expect_s3_class(fx_mpg |> plot2(x = 1:234, y = hwy), "gg")
   
   # set category.labels = md_to_expression automatically
   expect_s3_class(iris |> plot2(category = paste0("*", Species, "*")), "gg")

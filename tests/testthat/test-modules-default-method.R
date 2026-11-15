@@ -73,7 +73,7 @@ test_that("a single string names a data frame only in the calling environment (#
   mydf <- data.frame(x = c("a", "b"), y = 1:2)
   expect_identical(nrow(plot_data(plot2("mydf"))), 2L)
   # not found in the calling environment (package data, search path): a value
-  expect_identical(nrow(plot_data(plot2("admitted_patients"))), 1L)
+  expect_identical(nrow(plot_data(plot2("mpg"))), 1L)
   f <- function() plot2("mydf")
   expect_identical(nrow(plot_data(f())), 1L)
 })

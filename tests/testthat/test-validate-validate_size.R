@@ -22,7 +22,7 @@ test_that("points have size 2 by default", {
 })
 
 test_that("dumbbell dots have size 5, UpSet dots size 4", {
-  p <- plot2(admitted_patients, age_group, n(), ward, type = "dumbbell")
+  p <- plot2(fx_mpg, class, n(), transmission, type = "dumbbell")
   expect_identical(unique(layer_df(p, layer_index(p, "GeomPoint"))$size), 5)
   expect_identical(plot2:::validate_size(NULL, type = "upset", type_backup = "upset"), 4)
 })

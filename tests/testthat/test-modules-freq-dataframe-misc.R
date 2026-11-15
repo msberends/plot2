@@ -42,8 +42,6 @@ test_that("re-exports are exported and identical to their source", {
 })
 
 test_that("bundled data have the documented structure", {
-  expect_s3_class(admitted_patients, "data.frame")
-  expect_identical(dim(admitted_patients), c(250L, 7L))
   skip_if_not_installed("sf")
   expect_s3_class(netherlands, "sf")
   expect_identical(sf::st_crs(netherlands)$epsg, 4326L)

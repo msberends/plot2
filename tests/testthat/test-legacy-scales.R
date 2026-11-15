@@ -21,61 +21,61 @@ skip_on_cran()
 
 test_that("max items and sorting work", {
   skip_on_cran()
-  expect_equal(admitted_patients |>
-                 plot2(x = hospital,
+  expect_equal(fx_mpg |>
+                 plot2(x = drv,
                        y = n(),
                        x.sort = "asc") |> 
                  get_range_x(),
-               c("A", "B", "C", "D"))
-  expect_equal(admitted_patients |>
-                 plot2(x = hospital,
+               c("4", "f", "r"))
+  expect_equal(fx_mpg |>
+                 plot2(x = drv,
                        y = n(),
                        x.sort = "desc") |> 
                  get_range_x(),
-               c("D", "C", "B", "A"))
-  expect_equal(admitted_patients |>
-                 plot2(x = hospital,
+               c("r", "f", "4"))
+  expect_equal(fx_mpg |>
+                 plot2(x = drv,
                        y = n(),
                        x.sort = "freq-desc") |> 
                  get_range_x(),
-               c("D", "B", "A", "C"))
-  expect_equal(admitted_patients |>
-                 plot2(x = hospital,
+               c("f", "4", "r"))
+  expect_equal(fx_mpg |>
+                 plot2(x = drv,
                        y = n(),
                        x.sort = "freq-asc") |> 
                  get_range_x(),
-               c("A", "C", "B", "D"))
-  expect_equal(admitted_patients |>
-                 plot2(x = hospital,
+               c("r", "4", "f"))
+  expect_equal(fx_mpg |>
+                 plot2(x = drv,
                        y = n(),
                        x.sort = "asc") |> 
                  get_range_x(),
-               c("A", "B", "C", "D"))
-  expect_equal(admitted_patients |>
-                 plot2(x = format(date, "%Y"),
+               c("4", "f", "r"))
+  expect_equal(fx_mpg |>
+                 plot2(x = manufacturer,
                        y = n(),
                        x.sort = "freq-desc",
                        x.max_items = 5) |>
                  get_range_x(),
-               c("2010", "2003", "2017", "2016", "(rest, x12)"))
+               c("dodge", "toyota", "volkswagen", "ford", "(rest, x11)"))
   
-  expect_s3_class(admitted_patients |>
-                    plot2(x = format(date, "%Y"), y = n(), category = hospital, facet = age_group,
+  expect_s3_class(fx_mpg |>
+                    plot2(x = manufacturer, y = n(), category = drv, facet = class,
                           x.max_items = 2, category.max_items = 2, facet.max_items = 2),
                   "gg")
-  expect_equal(admitted_patients |>
-                 plot2(gender, n(), hospital,
-                       category.sort = c("A", "C", "D", "B"),
-                       x.sort = c("M", "F")) |> 
+  expect_equal(fx_mpg |>
+                 plot2(transmission, n(), drv,
+                       category.sort = c("r", "4", "f"),
+                       x.sort = c("manual", "automatic")) |> 
                  get_range_x(),
-               c("M", "F"))
-  expect_equal(admitted_patients |>
-                 plot2(gender, n(), hospital,
-                       category.sort = c("A", "C", "D", "B"),
+               c("manual", "automatic"))
+  expect_equal(fx_mpg |>
+                 plot2(transmission, n(), drv,
+                       category.sort = c("r", "4", "f"),
                        horizontal = TRUE,
-                       x.sort = c("M", "F")) |> 
+                       x.sort = c("manual", "automatic")) |> 
                  get_range_x(),
-               c("F", "M"))
+               c("automatic", "manual"))
 })
 
 test_that("x scale works", {
@@ -151,9 +151,9 @@ test_that("y scale works", {
                  plot2(x, c(y1, y2),
                        # category must not be set
                        category = 1))
-  expect_s3_class(admitted_patients |>
-                    plot2(x = hospital,
-                          y = quantile(age, c(0.25, 0.5, 0.75))),
+  expect_s3_class(fx_mpg |>
+                    plot2(x = drv,
+                          y = quantile(hwy, c(0.25, 0.5, 0.75))),
                   "gg")
 })
 
@@ -190,14 +190,14 @@ test_that("category scale works", {
                                        category.limits = c(NA, 10e3)),
                   "gg")
   # date class as category
-  expect_s3_class(admitted_patients |>
-                    plot2(hospital,
-                          median(age),
+  expect_s3_class(ggplot2::economics |>
+                    plot2(uempmed,
+                          unemploy,
                           date),
                   "gg")
-  expect_s3_class(admitted_patients |>
-                    plot2(hospital,
-                          median(age),
+  expect_s3_class(ggplot2::economics |>
+                    plot2(uempmed,
+                          unemploy,
                           date,
                           category.date_breaks = "5 years",
                           category.date_labels = "'yy"),
@@ -223,10 +223,10 @@ test_that("facet scale works", {
                                 Species,
                                 facet.repeat_labels_x = FALSE,
                                 facet.repeat_labels_y = TRUE), "gg")
-  expect_s3_class(admitted_patients |> plot2(hospital,
-                                             n(),
-                                             ward,
-                                             gender,
+  expect_s3_class(fx_mpg |> plot2(drv,
+                                  n(),
+                                  transmission,
+                                  class,
                                              stacked = TRUE,
                                              facet.fixed_y = TRUE), "gg")
 })

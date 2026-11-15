@@ -20,19 +20,19 @@ skip_on_cran()
 bar_fill <- function(p) layer_df(p, layer_index(p, "GeomBar"))$fill
 
 test_that("legend.position defaults to 'top' for discrete and 'right' for numeric categories and sf", {
-  expect_identical(legend_position(plot2(admitted_patients, hospital, n(), gender)), "top")
+  expect_identical(legend_position(plot2(fx_mpg, drv, n(), transmission)), "top")
   expect_identical(legend_position(plot2(iris, Sepal.Length, Sepal.Width, Petal.Length)), "right")
   skip_if_not_installed("sf")
   expect_identical(legend_position(plot2(netherlands)), "right")
 })
 
 test_that("legend.position = NA hides the legend, abbreviations are accepted", {
-  expect_identical(legend_position(plot2(admitted_patients, hospital, n(), gender, legend.position = NA)), "none")
-  expect_identical(legend_position(plot2(admitted_patients, hospital, n(), gender, legend.position = "b")), "bottom")
+  expect_identical(legend_position(plot2(fx_mpg, drv, n(), transmission, legend.position = NA)), "none")
+  expect_identical(legend_position(plot2(fx_mpg, drv, n(), transmission, legend.position = "b")), "bottom")
 })
 
 test_that("legend.position = NULL means the automatic default (documentation says 'none')", {
-  expect_identical(legend_position(plot2(admitted_patients, hospital, n(), gender, legend.position = NULL)), "top")
+  expect_identical(legend_position(plot2(fx_mpg, drv, n(), transmission, legend.position = NULL)), "top")
 })
 
 test_that("colour_transparency applies with an explicit colour", {
@@ -63,7 +63,7 @@ test_that("a named colour vector matches category values", {
 })
 
 test_that("facet.nrow sets the number of facet rows", {
-  expect_facets(plot2(admitted_patients, hospital, n(), facet = age_group, facet.nrow = 1), nrow = 1L)
+  expect_facets(plot2(fx_mpg, drv, n(), facet = class, facet.nrow = 1), nrow = 1L)
 })
 
 test_that("reverse reverses the category values, legend.reverse only the legend", {

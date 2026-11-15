@@ -87,8 +87,8 @@ test_that("an invalid colour name is reported and replaced by the default colour
 })
 
 test_that("boxplot whiskers take their colours from the scale, without expanding colour vectors (#73)", {
-  p <- expect_plot2(plot2(admitted_patients, hospital, age, gender,
-                          colour = c(F = "#3F681C", M = "#375E97"), colour_fill = "#FFBB00AA"))
+  p <- expect_plot2(plot2(fx_mpg, drv, hwy, transmission,
+                          colour = c(automatic = "#3F681C", manual = "#375E97"), colour_fill = "#FFBB00AA"))
   whiskers <- layer_df(p, layer_index(p, "GeomErrorbar"))
   expect_setequal(unique(col_hex(whiskers$colour)), c("#3F681C", "#375E97"))
   # several y columns become the category

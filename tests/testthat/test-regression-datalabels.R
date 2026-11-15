@@ -39,7 +39,7 @@ test_that("#40 %p datalabels sum to 100% per x value by default, or per datalabe
   p <- expect_plot2(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "category"))
   expect_equal(sort(pct(p)), c(1 / 3, 0.4, 0.6, 2 / 3), tolerance = 0.001)
   # without a category, "x" is the same as within the facet
-  p <- expect_plot2(plot2(admitted_patients, hospital, n(), facet = gender, datalabels.format = "%p"))
+  p <- expect_plot2(plot2(fx_mpg, drv, n(), facet = transmission, datalabels.format = "%p"))
   ld <- layer_df(p, "text")
   expect_equal(as.vector(tapply(as.double(sub("%", "", ld$label)), ld$PANEL, sum)), c(100, 100), tolerance = 0.002)
   expect_error(plot2(d, x, y, c, datalabels.format = "%p", datalabels.percent_by = "row"), "must be")

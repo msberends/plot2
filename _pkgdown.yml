@@ -96,7 +96,6 @@ reference:
     desc: >
       Example data sets used in the documentation.
     contents:
-      - admitted_patients
       - netherlands
 
   - title: "`dplyr` and `tidyselect` functions"

@@ -89,18 +89,18 @@ test_that("a missing ggbeeswarm gives an install hint, not 'geom_beeswarm() does
 })
 
 test_that("dumbbell requires exactly two category values, as documented", {
-  expect_error(plot2(admitted_patients, hospital, median(age), age_group, type = "dumbbell"), "two distinct values")
-  expect_geoms(plot2(admitted_patients, hospital, median(age), gender, type = "dumbbell"), c("point", "segment"))
+  expect_error(plot2(fx_mpg, drv, median(hwy), class, type = "dumbbell"), "two distinct values")
+  expect_geoms(plot2(fx_mpg, drv, median(hwy), transmission, type = "dumbbell"), c("point", "segment"))
 })
 
 test_that("category.title is shown for a numeric legend and hidden for a discrete one", {
   expect_labels(plot2(iris, Sepal.Length, Sepal.Width, Petal.Length), colour = "Petal.Length")
-  expect_labels(plot2(admitted_patients, hospital, n(), gender), fill = NULL)
+  expect_labels(plot2(fx_mpg, drv, n(), transmission), fill = NULL)
 })
 
 test_that("titles accept a calculation over the data", {
-  p <- plot2(admitted_patients, age, type = "hist", title = paste("n =", n_distinct(patient_id)))
-  expect_labels(p, title = paste("n =", dplyr::n_distinct(admitted_patients$patient_id)))
+  p <- plot2(fx_mpg, hwy, type = "hist", title = paste("n =", n_distinct(model)))
+  expect_labels(p, title = paste("n =", dplyr::n_distinct(fx_mpg$model)))
 })
 
 test_that("x.title = FALSE removes the axis title", {

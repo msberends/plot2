@@ -36,20 +36,20 @@ test_that("general types work", {
                              y = difftime(Sys.time(), Sys.time() - seq_len(10))) |>
                     plot2(),
                   "gg")
-  expect_s3_class(admitted_patients |> plot2(hospital, n(), where(is.character)), "gg")
-  expect_s3_class(admitted_patients |> plot2(hospital, n(), c(gender, ward)), "gg")
+  expect_s3_class(fx_mpg |> dplyr::select(class, drv, transmission) |> plot2(class, n(), where(is.character)), "gg")
+  expect_s3_class(fx_mpg |> plot2(class, n(), c(drv, transmission)), "gg")
   
   expect_s3_class(plotdata |> plot2(y.transform = "log2"), "gg")
   # dumbbell:
-  expect_s3_class(admitted_patients |> plot2(age_group, n_distinct(patient_id), ward, type = "d"), "gg")
-  expect_s3_class(admitted_patients |> plot2(age_group, n_distinct(patient_id), ward, gender, type = "d"), "gg")
+  expect_s3_class(fx_mpg |> plot2(class, n_distinct(model), transmission, type = "d"), "gg")
+  expect_s3_class(fx_mpg |> plot2(class, n_distinct(model), transmission, drv, type = "d"), "gg")
   # sankey:
   skip_if_not_installed("ggforce")
-  expect_s3_class(admitted_patients |>
-                    plot2(x = c(hospital, ward),
-                          y = n_distinct(patient_id),
-                          category = age_group,
-                          facet = gender,
+  expect_s3_class(fx_mpg |>
+                    plot2(x = c(drv, transmission),
+                          y = n_distinct(model),
+                          category = class,
+                          facet = year,
                           type = "sankey"),
                   "gg")
 })
@@ -86,19 +86,19 @@ test_that("S3 implementations work", {
   expect_s3_class(lm(mpg ~ hp, mtcars) |> plot2(), "gg")
   # freq
   skip_if_not_installed("cleaner")
-  freq <- cleaner::freq(admitted_patients$hospital)
+  freq <- cleaner::freq(fx_mpg$drv)
   expect_s3_class(freq |> plot2(), "gg")
   # sf
   skip_if_not_installed("sf")
   expect_s3_class(netherlands |> plot2(), "gg")
   expect_s3_class(netherlands |> plot2(crs = 28992, theme = theme_minimal2()), "gg")
   # type should become boxplot here
-  expect_s3_class(admitted_patients |> plot2(x = hospital, y = (age - mean(age)) / sd(age)), "gg")
+  expect_s3_class(fx_mpg |> plot2(x = drv, y = (hwy - mean(hwy)) / sd(hwy)), "gg")
   # this uses the format2_scientific function for the Y-axis
-  expect_s3_class(admitted_patients |>
-                    plot2(format(date, "%Y"),
-                          (age - mean(age)) / sd(age),
-                          hospital,
+  expect_s3_class(fx_mpg |>
+                    plot2(class,
+                          (hwy - mean(hwy)) / sd(hwy),
+                          drv,
                           y.scientific = TRUE),
                   "gg")
   expect_s3_class(netherlands |> plot2(markdown = TRUE), "gg")
