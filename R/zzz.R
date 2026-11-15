@@ -192,9 +192,11 @@ check_old_args <- function(arg_names) {
 
 # cli theme of the diagnostics ----
 # The inline classes that font_code(), font_arg(), font_var() and font_fn() in
-# R/utils.R use: green, with the backticks that cli adds. It is applied only
-# while plot2 formats its own text, so the user's own cli theme is untouched.
-plot2_cli_theme <- list(span.code = list(color = "green"),
-                        span.arg = list(color = "green"),
-                        span.var = list(color = "green"),
-                        span.fn = list(color = "green"))
+# R/utils.R use where colours can be shown: green, without the backticks that
+# cli adds by default (these remain where colours cannot be shown). It is
+# applied only while plot2 formats its own text, so the user's own cli theme is
+# untouched.
+plot2_cli_theme <- list(span.code = list(color = "green", transform = function(x) x),
+                        span.arg = list(color = "green", transform = function(x) x),
+                        span.var = list(color = "green", transform = function(x) x),
+                        span.fn = list(color = "green", transform = function(x) paste0(x, "()")))

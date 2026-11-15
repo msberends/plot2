@@ -139,9 +139,10 @@ font_white <- function(..., collapse = " ") {
 # Code in diagnostics, with the inline classes of cli as ggplot2 uses them:
 # font_code() for an argument with its value or any other code, font_arg() for
 # a bare argument name, font_var() for a column name and font_fn() for a
-# function name (cli adds the parentheses). The text is formatted at once,
-# with backticks and in the colours of plot2_cli_theme (R/zzz.R). Each element
-# of a vector is formatted separately; use `collapse` to join them first.
+# function name (cli adds the parentheses). The text is formatted at once:
+# in green without backticks where colours can be shown (plot2_cli_theme in
+# R/zzz.R), otherwise with backticks as cli does by default. Each element of
+# a vector is formatted separately; use `collapse` to join them first.
 font_code <- function(..., collapse = "") {
   font_cli_inline("code", paste0(c(...), collapse = collapse))
 }
@@ -156,10 +157,26 @@ font_fn <- function(..., collapse = "") {
 }
 font_cli_inline <- function(class, x) {
   template <- paste0("{.", class, " {txt}}")
+  n_colours <- plot2_cli_colours()
+  old <- options(cli.num_colors = n_colours)
+  on.exit(options(old))
   vapply(as.character(x), FUN.VALUE = character(1), USE.NAMES = FALSE, function(txt) {
-    cli::cli_div(theme = plot2_cli_theme)
+    if (n_colours > 1) {
+      cli::cli_div(theme = plot2_cli_theme)
+    }
     as.character(cli::format_inline(template))
   })
+}
+
+# The number of colours for diagnostics. pkgdown turns ANSI colours in output
+# into HTML, also in articles, but only sets the cli.num_colors option for the
+# reference examples; in articles, cli would detect no colours at all.
+plot2_cli_colours <- function() {
+  if (is.null(getOption("cli.num_colors")) && Sys.getenv("IN_PKGDOWN") != "") {
+    256L
+  } else {
+    cli::num_ansi_colors()
+  }
 }
 
 # Per-call state and diagnostics (#13, #26) ---------------------------------
@@ -241,11 +258,12 @@ plot2_shows_messages <- function() {
 # they can be caught or muffled (suppressMessages()), and are printed only in
 # interactive sessions and pkgdown builds unless plot2.silent = TRUE. Warnings
 # are R warnings (class "plot2_warning"), always visible. Returns whether a
-# message was printed.
+# message was printed. The condition message keeps its colours, as with
+# cli and rlang: code formatted in colour has no backticks, and knitr (and so
+# pkgdown) shows the condition message, not what cli prints.
 emit_diagnostic <- function(txt, type) {
-  plain <- cli::ansi_strip(txt)
   if (type == "warnings") {
-    warning(warningCondition(plain, class = "plot2_warning", call = NULL))
+    warning(warningCondition(txt, class = "plot2_warning", call = NULL))
     return(invisible(FALSE))
   }
   cls <- c(if (type == "cautions") "plot2_caution", "plot2_message")
@@ -254,9 +272,11 @@ emit_diagnostic <- function(txt, type) {
     # base::messageCondition() only exists as of R 4.6.0, so build it here
     signalCondition(structure(
       class = c(cls, "message", "condition"),
-      list(message = paste0(plain, "\n"), call = NULL)
+      list(message = paste0(txt, "\n"), call = NULL)
     ))
     if (plot2_shows_messages()) {
+      old <- options(cli.num_colors = plot2_cli_colours())
+      on.exit(options(old), add = TRUE)
       if (type == "cautions") {
         cli::cli_alert_warning("{txt}", wrap = TRUE)
       } else {

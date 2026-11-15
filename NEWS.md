@@ -1,6 +1,6 @@
 # plot2 1.99.1
 
-* Messages, cautions and warnings now show arguments, values, columns and functions as code, as `ggplot2` does: quoted with backticks (e.g. `` `type = "point"` ``) and green in consoles that support colours. Message texts containing braces (`{`, `}`) are now printed as they are, instead of failing.
+* Messages, cautions and warnings now show arguments, values, columns and functions as code, using the same inline classes of `cli` as `ggplot2`: green where colours can be shown, including the package website, and otherwise quoted with backticks (e.g. `` `type = "point"` ``). Message texts containing braces (`{`, `}`) are now printed as they are, instead of failing.
 * Re-exported from `dplyr`: `case_when()`
 * Scientific notation on the y axis (e.g. `y.scientific = TRUE`) failed with `ggplot2` 4.0.0 with the error 'invalid mathematical annotation'
 * Calculations in titles (`title`, `subtitle`, `caption`, `tag`, `x.title`, `y.title` and `category.title`) now always use the columns of the data first. Before, an object with the same name in the calling environment took precedence, so that e.g. `caption = min(format(date, "%Y"))` used the function `date()` instead of the column `date`, and a global object `age` was used instead of the column `age`.

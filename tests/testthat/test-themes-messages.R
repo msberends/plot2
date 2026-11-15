@@ -16,9 +16,12 @@
 skip_on_cran()
 
 # Code in diagnostics: arguments, values, columns and functions are formatted
-# with the inline classes of cli as ggplot2 uses them, in plot2_cli_theme.
+# with the inline classes of cli as ggplot2 uses them: green without backticks
+# where colours can be shown (plot2_cli_theme), otherwise with backticks.
 
-test_that("code in diagnostics is quoted with backticks in plain text", {
+test_that("code in diagnostics is quoted with backticks where colours cannot be shown", {
+  withr::local_options(cli.num_colors = 1)
+  withr::local_envvar(IN_PKGDOWN = "")
   expect_plot2_message(plot2(fx_xy), "Using `type = \"point\"` since both axes are numeric", fixed = TRUE)
   expect_identical(cli::ansi_strip(plot2:::font_code("type = \"", "point", "\"")), "`type = \"point\"`")
   expect_identical(cli::ansi_strip(plot2:::font_arg("x.limits")), "`x.limits`")
@@ -26,10 +29,21 @@ test_that("code in diagnostics is quoted with backticks in plain text", {
   expect_identical(cli::ansi_strip(plot2:::font_var(c("a", "b"), collapse = NULL)), c("`a`", "`b`"))
 })
 
-test_that("code in diagnostics is green when the console supports colours", {
+test_that("code in diagnostics is green without backticks where colours can be shown", {
   withr::local_options(cli.num_colors = 256)
-  expect_identical(plot2:::font_code("y = n()"), paste0("\033[32m`y = n()`\033[39m"))
-  expect_identical(plot2:::font_arg("x"), paste0("\033[32m`x`\033[39m"))
+  expect_identical(plot2:::font_code("y = n()"), "\033[32my = n()\033[39m")
+  expect_identical(plot2:::font_arg("x"), "\033[32mx\033[39m")
+  expect_identical(plot2:::font_var("col"), "\033[32mcol\033[39m")
+  expect_identical(plot2:::font_fn("sf::st_as_sf"), "\033[32msf::st_as_sf()\033[39m")
+})
+
+test_that("code in diagnostics is green in pkgdown articles, where cli.num_colors is not set", {
+  withr::local_options(cli.num_colors = NULL)
+  withr::local_envvar(IN_PKGDOWN = "true")
+  expect_identical(plot2:::font_code("y = n()"), "\033[32my = n()\033[39m")
+  # the user's own option is respected
+  withr::local_options(cli.num_colors = 1)
+  expect_identical(plot2:::font_code("y = n()"), "`y = n()`")
 })
 
 test_that("the theme of plot2 does not change the user's own cli output", {
