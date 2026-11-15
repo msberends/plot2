@@ -73,12 +73,12 @@ mtcars |>
         title = "*These are* the **Greek** lower $omega$ and upper $Omega$",
         x.title = "x_{mpg}",
         y.title = "y_{hp}")
-#> Using type = "point" since both axes are numeric
+#> Using `type = "point"` since both axes are numeric
 
         
 mtcars |> 
   plot2(mpg, hp,
         title = "$f[X](x)==frac(1, sigma*sqrt(2*pi))*plain(e)^{frac(-(x-mu)^2, 2*sigma^2)}$",
         subtitle = "Some insane $widehat(plotmath)$ title")
-#> Using type = "point" since both axes are numeric
+#> Using `type = "point"` since both axes are numeric
 ```

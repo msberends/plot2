@@ -277,8 +277,8 @@ combined into one bar:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html" class="external-link">mpg</a></span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">manufacturer</span>, type <span class="op">=</span> <span class="st">"barpercent"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = n() to count rows, since type = "barpercent" shows frequencies</span></span>
-<span><span class="co">#&gt; Summarising values for type = "barpercent" using summarise_function = sum</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `y = n()` to count rows, since `type = "barpercent"` shows frequencies</span></span>
+<span><span class="co">#&gt; Summarising values for `type = "barpercent"` using `summarise_function = sum`</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
 <p>This type sets <code>type = "bar"</code>,
 <code>x.sort = "freq-desc"</code>, <code>x.max_items = 10</code> and
@@ -326,7 +326,7 @@ numeric:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span>, category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, category.title <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "point" since both axes are numeric</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `type = "point"` since both axes are numeric</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
 <p>For a discrete <code>x</code>, points of the same group overlap.
 Jitter moves them randomly in the horizontal direction, and a beeswarm
@@ -348,15 +348,15 @@ the automatic type when every group contains at least three values:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hospital</span>, y <span class="op">=</span> <span class="va">age</span>, category <span class="op">=</span> <span class="va">gender</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using type = "boxplot" since all groups in hospital and gender contain at least three values</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `type = "boxplot"` since all groups in `hospital` and `gender` contain at least three values</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
 <p><code>y</code> can also be several columns, which are then shown as a
 category:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Species</span>, y <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.double</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)</span></span>
-<span><span class="co">#&gt; Using type = "boxplot" since all groups in Species and category contain at least three values</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`</span></span>
+<span><span class="co">#&gt; Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A violin also shows the shape of the distribution, with lines at the
 quartiles:</p>
@@ -375,8 +375,8 @@ density as a line; set <code>binwidth</code> and
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age</span>, type <span class="op">=</span> <span class="st">"histogram"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using binwidth = 6.4 based on data</span></span>
-<span><span class="co">#&gt; Assuming smooth = TRUE for type = "histogram"</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `binwidth = 6.4` based on data</span></span>
+<span><span class="co">#&gt; Assuming `smooth = TRUE` for `type = "histogram"`</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A density plot shows the distribution as a smooth curve, which makes
 it easier to compare groups. Transparency keeps overlapping groups
@@ -406,15 +406,15 @@ pyramid, shows two groups on either side of a shared axis. The
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; This additional argument was given to the geom: show.legend</span></span>
-<span><span class="co">#&gt; Assuming y.expand = 0 since y.limits is set</span></span></code></pre></div>
+<span><span class="co">#&gt; This additional argument was given to the geom: `show.legend`</span></span>
+<span><span class="co">#&gt; Assuming `y.expand = 0` since `y.limits` is set</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="100%"></p>
 <p>A <code>category</code> divides each side further:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">admitted_patients</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">age_group</span>, y <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">ward</span>, facet <span class="op">=</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"back-to-back"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; This additional argument was given to the geom: show.legend</span></span>
-<span><span class="co">#&gt; Assuming y.expand = 0 since y.limits is set</span></span></code></pre></div>
+<span><span class="co">#&gt; This additional argument was given to the geom: `show.legend`</span></span>
+<span><span class="co">#&gt; Assuming `y.expand = 0` since `y.limits` is set</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -428,9 +428,9 @@ the midpoint:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"white"</span>, <span class="st">"#B2182B"</span><span class="op">)</span>,</span>
 <span>        category.title <span class="op">=</span> <span class="st">"Correlation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming type = "tile" since the matrix contains identical row and column names</span></span>
-<span><span class="co">#&gt; Using category.midpoint = 0 (the current category scale centre)</span></span>
-<span><span class="co">#&gt; Omitting printing of 121 datalabels - use datalabels = TRUE to force printing</span></span></code></pre></div>
+<span><span class="co">#&gt; Assuming `type = "tile"` since the matrix contains identical row and column names</span></span>
+<span><span class="co">#&gt; Using `category.midpoint = 0` (the current `category` scale centre)</span></span>
+<span><span class="co">#&gt; Omitting printing of 121 datalabels - use `datalabels = TRUE` to force printing</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -442,7 +442,7 @@ several variables. <code>x</code> contains these variables, and
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Titanic</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Class</span>, <span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, category <span class="op">=</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"sankey"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Assuming sankey_remove_axes = TRUE</span></span>
+<span><span class="co">#&gt; Assuming `sankey_remove_axes = TRUE`</span></span>
 <span><span class="co">#&gt; Input class 'table' was transformed using `as.data.frame()`</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="100%"></p>
 <p><code>Titanic</code> is a table from base R. <code><a href="../reference/plot2.html">plot2()</a></code>
@@ -475,8 +475,8 @@ set. This example defines four sets of cars:</p>
 <span>            four_gears <span class="op">=</span> <span class="va">gear</span> <span class="op">==</span> <span class="fl">4</span>,</span>
 <span>            economical <span class="op">=</span> <span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">manual</span>, <span class="va">straight_engine</span>, <span class="va">four_gears</span>, <span class="va">economical</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using y = 1</span></span>
-<span><span class="co">#&gt; Using summarise_function = sum for UpSet plot</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `y = 1`</span></span>
+<span><span class="co">#&gt; Using `summarise_function = sum` for UpSet plot</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="100%"></p>
 <p>With a <code>y</code>, the bars show a summary of <code>y</code> per
 intersection instead of the counts:</p>
@@ -490,7 +490,7 @@ intersection instead of the counts:</p>
 <span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>,</span>
 <span>        y.title <span class="op">=</span> <span class="st">"Median horsepower"</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"upset"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using summarise_function = sum for UpSet plot</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `summarise_function = sum` for UpSet plot</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -502,8 +502,8 @@ their area:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">netherlands</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot2.html">plot2</a></span><span class="op">(</span>category <span class="op">=</span> <span class="va">area_km2</span>, category.title <span class="op">=</span> <span class="st">"Area (square kilometres)"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using datalabels = province</span></span>
-<span><span class="co">#&gt; Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.</span></span></code></pre></div>
+<span><span class="co">#&gt; Using `datalabels = province`</span></span>
+<span><span class="co">#&gt; Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.</span></span></code></pre></div>
 <p><img src="supported_types_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The article <em>Maps</em> on the package website shows more examples,
 such as layers with <code><a href="../reference/add_type.html">add_sf()</a></code>.</p>

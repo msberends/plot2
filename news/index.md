@@ -2,6 +2,11 @@
 
 ## plot2 1.99.1
 
+- Messages, cautions and warnings now show arguments, values, columns
+  and functions as code, as `ggplot2` does: quoted with backticks
+  (e.g. `` `type = "point"` ``) and green in consoles that support
+  colours. Message texts containing braces (`{`, `}`) are now printed as
+  they are, instead of failing.
 - Re-exported from `dplyr`:
   [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
 - Scientific notation on the y axis (e.g. `y.scientific = TRUE`) failed

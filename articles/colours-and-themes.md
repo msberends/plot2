@@ -120,7 +120,7 @@ mtcars |>
         colour = c("#2166AC", "grey90", "#B2182B"),
         category.midpoint = 150,
         size = 3)
-#> Using type = "point" since both axes are numeric
+#> Using `type = "point"` since both axes are numeric
 ```
 
 ![](colours-and-themes_files/figure-html/unnamed-chunk-9-1.png)

@@ -71,7 +71,7 @@ admitted_patients |>
         x.title = "Hospital",
         y.title = "Admissions",
         category.title = "Gender")
-#> Applying x.sort = "freq-desc" using summarise_function = sum
+#> Applying `x.sort = "freq-desc"` using `summarise_function = sum`
 ```
 
 ![](plot2-for-ggplot2-users_files/figure-html/unnamed-chunk-4-1.png)
@@ -125,7 +125,7 @@ admitted_patients |>
   geom_vline(xintercept = 65, linetype = "dashed") +
   annotate("text", x = 64, y = 40, label = "Aged 65 and over", hjust = 1) +
   scale_x_continuous(breaks = seq(0, 100, 10))
-#> Assuming smooth = TRUE for type = "histogram"
+#> Assuming `smooth = TRUE` for `type = "histogram"`
 #> Scale for x is already present.
 #> Adding another scale for x, which will replace the existing scale.
 ```

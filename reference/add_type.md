@@ -245,7 +245,7 @@ p <- iris |>
         y = Sepal.Width,
         category = Species,
         zoom = TRUE)
-#> Using type = "point" since both axes are numeric
+#> Using `type = "point"` since both axes are numeric
   
 # if not specifying x or y, current plot data are taken
 p |> add_line()
@@ -276,10 +276,10 @@ iris |>
         facet = Species) |>
   add_line(y = mean(Sepal.Width),
            legend.value = "Average")
-#> Using type = "point" since both axes are numeric
-#> Assuming facet.fixed_x = TRUE since the three x scales differ by less than 25%
-#> Assuming facet.fixed_y = TRUE since the three y scales differ by less than 25%
-#> Assuming facet.repeat_labels_y = FALSE since y has fixed scales
+#> Using `type = "point"` since both axes are numeric
+#> Assuming `facet.fixed_x = TRUE` since the three `x` scales differ by less than 25%
+#> Assuming `facet.fixed_y = TRUE` since the three `y` scales differ by less than 25%
+#> Assuming `facet.repeat_labels_y = FALSE` since `y` has fixed scales
 
 
 p |>
@@ -325,7 +325,7 @@ df |>
           width = 0.25,
           colour = "blue",
           legend.value = "This *is* **some** symbol: $beta$")
-#> Using type = "point" since both axes are numeric
+#> Using `type = "point"` since both axes are numeric
 #> Warning: Removed 1 row containing missing values or values outside the scale range
 #> (`geom_col()`).
 
@@ -343,8 +343,8 @@ df2 |>
   plot2(var_1, var_2, var_3, type = "col", datalabels = FALSE, alpha = 0.25, width = 0.75) |> 
   # adding error bars was never easier - just reference the lower and upper values
   add_errorbar(error1, error2)
-#> This additional argument was given to the geom: alpha
-#> Using x.character = TRUE for discrete plot type (geom_col) since var_1 is numeric
+#> This additional argument was given to the geom: `alpha`
+#> Using `x.character = TRUE` for discrete plot type (`type = "geom_col"`) since `var_1` is numeric
 
 
 # adding sf objects is just as convenient as all else
@@ -358,7 +358,7 @@ if (requireNamespace("sf", quietly = TRUE)) {
            linetype = 2,
            linewidth = 0.5)
 }
-#> Using category = area_km2
-#> Using datalabels = province
-#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
+#> Using `category = area_km2`
+#> Using `datalabels = province`
+#> Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.
 ```

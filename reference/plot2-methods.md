@@ -1880,13 +1880,13 @@ for [`plot2()`](https://msberends.github.io/plot2/reference/plot2.md).
 ``` r
 # vectors: character values are counted
 plot2(c("a", "b", "b", "c", "c", "c"))
-#> Using y = y
-#> Using x = x
+#> Using `y = y`
+#> Using `x = x`
 
 
 # formulas
 plot2(Sepal.Length ~ Species, data = iris)
-#> Using type = "boxplot" since all groups in Species contain at least three values
+#> Using `type = "boxplot"` since all groups in `Species` contain at least three values
 
 
 # frequency tables
@@ -1897,14 +1897,14 @@ if (requireNamespace("cleaner", quietly = TRUE)) {
 
 # correlation matrices become a heatmap
 plot2(cor(mtcars[, 1:5]))
-#> Assuming type = "tile" since the matrix contains identical row and column names
+#> Assuming `type = "tile"` since the matrix contains identical row and column names
 
 
 # spatial data
 if (requireNamespace("sf", quietly = TRUE)) {
   plot2(netherlands)
 }
-#> Using category = area_km2
-#> Using datalabels = province
-#> Assuming datalabels.centroid = TRUE. Set to FALSE for a point-on-surface placing of datalabels.
+#> Using `category = area_km2`
+#> Using `datalabels = province`
+#> Assuming `datalabels.centroid = TRUE`. Set to FALSE for a point-on-surface placing of datalabels.
 ```

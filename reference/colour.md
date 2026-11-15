@@ -199,8 +199,8 @@ get_colour("my_organisation", length = 6)
 # Now use it in plots as you like:
 iris |>
   plot2(x = Species, y = where(is.double), colour = "my_organisation")
-#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
-#> Using type = "boxplot" since all groups in Species and category contain at least three values
+#> Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`
+#> Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values
 
 
 # Or even set the option to use it in any future plot:
@@ -208,8 +208,8 @@ options(plot2.colour = "my_organisation")
 
 iris |>
   plot2(x = Species, y = where(is.double))
-#> Using y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)
-#> Using type = "boxplot" since all groups in Species and category contain at least three values
+#> Using `y = c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width)`
+#> Using `type = "boxplot"` since all groups in `Species` and `category` contain at least three values
 
 
 # reset option again

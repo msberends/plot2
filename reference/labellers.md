@@ -58,14 +58,14 @@ if (!names(grDevices::dev.cur()) %in% c("pdf", "postscript")) {
     plot2(y.labels = euros,
           datalabels = FALSE)
 }
-#> Using y = profit
-#> Using x = group
+#> Using `y = profit`
+#> Using `x = group`
 
 if (!names(grDevices::dev.cur()) %in% c("pdf", "postscript")) {
   profit |>
     plot2(y.labels = euros,
           datalabels.format = euros)
 }
-#> Using y = profit
-#> Using x = group
+#> Using `y = profit`
+#> Using `x = group`
 ```

@@ -28,13 +28,13 @@ get_plot_title(plot, valid_filename = TRUE, default = NULL)
 
 ``` r
 without_title <- plot2(mtcars)
-#> Using x = mpg
-#> Using y = cyl
-#> Using type = "point" since both axes are numeric
+#> Using `x = mpg`
+#> Using `y = cyl`
+#> Using `type = "point"` since both axes are numeric
 with_title <- plot2(mtcars, title = "Plotting **mpg** vs. **cyl**!")
-#> Using x = mpg
-#> Using y = cyl
-#> Using type = "point" since both axes are numeric
+#> Using `x = mpg`
+#> Using `y = cyl`
+#> Using `type = "point"` since both axes are numeric
 
 # default is a guess:
 get_plot_title(without_title)
