@@ -19,7 +19,8 @@
 # "cache"), as the CRAN policy allows; fonts unused for `font_cache_days` days
 # are removed from that cache. showtext is switched on only while a plot that
 # uses a custom font is drawn: such plots get the extra class "plot2_font",
-# whose print() and grid.draw() methods enable showtext for that drawing only.
+# whose print() and grid.draw() methods draw the plot with plot2_font_grob(),
+# which enables showtext for that drawing only, also when it is replayed.
 
 font_cache_days <- 90
 
@@ -91,22 +92,12 @@ font_from_google <- function(family, dir = font_cache_dir()) {
   font_from_cache(family, dir)
 }
 
-# draw with showtext switched on, as showtext_auto() would, but only for this drawing
-with_showtext <- function(expr) {
-  if (!requireNamespace("showtext", quietly = TRUE)) {
-    return(force(expr))
-  }
-  hooks <- getHook("grid.newpage")
-  setHook("grid.newpage", function() showtext::showtext_begin(), "append")
-  on.exit({
-    setHook("grid.newpage", hooks, "replace")
-    try(showtext::showtext_end(), silent = TRUE)
-  }, add = TRUE)
-  if (grDevices::dev.cur() > 1) {
-    showtext::showtext_begin()
-  }
-  force(expr)
-}
+# Drawing. showtext is switched on by a grob, so that it is part of the
+# drawing itself: devices that draw the plot again from their display list
+# (the RStudio plots pane, a resized windows() or X11 window, replayPlot())
+# then switch showtext on too. Switching it on only around print() left these
+# redraws to the device, which on Windows warns "font family not found in
+# Windows font database" for any font not in windowsFonts().
 
 as_plot2_font <- function(p) {
   if (!inherits(p, "plot2_font")) {
@@ -115,15 +106,54 @@ as_plot2_font <- function(p) {
   p
 }
 
+# a grob that draws the plot with showtext switched on; the gtable is made at
+# drawing time, as making it measures text, which needs showtext as well
+plot2_font_grob <- function(plot) {
+  grid::gTree(built = ggplot2::ggplot_build(plot), cl = "plot2_font_grob")
+}
+
+#' @noRd
+#' @exportS3Method grid::drawDetails
+drawDetails.plot2_font_grob <- function(x, recording) {
+  if (requireNamespace("showtext", quietly = TRUE)) {
+    # keep showtext on if it already was, e.g. after showtext::showtext_auto()
+    was_on <- tryCatch({
+      showtext::showtext_end()
+      TRUE
+    }, error = function(e) FALSE)
+    showtext::showtext_begin()
+    if (!was_on) {
+      on.exit(try(showtext::showtext_end(), silent = TRUE), add = TRUE)
+    }
+  }
+  grid::grid.draw(ggplot2::ggplot_gtable(x$built), recording = FALSE)
+}
+
 #' @method print plot2_font
 #' @noRd
 #' @export
-print.plot2_font <- function(x, ...) {
-  with_showtext(NextMethod())
+print.plot2_font <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+  # as ggplot2's print method, but drawing plot2_font_grob() instead of the gtable
+  ggplot2::set_last_plot(x)
+  if (newpage) {
+    grid::grid.newpage()
+  }
+  # so that a display list replayed in a new session can find drawDetails.plot2_font_grob()
+  grDevices::recordGraphics(requireNamespace("plot2", quietly = TRUE), list(), getNamespace("plot2"))
+  grob <- plot2_font_grob(x)
+  if (is.null(vp)) {
+    grid::grid.draw(grob)
+  } else {
+    if (is.character(vp)) grid::seekViewport(vp) else grid::pushViewport(vp)
+    grid::grid.draw(grob)
+    grid::upViewport()
+  }
+  invisible(x)
 }
 
 #' @noRd
 #' @exportS3Method grid::grid.draw
 grid.draw.plot2_font <- function(x, recording = TRUE) {
-  with_showtext(NextMethod())
+  # as ggplot2's grid.draw() method, used by e.g. ggsave()
+  print(x)
 }

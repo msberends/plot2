@@ -87,6 +87,35 @@ test_that("#23 a custom font is used only while its plot is drawn", {
                    file.path(Sys.getenv("R_USER_CACHE_DIR"), "R", "plot2"))
 })
 
+test_that("#23 a custom font survives a redraw from the display list", {
+  # devices such as the RStudio plots pane and windows() draw a plot again from
+  # their display list after print() returned; the pdf() device, like the
+  # windows() device, fails on a font family it does not know itself
+  skip_if_not_installed("showtext")
+  skip_if_not_installed("sysfonts")
+  skip_if_not("Plot2 Test Font" %in% sysfonts::font_families())
+  p <- plot2(fx_xy, x, y, font = "Plot2 Test Font")
+  withr::local_pdf(withr::local_tempfile(fileext = ".pdf"))
+  grDevices::dev.control("enable")
+  expect_no_warning(print(p))
+  recorded <- grDevices::recordPlot()
+  expect_no_warning(expect_no_error(grDevices::replayPlot(recorded)))
+  expect_no_warning(expect_no_error(grid::grid.draw(p)))
+  # showtext is off again after drawing
+  expect_error(showtext::showtext_end(), "did not turn on showtext")
+})
+
+test_that("#23 drawing a custom font keeps showtext on if the user switched it on", {
+  skip_if_not_installed("showtext")
+  skip_if_not_installed("sysfonts")
+  skip_if_not("Plot2 Test Font" %in% sysfonts::font_families())
+  p <- plot2(fx_xy, x, y, font = "Plot2 Test Font")
+  withr::local_pdf(withr::local_tempfile(fileext = ".pdf"))
+  showtext::showtext_begin()
+  print(p)
+  expect_no_error(showtext::showtext_end())
+})
+
 test_that("#27 an invalid dec_mark or big_mark option warns and falls back", {
   withr::local_options(plot2.decimal.mark = "x", plot2.big.mark = "y", OutDec = ".")
   expect_warning(expect_identical(dec_mark(), "."), "plot2.decimal.mark")
