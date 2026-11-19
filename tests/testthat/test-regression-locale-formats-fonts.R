@@ -105,6 +105,20 @@ test_that("#23 a custom font survives a redraw from the display list", {
   expect_error(showtext::showtext_end(), "did not turn on showtext")
 })
 
+test_that("#23 a custom font survives a redraw on the Windows device", {
+  # the reported case: 'font family not found in Windows font database'
+  skip_if_not(.Platform$OS.type == "windows")
+  skip_if_not_installed("showtext")
+  skip_if_not_installed("sysfonts")
+  skip_if_not("Times New Roman" %in% sysfonts::font_files()$family)
+  p <- plot2(fx_xy, x, y, font = "Times New Roman")
+  withr::local_png(withr::local_tempfile(fileext = ".png"), type = "windows")
+  grDevices::dev.control("enable")
+  expect_no_warning(print(p))
+  recorded <- grDevices::recordPlot()
+  expect_no_warning(expect_no_error(grDevices::replayPlot(recorded)))
+})
+
 test_that("#23 drawing a custom font keeps showtext on if the user switched it on", {
   skip_if_not_installed("showtext")
   skip_if_not_installed("sysfonts")
