@@ -2,6 +2,14 @@
 
 ## plot2 1.99.1
 
+- Custom fonts (`font`) failed when a device draws the plot again after
+  [`print()`](https://rdrr.io/r/base/print.html), as the windows()
+  device and the RStudio plots pane do, with many warnings ‘font family
+  not found in Windows font database’ (and on other devices, e.g. ‘not
+  found in PostScript font database’ after
+  [`replayPlot()`](https://rdrr.io/r/grDevices/recordplot.html)). The
+  font is now switched on as part of the drawing itself, so that
+  redrawing the plot uses it too
 - Messages, cautions and warnings now show arguments, values, columns
   and functions as code, using the same inline classes of `cli` as
   `ggplot2`: green where colours can be shown, including the package
