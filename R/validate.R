@@ -2712,7 +2712,7 @@ validate_font <- function(font) {
            call. = FALSE)
     }
   }
-  # showtext is switched on only while the plot is drawn, see print.plot2_font() (#23)
+  # showtext is switched on only while the plot is drawn, see plot2_font_grob() (#23)
   rlang::check_installed(c("showtext", "showtextdb", "sysfonts"), reason = "to use custom fonts")
   
   font.bak <- font
